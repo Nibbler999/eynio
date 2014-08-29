@@ -5,6 +5,38 @@ var hue = require("node-hue-api"),
 
 var api;
 
+function setLightState(id, values)
+{
+    var state = lightState.create();
+    
+    if (values.hasOwnProperty('rgb')) {
+        state = state.rgb(values.rgb[0], values.rgb[1], values.rgb[2]);
+        values.hue = state.hue;
+        values.sat = state.sat;
+        values.bri = state.bri;
+        delete values.rgb;
+    }
+
+    api.setLightState(id, values, function(err, result) {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        console.log(result);
+    });
+}
+
+function getLightState(id)
+{
+    api.lightStatus(id, function(err, result) {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        conn.emit('lightState', result.state);
+    });
+}
+
 module.exports = function(conn) {
 
     conn.on('accepted', function (cfg) {
@@ -56,31 +88,28 @@ module.exports = function(conn) {
     conn.on('getStatus', function () {
     
         api.lights(function(err, lights) {
-            if (err) throw err;
+            if (err) {
+                console.log(err);
+                return;
+            }
             conn.emit('status', lights);
         });
     
     });
     
     conn.on('switchOn', function (id) {
-    
-        var state = lightState.create();
-        
-        api.setLightState(id, state.on(), function(err, result) {
-            if (err) throw err;
-            console.log(result);
-        });
-    
+        setLightState(id, {"on": true});
     });
     
     conn.on('switchOff', function (id) {
-    
-        var state = lightState.create();
-        
-        api.setLightState(id, state.off(), function(err, result) {
-            if (err) throw err;
-            console.log(result);
-        });
-    
+        setLightState(id, {"on": false});
+    });
+
+    conn.on('setLightState', function (id, values) {
+        setLightState(id, values);
+    });
+
+    conn.on('getLightState', function (id) {
+        getLightState(id);
     });
 }
