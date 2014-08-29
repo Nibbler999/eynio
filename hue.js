@@ -3,93 +3,86 @@ var hue = require("node-hue-api"),
     HueApi = hue.HueApi,
     lightState = hue.lightState;
 
-var api;
+var api, conn;
 
-function setLightState(id, values)
+function log(msg)
 {
-    var state = lightState.create();
-    
-    if (values.hasOwnProperty('rgb')) {
-        state = state.rgb(values.rgb[0], values.rgb[1], values.rgb[2]);
-        values.hue = state.hue;
-        values.sat = state.sat;
-        values.bri = state.bri;
-        delete values.rgb;
-    }
-
-    api.setLightState(id, values, function(err, result) {
-        if (err) {
-            console.log(err);
-            return;
-        }
-        console.log(result);
-    });
+    console.log('[Hue] ' + msg);
 }
 
-function getLightState(id)
-{
-    api.lightStatus(id, function(err, result) {
-        if (err) {
-            console.log(err);
-            return;
-        }
-        conn.emit('lightState', result.state);
-    });
-}
+module.exports = function(c) {
 
-module.exports = function(conn) {
+    conn = c;
 
     conn.on('accepted', function (cfg) {
     
-        console.log('Accepted');
+        log('Accepted');
     
         hue.locateBridges(function(err, result) {
     
             if (err) {
-                console.log('locateBridges', err);
+                log('locateBridges: ' + err);
                 return;
             }
     
             if (result.length == 0) {
-                console.log('No hue bridges found');
+                log('No bridges found');
                 return;
             }
     
             api = new HueApi(result[0].ipaddress, cfg.hue_apikey);
+
             api.connect(function(err, config) {
+
                 if (err) {
-                    console.log(err);
+                    log('connect: ' + err);
                     return;
                 }
+
+                // If auth failed this property is missing
                 if (!config.hasOwnProperty('ipaddress')) {
-                    console.log('Need to create user');
+
+                    log('Need to create user');
                     conn.emit('pushthebutton', config.name);
+
                     var registerInterval = setInterval(function () {
-                        console.log('Creating user');
+                        log('Creating user');
                         api.createUser(result[0].ipaddress, null, 'NHome', function(err, user) {
                             if (err) {
-                                console.log(err);
+                                log('createUser: ' + err);
                                 return;
                             }
                             clearInterval(registerInterval);
-                            console.log('User ' + user + ' created');
+                            log('User ' + user + ' created');
+
+                            // Connect with newly created user
                             api = new HueApi(result[0].ipaddress, user);
+
                             // Send username to web server
                             conn.emit('setConfig', { hue_apikey: user});
+
+                            startListening();
                         });
                     }, 5000);
+
                 } else {
-                    console.log('Authentication ok');
+                    log('Authentication ok');
+                    startListening();
                 }
             });
         });
     });
-    
+}
+
+function startListening()
+{
+    log('Ready for commands');
+
     conn.on('getLights', function () {
     
         api.lights(function(err, lights) {
             if (err) {
-                console.log(err);
+                log('api.lights: ' + err);
                 return;
             }
             conn.emit('lights', lights);
@@ -103,5 +96,41 @@ module.exports = function(conn) {
 
     conn.on('getLightState', function (id) {
         getLightState(id);
+    });
+}
+
+function setLightState(id, values)
+{
+    var state = lightState.create();
+    
+    if (values.hasOwnProperty('rgb')) {
+        state = state.rgb.apply(state, values.rgb);
+        values.hue = state.hue;
+        values.sat = state.sat;
+        values.bri = state.bri;
+        delete values.rgb;
+    }
+
+    api.setLightState(id, values, function(err, result) {
+
+        if (err) {
+            log('api.setLightState:' + err);
+            return;
+        }
+
+        if (result) {
+            getLightState(id);
+        }
+    });
+}
+
+function getLightState(id)
+{
+    api.lightStatus(id, function(err, result) {
+        if (err) {
+            log('api.lightStatus: ' + err);
+            return;
+        }
+        conn.emit('lightState', result.state);
     });
 }
