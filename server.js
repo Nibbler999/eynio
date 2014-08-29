@@ -1,6 +1,6 @@
 var io = require('socket.io-client');
 
-var serverUrl = 'http://nhome.neosoft.ba:8080';
+var serverUrl = 'https://nhome.neosoft.ba:8080';
 var conn = io.connect(serverUrl);
 
 conn.on('connect', function () {
