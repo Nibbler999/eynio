@@ -85,26 +85,18 @@ module.exports = function(conn) {
         });
     });
     
-    conn.on('getStatus', function () {
+    conn.on('getLights', function () {
     
         api.lights(function(err, lights) {
             if (err) {
                 console.log(err);
                 return;
             }
-            conn.emit('status', lights);
+            conn.emit('lights', lights);
         });
     
     });
     
-    conn.on('switchOn', function (id) {
-        setLightState(id, {"on": true});
-    });
-    
-    conn.on('switchOff', function (id) {
-        setLightState(id, {"on": false});
-    });
-
     conn.on('setLightState', function (id, values) {
         setLightState(id, values);
     });
