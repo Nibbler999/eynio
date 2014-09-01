@@ -62,6 +62,8 @@ module.exports = function(c) {
                             conn.emit('setConfig', { hue_apikey: user});
 
                             startListening();
+
+                            getLights();
                         });
                     }, 5000);
 
@@ -79,15 +81,7 @@ function startListening()
     log('Ready for commands');
 
     conn.on('getLights', function () {
-    
-        api.lights(function(err, lights) {
-            if (err) {
-                log('api.lights: ' + err);
-                return;
-            }
-            conn.emit('lights', lights);
-        });
-    
+        getLights();    
     });
     
     conn.on('setLightState', function (id, values) {
@@ -96,6 +90,17 @@ function startListening()
 
     conn.on('getLightState', function (id) {
         getLightState(id);
+    });
+}
+
+function getLights()
+{
+    api.lights(function(err, lights) {
+        if (err) {
+            log('api.lights: ' + err);
+            return;
+        }
+        conn.emit('lights', lights);
     });
 }
 
