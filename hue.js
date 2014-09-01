@@ -30,7 +30,7 @@ module.exports = function(c) {
                 return;
             }
     
-            api = new HueApi(result[0].ipaddress, cfg.hue_apikey);
+            api = new HueApi(result[0].ipaddress, cfg.hue_apikey || 'none');
 
             api.connect(function(err, config) {
 
