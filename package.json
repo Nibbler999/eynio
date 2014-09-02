@@ -4,7 +4,8 @@
   "dependencies": {
     "node-hue-api": "0.2.x",
     "node-uuid": "1.4.x",
-    "socket.io-client": "0.9.x"
+    "socket.io-client": "0.9.x",
+    "wemo": "0.1.x"
   },
   "private": true
 }

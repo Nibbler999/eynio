@@ -32,3 +32,4 @@ function getUUID()
 }
 
 require('./hue.js')(conn);
+require('./wemo.js')(conn);
