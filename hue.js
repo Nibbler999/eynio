@@ -136,6 +136,6 @@ function getLightState(id)
             log('api.lightStatus: ' + err);
             return;
         }
-        conn.emit('lightState', result.state);
+        conn.emit('lightState', { id: id, state: result.state });
     });
 }
