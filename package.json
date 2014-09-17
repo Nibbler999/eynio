@@ -6,7 +6,8 @@
     "node-uuid": "1.4.x",
     "socket.io-client": "0.9.x",
     "wemo": "0.1.x",
-    "upnp-controlpoint": "0.0.2"
+    "upnp-controlpoint": "0.0.2",
+    "xml2js": "0.4.x"
   },
   "private": true
 }
