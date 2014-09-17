@@ -34,3 +34,8 @@ function getUUID()
 require('./hue.js')(conn);
 require('./wemo.js')(conn);
 require('./upnp.js')(conn);
+
+process.on('uncaughtException', function (err) {
+	console.log('uncaughtException:' + err);
+	console.log(err.stack);
+});
