@@ -20,6 +20,7 @@ module.exports = function(c) {
         var cp = new UpnpControlPoint();
 
         cp.on("device", function(device) {
+console.log(device.deviceType);
             if (device.deviceType == 'urn:schemas-upnp-org:device:MediaRenderer:1') {
                 devices[device.uuid] = {
                     name: device.friendlyName,
@@ -28,7 +29,7 @@ module.exports = function(c) {
             }
         });
 
-        cp.search('urn:schemas-upnp-org:device:MediaRenderer:1');
+        cp.search('');
 
         startListening();
     });
