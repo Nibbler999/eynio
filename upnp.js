@@ -116,7 +116,7 @@ function adjustVolume(id, increment)
         }
 
     	xml2js.parseString(result, function(err, result) {
-            var reply = result['s:Envelope']['s:Body'][0]['u:GetVolumeResponse'][0].CurrentVolume;
+            var reply = result['s:Envelope']['s:Body'][0]['u:GetVolumeResponse'][0].CurrentVolume[0];
             var volume = parseInt(reply, 10);
             setVolume(id, volume + increment);
         });  
@@ -138,8 +138,7 @@ function getVolume(id)
         }
 
     	xml2js.parseString(result, function(err, result) {
-            console.log(result['s:Envelope']['s:Body'][0]['u:GetVolumeResponse'][0].CurrentVolume[0]);
-            var reply = result['s:Envelope']['s:Body'][0]['u:GetVolumeResponse'][0].CurrentVolume;
+            var reply = result['s:Envelope']['s:Body'][0]['u:GetVolumeResponse'][0].CurrentVolume[0];
             var volume = parseInt(reply, 10);
             conn.emit('volume', {id: id, volume: volume});
         });  
