@@ -30,6 +30,8 @@ module.exports = function(c) {
                 return;
             }
     
+            log('Found a bridge');
+
             api = new HueApi(result[0].ipaddress, cfg.hue_apikey || 'none');
 
             api.connect(function(err, config) {
