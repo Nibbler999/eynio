@@ -4,7 +4,7 @@ Release:        auto
 Summary:        NHomeServer
 Group:          NHomeServer
 License:        None
-Requires:       nodejs npm
+Requires:       nodejs
 
 Source0:        %{name}.tar.gz
 
@@ -30,8 +30,6 @@ rm -rf %{buildroot}
 mkdir -p %{buildroot}/opt/nhome
 cp -pR * %{buildroot}/opt/nhome/
 
-mkdir -p %{buildroot}/opt/nhome/node_modules
-
 %clean
 rm -rf %{buildroot}
 
@@ -41,6 +39,5 @@ rm -rf %{buildroot}
 
 %files
 %attr(0755,root,root) /opt/nhome
-%attr(0777,root,root) /opt/nhome/node_modules
 
 %changelog
