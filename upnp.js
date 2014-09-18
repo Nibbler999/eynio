@@ -45,7 +45,11 @@ function samsungAuth(service)
         if (err) {
             log('samsungAuth:' + err);
             return;
-        } 
+        }
+
+        if (result) {
+            log('Authenticated with Samsung TV');
+        }
     });
 }
 
