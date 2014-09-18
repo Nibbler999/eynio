@@ -20,6 +20,11 @@ module.exports = function(c) {
         var cp = new UpnpControlPoint();
 
         cp.on("device", function(device) {
+
+            if (device.deviceType == 'urn:samsung.com:device:MainTVServer2:1') {
+                samsungAuth(device.services['urn:samsung.com:serviceId:MainTVAgent2']);
+            }
+
             if (device.deviceType == 'urn:schemas-upnp-org:device:MediaRenderer:1') {
                 devices[device.uuid] = {
                     name: device.friendlyName,
@@ -28,9 +33,19 @@ module.exports = function(c) {
             }
         });
 
-        cp.search('urn:schemas-upnp-org:device:MediaRenderer:1');
+        cp.search();
 
         startListening();
+    });
+}
+
+function samsungAuth(service)
+{
+    service.callAction('GetCurrentMainTVChannel', {}, function(err,  result) {
+        if (err) {
+            log('samsungAuth:' + err);
+            return;
+        } 
     });
 }
 
