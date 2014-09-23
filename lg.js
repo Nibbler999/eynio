@@ -53,6 +53,14 @@ function startListening()
         setVolumeDown(id);    
     });
 
+    conn.on('setChannelUp', function (id) {
+        setChannelUp(id);    
+    });
+
+    conn.on('setChannelDown', function (id) {
+        setChannelDown(id);    
+    });
+
     conn.on('getMultiMedia', function () {
         getMultiMedia();
     });
@@ -79,6 +87,20 @@ function setVolumeUp(id)
 function setVolumeDown(id)
 {
     var cmd = '25';
+
+    sendCommand(id, cmd);
+}
+
+function setChannelUp(id)
+{
+    var cmd = '27';
+
+    sendCommand(id, cmd);
+}
+
+function setChannelDown(id)
+{
+    var cmd = '28';
 
     sendCommand(id, cmd);
 }
