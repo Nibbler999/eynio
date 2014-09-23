@@ -35,6 +35,7 @@ require('./hue.js')(conn);
 require('./wemo.js')(conn);
 //require('./upnp.js')(conn);
 require('./lg.js')(conn);
+require('./insteon.js')(conn);
 
 process.on('uncaughtException', function (err) {
 	console.log('uncaughtException:' + err);
