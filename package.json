@@ -1,5 +1,5 @@
 {
-  "name": "nhomeserver",
+  "name": "NHomeServer",
   "version": "0.0.1",
   "dependencies": {
     "node-hue-api": "0.2.x",
