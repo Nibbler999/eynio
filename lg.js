@@ -107,6 +107,10 @@ function setChannelDown(id)
 
 function sendCommand(id, cmd)
 {
+    if (!devices.hasOwnProperty(id)) {
+        return;
+    }
+
     lg.sendCmd(id, cmd, function(err, response) {
         if (err) {
             log(err);
