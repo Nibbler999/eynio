@@ -42,6 +42,10 @@ module.exports = function(c) {
 
                 log('Hub found');
 
+                insteon.on('error', function(err) {
+                    log(err);
+                });
+
                 insteon.connect(host, function() {
         
                     log('Connected');
