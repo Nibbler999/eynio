@@ -1,6 +1,6 @@
 {
   "name": "NHomeServer",
-  "version": "0.0.1",
+  "version": "1.00.96184",
   "dependencies": {
     "node-hue-api": "0.2.x",
     "node-uuid": "1.4.x",
@@ -9,7 +9,9 @@
     "upnp-controlpoint": "0.0.2",
     "xml2js": "0.4.x",
     "lg-tv-api": "0.1.x",
-    "home-controller": "0.5.x"
+    "home-controller": "0.5.x",
+    "adm-zip": "0.4.x",
+    "simple-itach": "0.2.x"
   },
   "private": true
 }
