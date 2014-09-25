@@ -13,7 +13,7 @@ module.exports = function(c) {
 
     conn = c;
 
-    conn.on('accepted', function (cfg) {
+    conn.once('accepted', function (cfg) {
     
         log('Accepted');
 
