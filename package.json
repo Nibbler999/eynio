@@ -7,7 +7,7 @@
     "socket.io-client": "0.9.x",
     "wemo": "0.1.x",
     "upnp-controlpoint": "0.0.2",
-    "xml2js": "0.4.x",
+    "xml2js": "0.2.8",
     "lg-tv-api": "0.1.x",
     "home-controller": "0.5.x",
     "adm-zip": "0.4.x",
