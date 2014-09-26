@@ -64,12 +64,12 @@ Section "Start Menu Shortcuts"
   SetShellVarContext current
   CreateDirectory "$SMPROGRAMS\NHomeServer"
   CreateShortCut "$SMPROGRAMS\NHomeServer\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
-  CreateShortCut "$SMPROGRAMS\NHomeServer\NHomeServer.lnk" "$INSTDIR\node.exe" "server.js" "" 0
+  CreateShortCut "$SMPROGRAMS\NHomeServer\NHomeServer.lnk" "$INSTDIR\node.exe" "update.js" "" 0
 SectionEnd
 
 Section "Desktop Icons"
   SetShellVarContext current
-  CreateShortCut "$DESKTOP\NHomeServer.lnk" "$INSTDIR\node.exe" "server.js" "" 0
+  CreateShortCut "$DESKTOP\NHomeServer.lnk" "$INSTDIR\node.exe" "update.js" "" 0
 SectionEnd
 
 Section "Uninstall"
