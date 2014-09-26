@@ -1,9 +1,10 @@
 
-var version = require('./package.json').version;
+var version = require('./package.json').version,
+    name = require('./package.json').name;
 
 var https = require('https');
 
-https.get('https://neosoft-updates.s3.amazonaws.com/zupdate/NHomeServer/' + version + '.xml', function(res) {
+https.get('https://neosoft-updates.s3.amazonaws.com/zupdate/' + name + '/' + version + '.xml', function(res) {
 
     console.log('Checking for updates');
 
