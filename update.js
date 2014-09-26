@@ -42,29 +42,53 @@ function processUpdateInfo(err, info)
         return false;
     }
 
+    var update = info.updates.update[0].patch[0].$;
+    update.size = parseInt(update.size, 10);
+
     var fs = require('fs');
-    var zipfilename = 'update.zip';
+    var crypto = require('crypto');
 
-    var file = fs.createWriteStream(zipfilename);
+    var zip = new Buffer(update.size);
 
-    https.get(info.updates.update[0].patch[0].$.URL, function(res) {
+    var shasum = crypto.createHash(update.hashFunction);
+
+    https.get(update.URL, function(res) {
     
         console.log('Downloading update');
 
-        res.pipe(file);
+        var downloadedBytes = 0;
+
+        res.on('data', function(d) {
+            shasum.update(d);
+            d.copy(zip, downloadedBytes);
+            downloadedBytes += d.length;
+        });
     
         res.on('end', function() {
+
+            if (downloadedBytes !== update.size) {
+                console.error('Download incomplete');
+                require('./server.js');
+                return;
+            }
+
             console.log('Download complete');
+
+            var checksum = shasum.digest('hex');
+
+            if (checksum !== update.hashValue) {
+                console.error('Checksum mismatch');
+                require('./server.js');
+                return;
+            }
+
+            console.log('Applying update');
 
             var AdmZip = require('adm-zip');
             
-            var zip = new AdmZip(zipfilename);
+            var zip = new AdmZip(zip);
             
-            console.log('Applying update');
-
             zip.extractAllTo('.', true);
-
-            fs.unlink(zipfilename);
 
             console.log('Update complete');
 
@@ -76,3 +100,8 @@ function processUpdateInfo(err, info)
         require('./server.js');
     });
 }
+
+process.on('uncaughtException', function (err) {
+	console.log('uncaughtException:' + err);
+	console.log(err.stack);
+});
