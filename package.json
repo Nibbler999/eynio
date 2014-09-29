@@ -12,7 +12,9 @@
     "home-controller": "0.5.x",
     "adm-zip": "0.4.x",
     "simple-itach": "0.2.x",
-    "samsung-remote": "1.2.x"
+    "samsung-remote": "1.2.x",
+    "fibaro-api": "~0.1.0",
+    "request": "~2.44.0"
   },
   "private": true
 }

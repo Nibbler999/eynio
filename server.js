@@ -38,6 +38,7 @@ require('./lg.js')(conn);
 require('./insteon.js')(conn);
 require('./itach.js')(conn);
 require('./samsung-remote.js')(conn);
+require('./fibaro.js')(conn);
 
 process.on('uncaughtException', function (err) {
 	console.log('uncaughtException:' + err);

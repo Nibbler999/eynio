@@ -59,6 +59,10 @@ function getSwitches()
 
 function switchOn(id)
 {
+    if (!devices.hasOwnProperty(id)) {
+        return;
+    }
+
     devices[id].dev.setBinaryState(1, function(err, result) {
         if (err) {
             log('switchOn:' + err);
@@ -68,6 +72,10 @@ function switchOn(id)
 
 function switchOff(id)
 {
+    if (!devices.hasOwnProperty(id)) {
+        return;
+    }
+
     devices[id].dev.setBinaryState(0, function(err, result) {
         if (err) {
             log('switchOff:' + err);
