@@ -104,8 +104,6 @@ function getSensors()
         }
     }
 
-    console.log(sensors);
-
     conn.emit('sensors', sensors);
 }
 
