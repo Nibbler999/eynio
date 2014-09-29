@@ -109,6 +109,10 @@ function getSensors()
 
 function switchOn(id)
 {
+    if (!devices.hasOwnProperty(id)) {
+        return;
+    }
+
     var deviceId = devices[id].id;
 
     fibaro.api.devices.turnOn(deviceId, function(err, result) {
@@ -120,6 +124,10 @@ function switchOn(id)
 
 function switchOff(id)
 {
+    if (!devices.hasOwnProperty(id)) {
+        return;
+    }
+
     var deviceId = devices[id].id;
 
     fibaro.api.devices.turnOff(deviceId, function(err, result) {
@@ -131,6 +139,10 @@ function switchOff(id)
 
 function getSensorValue(id)
 {
+    if (!devices.hasOwnProperty(id)) {
+        return;
+    }
+
     var deviceId = devices[id].id;
 
     fibaro.api.devices.get(deviceId, function(err, result) {
