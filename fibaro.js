@@ -100,7 +100,7 @@ function getSensors()
 
     for (device in devices) {
         if (devices[device].type.match('sensor')) {
-            sensors.push({id: device, name: devices[device].name});
+            sensors.push({id: device, name: devices[device].name, type: devices[device].type.replace('_sensor', '')});
         }
     }
 
