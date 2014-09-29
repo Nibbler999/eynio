@@ -86,9 +86,9 @@ function processUpdateInfo(err, info)
 
             var AdmZip = require('adm-zip');
             
-            var zip = new AdmZip(zip);
+            var archive = new AdmZip(zip);
             
-            zip.extractAllTo('.', true);
+            archive.extractAllTo('.', true);
 
             console.log('Update complete');
 
