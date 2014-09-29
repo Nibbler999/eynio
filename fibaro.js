@@ -1,11 +1,7 @@
 
-var ip = '172.20.15.148';
-
 var Fibaro = require('fibaro-api');
 
-var fibaro = new Fibaro(ip, 'admin', 'admin');
-
-var conn, devices = {};
+var conn, devices = {}, fibaro;
 
 function log(msg)
 {
@@ -20,20 +16,44 @@ module.exports = function(c) {
     
         log('Accepted');
 
-        fibaro.api.devices.list(function (err, devicelist) {
+        discovery(function(ip) {
 
-            if (err) {
-                log(err);
-                return;
-            }
+            fibaro = new Fibaro(ip, 'admin', 'admin');
 
-            devicelist.forEach(function(device) {
-                devices['fibaro:' + ip + ':' + device.id] = device;
-            });
-
-            startListening();
-        }); 
+            fibaro.api.devices.list(function (err, devicelist) {
+    
+                if (err) {
+                    log(err);
+                    return;
+                }
+    
+                devicelist.forEach(function(device) {
+                    devices['fibaro:' + ip + ':' + device.id] = device;
+                });
+    
+                startListening();
+            }); 
+        });
     });
+}
+
+function discovery(cb)
+{
+    var server = require('dgram').createSocket("udp4");
+    
+    server.on('message', function (packet, rinfo) {
+        if (packet.toString().match('^ACK HC2-[0-9]+ [0-9:a-f]+$')) {
+            cb && cb(rinfo.address);
+            server.close();
+        }
+    });
+
+    server.bind(44444, function () {
+        var message = new Buffer("FIBARO");
+        server.setBroadcast(true);
+        server.send(message, 0, message.length, 44444, "255.255.255.255");
+    });
+
 }
 
 function startListening()
