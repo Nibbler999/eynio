@@ -31,14 +31,14 @@ function getUUID()
     return fs.readFileSync(uuidFile, { encoding: 'utf8'});
 }
 
-require('./hue.js')(conn);
-require('./wemo.js')(conn);
-//require('./upnp.js')(conn);
-require('./lg.js')(conn);
-require('./insteon.js')(conn);
-require('./itach.js')(conn);
-require('./samsung-remote.js')(conn);
-require('./fibaro.js')(conn);
+require('./devices/hue.js')(conn);
+require('./devices/wemo.js')(conn);
+//require('./devices/upnp.js')(conn);
+require('./devices/lg.js')(conn);
+require('./devices/insteon.js')(conn);
+require('./devices/itach.js')(conn);
+require('./devices/samsung-remote.js')(conn);
+require('./devices/fibaro.js')(conn);
 
 process.on('uncaughtException', function (err) {
 	console.log('uncaughtException:' + err);
