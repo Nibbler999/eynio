@@ -47,6 +47,10 @@ function startListening()
     conn.on('sendRemoteCommand', function (id, cmd) {
         sendRawCommand(id, cmd);
     });
+
+    conn.on('IRLearn', function (info) {
+        setLearningMode(info.id);
+    });
 }
 
 function getRemotes()
@@ -71,5 +75,20 @@ function sendRawCommand(id, cmd)
             log(err);
             return;
           }
+    });
+}
+
+function setLearningMode(id)
+{
+    console.log('setLearningMode');
+
+    devices[id].dev.learn(function (err, res) {
+
+        if (err) {
+            log('Learn error: ' + err);
+            return;
+        }
+
+        conn.emit('IRCode', res);
     });
 }
