@@ -75,7 +75,7 @@ function startListening()
     });
 
     conn.on('sendKey', function (remoteid, key) {
-        sendVolumeUp(remoteid, key);
+        sendKey(remoteid, key);
     });
 
     conn.on('learnKey', function (remoteid, key) {
