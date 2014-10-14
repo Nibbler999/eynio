@@ -144,6 +144,11 @@ function sendKey(remoteid, key)
 {
     var remote = remotes[remoteid];
 
+    if (!remote.keys.hasOwnProperty(key)) {
+        log('Unknown key "' + key + '"');
+        return;
+    }
+
     cmd = remote.keys[key].replace('1:1', remote.connector);
 
     sendRawCommand(remote.deviceid, cmd + '\r');
