@@ -25,9 +25,14 @@ module.exports = function(c) {
                 if (err) {
                     log(err);
                     return;
-                }
-    
+                } 
+
                 devicelist.forEach(function(device) {
+
+                    if (device.properties.disabled === '1') {
+                        return;
+                    }
+
                     devices[info.mac + ':' + device.id] = {
                         id: device.id,
                         name: device.name,
