@@ -44,6 +44,10 @@ function startListening()
     conn.on('getSwitches', function () {
         getSwitches();
     });
+
+    conn.on('getSwitchState', function (id) {
+        getSwitchState(id);
+    });
 }
 
 function getSwitches()
@@ -64,9 +68,13 @@ function switchOn(id)
     }
 
     devices[id].dev.setBinaryState(1, function(err, result) {
+
         if (err) {
             log('switchOn:' + err);
+            return;
         }
+
+        getSwitchState(id);
     });
 }
 
@@ -77,8 +85,29 @@ function switchOff(id)
     }
 
     devices[id].dev.setBinaryState(0, function(err, result) {
+
         if (err) {
             log('switchOff:' + err);
+            return;
         }
+
+        getSwitchState(id);
+    });
+}
+
+function getSwitchState(id)
+{
+    if (!devices.hasOwnProperty(id)) {
+        return;
+    }
+
+    devices[id].dev.getBinaryState(function(err, result) {
+
+        if (err) {
+            log('getSwitchState:' + err);
+            return;
+        }
+
+        conn.emit('switchState', { id: id, state: { on: result === '1'}});
     });
 }

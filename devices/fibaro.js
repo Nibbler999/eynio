@@ -25,7 +25,7 @@ module.exports = function(c) {
                 if (err) {
                     log(err);
                     return;
-                } 
+                }
 
                 devicelist.forEach(function(device) {
 
@@ -61,6 +61,10 @@ function startListening()
 
     conn.on('getSwitches', function () {
         getSwitches();
+    });
+
+    conn.on('getSwitchState', function (id) {
+        getSwitchState(id);
     });
 
     conn.on('getSensors', function () {
@@ -107,9 +111,13 @@ function switchOn(id)
     var deviceId = devices[id].id;
 
     devices[id].dev.api.devices.turnOn(deviceId, function(err, result) {
+
         if (err) {
             log('switchOn:' + err);
+            return;
         }
+
+        conn.emit('switchState', { id: id, state: { on: true }});
     });
 }
 
@@ -122,9 +130,13 @@ function switchOff(id)
     var deviceId = devices[id].id;
 
     devices[id].dev.api.devices.turnOff(deviceId, function(err, result) {
+
         if (err) {
             log('switchOff:' + err);
+            return;
         }
+
+        conn.emit('switchState', { id: id, state: { on: false }});
     });
 }
 
@@ -144,5 +156,24 @@ function getSensorValue(id)
         }
 
         conn.emit('sensorValue', { id: id, name: result.name, value: result.properties.value });
+    });
+}
+
+function getSwitchState(id)
+{
+    if (!devices.hasOwnProperty(id)) {
+        return;
+    }
+
+    var deviceId = devices[id].id;
+
+    devices[id].dev.api.devices.get(deviceId, function(err, result) {
+
+        if (err) {
+            log('getSwitchState:' + err);
+            return;
+        }
+
+        conn.emit('switchState', { id: id, state: { on: result.properties.value === '1' }});
     });
 }
