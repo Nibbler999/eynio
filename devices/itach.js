@@ -54,26 +54,6 @@ function startListening()
         sendRawCommand(id, cmd);
     });
 
-    conn.on('IRLearn', function (info) {
-        setLearningMode(info.id);
-    });
-
-    conn.on('sendVolumeUp', function (remoteid) {
-        sendVolumeUp(remoteid);
-    });
-
-    conn.on('sendVolumeDown', function (remoteid) {
-        sendVolumeDown(remoteid);
-    });
-
-    conn.on('learnVolumeUp', function (remoteid) {
-        learnVolumeUp(remoteid);
-    });
-
-    conn.on('learnVolumeDown', function (remoteid) {
-        learnVolumeDown(remoteid);
-    });
-
     conn.on('sendKey', function (remoteid, key) {
         sendKey(remoteid, key);
     });
@@ -118,26 +98,6 @@ function sendRawCommand(id, cmd)
             return;
           }
     });
-}
-
-function sendVolumeUp(remoteid)
-{
-    sendKey(remoteid, 'VOLUME UP');
-}
-
-function sendVolumeDown(remoteid)
-{
-    sendKey(remoteid, 'VOLUME DOWN');
-}
-
-function learnVolumeUp(remoteid)
-{
-    learnKey(remoteid, 'VOLUME UP');
-}
-
-function learnVolumeDown(remoteid)
-{
-    learnKey(remoteid, 'VOLUME DOWN');
 }
 
 function sendKey(remoteid, key)
