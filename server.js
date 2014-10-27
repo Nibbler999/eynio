@@ -14,6 +14,19 @@ conn.on('disconnect', function () {
     console.log('disconnected');
 });
 
+conn.emitLocal = function (name) {
+
+    var args = Array.prototype.slice.call(arguments, 1);
+
+    var packet = {
+        type: 'event',
+        name: name,
+        args: args
+    };
+
+    this.onPacket(packet);
+}
+
 function getUUID()
 {
     var home = process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;
@@ -40,6 +53,8 @@ require('./devices/itach.js')(conn);
 require('./devices/samsung-remote.js')(conn);
 require('./devices/fibaro.js')(conn);
 require('./devices/razberry.js')(conn);
+
+require('./services/schedule.js')(conn);
 
 process.on('uncaughtException', function (err) {
 	console.log('uncaughtException:' + err);
