@@ -55,6 +55,7 @@ require('./devices/fibaro.js')(conn);
 require('./devices/razberry.js')(conn);
 
 require('./services/schedule.js')(conn);
+require('./services/proxy.js')(conn);
 
 process.on('uncaughtException', function (err) {
 	console.log('uncaughtException:' + err);
