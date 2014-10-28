@@ -1,6 +1,6 @@
 {
   "name": "NHomeServer",
-  "version": "1.00",
+  "version": "1.0.0",
   "dependencies": {
     "adm-zip": "0.4.4",
     "fibaro-api": "0.1.1",
