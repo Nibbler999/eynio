@@ -1,21 +1,21 @@
 {
   "name": "NHomeServer",
-  "version": "1.00.96184",
+  "version": "1.00",
   "dependencies": {
-    "node-hue-api": "0.2.x",
-    "node-uuid": "1.4.x",
-    "socket.io-client": "0.9.x",
-    "wemo": "0.1.x",
+    "adm-zip": "0.4.4",
+    "fibaro-api": "0.1.1",
+    "home-controller": "0.5.2",
+    "lg-tv-api": "0.1.2",
+    "node-hue-api": "0.2.3",
+    "node-schedule": "0.1.13",
+    "node-uuid": "1.4.1",
+    "request": "2.44.0",
+    "samsung-remote": "1.2.4",
+    "simple-itach": "0.2.1",
+    "socket.io-client": "0.9.17",
     "upnp-controlpoint": "0.0.2",
-    "xml2js": "0.2.8",
-    "lg-tv-api": "0.1.x",
-    "home-controller": "0.5.x",
-    "adm-zip": "0.4.x",
-    "simple-itach": "0.2.x",
-    "samsung-remote": "1.2.x",
-    "fibaro-api": "~0.1.1",
-    "request": "~2.44.0",
-    "node-schedule": "~0.1.13"
+    "wemo": "0.1.1",
+    "xml2js": "0.2.8"
   },
   "private": true
 }
