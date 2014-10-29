@@ -24,7 +24,6 @@ module.exports = function(c) {
         lx.on('bulbstate', function(b) {
             var id = 'lifx-' + b.addr.toString('hex');
             conn.emit('lightState', { id: id, state: { on: b.on }});
-            devices[id].on = b.on;
         });
 
         lx.on('bulb', function(b) {
@@ -33,8 +32,7 @@ module.exports = function(c) {
 
             devices['lifx-' + addr] = {
                 name: b.name || 'Un-named',
-                addr: addr,
-                on: b.on
+                addr: addr
             };
         });
 
@@ -76,6 +74,10 @@ function getLights()
 
 function setLightState(id, values)
 {
+    if (!devices.hasOwnProperty(id)) {
+        return;
+    }
+
     var addr = devices[id].addr;
 
     if (values.on) {
@@ -87,7 +89,11 @@ function setLightState(id, values)
 
 function getLightState(id)
 {
-    var bulb = devices[id];
+    if (!devices.hasOwnProperty(id)) {
+        return;
+    }
 
-    conn.emit('lightState', { id: id, state: { on: bulb.on }});
+    var addr = devices[id].addr;
+
+    lx.requestStatus(new Buffer(addr, 'hex'));
 }

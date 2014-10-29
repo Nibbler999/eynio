@@ -108,6 +108,10 @@ function getLights()
 
 function setLightState(id, values)
 {
+    if (!devices.hasOwnProperty(id)) {
+        return;
+    }
+
     var state = lightState.create();
     
     if (values.hasOwnProperty('rgb')) {
@@ -133,6 +137,10 @@ function setLightState(id, values)
 
 function getLightState(id)
 {
+    if (!devices.hasOwnProperty(id)) {
+        return;
+    }
+
     api.lightStatus(id, function(err, result) {
         if (err) {
             log('api.lightStatus: ' + err);
