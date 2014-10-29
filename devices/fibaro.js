@@ -38,10 +38,10 @@ module.exports = function(c) {
                         dev: fibaro
                     }
                 });
-            }); 
-        });
 
-        startListening();
+                startListening();
+            }); 
+        }); 
     });
 }
 

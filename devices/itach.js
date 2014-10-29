@@ -36,7 +36,9 @@ module.exports = function(c) {
             }
         });
 
-        startListening();
+        d.once('device', function(device) {
+            startListening();
+        });
     });
 };
 
