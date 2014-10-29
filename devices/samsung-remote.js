@@ -13,8 +13,6 @@ module.exports = function(c) {
     conn = c;
 
     conn.once('accepted', function (cfg) {
-    
-        log('Accepted');
 
         devices['Samsung-172.20.15.127'] = {
             name: 'Samsung TV',

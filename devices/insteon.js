@@ -17,8 +17,6 @@ module.exports = function(c) {
 
     conn.once('accepted', function (cfg) {
     
-        log('Accepted');
-    
         var html = '';
 
         require('http').get("http://connect.insteon.com/getinfo.asp", function(res) {

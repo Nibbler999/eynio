@@ -13,8 +13,6 @@ module.exports = function(c) {
     conn = c;
 
     conn.once('accepted', function (cfg) {
-    
-        log('Accepted');
 
         lg.discovery(function(found) {
 

@@ -16,9 +16,6 @@ module.exports = function(c) {
     conn = c;
 
     conn.once('accepted', function (cfg) {
-    
-        log('Accepted');
-
         update(startListening);
     });
 }

@@ -16,8 +16,6 @@ module.exports = function(c) {
     conn = c;
 
     conn.once('accepted', function (cfg) {
-    
-        log('Accepted');
 
         if (cfg.itach_remotes) {
             remotes = JSON.parse(cfg.itach_remotes);

@@ -17,8 +17,6 @@ module.exports = function(c) {
 
     conn.once('accepted', function (cfg) {
     
-        log('Accepted');
-    
         lx = lifx.init();
 
         lx.on('bulbstate', function(b) {

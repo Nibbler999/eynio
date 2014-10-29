@@ -16,8 +16,6 @@ module.exports = function(c) {
 
     conn.once('accepted', function (cfg) {
     
-        log('Accepted');
-    
         hue.locateBridges(function(err, result) {
     
             if (err) {
