@@ -6,6 +6,7 @@
     "fibaro-api": "0.1.1",
     "home-controller": "0.5.2",
     "lg-tv-api": "0.1.2",
+    "lifx": "0.2.1",
     "node-hue-api": "0.2.3",
     "node-schedule": "0.1.13",
     "node-uuid": "1.4.1",

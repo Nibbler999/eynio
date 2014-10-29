@@ -53,6 +53,7 @@ require('./devices/itach.js')(conn);
 require('./devices/samsung-remote.js')(conn);
 require('./devices/fibaro.js')(conn);
 require('./devices/razberry.js')(conn);
+require('./devices/lifx.js')(conn);
 
 require('./services/schedule.js')(conn);
 require('./services/proxy.js')(conn);
