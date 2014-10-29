@@ -50,7 +50,7 @@ require('./devices/wemo.js')(conn);
 require('./devices/lg.js')(conn);
 require('./devices/insteon.js')(conn);
 require('./devices/itach.js')(conn);
-require('./devices/samsung-remote.js')(conn);
+//require('./devices/samsung-remote.js')(conn);
 require('./devices/fibaro.js')(conn);
 require('./devices/razberry.js')(conn);
 require('./devices/lifx.js')(conn);

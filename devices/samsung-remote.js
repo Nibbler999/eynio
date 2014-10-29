@@ -14,22 +14,12 @@ module.exports = function(c) {
 
     conn.once('accepted', function (cfg) {
 
-        var dev = new SamsungRemote({ ip: '172.20.15.127'});
+        devices['Samsung-172.20.15.127'] = {
+            name: 'Samsung TV',
+            dev: new SamsungRemote({ ip: '172.20.15.127'})
+        };
 
-        dev.isAlive(function(status) {
-
-            if (!status) {
-                console.log(':(');
-                return;
-            }
-
-            devices['Samsung-172.20.15.127'] = {
-                name: 'Samsung TV',
-                dev: dev
-            };
-
-            startListening();
-        });
+        startListening();
     });
 }
 
