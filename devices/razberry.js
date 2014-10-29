@@ -16,7 +16,15 @@ module.exports = function(c) {
     conn = c;
 
     conn.once('accepted', function (cfg) {
-        update(startListening);
+
+        require('tcp-ping').probe(ip, 8083, function(err, available) {
+
+            if (!available) {
+                return;
+            }
+
+            update(startListening);
+        });
     });
 }
 

@@ -14,12 +14,19 @@ module.exports = function(c) {
 
     conn.once('accepted', function (cfg) {
 
-        devices['Samsung-172.20.15.127'] = {
-            name: 'Samsung TV',
-            dev: new SamsungRemote({ ip: '172.20.15.127'})
-        };
+        require('tcp-ping').probe('172.20.15.127', 55000, function(err, available) {
 
-        startListening();
+            if (!available) {
+                return;
+            }
+
+            devices['Samsung-172.20.15.127'] = {
+                name: 'Samsung TV',
+                dev: new SamsungRemote({ ip: '172.20.15.127'})
+            };
+    
+            startListening();
+        });
     });
 }
 
