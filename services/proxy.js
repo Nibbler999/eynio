@@ -10,10 +10,6 @@ module.exports = function(c) {
 
     conn = c;
 
-    conn.once('accepted', function (cfg) {
-        log('Ready for commands');
-    });
-
     conn.on('proxyConnect', function (proxy) {
         proxyConnect(proxy);
     });

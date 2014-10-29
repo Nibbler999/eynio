@@ -36,9 +36,8 @@ module.exports = function(c) {
 
         lx.on('gateway', function(g) {
             log('Gateway found');
+            startListening();
         });
-
-        startListening();
     });
 }
 

@@ -23,7 +23,9 @@ module.exports = function(c) {
             };
         });
 
-        startListening();
+        client.once('found', function(device) {
+            startListening();
+        }); 
     });
 }
 

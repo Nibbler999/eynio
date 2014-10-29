@@ -24,7 +24,6 @@ module.exports = function(c) {
             }
     
             if (result.length == 0) {
-                log('No bridges found');
                 return;
             }
     

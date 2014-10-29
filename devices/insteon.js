@@ -32,7 +32,6 @@ module.exports = function(c) {
                 var matches = regex.exec(html);
 
                 if (!matches) {
-                    log('No hub found');
                     return;
                 }
 
