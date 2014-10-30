@@ -25,6 +25,8 @@ function proxyConnect(proxy)
     
         require('tls').connect({host: 'nhome.neosoft.ba', port: 8082}, function() {
 
+            this.setNoDelay();
+
             this.write(proxy.id);
 
             ext.pipe(this).pipe(ext);
