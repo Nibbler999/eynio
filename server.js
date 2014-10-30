@@ -1,17 +1,35 @@
 var io = require('socket.io-client');
 
 var serverUrl = 'https://nhome.neosoft.ba:8080';
-var conn = io.connect(serverUrl);
+
+var serverOptions = {
+    'reconnection limit': 18000,
+    'max reconnection attempts': Infinity
+};
+
+var conn = io.connect(serverUrl, serverOptions);
+
+conn.on('connecting', function(info) {
+	console.log('Connecting to NHome...');
+});
 
 conn.on('connect', function () {
 
-    console.log('Connected to socket.io');
+    console.log('Connected.');
 
     conn.emit('serverhello', { uuid: getUUID() });
 });
 
+conn.on('reconnecting', function(timeout, attempts) {
+	console.log('Attempting to reconnect');
+});
+
 conn.on('disconnect', function () {
-    console.log('disconnected');
+    console.log('Disconnected');
+});
+
+conn.on('connect_failed', function() {
+    console.log('Failed to connect to NHome');
 });
 
 conn.emitLocal = function (name) {
