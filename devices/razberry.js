@@ -1,10 +1,7 @@
 
-var ip = '192.168.0.100';
+var http = require('http');
 
-var http = require('http'),
-    util = require('util');
-
-var conn, devices = {};
+var conn, devices = {}, ip;
 
 function log(msg)
 {
@@ -17,13 +14,22 @@ module.exports = function(c) {
 
     conn.once('accepted', function (cfg) {
 
-        require('tcp-ping').probe(ip, 8083, function(err, available) {
+        require('request')('http://find.z-wave.me/', function (error, response, body) {
 
-            if (!available) {
-                return;
+          if (!error && response.statusCode == 200) {
+
+                var regex = /<a href="http:..([0-9.]+):8084">/
+
+                var matches = regex.exec(body);
+
+                if (!matches) {
+                    return;
+                }
+    
+                ip = matches[1];
+    
+                update(startListening);
             }
-
-            update(startListening);
         });
     });
 }
