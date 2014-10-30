@@ -67,7 +67,9 @@ function reloadSchedule()
     schedule.forEach(function (s) {
 
         var j = scheduler.scheduleJob(s.dateTime, function() {
-            conn.emitLocal(s.emit, s.params);
+            var params = [s.emit];
+            params = params.concat(s.params);
+            conn.emitLocal.apply(conn, params);
         });
 
         jobs.push(j);
@@ -75,17 +77,3 @@ function reloadSchedule()
         log('Scheduled job');
     });
 }
-/*
-var schedule = [
-    {
-        dateTime: {second: 0},
-        emit: 'switchOn',
-        params: '221403K11002BB'
-    },
-    {
-        dateTime: {second: 5},
-        emit: 'switchOff',
-        params: '221403K11002BB'
-    },
-];
-*/
