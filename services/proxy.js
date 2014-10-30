@@ -33,10 +33,14 @@ function proxyConnect(proxy)
     
             this.on('error', function(err) {
                 log('Client error: ' + err);
+                ext.end();
+                ext.destroy();
             });
     
             this.on('close', function() {
                 log('Client close');
+                ext.end();
+                ext.destroy();
             });
         });
     });
