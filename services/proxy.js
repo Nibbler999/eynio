@@ -37,13 +37,13 @@ function proxyConnect(proxy)
                 log('Client close');
             });
         });
-        
-        this.on('error', function(err) {
-            log('Server error: ' + err);
-        });
-        
-        this.on('close', function() {
-            log('Server close');
-        });
+    });
+
+    ext.on('error', function(err) {
+        log('Server error: ' + err);
+    });
+    
+    ext.on('close', function() {
+        log('Server close');
     });
 }
