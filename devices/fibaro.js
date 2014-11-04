@@ -153,7 +153,7 @@ function getSensorValue(id)
             return;
         }
 
-        conn.emit('sensorValue', { id: id, name: result.name, value: result.properties.value });
+        conn.emit('sensorValue', { id: id, name: result.name, type: devices[id].type.replace('_sensor', ''), value: result.properties.value });
     });
 }
 
