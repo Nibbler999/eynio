@@ -92,8 +92,8 @@ function getSensors()
     var sensors = [];
 
     for (device in devices) {
-        if (devices[device].type.match('sensor')) {
-            sensors.push({id: device, name: devices[device].name, type: devices[device].type.replace('_sensor', '')});
+        if (devices[device].type.match('Sensor')) {
+            sensors.push({id: device, name: devices[device].name, type: devices[device].type.replace('com.fibaro.', '').replace('Sensor', '')});
         }
     }
 
@@ -153,7 +153,7 @@ function getSensorValue(id)
             return;
         }
 
-        conn.emit('sensorValue', { id: id, name: result.name, type: devices[id].type.replace('_sensor', ''), value: result.properties.value });
+        conn.emit('sensorValue', { id: id, name: result.name, type: devices[id].type.replace('com.fibaro.', '').replace('Sensor', ''), value: result.properties.value });
     });
 }
 
