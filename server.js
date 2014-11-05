@@ -62,6 +62,10 @@ function getUUID()
     return fs.readFileSync(uuidFile, { encoding: 'utf8'});
 }
 
+require('./services/namer.js').listen(conn);
+require('./services/schedule.js')(conn);
+require('./services/proxy.js')(conn);
+
 require('./devices/hue.js')(conn);
 require('./devices/wemo.js')(conn);
 //require('./devices/upnp.js')(conn);
@@ -72,9 +76,6 @@ require('./devices/samsung-remote.js')(conn);
 require('./devices/fibaro.js')(conn);
 require('./devices/razberry.js')(conn);
 require('./devices/lifx.js')(conn);
-
-require('./services/schedule.js')(conn);
-require('./services/proxy.js')(conn);
 
 process.on('uncaughtException', function (err) {
 	console.log('uncaughtException:' + err);
