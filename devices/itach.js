@@ -70,6 +70,10 @@ function startListening()
         deleteCustomRemote(remoteid);
     });
 
+    conn.on('updateCustomRemote', function (remote) {
+        updateCustomRemote(remote);
+    });
+
     conn.on('getCustomRemotes', function () {
         getCustomRemotes();
     });
@@ -153,6 +157,19 @@ function saveCustomRemote(r)
     saveRemotes();
 
     conn.emit('customRemoteAdded', r);
+}
+
+function updateCustomRemote(r)
+{
+    if (!remotes.hasOwnProperty(r.id)) {
+        return;
+    }
+
+    remotes[r.id] = r;
+
+    saveRemotes();
+
+    conn.emit('customRemoteUpdated', r);
 }
 
 function deleteCustomRemote(id)
