@@ -1,6 +1,8 @@
 
 var http = require('http');
 
+var Namer = require('../services/namer.js');
+
 var conn, devices = {}, ip;
 
 function log(msg)
@@ -63,7 +65,7 @@ function getSwitches()
     
         for (device in devices) {
             if (devices[device].commandClasses.hasOwnProperty('37') !== -1) {
-                switches.push({id: device, name: devices[device].name});
+                switches.push({id: device, name: Namer.getName(device)});
             }
         }
     
@@ -140,6 +142,8 @@ function update(cb)
                     commandClasses: status.devices[d].instances[0].commandClasses
                 };
             }
+
+            Namer.add(devices);
 
             cb && cb();
         });

@@ -1,6 +1,8 @@
 
 var SamsungRemote = require('samsung-remote');
 
+var Namer = require('../services/namer.js');
+
 var conn, devices = {};
 
 function log(msg)
@@ -24,7 +26,9 @@ module.exports = function(c) {
                 name: 'Samsung TV',
                 dev: new SamsungRemote({ ip: '172.20.15.127'})
             };
-    
+
+            Namer.add(devices);
+
             startListening();
         });
     });
@@ -64,7 +68,7 @@ function getMultiMedia()
     var multimedia = [];
 
     for (device in devices) {
-        multimedia.push({id: device, name: devices[device].name});
+        multimedia.push({id: device, name: Namer.getName(device)});
     }
 
     conn.emit('multimedia', multimedia);

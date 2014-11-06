@@ -2,6 +2,8 @@
 var lifx = require('lifx');
 var lx;
 
+var Namer = require('../services/namer.js');
+
 var conn;
 
 var devices = {};
@@ -32,6 +34,8 @@ module.exports = function(c) {
                 name: b.name || 'Un-named',
                 addr: addr
             };
+
+            Namer.add(devices);
         });
 
         lx.on('gateway', function(g) {
@@ -63,7 +67,7 @@ function getLights()
     var lights = [];
 
     for (device in devices) {
-        lights.push({id: device, name: devices[device].name});
+        lights.push({id: device, name: Namer.getName(device)});
     }
 
     conn.emit('lights', {lights: lights});

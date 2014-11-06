@@ -90,6 +90,10 @@ function startListening()
     conn.on('getLightState', function (id) {
         getLightState(id);
     });
+
+    conn.on('setDeviceName', function (id, name) {
+        setDeviceName(id, name);
+    });
 }
 
 function getLights()
@@ -137,4 +141,18 @@ function getLightState(id)
         }
         conn.emit('lightState', { id: id, state: result.state });
     });
+}
+
+function setDeviceName(id, name)
+{
+    api.setLightName(id, name, function(err, result) {
+        if (err) {
+            log('api.setDeviceName: ' + err);
+            return;
+        }
+
+        if (result) {
+            conn.emit('deviceRenamed', id, name);
+        }
+    });    
 }

@@ -2,6 +2,8 @@ var Insteon = require('home-controller').Insteon;
 
 var insteon = new Insteon();
 
+var Namer = require('../services/namer.js');
+
 var api, conn;
 
 var lights = {};
@@ -57,6 +59,8 @@ module.exports = function(c) {
                             });
                         });
                         
+                        Namer.add(devices);
+
                         startListening();
                     }); 
                 });
@@ -91,7 +95,7 @@ function getLights()
     var l = {lights: []};
 
     for (device in lights) {
-        l.lights.push({id: device, name: device});
+        l.lights.push({id: device, name: Namer.getName(device)});
     }
 
     conn.emit('lights', l);

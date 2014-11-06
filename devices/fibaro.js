@@ -1,5 +1,6 @@
 
 var Fibaro = require('fibaro-api');
+var Namer = require('../services/namer.js');
 
 var conn, devices = {};
 
@@ -38,6 +39,8 @@ module.exports = function(c) {
                         dev: fibaro
                     }
                 });
+
+                Namer.add(devices);
 
                 startListening();
             }); 
@@ -80,7 +83,7 @@ function getSwitches()
 
     for (device in devices) {
         if (devices[device].type == 'binary_light') {
-            switches.push({id: device, name: devices[device].name});
+            switches.push({id: device, name: Namer.getName(device)});
         }
     }
 
@@ -93,7 +96,7 @@ function getSensors()
 
     for (device in devices) {
         if (devices[device].type.match('Sensor')) {
-            sensors.push({id: device, name: devices[device].name, type: devices[device].type.replace('com.fibaro.', '').replace('Sensor', '')});
+            sensors.push({id: device, name: Namer.getName(device), type: devices[device].type.replace('com.fibaro.', '').replace('Sensor', '')});
         }
     }
 
@@ -153,7 +156,7 @@ function getSensorValue(id)
             return;
         }
 
-        conn.emit('sensorValue', { id: id, name: result.name, type: devices[id].type.replace('com.fibaro.', '').replace('Sensor', ''), value: result.properties.value });
+        conn.emit('sensorValue', { id: id, name: Namer.getName(device), type: devices[id].type.replace('com.fibaro.', '').replace('Sensor', ''), value: result.properties.value });
     });
 }
 

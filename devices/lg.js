@@ -1,5 +1,6 @@
 
 var lg = require('lg-tv-api');
+var Namer = require('../services/namer.js');
 
 var conn, devices = {};
 
@@ -35,6 +36,8 @@ module.exports = function(c) {
                     name: found[f].friendlyName
                 };
             }
+
+            Namer.add(devices);
         });
     });
 }
@@ -69,7 +72,7 @@ function getMultiMedia()
     var multimedia = [];
 
     for (device in devices) {
-        multimedia.push({id: device, name: devices[device].name});
+        multimedia.push({id: device, name: Namer.getName(device)});
     }
 
     conn.emit('multimedia', multimedia);

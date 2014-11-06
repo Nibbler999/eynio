@@ -1,5 +1,6 @@
 
 var WeMo = require('wemo');
+var Namer = require('../services/namer.js');
 
 var conn, devices = {};
 
@@ -17,10 +18,13 @@ module.exports = function(c) {
         var client = WeMo.Search();
 
         client.on('found', function(device) {
+
             devices[device.serialNumber] = {
                 name: device.friendlyName,
                 dev: new WeMo(device.ip, device.port)
             };
+
+            Namer.add(devices);
         });
 
         client.once('found', function(device) {
@@ -55,7 +59,7 @@ function getSwitches()
     var switches = [];
 
     for (device in devices) {
-        switches.push({id: device, name: devices[device].name});
+        switches.push({id: device, name: Namer.getName(device)});
     }
 
     conn.emit('switches', switches);
