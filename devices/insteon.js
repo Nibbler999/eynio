@@ -77,6 +77,10 @@ function startListening()
 {
     log('Ready for commands');
 
+    conn.on('getBridges', function() {
+        sendBridgeInfo();
+    });
+
     conn.on('getLights', function () {
         getLights();    
     });
@@ -88,6 +92,11 @@ function startListening()
     conn.on('getLightState', function (id) {
         getLightState(id);
     });
+}
+
+function sendBridgeInfo()
+{
+    conn.emit('bridgeInfo', { name: 'Insteon' });
 }
 
 function getLights()

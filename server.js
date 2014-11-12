@@ -65,6 +65,7 @@ function getUUID()
 require('./services/namer.js').listen(conn);
 require('./services/schedule.js')(conn);
 require('./services/proxy.js')(conn);
+require('./services/info.js')(conn);
 
 require('./devices/hue.js')(conn);
 require('./devices/wemo.js')(conn);

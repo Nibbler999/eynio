@@ -40,6 +40,10 @@ function startListening()
 {
     log('Ready for commands');
 
+    conn.on('getBridges', function() {
+        sendBridgeInfo();
+    });
+
     conn.on('switchOn', function (id) {
         switchOn(id);    
     });
@@ -55,6 +59,11 @@ function startListening()
     conn.on('getSwitchState', function (id) {
         getSwitchState(id);
     });
+}
+
+function sendBridgeInfo()
+{
+    conn.emit('bridgeInfo', { name: 'RaZberry' });
 }
 
 function getSwitches()

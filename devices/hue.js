@@ -79,6 +79,10 @@ function startListening()
 {
     log('Ready for commands');
 
+    conn.on('getBridges', function() {
+        sendBridgeInfo();
+    });
+
     conn.on('getLights', function () {
         getLights();    
     });
@@ -94,6 +98,11 @@ function startListening()
     conn.on('setDeviceName', function (id, name) {
         setDeviceName(id, name);
     });
+}
+
+function sendBridgeInfo()
+{
+    conn.emit('bridgeInfo', { name: 'Hue' });
 }
 
 function getLights()

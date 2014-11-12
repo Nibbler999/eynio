@@ -52,6 +52,10 @@ function startListening()
 {
     log('Ready for commands');
 
+    conn.on('getBridges', function() {
+        sendBridgeInfo();
+    });
+
     conn.on('switchOn', function (id) {
         switchOn(id);    
     });
@@ -75,6 +79,11 @@ function startListening()
     conn.on('getSensorValue', function (id) {
         getSensorValue(id);
     });
+}
+
+function sendBridgeInfo()
+{
+    conn.emit('bridgeInfo', { name: 'Fibaro' });
 }
 
 function getSwitches()
