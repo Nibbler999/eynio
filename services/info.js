@@ -48,6 +48,10 @@ function getIP()
                 continue;
             }
 
+            if (interfaces[i][j].family == 'IPv6' && interfaces[i][j].address.substr(0, 4) == '2001') {
+                continue;
+            }
+
             addresses.push(interfaces[i][j].address);
         }
     }
