@@ -3,7 +3,7 @@ var hue = require("node-hue-api"),
     HueApi = hue.HueApi,
     lightState = hue.lightState;
 
-var api, conn;
+var conn, devices = {};
 
 function log(msg)
 {
@@ -17,7 +17,7 @@ module.exports = function(c) {
     conn.once('accepted', function (cfg) {
     
         hue.locateBridges(function(err, result) {
-    
+
             if (err) {
                 log('locateBridges: ' + err);
                 return;
@@ -29,7 +29,7 @@ module.exports = function(c) {
     
             log('Found a bridge');
 
-            api = new HueApi(result[0].ipaddress, cfg.hue_apikey || 'none');
+            var api = new HueApi(result[0].ipaddress, cfg.hue_apikey || 'none');
 
             api.connect(function(err, config) {
 
@@ -62,15 +62,36 @@ module.exports = function(c) {
 
                             startListening();
 
-                            getLights();
+                            loadLights();
                         });
                     }, 5000);
 
                 } else {
                     log('Authentication ok');
                     startListening();
+                    loadLights();
                 }
             });
+
+            function loadLights() {
+
+                api.lights(function(err, reply) {
+            
+                    if (err) {
+                        log('api.lights: ' + err);
+                        return;
+                    }
+            
+                    reply.lights.forEach(function(light) {
+            
+                        devices[result[0].id + ':' + light.id] = {
+                            id: light.id,
+                            name: light.name,
+                            dev: api
+                        };
+                    });
+                });
+            }
         });
     });
 }
@@ -107,17 +128,21 @@ function sendBridgeInfo()
 
 function getLights()
 {
-    api.lights(function(err, lights) {
-        if (err) {
-            log('api.lights: ' + err);
-            return;
-        }
-        conn.emit('lights', lights);
-    });
+    var lights = [];
+
+    for (device in devices) {
+        lights.push({id: device, name: devices[device].name});
+    }
+
+    conn.emit('lights', {lights: lights});
 }
 
 function setLightState(id, values)
 {
+    if (!devices.hasOwnProperty(id)) {
+        return;
+    }
+
     var state = lightState.create();
     
     if (values.hasOwnProperty('rgb')) {
@@ -128,7 +153,7 @@ function setLightState(id, values)
         delete values.rgb;
     }
 
-    api.setLightState(id, values, function(err, result) {
+    devices[id].dev.setLightState(devices[id].id, values, function(err, result) {
 
         if (err) {
             log('api.setLightState:' + err);
@@ -143,7 +168,11 @@ function setLightState(id, values)
 
 function getLightState(id)
 {
-    api.lightStatus(id, function(err, result) {
+    if (!devices.hasOwnProperty(id)) {
+        return;
+    }
+
+    devices[id].dev.lightStatus(devices[id].id, function(err, result) {
         if (err) {
             log('api.lightStatus: ' + err);
             return;
@@ -154,13 +183,18 @@ function getLightState(id)
 
 function setDeviceName(id, name)
 {
-    api.setLightName(id, name, function(err, result) {
+    if (!devices.hasOwnProperty(id)) {
+        return;
+    }
+
+    devices[id].dev.setLightName(devices[id].id, name, function(err, result) {
         if (err) {
             log('api.setDeviceName: ' + err);
             return;
         }
 
         if (result) {
+            devices[id].name = name;
             conn.emit('deviceRenamed', id, name);
         }
     });    
