@@ -23,7 +23,7 @@ module.exports = function(c) {
 
         lx.on('bulbstate', function(b) {
             var id = 'lifx-' + b.addr.toString('hex');
-            conn.emit('lightState', { id: id, state: { on: b.on }});
+            conn.emit('lightState', { id: id, state: { on: b.on, level: b.on ? 100 : 0 }});
         });
 
         lx.on('bulb', function(b) {
@@ -61,6 +61,10 @@ function startListening()
         setLightState(id, values);
     });
 
+    conn.on('setLightLevel', function (id, level) {
+        setLightLevel(id, level);
+    });
+
     conn.on('getLightState', function (id) {
         getLightState(id);
     });
@@ -82,6 +86,7 @@ function getLights()
     conn.emit('lights', {lights: lights});
 }
 
+// deprecated
 function setLightState(id, values)
 {
     if (!devices.hasOwnProperty(id)) {
@@ -91,6 +96,21 @@ function setLightState(id, values)
     var addr = devices[id].addr;
 
     if (values.on) {
+        lx.lightsOn(new Buffer(addr, 'hex'));
+    } else {
+        lx.lightsOff(new Buffer(addr, 'hex'));
+    }
+}
+
+function setLightLevel(id, level)
+{
+    if (!devices.hasOwnProperty(id)) {
+        return;
+    }
+
+    var addr = devices[id].addr;
+
+    if (level > 0) {
         lx.lightsOn(new Buffer(addr, 'hex'));
     } else {
         lx.lightsOff(new Buffer(addr, 'hex'));

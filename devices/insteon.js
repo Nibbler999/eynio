@@ -89,6 +89,10 @@ function startListening()
         setLightState(id, values);
     });
 
+    conn.on('setLightLevel', function (id, level) {
+        setLightLevel(id, level);
+    });
+
     conn.on('getLightState', function (id) {
         getLightState(id);
     });
@@ -110,6 +114,7 @@ function getLights()
     conn.emit('lights', l);
 }
 
+// deprecated
 function setLightState(id, values)
 {
     if (!lights.hasOwnProperty(id)) {
@@ -151,6 +156,33 @@ function setLightState(id, values)
     }
 }
 
+function setLightLevel(id, level)
+{
+    if (!devices.hasOwnProperty(id)) {
+        return;
+    }
+
+    var light = lights[id];
+
+    if (level > 0) {
+        light.turnOn(level, function(err) {
+            if (err) {
+                log('light.turnOn: ' + err);
+                return;
+            }
+            getLightState(id);
+        });
+    } else {
+        light.turnOffFast(function(err) {
+            if (err) {
+                log('light.turnOff: ' + err);
+                return;
+            }
+            getLightState(id);
+        });
+    }
+}
+
 function getLightState(id)
 {
     if (!lights.hasOwnProperty(id)) {
@@ -161,6 +193,6 @@ function getLightState(id)
 
     light.level(function(err, level) {
         var on = level > 0;
-        conn.emit('lightState', { id: id, state: { on: on, bri: level }});
+        conn.emit('lightState', { id: id, state: { on: on, level: level, bri: level }});
     });  
 }

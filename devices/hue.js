@@ -15,7 +15,7 @@ module.exports = function(c) {
     conn = c;
 
     conn.once('accepted', function (cfg) {
-    
+
         hue.locateBridges(function(err, result) {
 
             if (err) {
@@ -112,6 +112,14 @@ function startListening()
         setLightState(id, values);
     });
 
+    conn.on('setLightColor', function (id, color_string, color_format) {
+        setLightColor(id, color_string, color_format);
+    });
+
+    conn.on('setLightLevel', function (id, level) {
+        setLightLevel(id, level);
+    });
+
     conn.on('getLightState', function (id) {
         getLightState(id);
     });
@@ -137,6 +145,7 @@ function getLights()
     conn.emit('lights', {lights: lights});
 }
 
+// Deprecated
 function setLightState(id, values)
 {
     if (!devices.hasOwnProperty(id)) {
@@ -166,6 +175,63 @@ function setLightState(id, values)
     });
 }
 
+function setLightColor(id, color_string, color_format)
+{
+    if (!devices.hasOwnProperty(id)) {
+        return;
+    }
+
+    var state = lightState.create();
+    
+    try {
+        var hsl = require('chroma-js')(color_string, color_format).hsl();
+    } catch (e){
+        log(e);
+        return;
+    }
+
+    state.hsl(hsl[0] * 359, hsl[1] * 100, hsl[2] * 100).on();
+
+    devices[id].dev.setLightState(devices[id].id, state, function(err, result) {
+
+        if (err) {
+            log('api.setLightColor:' + err);
+            return;
+        }
+
+        if (result) {
+            getLightState(id);
+        }
+    });
+}
+
+function setLightLevel(id, level)
+{
+    if (!devices.hasOwnProperty(id)) {
+        return;
+    }
+
+    var state = lightState.create();
+
+    if (level > 0) {
+        state.brightness(level).on();
+    } else {
+        state.off();
+    }
+
+    devices[id].dev.setLightState(devices[id].id, state, function(err, result) {
+
+        if (err) {
+            log('api.setLightLevel:' + err);
+            return;
+        }
+
+        if (result) {
+            getLightState(id);
+        }
+    });
+}
+
 function getLightState(id)
 {
     if (!devices.hasOwnProperty(id)) {
@@ -177,7 +243,23 @@ function getLightState(id)
             log('api.lightStatus: ' + err);
             return;
         }
-        conn.emit('lightState', { id: id, state: result.state });
+
+        var hsl = [result.state.hue / 65535, result.state.sat / 255, result.state.bri / 255];
+        var chroma = require('chroma-js')(hsl, 'hsl');
+
+        var state = {
+            on: result.state.on,
+            level: result.state.bri,
+            bri: result.state.bri, // deprecated
+            hue: result.state.hue, // deprecated
+            sat: result.state.sat, // deprecated
+            hsl: chroma.hsl(),
+            hsv: chroma.hsv(),
+            rgb: chroma.rgb(),
+            hex: chroma.hex()
+        };
+
+        conn.emit('lightState', { id: id, state: state });
     });
 }
 

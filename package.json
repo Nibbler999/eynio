@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "dependencies": {
     "adm-zip": "0.4.4",
+    "chroma-js": "0.6.1",
     "fibaro-api": "0.1.1",
     "home-controller": "0.5.2",
     "lg-tv-api": "0.1.2",
