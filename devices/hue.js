@@ -214,7 +214,7 @@ function setLightLevel(id, level)
     var state = lightState.create();
 
     if (level > 0) {
-        state.brightness((level / 100) * 255).on();
+        state.brightness((level / 100) * 254).on();
     } else {
         state.off();
     }
@@ -244,12 +244,12 @@ function getLightState(id)
             return;
         }
 
-        var hsl = [result.state.hue / 65535, result.state.sat / 255, result.state.bri / 255];
+        var hsl = [result.state.hue / 65534, result.state.sat / 254, result.state.bri / 254];
         var chroma = require('chroma-js')(hsl, 'hsl');
 
         var state = {
             on: result.state.on,
-            level: parseInt((result.state.bri / 255) * 100),
+            level: parseInt((result.state.bri / 254) * 100),
             bri: result.state.bri, // deprecated
             hue: result.state.hue, // deprecated
             sat: result.state.sat, // deprecated
