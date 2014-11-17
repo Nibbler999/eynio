@@ -214,7 +214,7 @@ function setLightLevel(id, level)
     var state = lightState.create();
 
     if (level > 0) {
-        state.brightness(level).on();
+        state.brightness((level / 100) * 255).on();
     } else {
         state.off();
     }
@@ -249,7 +249,7 @@ function getLightState(id)
 
         var state = {
             on: result.state.on,
-            level: result.state.bri,
+            level: parseInt((result.state.bri / 255) * 100),
             bri: result.state.bri, // deprecated
             hue: result.state.hue, // deprecated
             sat: result.state.sat, // deprecated
