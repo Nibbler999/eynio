@@ -23,7 +23,8 @@ module.exports = function(c) {
 
         lx.on('bulbstate', function(b) {
             var id = 'lifx-' + b.addr.toString('hex');
-            conn.emit('lightState', { id: id, state: { on: b.on, level: b.on ? 100 : 0 }});
+            var level = parseInt(b.level / 65535 * 100);
+            conn.emit('lightState', { id: id, state: { on: b.on, level: level }});
         });
 
         lx.on('bulb', function(b) {
@@ -111,7 +112,10 @@ function setLightLevel(id, level)
     var addr = devices[id].addr;
 
     if (level > 0) {
-        lx.lightsOn(new Buffer(addr, 'hex'));
+        var brightness = parseInt((level / 100) * 65535);
+        var temp = 0x0af0;
+        lx.lightsColour(0, 0, brightness, temp, 0, new Buffer(addr, 'hex'));
+        conn.emit('lightState', { id: id, state: { on: true, level: level }});
     } else {
         lx.lightsOff(new Buffer(addr, 'hex'));
     }
