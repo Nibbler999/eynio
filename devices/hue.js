@@ -214,7 +214,7 @@ function setLightLevel(id, level)
     var state = lightState.create();
 
     if (level > 0) {
-        state.brightness((level / 100) * 254).on();
+        state.brightness(level).on();
     } else {
         state.off();
     }
