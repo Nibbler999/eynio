@@ -41,8 +41,8 @@ module.exports = function(c) {
 
         lx.on('gateway', function(g) {
             log('Gateway found');
-            g.site = g.site.toString('hex');
-            bridges[g.site] = g;
+            g.id = g.site.toString('hex');
+            bridges[g.id] = g;
             startListening();
         });
     });
@@ -62,6 +62,10 @@ function startListening()
     
     conn.on('setLightState', function (id, values) {
         setLightState(id, values);
+    });
+
+    conn.on('setLightColor', function (id, color_string, color_format) {
+        setLightColor(id, color_string, color_format);
     });
 
     conn.on('setLightLevel', function (id, level) {
@@ -117,11 +121,35 @@ function setLightLevel(id, level)
 
     if (level > 0) {
         var brightness = parseInt((level / 100) * 65535);
-        var temp = 0x0af0;
+        var temp = 0xffff;
         lx.lightsColour(0, 0, brightness, temp, 0, new Buffer(addr, 'hex'));
         conn.emit('lightState', { id: id, state: { on: true, level: level }});
     } else {
         lx.lightsOff(new Buffer(addr, 'hex'));
+    }
+}
+
+function setLightColor(id, color_string, color_format)
+{
+    if (!devices.hasOwnProperty(id)) {
+        return;
+    }
+
+    var addr = devices[id].addr;
+
+    try {
+        var hsl = require('chroma-js')(color_string, color_format).hsl();
+    } catch (e){
+        log(e);
+        return;
+    }
+
+    var temp = 0xffff;
+
+    try {
+        lx.lightsColour(parseInt(hsl[0] / 360 * 65535), parseInt(hsl[1] * 65535), parseInt(hsl[2] * 65535), temp, 0, new Buffer(addr, 'hex'));
+    } catch (e) {
+        log(e);
     }
 }
 
