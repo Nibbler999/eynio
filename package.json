@@ -16,7 +16,6 @@
     "simple-itach": "0.2.1",
     "socket.io-client": "0.9.17",
     "tcp-ping": "0.1.1",
-    "upnp-controlpoint": "0.0.2",
     "wemo": "0.1.1",
     "xml2js": "0.2.8"
   },

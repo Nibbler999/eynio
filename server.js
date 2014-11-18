@@ -66,7 +66,6 @@ require('./services/info.js')(conn);
 
 require('./devices/hue.js')(conn);
 require('./devices/wemo.js')(conn);
-//require('./devices/upnp.js')(conn);
 require('./devices/lg.js')(conn);
 require('./devices/insteon.js')(conn);
 require('./devices/itach.js')(conn);
