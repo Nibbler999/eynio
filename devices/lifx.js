@@ -22,9 +22,22 @@ module.exports = function(c) {
         lx = lifx.init();
 
         lx.on('bulbstate', function(b) {
+
             var id = 'lifx-' + b.addr.toString('hex');
-            var level = parseInt(b.level / 65535 * 100);
-            conn.emit('lightState', { id: id, state: { on: b.on, level: level }});
+
+            var hsl = [(b.hue / 65535) * 360, b.saturation / 65535, b.brightness / 65535];
+            var chroma = require('chroma-js')(hsl, 'hsl');
+    
+            var state = {
+                on: b.on,
+                level: parseInt((b.brightness / 65535) * 100),
+                hsl: chroma.hsl(),
+                hsv: chroma.hsv(),
+                rgb: chroma.rgb(),
+                hex: chroma.hex()
+            };
+    
+            conn.emit('lightState', { id: id, state: state });
         });
 
         lx.on('bulb', function(b) {
