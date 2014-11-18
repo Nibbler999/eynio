@@ -1,12 +1,10 @@
 var Insteon = require('home-controller').Insteon;
 
-var insteon = new Insteon();
-
 var Namer = require('../services/namer.js');
 
 var api, conn;
 
-var lights = {};
+var lights = {}, bridges = {};
 
 function log(msg)
 {
@@ -40,6 +38,10 @@ module.exports = function(c) {
                 var host = matches[1];
 
                 log('Hub found');
+
+                var insteon = new Insteon();
+
+                bridges['insteon:' + host] = insteon;
 
                 insteon.on('error', function(err) {
                     log(err);
@@ -100,7 +102,9 @@ function startListening()
 
 function sendBridgeInfo()
 {
-    conn.emit('bridgeInfo', { name: 'Insteon' });
+    for (var bridge in bridges) {
+        conn.emit('bridgeInfo', { name: 'Insteon', id: bridge });
+    }
 }
 
 function getLights()

@@ -3,7 +3,7 @@ var hue = require("node-hue-api"),
     HueApi = hue.HueApi,
     lightState = hue.lightState;
 
-var conn, devices = {};
+var conn, devices = {}, bridges = {};
 
 function log(msg)
 {
@@ -30,6 +30,8 @@ module.exports = function(c) {
             log('Found a bridge');
 
             var api = new HueApi(result[0].ipaddress, cfg.hue_apikey || 'none');
+
+            bridges[result[0].id] = api;
 
             api.connect(function(err, config) {
 
@@ -131,7 +133,18 @@ function startListening()
 
 function sendBridgeInfo()
 {
-    conn.emit('bridgeInfo', { name: 'Hue' });
+    for (var bridge in bridges) {
+
+        bridges[bridge].config(function(err, config) {
+
+            if (err) {
+                log(err);
+                return;
+            }
+
+            conn.emit('bridgeInfo', { name: config.name, id: bridge });
+        });
+    }
 }
 
 function getLights()

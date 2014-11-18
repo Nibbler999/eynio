@@ -2,7 +2,7 @@
 var Fibaro = require('fibaro-api');
 var Namer = require('../services/namer.js');
 
-var conn, devices = {};
+var conn, devices = {}, bridges = {};
 
 function log(msg)
 {
@@ -18,6 +18,8 @@ module.exports = function(c) {
         Fibaro.discover(function(info) {
 
             var fibaro = new Fibaro(info.ip, 'admin', 'admin');
+
+            bridges[info.serial] = info;
 
             fibaro.api.devices.list(function (err, devicelist) {
     
@@ -83,7 +85,9 @@ function startListening()
 
 function sendBridgeInfo()
 {
-    conn.emit('bridgeInfo', { name: 'Fibaro' });
+    for (var bridge in bridges) {
+        conn.emit('bridgeInfo', { name: 'Fibaro', id: bridge });
+    }
 }
 
 function getSwitches()

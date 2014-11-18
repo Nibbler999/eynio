@@ -6,7 +6,7 @@ var Namer = require('../services/namer.js');
 
 var conn;
 
-var devices = {};
+var devices = {}, bridges = {};
 
 function log(msg)
 {
@@ -41,6 +41,8 @@ module.exports = function(c) {
 
         lx.on('gateway', function(g) {
             log('Gateway found');
+            g.site = g.site.toString('hex');
+            bridges[g.site] = g;
             startListening();
         });
     });
@@ -73,7 +75,9 @@ function startListening()
 
 function sendBridgeInfo()
 {
-    conn.emit('bridgeInfo', { name: 'LIFX' });
+    for (var bridge in bridges) {
+        conn.emit('bridgeInfo', { name: 'LIFX', id: bridge });
+    }
 }
 
 function getLights()

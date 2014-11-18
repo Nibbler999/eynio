@@ -3,7 +3,7 @@ var http = require('http');
 
 var Namer = require('../services/namer.js');
 
-var conn, devices = {}, ip;
+var conn, devices = {}, ip, bridges = {};
 
 function log(msg)
 {
@@ -30,6 +30,8 @@ module.exports = function(c) {
     
                 ip = matches[1];
     
+                bridges['raz:' + ip] = ip;
+
                 update(startListening);
             }
         });
@@ -63,7 +65,9 @@ function startListening()
 
 function sendBridgeInfo()
 {
-    conn.emit('bridgeInfo', { name: 'RaZberry' });
+    for (var bridge in bridges) {
+        conn.emit('bridgeInfo', { name: 'RaZberry', id: bridge });
+    }
 }
 
 function getSwitches()

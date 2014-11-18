@@ -46,6 +46,10 @@ function startListening()
 {
     log('Ready for commands');
 
+    conn.on('getBridges', function() {
+        sendBridgeInfo();
+    });
+
     conn.on('getRemotes', function () {
         getRemotes();    
     });
@@ -77,6 +81,13 @@ function startListening()
     conn.on('getCustomRemotes', function () {
         getCustomRemotes();
     });
+}
+
+function sendBridgeInfo()
+{
+    for (var device in devices) {
+        conn.emit('bridgeInfo', { name: devices[device].name, id: device });
+    }
 }
 
 function getRemotes()
