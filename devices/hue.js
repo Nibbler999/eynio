@@ -203,7 +203,7 @@ function setLightColor(id, color_string, color_format)
         return;
     }
 
-    state.hsl(hsl[0] * 359, hsl[1] * 100, hsl[2] * 100).on();
+    state.hsl(hsl[0] / 360 * 65534, hsl[1] * 100, hsl[2] * 100).on();
 
     devices[id].dev.setLightState(devices[id].id, state, function(err, result) {
 
