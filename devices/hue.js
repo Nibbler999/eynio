@@ -155,7 +155,7 @@ function getLights()
         lights.push({id: device, name: devices[device].name});
     }
 
-    conn.emit('lights', {lights: lights});
+    conn.emit('lights', lights);
 }
 
 // Deprecated

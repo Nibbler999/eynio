@@ -105,7 +105,7 @@ function getLights()
         lights.push({id: device, name: Namer.getName(device)});
     }
 
-    conn.emit('lights', {lights: lights});
+    conn.emit('lights', lights);
 }
 
 // deprecated

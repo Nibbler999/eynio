@@ -109,10 +109,10 @@ function sendBridgeInfo()
 
 function getLights()
 {
-    var l = {lights: []};
+    var l = [];
 
     for (device in lights) {
-        l.lights.push({id: device, name: Namer.getName(device)});
+        l.push({id: device, name: Namer.getName(device)});
     }
 
     conn.emit('lights', l);
