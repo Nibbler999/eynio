@@ -67,7 +67,7 @@ function getMultiMedia()
 {
     var multimedia = [];
 
-    for (device in devices) {
+    for (var device in devices) {
         multimedia.push({id: device, name: Namer.getName(device)});
     }
 

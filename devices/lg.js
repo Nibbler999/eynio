@@ -17,7 +17,7 @@ module.exports = function(c) {
 
         lg.discovery(function(found) {
 
-            for (f in found) {
+            for (var f in found) {
 
             	lg.startPairing(found[f].uuid, '965887', function(err, response) {
                     if (err) {
@@ -71,7 +71,7 @@ function getMultiMedia()
 {
     var multimedia = [];
 
-    for (device in devices) {
+    for (var device in devices) {
         multimedia.push({id: device, name: Namer.getName(device)});
     }
 

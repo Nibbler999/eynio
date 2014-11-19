@@ -37,7 +37,7 @@ function getIP()
 
     var addresses = [];
 
-    for (i in interfaces) {
+    for (var i in interfaces) {
 
         for (var j = 0; j < interfaces[i].length; j++) {
 

@@ -94,7 +94,7 @@ function getSwitches()
 {
     var switches = [];
 
-    for (device in devices) {
+    for (var device in devices) {
         if (devices[device].type == 'binary_light') {
             switches.push({id: device, name: Namer.getName(device)});
         }
@@ -107,7 +107,7 @@ function getSensors()
 {
     var sensors = [];
 
-    for (device in devices) {
+    for (var device in devices) {
         if (devices[device].type.match('Sensor')) {
             sensors.push({id: device, name: Namer.getName(device), type: devices[device].type.replace('com.fibaro.', '').replace('Sensor', '')});
         }

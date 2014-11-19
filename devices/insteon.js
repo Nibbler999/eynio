@@ -111,7 +111,7 @@ function getLights()
 {
     var l = [];
 
-    for (device in lights) {
+    for (var device in lights) {
         l.push({id: device, name: Namer.getName(device)});
     }
 

@@ -76,7 +76,7 @@ function getSwitches()
 
         var switches = [];
     
-        for (device in devices) {
+        for (var device in devices) {
             if (devices[device].commandClasses.hasOwnProperty('37') !== -1) {
                 switches.push({id: device, name: Namer.getName(device)});
             }

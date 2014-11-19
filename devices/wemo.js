@@ -58,7 +58,7 @@ function getSwitches()
 {
     var switches = [];
 
-    for (device in devices) {
+    for (var device in devices) {
         switches.push({id: device, name: Namer.getName(device)});
     }
 

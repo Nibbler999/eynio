@@ -151,7 +151,7 @@ function getLights()
 {
     var lights = [];
 
-    for (device in devices) {
+    for (var device in devices) {
         lights.push({id: device, name: devices[device].name});
     }
 

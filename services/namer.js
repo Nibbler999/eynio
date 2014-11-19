@@ -36,7 +36,7 @@ Namer.save = function() {
 
 Namer.add = function(devices) {
 
-    for (id in devices) {
+    for (var id in devices) {
         realnames[id] = devices[id].name;
     };
 }

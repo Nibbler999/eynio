@@ -94,7 +94,7 @@ function getRemotes()
 {
     var remotes = [];
 
-    for (device in devices) {
+    for (var device in devices) {
         remotes.push({id: device, name: devices[device].name});
     }
 
@@ -194,9 +194,9 @@ function deleteCustomRemote(id)
 
 function getCustomRemotes()
 {
-    var customremotes = [], r;
+    var customremotes = [];
 
-    for (r in remotes) {
+    for (var r in remotes) {
 
         var r2 = JSON.parse(JSON.stringify(remotes[r]));
 
