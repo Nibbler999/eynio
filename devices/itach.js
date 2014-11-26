@@ -200,7 +200,7 @@ function getCustomRemotes()
 
         var r2 = JSON.parse(JSON.stringify(remotes[r]));
 
-        r2.keys = Object.keys(r2);
+        r2.keys = Object.keys(r2.keys);
 
         customremotes.push(r2);
     }
