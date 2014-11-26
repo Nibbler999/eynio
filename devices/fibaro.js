@@ -169,7 +169,7 @@ function getSensorValue(id)
             return;
         }
 
-        conn.emit('sensorValue', { id: id, name: Namer.getName(device), type: devices[id].type.replace('com.fibaro.', '').replace('Sensor', ''), value: result.properties.value });
+        conn.emit('sensorValue', { id: id, name: Namer.getName(id), type: devices[id].type.replace('com.fibaro.', '').replace('Sensor', ''), value: result.properties.value });
     });
 }
 
