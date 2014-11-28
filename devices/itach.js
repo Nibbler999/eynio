@@ -176,6 +176,8 @@ function updateCustomRemote(r)
         return;
     }
 
+    r.keys = remotes[r.id].keys;
+
     remotes[r.id] = r;
 
     saveRemotes();
@@ -200,7 +202,11 @@ function getCustomRemotes()
 
         var r2 = JSON.parse(JSON.stringify(remotes[r]));
 
-        r2.keys = Object.keys(r2.keys);
+        if (r2.hasOwnProperty('keys')) {
+            r2.keys = Object.keys(r2.keys);
+        } else {
+            r2.keys = [];
+        }
 
         customremotes.push(r2);
     }
