@@ -42,8 +42,8 @@ function startListening()
 {
     log('Ready for commands');
 
-    conn.on('getBridges', function() {
-        sendBridgeInfo();
+    conn.on('getBridges', function(cb) {
+        sendBridgeInfo(cb);
     });
 
     conn.on('switchOn', function (id) {
@@ -54,23 +54,29 @@ function startListening()
         switchOff(id);
     });
 
-    conn.on('getSwitches', function () {
-        getSwitches();
+    conn.on('getSwitches', function (cb) {
+        getSwitches(cb);
     });
 
-    conn.on('getSwitchState', function (id) {
-        getSwitchState(id);
+    conn.on('getSwitchState', function (id, cb) {
+        getSwitchState(id, cb);
     });
 }
 
-function sendBridgeInfo()
+function sendBridgeInfo(cb)
 {
+    var bridgeInfo = [];
+
     for (var bridge in bridges) {
-        conn.emit('bridgeInfo', { name: 'RaZberry', id: bridge });
+        bridgeInfo.push({ name: 'RaZberry', id: bridge });
     }
+
+    conn.emit('bridgeInfo', bridgeInfo);
+
+    if (cb) cb(bridgeInfo);
 }
 
-function getSwitches()
+function getSwitches(cb)
 {
     update(function() {
 
@@ -83,8 +89,9 @@ function getSwitches()
         }
     
         conn.emit('switches', switches);
-    });
 
+        if (cb) cb(switches);
+    });
 }
 
 function switchOn(id)
@@ -117,15 +124,17 @@ function switchOff(id)
     });
 }
 
-function getSwitchState(id)
+function getSwitchState(id, cb)
 {
     if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
         return;
     }
 
     update(function() {
-        var on = devices[id].commandClasses['37'].data.level.value;
-        conn.emit('switchState', { id: id, state: { on: on}});
+        var switchState = { on: devices[id].commandClasses['37'].data.level.value};
+        conn.emit('switchState', { id: id, state: switchState});
+        if (cb) cb(switchState);
     });
 }
 

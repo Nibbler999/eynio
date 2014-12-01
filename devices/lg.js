@@ -62,12 +62,12 @@ function startListening()
         setChannelDown(id);    
     });
 
-    conn.on('getMultiMedia', function () {
-        getMultiMedia();
+    conn.on('getMultiMedia', function (cb) {
+        getMultiMedia(cb);
     });
 }
 
-function getMultiMedia()
+function getMultiMedia(cb)
 {
     var multimedia = [];
 
@@ -76,6 +76,8 @@ function getMultiMedia()
     }
 
     conn.emit('multimedia', multimedia);
+
+    if (cb) cb(multimedia);
 }
 
 function setVolumeUp(id)

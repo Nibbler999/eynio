@@ -29,6 +29,35 @@ conn.on('connect_failed', function() {
     console.log('Failed to connect to NHome');
 });
 
+// Web API
+conn.on('message', function (name, args, cb) {
+
+    var data = [], i = 0;
+
+    var numListeners = conn.listeners(name).length;
+
+    if (numListeners === 0) {
+        cb(null);
+        return;
+    }
+
+    var mycb = function(result) {
+
+        if (numListeners === 1) {
+            cb(result);
+        } else {
+            data = data.concat(result);
+            if (++i === numListeners) {
+                cb(data);
+            }
+        }
+    };
+
+    args.push(mycb);
+
+    conn.emitLocal.apply(conn, [name].concat(args));
+});
+
 conn.emitLocal = function (name) {
 
     var args = Array.prototype.slice.call(arguments, 1);

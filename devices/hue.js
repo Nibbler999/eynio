@@ -31,7 +31,15 @@ module.exports = function(c) {
 
             var api = new HueApi(result[0].ipaddress, cfg.hue_apikey || 'none');
 
-            bridges[result[0].id] = api;
+            api.config(function(err, config) {
+
+                if (err) {
+                    log(err);
+                    return;
+                }
+    
+                bridges[result[0].id] = { name: config.name };
+            });
 
             api.connect(function(err, config) {
 
@@ -102,12 +110,12 @@ function startListening()
 {
     log('Ready for commands');
 
-    conn.on('getBridges', function() {
-        sendBridgeInfo();
+    conn.on('getBridges', function(cb) {
+        sendBridgeInfo(cb);
     });
 
-    conn.on('getLights', function () {
-        getLights();    
+    conn.on('getLights', function (cb) {
+        getLights(cb);    
     });
     
     conn.on('setLightState', function (id, values) {
@@ -122,8 +130,8 @@ function startListening()
         setLightLevel(id, level);
     });
 
-    conn.on('getLightState', function (id) {
-        getLightState(id);
+    conn.on('getLightState', function (id, cb) {
+        getLightState(id, cb);
     });
 
     conn.on('setDeviceName', function (id, name) {
@@ -131,23 +139,20 @@ function startListening()
     });
 }
 
-function sendBridgeInfo()
+function sendBridgeInfo(cb)
 {
+    var bridgeInfo = [];
+
     for (var bridge in bridges) {
-
-        bridges[bridge].config(function(err, config) {
-
-            if (err) {
-                log(err);
-                return;
-            }
-
-            conn.emit('bridgeInfo', { name: config.name, id: bridge });
-        });
+        bridgeInfo.push({ name: bridges[bridge].name, id: bridge });
     }
+
+    conn.emit('bridgeInfo', bridgeInfo);
+
+    if (cb) cb(bridgeInfo);
 }
 
-function getLights()
+function getLights(cb)
 {
     var lights = [];
 
@@ -156,6 +161,8 @@ function getLights()
     }
 
     conn.emit('lights', lights);
+
+    if (cb) cb(lights);
 }
 
 // Deprecated
@@ -245,15 +252,18 @@ function setLightLevel(id, level)
     });
 }
 
-function getLightState(id)
+function getLightState(id, cb)
 {
     if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
         return;
     }
 
     devices[id].dev.lightStatus(devices[id].id, function(err, result) {
+
         if (err) {
             log('api.lightStatus: ' + err);
+            if (cb) cb(null);
             return;
         }
 
@@ -273,6 +283,8 @@ function getLightState(id)
         };
 
         conn.emit('lightState', { id: id, state: state });
+
+        if (cb) cb(state);
     });
 }
 

@@ -65,12 +65,12 @@ function startListening()
 {
     log('Ready for commands');
 
-    conn.on('getBridges', function() {
-        sendBridgeInfo();
+    conn.on('getBridges', function(cb) {
+        sendBridgeInfo(cb);
     });
 
-    conn.on('getLights', function () {
-        getLights();    
+    conn.on('getLights', function (cb) {
+        getLights(cb);    
     });
     
     conn.on('setLightState', function (id, values) {
@@ -85,19 +85,25 @@ function startListening()
         setLightLevel(id, level);
     });
 
-    conn.on('getLightState', function (id) {
-        getLightState(id);
+    conn.on('getLightState', function (id, cb) {
+        getLightState(id, cb);
     });
 }
 
-function sendBridgeInfo()
+function sendBridgeInfo(cb)
 {
+    var bridgeInfo = [];
+
     for (var bridge in bridges) {
-        conn.emit('bridgeInfo', { name: 'LIFX', id: bridge });
+        bridgeInfo.push({ name: 'LIFX', id: bridge });
     }
+
+    conn.emit('bridgeInfo', bridgeInfo);
+
+    if (cb) cb(bridgeInfo);
 }
 
-function getLights()
+function getLights(cb)
 {
     var lights = [];
 
@@ -106,6 +112,8 @@ function getLights()
     }
 
     conn.emit('lights', lights);
+
+    if (cb) cb(lights);
 }
 
 // deprecated
@@ -166,13 +174,16 @@ function setLightColor(id, color_string, color_format)
     }
 }
 
-function getLightState(id)
+function getLightState(id, cb)
 {
     if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
         return;
     }
 
     var addr = devices[id].addr;
 
     lx.requestStatus(new Buffer(addr, 'hex'));
+
+    if (cb) cb([]);
 }

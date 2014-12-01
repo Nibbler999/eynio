@@ -45,16 +45,16 @@ function startListening()
         switchOff(id);
     });
 
-    conn.on('getSwitches', function () {
-        getSwitches();
+    conn.on('getSwitches', function (cb) {
+        getSwitches(cb);
     });
 
-    conn.on('getSwitchState', function (id) {
-        getSwitchState(id);
+    conn.on('getSwitchState', function (id, cb) {
+        getSwitchState(id, cb);
     });
 }
 
-function getSwitches()
+function getSwitches(cb)
 {
     var switches = [];
 
@@ -63,6 +63,8 @@ function getSwitches()
     }
 
     conn.emit('switches', switches);
+
+    if (cb) cb(switches);
 }
 
 function switchOn(id)
@@ -99,9 +101,10 @@ function switchOff(id)
     });
 }
 
-function getSwitchState(id)
+function getSwitchState(id, cb)
 {
     if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
         return;
     }
 
@@ -109,9 +112,14 @@ function getSwitchState(id)
 
         if (err) {
             log('getSwitchState:' + err);
+            if (cb) cb(null);
             return;
         }
 
-        conn.emit('switchState', { id: id, state: { on: result === '1'}});
+        var switchState = { on: result === '1'};
+
+        conn.emit('switchState', { id: id, state: switchState});
+
+        if (cb) cb(switchState);
     });
 }

@@ -54,8 +54,8 @@ function startListening()
 {
     log('Ready for commands');
 
-    conn.on('getBridges', function() {
-        sendBridgeInfo();
+    conn.on('getBridges', function(cb) {
+        sendBridgeInfo(cb);
     });
 
     conn.on('switchOn', function (id) {
@@ -66,31 +66,37 @@ function startListening()
         switchOff(id);
     });
 
-    conn.on('getSwitches', function () {
-        getSwitches();
+    conn.on('getSwitches', function (cb) {
+        getSwitches(cb);
     });
 
-    conn.on('getSwitchState', function (id) {
+    conn.on('getSwitchState', function (id, cb) {
         getSwitchState(id);
     });
 
-    conn.on('getSensors', function () {
-        getSensors();
+    conn.on('getSensors', function (cb) {
+        getSensors(cb);
     });
 
-    conn.on('getSensorValue', function (id) {
-        getSensorValue(id);
+    conn.on('getSensorValue', function (id, cb) {
+        getSensorValue(id, cb);
     });
 }
 
-function sendBridgeInfo()
+function sendBridgeInfo(cb)
 {
+    var bridgeInfo = [];
+
     for (var bridge in bridges) {
-        conn.emit('bridgeInfo', { name: 'Fibaro', id: bridge });
+        bridgeInfo.push({ name: 'Fibaro', id: bridge });
     }
+
+    conn.emit('bridgeInfo', bridgeInfo);
+
+    if (cb) cb(bridgeInfo);
 }
 
-function getSwitches()
+function getSwitches(cb)
 {
     var switches = [];
 
@@ -101,9 +107,11 @@ function getSwitches()
     }
 
     conn.emit('switches', switches);
+
+    if (cb) cb(switches);
 }
 
-function getSensors()
+function getSensors(cb)
 {
     var sensors = [];
 
@@ -114,6 +122,8 @@ function getSensors()
     }
 
     conn.emit('sensors', sensors);
+
+    if (cb) cb(sensors);
 }
 
 function switchOn(id)
@@ -154,9 +164,10 @@ function switchOff(id)
     });
 }
 
-function getSensorValue(id)
+function getSensorValue(id, cb)
 {
     if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
         return;
     }
 
@@ -166,16 +177,27 @@ function getSensorValue(id)
 
         if (err) {
             log('getSensorValue:' + err);
+            if (cb) cb(null);
             return;
         }
 
-        conn.emit('sensorValue', { id: id, name: Namer.getName(id), type: devices[id].type.replace('com.fibaro.', '').replace('Sensor', ''), value: result.properties.value });
+        var sensorValue = {
+            id: id,
+            name: Namer.getName(id),
+            type: devices[id].type.replace('com.fibaro.', '').replace('Sensor', ''),
+            value: result.properties.value
+        };
+
+        conn.emit('sensorValue', sensorValue);
+    
+        if (cb) cb(sensorValue);
     });
 }
 
-function getSwitchState(id)
+function getSwitchState(id, cb)
 {
     if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
         return;
     }
 
@@ -185,9 +207,14 @@ function getSwitchState(id)
 
         if (err) {
             log('getSwitchState:' + err);
+            if (cb) cb(null);
             return;
         }
 
-        conn.emit('switchState', { id: id, state: { on: result.properties.value === '1' }});
+        var switchState = { on: result.properties.value === '1' };
+
+        conn.emit('switchState', { id: id, state: switchState});
+
+        if (cb) cb(switchState);
     });
 }

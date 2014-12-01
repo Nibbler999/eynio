@@ -41,8 +41,9 @@ module.exports = function(c) {
         }
     });
 
-    conn.on('getSchedule', function () {
+    conn.on('getSchedule', function (cb) {
         conn.emit('schedule', schedule);
+        if (cb) cb(schedule);
     });
 }
 

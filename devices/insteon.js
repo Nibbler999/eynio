@@ -79,11 +79,11 @@ function startListening()
 {
     log('Ready for commands');
 
-    conn.on('getBridges', function() {
-        sendBridgeInfo();
+    conn.on('getBridges', function(cb) {
+        sendBridgeInfo(cb);
     });
 
-    conn.on('getLights', function () {
+    conn.on('getLights', function (cb) {
         getLights();    
     });
     
@@ -95,19 +95,25 @@ function startListening()
         setLightLevel(id, level);
     });
 
-    conn.on('getLightState', function (id) {
-        getLightState(id);
+    conn.on('getLightState', function (id, cb) {
+        getLightState(id, cb);
     });
 }
 
-function sendBridgeInfo()
+function sendBridgeInfo(cb)
 {
+    var bridgeInfo = [];
+
     for (var bridge in bridges) {
-        conn.emit('bridgeInfo', { name: 'Insteon', id: bridge });
+        bridgeInfo.push({ name: 'Insteon', id: bridge });
     }
+
+    conn.emit('bridgeInfo', bridgeInfo);
+
+    if (cb) cb(bridgeInfo);
 }
 
-function getLights()
+function getLights(cb)
 {
     var l = [];
 
@@ -116,6 +122,8 @@ function getLights()
     }
 
     conn.emit('lights', l);
+
+    if (cb) cb(l);
 }
 
 // deprecated
@@ -187,9 +195,10 @@ function setLightLevel(id, level)
     }
 }
 
-function getLightState(id)
+function getLightState(id, cb)
 {
     if (!lights.hasOwnProperty(id)) {
+        if (cb) cb([]);
         return;
     }
 
@@ -197,6 +206,8 @@ function getLightState(id)
 
     light.level(function(err, level) {
         var on = level > 0;
-        conn.emit('lightState', { id: id, state: { on: on, level: level, bri: level }});
+        var lightState = { on: on, level: level, bri: level };
+        conn.emit('lightState', { id: id, state: lightState});
+        if (cb) cb(lightState);
     });  
 }

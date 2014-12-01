@@ -10,12 +10,12 @@ module.exports = function(c) {
 
     conn = c;
 
-    conn.on('getServerStatus', function () {
-        getServerStatus();
+    conn.on('getServerStatus', function (cb) {
+       getServerStatus(cb);
     });
 }
 
-function getServerStatus(status)
+function getServerStatus(cb)
 {
     var status = {
         ip: getIP(),
@@ -23,6 +23,8 @@ function getServerStatus(status)
     };
 
     conn.emit('serverStatus', status);
+
+    if (cb) cb(status);
 }
 
 function getVersion()

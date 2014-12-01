@@ -46,12 +46,12 @@ function startListening()
 {
     log('Ready for commands');
 
-    conn.on('getBridges', function() {
-        sendBridgeInfo();
+    conn.on('getBridges', function(cb) {
+        sendBridgeInfo(cb);
     });
 
-    conn.on('getRemotes', function () {
-        getRemotes();    
+    conn.on('getRemotes', function (cb) {
+        getRemotes(cb);    
     });
     
     conn.on('sendRemoteCommand', function (id, cmd) {
@@ -78,19 +78,25 @@ function startListening()
         updateCustomRemote(remote);
     });
 
-    conn.on('getCustomRemotes', function () {
-        getCustomRemotes();
+    conn.on('getCustomRemotes', function (cb) {
+        getCustomRemotes(cb);
     });
 }
 
-function sendBridgeInfo()
+function sendBridgeInfo(cb)
 {
+    var bridgeInfo = [];
+
     for (var device in devices) {
-        conn.emit('bridgeInfo', { name: devices[device].name, id: device });
+        bridgeInfo.push({ name: devices[device].name, id: device });
     }
+
+    conn.emit('bridgeInfo', bridgeInfo);
+
+    if (cb) cb(bridgeInfo);
 }
 
-function getRemotes()
+function getRemotes(cb)
 {
     var remotes = [];
 
@@ -99,6 +105,8 @@ function getRemotes()
     }
 
     conn.emit('remotes', remotes);
+
+    if (cb) cb(remotes);
 }
 
 function sendRawCommand(id, cmd)
@@ -194,7 +202,7 @@ function deleteCustomRemote(id)
     conn.emit('customRemoteDeleted', id);
 }
 
-function getCustomRemotes()
+function getCustomRemotes(cb)
 {
     var customremotes = [];
 
@@ -212,4 +220,6 @@ function getCustomRemotes()
     }
 
     conn.emit('customRemotes', customremotes);
+
+    if (cb) cb(customremotes);
 }
