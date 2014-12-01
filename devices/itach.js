@@ -1,5 +1,7 @@
 var Itach = require('simple-itach');
 
+var Namer = require('../services/namer.js');
+
 var conn;
 
 var devices = {};
@@ -33,6 +35,8 @@ module.exports = function(c) {
                     name: device.Model,
                     dev: new Itach(device.host)
                 };
+
+                Namer.add(devices);
             }
         });
 
@@ -88,7 +92,7 @@ function sendBridgeInfo(cb)
     var bridgeInfo = [];
 
     for (var device in devices) {
-        bridgeInfo.push({ name: devices[device].name, id: device });
+        bridgeInfo.push({ name: Namer.getName(device), id: device });
     }
 
     conn.emit('bridgeInfo', bridgeInfo);

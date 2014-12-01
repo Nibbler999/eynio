@@ -28,6 +28,16 @@ Namer.listen = function(c) {
         delete customnames[id];
         Namer.deviceRenamed(id);
     });
+
+    conn.on('setBridgeName', function (id, name) {
+        customnames[id] = name;
+        Namer.bridgeRenamed(id);
+    });
+
+    conn.on('resetBridgeName', function (id) {
+        delete customnames[id];
+        Namer.bridgeRenamed(id);
+    });
 }
 
 Namer.save = function() {
@@ -48,6 +58,11 @@ Namer.getName = function(id) {
 Namer.deviceRenamed = function(id) {
     Namer.save();
     conn.emit('deviceRenamed', id, Namer.getName(id));
+}
+
+Namer.bridgeRenamed = function(id) {
+    Namer.save();
+    conn.emit('bridgeRenamed', id, Namer.getName(id));
 }
 
 module.exports = Namer;
