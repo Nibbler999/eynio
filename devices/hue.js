@@ -31,6 +31,8 @@ module.exports = function(c) {
 
             var api = new HueApi(result[0].ipaddress, cfg.hue_apikey || 'none');
 
+            bridges[result[0].id] = { api: api };
+
             api.config(function(err, config) {
 
                 if (err) {
@@ -38,7 +40,7 @@ module.exports = function(c) {
                     return;
                 }
     
-                bridges[result[0].id] = { name: config.name };
+                bridges[result[0].id].name = config.name;
             });
 
             api.connect(function(err, config) {
@@ -72,36 +74,36 @@ module.exports = function(c) {
 
                             startListening();
 
-                            loadLights();
+                            loadLights(result[0].id);
                         });
                     }, 5000);
 
                 } else {
                     log('Authentication ok');
                     startListening();
-                    loadLights();
+                    loadLights(result[0].id);
                 }
             });
+        });
+    });
+}
 
-            function loadLights() {
+function loadLights(id)
+{
+    bridges[id].api.lights(function(err, reply) {
 
-                api.lights(function(err, reply) {
-            
-                    if (err) {
-                        log('api.lights: ' + err);
-                        return;
-                    }
-            
-                    reply.lights.forEach(function(light) {
-            
-                        devices[result[0].id + ':' + light.id] = {
-                            id: light.id,
-                            name: light.name,
-                            dev: api
-                        };
-                    });
-                });
-            }
+        if (err) {
+            log('api.lights: ' + err);
+            return;
+        }
+
+        reply.lights.forEach(function(light) {
+
+            devices[id + ':' + light.id] = {
+                id: light.id,
+                name: light.name,
+                dev: bridges[id].api
+            };
         });
     });
 }
@@ -136,6 +138,10 @@ function startListening()
 
     conn.on('setDeviceName', function (id, name) {
         setDeviceName(id, name);
+    });
+
+    conn.on('addNewDevices', function (id) {
+        addNewDevices(id);
     });
 }
 
@@ -305,4 +311,21 @@ function setDeviceName(id, name)
             conn.emit('deviceRenamed', id, name);
         }
     });    
+}
+
+function addNewDevices(id)
+{
+    bridges[id].api.searchForNewLights(function(err, result) {
+
+        if (err) {
+            log('api.searchForNewLights: ' + err);
+            return;
+        }
+
+        if (result) {
+            setTimeout(function() {
+                loadLights(id);
+            }, 65000);
+        }
+    });
 }
