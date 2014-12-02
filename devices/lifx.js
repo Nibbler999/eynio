@@ -167,6 +167,11 @@ function setLightColor(id, color_string, color_format)
     var temp = 0xffff;
 
     try {
+
+        if (isNaN(hsl[0])) {
+            hsl[0] = 0;
+        }
+
         lx.lightsColour(parseInt(hsl[0] / 360 * 65535), parseInt(hsl[1] * 65535), parseInt(hsl[2] * 65535), temp, 0, new Buffer(addr, 'hex'));
     } catch (e) {
         log(e);
