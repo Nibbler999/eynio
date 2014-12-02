@@ -101,7 +101,7 @@ function getSwitches(cb)
     var switches = [];
 
     for (var device in devices) {
-        if (devices[device].type == 'binary_light') {
+        if (devices[device].type == 'com.fibaro.binarySwitch') {
             switches.push({id: device, name: Namer.getName(device)});
         }
     }
