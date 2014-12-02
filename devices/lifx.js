@@ -30,7 +30,7 @@ module.exports = function(c) {
     
             var state = {
                 on: b.on,
-                level: parseInt((b.brightness / 65535) * 100),
+                level: parseInt(((b.dim + 32768) / 65535) * 100),
                 hsl: chroma.hsl(),
                 hsv: chroma.hsv(),
                 rgb: chroma.rgb(),
@@ -141,9 +141,8 @@ function setLightLevel(id, level)
     var addr = devices[id].addr;
 
     if (level > 0) {
-        var brightness = parseInt((level / 100) * 65535);
-        var temp = 0xffff;
-        lx.lightsColour(0, 0, brightness, temp, 0, new Buffer(addr, 'hex'));
+        var brightness = parseInt((level / 100) * 65535) - 32768;
+        lx.setBrightness(brightness, 0, new Buffer(addr, 'hex'));
         conn.emit('lightState', { id: id, state: { on: true, level: level }});
     } else {
         lx.lightsOff(new Buffer(addr, 'hex'));
