@@ -1,6 +1,6 @@
 var io = require('socket.io-client');
 
-var serverUrl = 'https://nhome.neosoft.ba:8080?uuid=' + getUUID();
+var serverUrl = 'https://nhome.ba:8080?uuid=' + getUUID();
 
 var serverOptions = {
     'reconnection limit': 18000,
