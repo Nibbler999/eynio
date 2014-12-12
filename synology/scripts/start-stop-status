@@ -1,0 +1,40 @@
+#!/bin/sh
+
+PRIVATE_LOCATION="/var/packages/NHome/target"
+
+start_package()
+{
+    HOME=/var/packages/NHome/etc /usr/bin/node ${PRIVATE_LOCATION}/server.js &> /tmp/nhome.log &
+}
+
+stop_package()
+{
+    /usr/bin/pkill -f server.js
+}
+
+case $1 in
+	start)
+		start_package
+                exit 0
+                ;;
+        stop)
+                stop_package
+                exit 0
+                ;;
+        status)
+                COUNT_NHOME=`ps | grep -c server.js`
+                if [ 1 -lt ${COUNT_NHOME} ]; then
+                        exit 0
+                else
+                        exit 1
+                fi
+                ;;
+        killall)
+                stop_package
+                exit 0
+                ;;
+        log)
+                echo "/tmp/nhome.log"
+                exit 0
+                ;;
+esac
