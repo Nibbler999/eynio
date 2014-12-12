@@ -105,7 +105,7 @@ function getRemotes(cb)
     var remotes = [];
 
     for (var device in devices) {
-        remotes.push({id: device, name: devices[device].name});
+        remotes.push({id: device, name: Namer.getName(device)});
     }
 
     conn.emit('remotes', remotes);
