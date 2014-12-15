@@ -102,7 +102,7 @@ require('./devices/samsung-remote.js')(conn);
 require('./devices/fibaro.js')(conn);
 require('./devices/razberry.js')(conn);
 require('./devices/lifx.js')(conn);
-//require('./devices/netatmo.js')(conn);
+require('./devices/netatmo.js')(conn);
 
 process.on('uncaughtException', function (err) {
 	console.log('uncaughtException:' + err);

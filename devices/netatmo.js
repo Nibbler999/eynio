@@ -16,10 +16,10 @@ module.exports = function(c) {
     conn.once('accepted', function (cfg) {
 
         var auth = {
-            "client_id": "",
-            "client_secret": "",
-            "username": "",
-            "password": "",
+            "client_id": "548eda57197759e5529dbbf6",
+            "client_secret": "erW1fhPiTF63UMTHoLGEPduv3C0v",
+            "username": "culjak.luka@nsoft.ba",
+            "password": "nhometest",
         };
 
         api = new netatmo(auth);
