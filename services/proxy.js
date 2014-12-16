@@ -32,13 +32,13 @@ function proxyConnect(proxy)
             ext.pipe(this).pipe(ext);
     
             this.on('error', function(err) {
-                log('Client error: ' + err);
+                //log('Client error: ' + err);
                 ext.end();
                 ext.destroy();
             });
     
             this.on('close', function() {
-                log('Client close');
+                //log('Client close');
                 ext.end();
                 ext.destroy();
             });
@@ -46,10 +46,10 @@ function proxyConnect(proxy)
     });
 
     ext.on('error', function(err) {
-        log('Server error: ' + err);
+       // log('Server error: ' + err);
     });
     
     ext.on('close', function() {
-        log('Server close');
+        //log('Server close');
     });
 }
