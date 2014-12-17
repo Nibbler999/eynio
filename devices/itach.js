@@ -58,12 +58,12 @@ function startListening()
         getRemotes(cb);    
     });
     
-    conn.on('sendRemoteCommand', function (id, cmd) {
-        sendRawCommand(id, cmd);
+    conn.on('sendRemoteCommand', function (id, cmd, cb) {
+        sendRawCommand(id, cmd, cb);
     });
 
-    conn.on('sendKey', function (remoteid, key) {
-        sendKey(remoteid, key);
+    conn.on('sendKey', function (remoteid, key, cb) {
+        sendKey(remoteid, key, cb);
     });
 
     conn.on('learnKey', function (remoteid, key) {
@@ -113,32 +113,42 @@ function getRemotes(cb)
     if (cb) cb(remotes);
 }
 
-function sendRawCommand(id, cmd)
+function sendRawCommand(id, cmd, cb)
 {
     if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
         return;
     }
 
     devices[id].dev.send(cmd, function (err, res) {
         if (err) {
             log(err);
+            if (cb) cb(false);
             return;
-          }
+        }
+        if (cb) cb(true);
     });
 }
 
-function sendKey(remoteid, key)
+function sendKey(remoteid, key, cb)
 {
     var remote = remotes[remoteid];
 
+    if (!remote) {
+        log('Unknown remote "' + remoteid + '"');
+        if (cb) cb(false);
+        return;
+    }
+
     if (!remote.keys.hasOwnProperty(key)) {
         log('Unknown key "' + key + '"');
+        if (cb) cb(false);
         return;
     }
 
     cmd = remote.keys[key].replace('1:1', remote.connector);
 
-    sendRawCommand(remote.deviceid, cmd + '\r');
+    sendRawCommand(remote.deviceid, cmd + '\r', cb);
 }
 
 function learnKey(remoteid, key)
