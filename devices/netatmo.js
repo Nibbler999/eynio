@@ -15,11 +15,15 @@ module.exports = function(c) {
 
     conn.once('accepted', function (cfg) {
 
+        if (!cfg.netatmo_username) {
+            return;
+        }
+
         var auth = {
             "client_id": "548eda57197759e5529dbbf6",
             "client_secret": "erW1fhPiTF63UMTHoLGEPduv3C0v",
-            "username": "culjak.luka@nsoft.ba",
-            "password": "mostar",
+            "username": cfg.netatmo_username,
+            "password": cfg.netatmo_password,
         };
 
         api = new netatmo(auth);
