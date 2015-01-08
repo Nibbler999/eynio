@@ -68,7 +68,13 @@ conn.emitLocal = function (name) {
         args: args
     };
 
-    this.onPacket(packet);
+    try {
+        this.onPacket(packet);
+    } catch (e) {
+        console.log('Error handling event "' + name + "'");
+        console.log(args);
+        console.log(e);
+    }
 }
 
 function getUUID()

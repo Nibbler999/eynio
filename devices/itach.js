@@ -153,9 +153,14 @@ function sendKey(remoteid, key, cb)
 
 function learnKey(remoteid, key)
 {
-    var id = remotes[remoteid].deviceid;
+    var remote = remotes[remoteid];
 
-    devices[id].dev.learn(function (err, res) {
+    if (!remote) {
+        log('Unknown remote "' + remoteid + '"');
+        return;
+    }
+
+    devices[remote.deviceid].dev.learn(function (err, res) {
 
         if (err) {
             log('Learn error: ' + err);
