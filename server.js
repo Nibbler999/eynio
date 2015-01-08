@@ -71,7 +71,7 @@ conn.emitLocal = function (name) {
     try {
         this.onPacket(packet);
     } catch (e) {
-        console.log('Error handling event "' + name + "'");
+        console.log('Error handling event "' + name + '"');
         console.log(args);
         console.log(e);
     }
