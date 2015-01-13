@@ -97,7 +97,7 @@ function sendBridgeInfo(cb)
     var bridgeInfo = [];
 
     for (var bridge in bridges) {
-        bridgeInfo.push({ name: Namer.getName(bridge), id: bridge });
+        bridgeInfo.push({ name: 'netatmo', id: bridge });
     }
 
     conn.emit('bridgeInfo', bridgeInfo);
