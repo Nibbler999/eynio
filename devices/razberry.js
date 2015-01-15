@@ -1,6 +1,4 @@
 
-var http = require('http');
-
 var Namer = require('../services/namer.js');
 
 var conn, devices = {}, ip, bridges = {};
@@ -144,7 +142,6 @@ function getSwitchState(id, cb)
     }
 
     update(function() {
-        console.log(devices[id].commandClasses['37'].data);
         var switchState = { on: devices[id].commandClasses['37'].data.level.value};
         conn.emit('switchState', { id: id, state: switchState});
         if (cb) cb(switchState);
@@ -167,8 +164,6 @@ function update(cb)
             if (d == '1') {
                 continue;
             }
-
-            console.log(status.devices[d]);
 
             devices['razberry-' + d] = {
                 id: d,
