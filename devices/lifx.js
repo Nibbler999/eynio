@@ -123,13 +123,15 @@ function setLightState(id, values)
         return;
     }
 
-    var addr = devices[id].addr;
+    var bulb = new Buffer(devices[id].addr, 'hex');
 
     if (values.on) {
-        lx.lightsOn(new Buffer(addr, 'hex'));
+        lx.lightsOn(bulb);
     } else {
-        lx.lightsOff(new Buffer(addr, 'hex'));
+        lx.lightsOff(bulb);
     }
+
+    setTimeout(function() { lx.requestStatus(bulb); }, 500);
 }
 
 function setLightLevel(id, level)
@@ -138,15 +140,17 @@ function setLightLevel(id, level)
         return;
     }
 
-    var addr = devices[id].addr;
+    var bulb = new Buffer(devices[id].addr, 'hex');
 
     if (level > 0) {
         var brightness = parseInt((level / 100) * 65535) - 32768;
-        lx.setBrightness(brightness, 0, new Buffer(addr, 'hex'));
-        conn.emit('lightState', { id: id, state: { on: true, level: level }});
+        lx.lightsOn(bulb);
+        lx.setBrightness(brightness, 0, bulb);
     } else {
-        lx.lightsOff(new Buffer(addr, 'hex'));
+        lx.lightsOff(bulb);
     }
+
+    setTimeout(function() { lx.requestStatus(bulb); }, 500);
 }
 
 function setLightColor(id, color_string, color_format)
