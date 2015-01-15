@@ -20,7 +20,7 @@ module.exports = function(c) {
 
           if (!error && response.statusCode == 200) {
 
-                var regex = /<a href="http:..([0-9.]+):8084">/
+                var regex = /<a href="http:..([0-9.]+):808.">/
 
                 var matches = regex.exec(body);
 
