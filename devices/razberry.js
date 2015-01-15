@@ -83,7 +83,7 @@ function getSwitches(cb)
         var switches = [];
     
         for (var device in devices) {
-            if (devices[device].commandClasses.hasOwnProperty('37') !== -1) {
+            if (devices[device].commandClasses.hasOwnProperty('37')) {
                 switches.push({id: device, name: Namer.getName(device)});
             }
         }
@@ -102,8 +102,14 @@ function switchOn(id)
 
     var device = devices[id].id;
 
-    http.get('http://' + ip + ':8083/ZWaveAPI/Run/devices[' + device + '].instances[0].commandClasses[0x25].Set(255)', function(res) {
-        if (res.statusCode === 200) {
+    require('request')('http://' + ip + ':8083/ZWaveAPI/Run/devices[' + device + '].instances[0].commandClasses[0x25].Set(255)', function(err, response) {
+
+        if (err) {
+            log(err);
+            return;
+        }
+
+        if (response.statusCode === 200) {
             conn.emit('switchState', { id: id, state: { on: true }});
         }
     });
@@ -117,8 +123,14 @@ function switchOff(id)
 
     var device = devices[id].id;
 
-    http.get('http://' + ip + ':8083/ZWaveAPI/Run/devices[' + device + '].instances[0].commandClasses[0x25].Set(0)', function(res) {
-        if (res.statusCode === 200) {
+    require('request')('http://' + ip + ':8083/ZWaveAPI/Run/devices[' + device + '].instances[0].commandClasses[0x25].Set(0)', function(err, response) {
+
+        if (err) {
+            log(err);
+            return;
+        }
+
+        if (response.statusCode === 200) {
             conn.emit('switchState', { id: id, state: { on: false }});
         }
     });
@@ -132,6 +144,7 @@ function getSwitchState(id, cb)
     }
 
     update(function() {
+        console.log(devices[id].commandClasses['37'].data);
         var switchState = { on: devices[id].commandClasses['37'].data.level.value};
         conn.emit('switchState', { id: id, state: switchState});
         if (cb) cb(switchState);
@@ -140,37 +153,32 @@ function getSwitchState(id, cb)
 
 function update(cb)
 {
-    http.get('http://' + ip + ':8083/ZWaveAPI/Data/0', function(res) {
+    require('request')('http://' + ip + ':8083/ZWaveAPI/Data/0', function(err, response, body) {
 
-        var data = '';
+        if (err) {
+            log(err);
+            return;
+        }
 
-        res.on('data', function (chunk) {
-            data += chunk;
-        });
+        var status = JSON.parse(body);
 
-        res.on('end', function () {
+        for (var d in status.devices) {
 
-            var status = JSON.parse(data);
-
-            for (var d in status.devices) {
-
-                if (d == '1') {
-                    continue;
-                }
-
-                devices['razberry-' + d] = {
-                    id: d,
-                    name: 'Device ' + d,
-                    commandClasses: status.devices[d].instances[0].commandClasses
-                };
+            if (d == '1') {
+                continue;
             }
 
-            Namer.add(devices);
+            console.log(status.devices[d]);
 
-            cb && cb();
-        });
+            devices['razberry-' + d] = {
+                id: d,
+                name: 'Device ' + d,
+                commandClasses: status.devices[d].instances[0].commandClasses
+            };
+        }
 
-    }).on('error', function(e) {
-        log('ZWaveAPI/Data/0: ' + e.message);
+        Namer.add(devices);
+
+        cb && cb();
     });
 }
