@@ -18,7 +18,8 @@
     "tcp-ping": "0.1.1",
     "wemo": "0.1.1",
     "xml2js": "0.2.8",
-    "netatmo": "1.1.1"
+    "netatmo": "1.1.1",
+    "q": "1.0.1"
   },
   "private": true
 }
