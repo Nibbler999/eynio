@@ -13,6 +13,7 @@ var log = bunyan.createLogger({
         stream: prettyStdOut
     },{
         level: 'info',
+        type: 'raw',
         stream: ringbuffer
     }]
 });
@@ -85,7 +86,7 @@ conn.on('log', function (cb) {
     var prettyLog = new PrettyStream({mode: 'short', useColor: false});
 
     var log = ringbuffer.records.reduce(function(prev, rec) {
-        return prev + prettyLog.formatRecord(JSON.parse(rec))
+        return prev + prettyLog.formatRecord(rec)
     }, '');
 
     cb && cb(log);
