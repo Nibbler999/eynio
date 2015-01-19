@@ -19,7 +19,7 @@ function log()
 Namer.listen = function(c, l) {
 
     conn = c;
-    logger = l.child({component: 'MJPEG'});
+    logger = l.child({component: 'Namer'});
 
     conn.once('accepted', function (cfg) {
         if (cfg.namer_customnames) {
