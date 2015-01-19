@@ -4,11 +4,16 @@ var PrettyStream = require('bunyan-prettystream');
 var prettyStdOut = new PrettyStream({mode: 'short'});
 prettyStdOut.pipe(process.stdout);
 
+var ringbuffer = new bunyan.RingBuffer({ limit: 100 });
+
 var log = bunyan.createLogger({
     name: 'NHome',
     streams: [{
         level: 'info',
         stream: prettyStdOut
+    },{
+        level: 'info',
+        stream: ringbuffer
     }]
 });
 
@@ -43,7 +48,6 @@ conn.on('connect_failed', function() {
     log.error('Failed to connect to NHome');
 });
 
-// Web API
 conn.on('message', function (name, args, cb) {
 
     var data = [], i = 0;
@@ -70,6 +74,17 @@ conn.on('message', function (name, args, cb) {
     args.push(mycb);
 
     conn.emitLocal.apply(conn, [name].concat(args));
+});
+
+conn.on('log', function (cb) {
+
+    var prettyLog = new PrettyStream({mode: 'short', useColor: false});
+
+    var log = ringbuffer.records.reduce(function(prev, rec) {
+        return prev + prettyLog.formatRecord(JSON.parse(rec))
+    }, '');
+
+    cb && cb(log);
 });
 
 conn.emitLocal = function (name) {
