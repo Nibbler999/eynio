@@ -1,14 +1,17 @@
 
 var conn;
 
-function log(msg)
+var logger;
+
+function log()
 {
-    console.log('[Info]', msg);
+    logger.info.apply(logger, arguments);
 }
 
-module.exports = function(c) {
+module.exports = function(c, l) {
 
     conn = c;
+    logger = l.child({component: 'Info'});
 
     conn.on('getServerStatus', function (cb) {
        getServerStatus(cb);

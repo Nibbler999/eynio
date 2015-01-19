@@ -3,14 +3,17 @@ var conn;
 
 var request = require('request');
 
-function log(msg)
+var logger;
+
+function log()
 {
-    console.log('[MJPEG]', msg);
+    logger.info.apply(logger, arguments);
 }
 
-module.exports = function(c) {
+module.exports = function(c, l) {
 
     conn = c;
+    logger = l.child({component: 'MJPEG'});
 
     conn.on('makeMJPEG', function (camera) {
         makeMJPEG(camera);

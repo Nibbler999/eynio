@@ -4,14 +4,17 @@ var Namer = require('../services/namer.js');
 
 var conn, devices = {}, bridges = {};
 
-function log(msg)
+var logger;
+
+function log()
 {
-    console.log('[Fibaro] ' + msg);
+    logger.info.apply(logger, arguments);
 }
 
-module.exports = function(c) {
+module.exports = function(c, l) {
 
     conn = c;
+    logger = l.child({component: 'Fibaro'});
 
     conn.once('accepted', function (cfg) {
 
