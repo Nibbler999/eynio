@@ -17,6 +17,10 @@ var log = bunyan.createLogger({
     }]
 });
 
+console.log = function() {
+    log.warn.apply(log, arguments);   
+}
+
 var io = require('socket.io-client');
 
 var serverUrl = 'https://nhome.ba?uuid=' + getUUID();
