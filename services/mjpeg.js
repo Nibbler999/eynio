@@ -63,9 +63,10 @@ function updateSnapshot(camera, res)
                 res.write(body, 'binary');
                 res.write("\r\n");
 
+            } else if (response) {
+                logger.error(response);
             } else {
-                log(response.statusCode);
-                log(error);
+                logger.error(error);
             }
         });
     };
