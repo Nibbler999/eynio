@@ -77,19 +77,11 @@ module.exports = function(log) {
 
     conn.emitLocal = function (name) {
     
-        var args = Array.prototype.slice.call(arguments, 1);
-    
-        var packet = {
-            type: 'event',
-            name: name,
-            args: args
-        };
-    
         try {
-            this.onPacket(packet);
+            io.EventEmitter.prototype.emit.apply(this, arguments);
         } catch (e) {
             log.error('Error handling event "' + name + '"');
-            log.error(args);
+            log.error(arguments);
             log.error(e);
         }
     }
