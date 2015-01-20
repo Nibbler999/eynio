@@ -1,7 +1,18 @@
 
-var loglevel = 'info';
+function getVersion()
+{
+    delete require.cache[require.resolve('./package.json')];
+    return require('./package.json').version;
+}
 
-var log = require('./logger.js')(loglevel);
+var program = require('commander');
+
+program
+  .version(getVersion())
+  .option('-l, --loglevel [level]', 'Log level (fatal, error, warn, info, debug, trace) [info]', 'info')
+  .parse(process.argv);
+
+var log = require('./logger.js')(program.loglevel);
 var conn = require('./connection.js')(log);
 
 require('./services/namer.js').listen(conn, log);
