@@ -68,9 +68,9 @@ module.exports = function(log) {
     
         var ringbuffer = log.streams[1].stream;
 
-        var entries = ringbuffer.records.reduce(function(prev, rec) {
-            return prev + prettyLog.formatRecord(rec)
-        }, '');
+        var entries = ringbuffer.records.map(function(rec) {
+            return prettyLog.formatRecord(rec)
+        }).join('');
     
         cb && cb(entries);
     });
