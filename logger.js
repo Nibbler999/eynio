@@ -22,8 +22,28 @@ module.exports = function(loglevel) {
     });
     
     console.log = function() {
+        log.info.apply(log, arguments);   
+    };
+
+    console.info = function() {
+        log.info.apply(log, arguments);   
+    };
+
+    console.error = function() {
+        log.error.apply(log, arguments);   
+    };
+
+    console.warn = function() {
         log.warn.apply(log, arguments);   
-    }
+    };
+
+    console.dir = function() {
+        log.info.apply(log, arguments);   
+    };
+
+    console.trace = function() {
+        log.trace.apply(log, arguments);   
+    };
 
     return log;
 };
