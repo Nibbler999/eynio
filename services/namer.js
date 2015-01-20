@@ -11,11 +11,6 @@ var Namer = {};
 
 var logger;
 
-function log()
-{
-    logger.info.apply(logger, arguments);
-}
-
 Namer.listen = function(c, l) {
 
     conn = c;

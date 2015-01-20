@@ -3,11 +3,6 @@ var conn;
 
 var logger;
 
-function log()
-{
-    logger.info.apply(logger, arguments);
-}
-
 module.exports = function(c, l) {
 
     conn = c;

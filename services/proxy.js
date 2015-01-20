@@ -3,11 +3,6 @@ var conn;
 
 var logger;
 
-function log()
-{
-    logger.info.apply(logger, arguments);
-}
-
 module.exports = function(c, l) {
 
     conn = c;
@@ -20,7 +15,7 @@ module.exports = function(c, l) {
 
 function proxyConnect(proxy)
 {
-    log('Creating proxy to ' + proxy.host + ':' + proxy.port);
+    logger.info('Creating proxy to ' + proxy.host + ':' + proxy.port);
     
     var ext = require('net').connect(proxy.port, proxy.host, function() {
     
@@ -35,13 +30,13 @@ function proxyConnect(proxy)
             ext.pipe(this).pipe(ext);
     
             this.on('error', function(err) {
-                //log('Client error: ' + err);
+                logger.trace(err);
                 ext.end();
                 ext.destroy();
             });
     
             this.on('close', function() {
-                //log('Client close');
+                logger.trace('Client close');
                 ext.end();
                 ext.destroy();
             });
@@ -49,10 +44,10 @@ function proxyConnect(proxy)
     });
 
     ext.on('error', function(err) {
-       // log('Server error: ' + err);
+       logger.trace(err);
     });
     
     ext.on('close', function() {
-        //log('Server close');
+        logger.trace('Server close');
     });
 }

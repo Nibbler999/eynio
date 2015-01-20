@@ -1,10 +1,12 @@
 
-module.exports = function(log) {
+module.exports = function (log) {
 
     var io = require('socket.io-client');
     
     var serverUrl = 'https://nhome.ba?uuid=' + getUUID();
     
+    log.debug('URL', serverUrl);
+
     var serverOptions = {
         'reconnection limit': 18000,
         'max reconnection attempts': Infinity
@@ -13,7 +15,7 @@ module.exports = function(log) {
     var conn = io.connect(serverUrl, serverOptions);
     
     conn.on('connecting', function(info) {
-    	log.info('Connecting to NHome...');
+    	log.info('Connecting...');
     });
     
     conn.on('connect', function () {
@@ -34,11 +36,14 @@ module.exports = function(log) {
     
     conn.on('message', function (name, args, cb) {
     
+        log.debug('Received:', name, args);
+
         var data = [], i = 0;
     
         var numListeners = conn.listeners(name).length;
     
         if (numListeners === 0) {
+            log.debug('Replied to', name, args, 'with empty response');
             cb(null);
             return;
         }
@@ -46,10 +51,12 @@ module.exports = function(log) {
         var mycb = function(result) {
     
             if (numListeners === 1) {
+                log.debug('Replied to', name, args, 'with result', result);
                 cb(result);
             } else {
                 data = data.concat(result);
                 if (++i === numListeners) {
+                    log.debug('Replied to', name, args, 'with result array', data);
                     cb(data);
                 }
             }
@@ -82,6 +89,33 @@ module.exports = function(log) {
             log.error(arguments);
             log.error(e);
         }
+    };
+
+    if (log.debug()) {
+
+        var emit_orig = conn.emit;
+    
+        conn.emit = function () {
+
+            var args = Array.prototype.slice.call(arguments);
+            args.unshift('Emitted event');
+            log.debug.apply(log, args);
+
+            emit_orig.apply(conn, arguments);
+        };
+    
+        var on_orig = io.SocketNamespace.prototype.$emit;
+    
+        io.SocketNamespace.prototype.$emit = function (name) {
+
+            if (name !== 'message') {
+                var args = Array.prototype.slice.call(arguments);
+                args.unshift('Received event');
+                log.debug.apply(log, args);
+            }
+
+            on_orig.apply(conn, arguments);
+        };
     }
 
     return conn;
@@ -98,6 +132,7 @@ function getUUID()
     if (!fs.existsSync(uuidFile)) {
         log.info('Generating new uuid');
         var uuid = require('node-uuid').v4();
+        log.debug(uuid);
         fs.writeFileSync(uuidFile, uuid);
     }
 

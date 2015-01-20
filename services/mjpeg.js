@@ -5,11 +5,6 @@ var request = require('request');
 
 var logger;
 
-function log()
-{
-    logger.info.apply(logger, arguments);
-}
-
 module.exports = function(c, l) {
 
     conn = c;
@@ -22,7 +17,7 @@ module.exports = function(c, l) {
 
 function makeMJPEG(camera)
 {
-    log('Creating MJPEG stream from ' + camera.url);
+    logger.info('Creating MJPEG stream from ' + camera.url);
 
     require('tls').connect({host: 'nhome.ba', port: 8082}, function() {
 
@@ -39,8 +34,12 @@ function makeMJPEG(camera)
 
         updateSnapshot(camera, this);
     
+        this.on('error', function(err) {
+            logger.trace(err);
+        });
+
         this.on('close', function() {
-            log('Completed');
+            logger.info('Completed');
         });
     });
 }

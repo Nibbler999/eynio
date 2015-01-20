@@ -6,11 +6,6 @@ var schedule = [];
 
 var logger;
 
-function log()
-{
-    logger.info.apply(logger, arguments);
-}
-
 module.exports = function(c, l) {
 
     conn = c;
@@ -27,20 +22,20 @@ module.exports = function(c, l) {
     conn.on('saveSchedule', function (newSchedule) {
         schedule = newSchedule;
         saveSchedule();
-        log('Set new schedule');
+        logger.info('Set new schedule');
     });
 
     conn.on('addScheduleItem', function (item) {
         schedule.push(item);
         saveSchedule();
-        log('Added new schedule item');
+        logger.info('Added new schedule item');
     });
 
     conn.on('deleteScheduleItem', function (index) {
         if (index < schedule.length) {
             schedule.splice(index, 1);
             saveSchedule();
-            log('Deleted schedule item');
+            logger.info('Deleted schedule item');
         }
     });
 
@@ -62,7 +57,7 @@ function reloadSchedule()
         j.cancel();
     });
 
-    log('Cleared schedule');
+    logger.info('Cleared schedule');
 
     if (!schedule) {
         return;
@@ -78,6 +73,6 @@ function reloadSchedule()
 
         jobs.push(j);
 
-        log('Scheduled job');
+        logger.info('Scheduled job');
     });
 }
