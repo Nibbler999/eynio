@@ -1,5 +1,7 @@
 
-var log = require('./logger.js')();
+var loglevel = 'info';
+
+var log = require('./logger.js')(loglevel);
 var conn = require('./connection.js')(log);
 
 require('./services/namer.js').listen(conn, log);

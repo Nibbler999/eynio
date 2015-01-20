@@ -1,5 +1,5 @@
 
-module.exports = function() {
+module.exports = function(loglevel) {
 
     var bunyan = require('bunyan');
     var PrettyStream = require('bunyan-prettystream');
@@ -12,10 +12,10 @@ module.exports = function() {
     var log = bunyan.createLogger({
         name: 'NHome',
         streams: [{
-            level: 'info',
+            level: loglevel,
             stream: prettyStdOut
         },{
-            level: 'info',
+            level: loglevel,
             type: 'raw',
             stream: ringbuffer
         }]
