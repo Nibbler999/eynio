@@ -130,9 +130,9 @@ function getUUID()
     var fs = require('fs');
 
     if (!fs.existsSync(uuidFile)) {
-        log.info('Generating new uuid');
+        //log.info('Generating new uuid');
         var uuid = require('node-uuid').v4();
-        log.debug(uuid);
+        //log.debug(uuid);
         fs.writeFileSync(uuidFile, uuid);
     }
 
