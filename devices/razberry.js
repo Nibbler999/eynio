@@ -160,6 +160,11 @@ function update(cb)
             return;
         }
 
+        if (response.statusCode !== 200) {
+            log('ZWaveAPI/Data failure', body.trim());
+            return;
+        }
+
         var status = JSON.parse(body);
 
         for (var d in status.devices) {
