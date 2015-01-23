@@ -73,7 +73,7 @@ function loadDevices(cb)
                     type: datatype.toLowerCase(),
                     _type: datatype,
                     name: device.module_name + ' ' + datatype,
-                    value: device.dashboard_data[datatype]
+                    value: device.dashboard_data[datatype === 'Co2' ? 'CO2' : datatype]
                 }
             });
         });
