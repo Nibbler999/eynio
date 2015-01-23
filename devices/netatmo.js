@@ -6,11 +6,6 @@ var conn, devices = {}, bridges = {};
 
 var logger;
 
-function log()
-{
-    logger.info.apply(logger, arguments);
-}
-
 module.exports = function(c, l) {
 
     conn = c;
@@ -32,66 +27,75 @@ module.exports = function(c, l) {
         api = new netatmo(auth);
 
         api.on("error", function(error) {
-            log(error);
+            logger.error(error);
         });
 
-        api.getDevicelist(function(err, _devices, modules) {
-
-            if (err) {
-                log(err);
-                return false;
-            }
-
-            _devices.forEach(function(device) {
-
-                bridges[device._id] = 'netatmo';
-
-                device.data_type.forEach(function(datatype) {
-
-                  devices[device._id + '-' + datatype] = {
-                        id: device._id,
-                        type: datatype.toLowerCase(),
-                        _type: datatype,
-                        name: device.module_name + ' ' + datatype
-                    }
-                });
-            });
-
-            modules.forEach(function(module) {
-
-                module.data_type.forEach(function(datatype) {
-
-                  devices[module.main_device + '-' + module._id + '-' + datatype] = {
-                        id: module._id,
-                        main_device: module.main_device,
-                        type: datatype.toLowerCase(),
-                        _type: datatype,
-                        name: module.module_name + ' ' + datatype
-                    }
-                });
-            });
-
-            Namer.add(devices);
-
-            startListening();
-        });
+        loadDevices(startListening);
     });
 }
 
 function startListening()
 {
-    log('Ready for commands');
+    logger.info('Ready for commands');
 
     conn.on('getBridges', function(cb) {
         sendBridgeInfo(cb);
     });
 
     conn.on('getSensors', function (cb) {
-        getSensors(cb);
+        loadDevices(function() {
+            getSensors(cb);
+        });
     });
 
     conn.on('getSensorValue', function (id, cb) {
         getSensorValue(id, cb);
+    });
+}
+
+function loadDevices(cb)
+{
+    api.getDevicelist(function(err, _devices, modules) {
+
+        if (err) {
+            logger.error('getDevicelist', err);
+            return false;
+        }
+
+        _devices.forEach(function(device) {
+
+            bridges[device._id] = 'netatmo';
+
+            device.data_type.forEach(function(datatype) {
+
+              devices[device._id + '-' + datatype] = {
+                    id: device._id,
+                    type: datatype.toLowerCase(),
+                    _type: datatype,
+                    name: device.module_name + ' ' + datatype,
+                    value: device.dashboard_data[datatype]
+                }
+            });
+        });
+
+        modules.forEach(function(module) {
+
+            module.data_type.forEach(function(datatype) {
+
+              devices[module.main_device + '-' + module._id + '-' + datatype] = {
+                    id: module._id,
+                    main_device: module.main_device,
+                    type: datatype.toLowerCase(),
+                    _type: datatype,
+                    name: module.module_name + ' ' + datatype,
+                    value: module.dashboard_data[datatype]
+                }
+            });
+        });
+
+        Namer.add(devices);
+
+        cb && cb(); 
     });
 }
 
@@ -113,7 +117,12 @@ function getSensors(cb)
     var sensors = [];
 
     for (var device in devices) {
-        sensors.push({id: device, name: Namer.getName(device), type: devices[device].type});
+        sensors.push({
+            id: device,
+            name: Namer.getName(device),
+            type: devices[device].type,
+            value: devices[device].value
+        });
     }
 
     conn.emit('sensors', sensors);
@@ -143,8 +152,8 @@ function getSensorValue(id, cb)
 
     api.getMeasure(options, function(err, measure) {
 
-         if (err) {
-            log('getSensorValue:' + err);
+        if (err) {
+            logger.error('getSensorValue', err);
             if (cb) cb(null);
             return;
         }
@@ -155,6 +164,8 @@ function getSensorValue(id, cb)
             type: devices[id].type,
             value: measure[0].value[0][0]
         };
+
+        devices[id].value = sensorValue.value;
 
         conn.emit('sensorValue', sensorValue);
     
