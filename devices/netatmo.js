@@ -27,7 +27,11 @@ module.exports = function(c, l) {
         api = new netatmo(auth);
 
         api.on("error", function(error) {
-            logger.error(error);
+            if (error.message === 'Authenticate error: invalid_grant') {
+                logger.error('Failed to authenticate. Check username and password.');
+            } else {
+                logger.error(error);
+            }
         });
 
         loadDevices(startListening);
