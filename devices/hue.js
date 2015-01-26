@@ -139,6 +139,10 @@ function startListening()
         setLightWhite(id, brightness, temperature);
     });
 
+    conn.on('setLightLevel', function (id, level) {
+        setLightLevel(id, level);
+    });
+
     conn.on('getLightState', function (id, cb) {
         getLightState(id, cb);
     });
@@ -263,6 +267,33 @@ function setLightWhite(id, brightness, temperature)
     });
 }
 
+function setLightLevel(id, level)
+{
+    if (!devices.hasOwnProperty(id)) {
+        return;
+    }
+
+    var state = lightState.create();
+
+    if (level > 0) {
+        state.brightness(level).on();
+    } else {
+        state.off();
+    }
+
+    devices[id].dev.setLightState(devices[id].id, state, function(err, result) {
+
+        if (err) {
+            log('api.setLightLevel:' + err);
+            return;
+        }
+
+        if (result) {
+            getLightState(id);
+        }
+    });
+}
+
 function getLightState(id, cb)
 {
     if (!devices.hasOwnProperty(id)) {
@@ -283,6 +314,7 @@ function getLightState(id, cb)
 
         var state = {
             on: result.state.on,
+            level: parseInt((result.state.bri / 254) * 100),
             hsl: chroma.hsl(),
             hsv: chroma.hsv(),
             rgb: chroma.rgb(),

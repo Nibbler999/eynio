@@ -33,6 +33,7 @@ module.exports = function(c, l) {
     
             var state = {
                 on: b.on,
+                level: parseInt(((b.dim + 32768) / 65535) * 100),
                 hsl: chroma.hsl(),
                 hsv: chroma.hsv(),
                 rgb: chroma.rgb(),
@@ -85,6 +86,10 @@ function startListening()
 
     conn.on('setLightWhite', function (id, brightness, temperature) {
         setLightWhite(id, brightness, temperature);
+    });
+
+    conn.on('setLightLevel', function (id, level) {
+        setLightLevel(id, level);
     });
 
     conn.on('getLightState', function (id, cb) {
