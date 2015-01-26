@@ -102,6 +102,10 @@ function loadLights(id)
 
         reply.lights.forEach(function(light) {
 
+            if (!light.reachable) {
+                return;
+            }
+
             devices[id + ':' + light.id] = {
                 id: light.id,
                 name: light.name,
