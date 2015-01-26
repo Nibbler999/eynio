@@ -28,12 +28,11 @@ module.exports = function(c, l) {
 
             var id = 'lifx-' + b.addr.toString('hex');
 
-            var hsl = [(b.hue / 65535) * 360, b.saturation / 65535, b.brightness / 65535];
-            var chroma = require('chroma-js')(hsl, 'hsl');
+            var hsv = [(b.hue / 65535) * 360, b.saturation / 65535, b.brightness / 65535];
+            var chroma = require('chroma-js')(hsv, 'hsv');
     
             var state = {
                 on: b.on,
-                level: parseInt(((b.dim + 32768) / 65535) * 100),
                 hsl: chroma.hsl(),
                 hsv: chroma.hsv(),
                 rgb: chroma.rgb(),
@@ -84,8 +83,8 @@ function startListening()
         setLightColor(id, color_string, color_format);
     });
 
-    conn.on('setLightLevel', function (id, level) {
-        setLightLevel(id, level);
+    conn.on('setLightWhite', function (id, brightness, temperature) {
+        setLightWhite(id, brightness, temperature);
     });
 
     conn.on('getLightState', function (id, cb) {
@@ -162,27 +161,35 @@ function setLightColor(id, color_string, color_format)
         return;
     }
 
-    var addr = devices[id].addr;
+    var bulb = new Buffer(devices[id].addr, 'hex');
 
     try {
-        var hsl = require('chroma-js')(color_string, color_format).hsl();
+        var hsv = require('chroma-js')(color_string, color_format).hsv();
     } catch (e){
         log(e);
         return;
     }
 
-    var temp = 0xffff;
+    var temp = 3500;
 
-    try {
+    lx.lightsColour(parseInt(hsv[0] / 360 * 65535), parseInt(hsv[1] * 65535), parseInt(hsv[2] * 65535), temp, 0, bulb);
 
-        if (isNaN(hsl[0])) {
-            hsl[0] = 0;
-        }
+    setTimeout(function() { lx.requestStatus(bulb); }, 1000);
+}
 
-        lx.lightsColour(parseInt(hsl[0] / 360 * 65535), parseInt(hsl[1] * 65535), parseInt(hsl[2] * 65535), temp, 0, new Buffer(addr, 'hex'));
-    } catch (e) {
-        log(e);
+function setLightWhite(id, brightness, temperature)
+{
+    if (!devices.hasOwnProperty(id)) {
+        return;
     }
+
+    var bulb = new Buffer(devices[id].addr, 'hex');
+
+    temperature = ((temperature * 6500) / 100) + 2500;
+
+    lx.lightsColour(0, 0, parseInt(brightness / 100 * 65535), temperature, 0, bulb);
+
+    setTimeout(function() { lx.requestStatus(bulb); }, 1000);
 }
 
 function getLightState(id, cb)
