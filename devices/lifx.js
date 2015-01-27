@@ -168,16 +168,19 @@ function setLightColor(id, color_string, color_format)
 
     var bulb = new Buffer(devices[id].addr, 'hex');
 
-    try {
-        var hsv = require('chroma-js')(color_string, color_format).hsv();
-    } catch (e){
-        log(e);
-        return;
-    }
+    var hsv = require('chroma-js')(color_string, color_format).hsv();
+
+    if (isNaN(hsv[0])) {
+        hsv[0] = 0;
+    } 
 
     var temp = 3500;
 
-    lx.lightsColour(parseInt(hsv[0] / 360 * 65535), parseInt(hsv[1] * 65535), parseInt(hsv[2] * 65535), temp, 0, bulb);
+    try {
+        lx.lightsColour(parseInt(hsv[0] / 360 * 65535), parseInt(hsv[1] * 65535), parseInt(hsv[2] * 65535), temp, 0, bulb);
+    } catch (e) {
+        logger.error(e);
+    }
 
     setTimeout(function() { lx.requestStatus(bulb); }, 1000);
 }
@@ -192,7 +195,11 @@ function setLightWhite(id, brightness, temperature)
 
     temperature = ((temperature * 6500) / 100) + 2500;
 
-    lx.lightsColour(0, 0, parseInt(brightness / 100 * 65535), temperature, 0, bulb);
+    try {
+        lx.lightsColour(0, 0, parseInt(brightness / 100 * 65535), temperature, 0, bulb);
+    } catch (e) {
+        logger.error(e);
+    }
 
     setTimeout(function() { lx.requestStatus(bulb); }, 1000);
 }
@@ -204,9 +211,9 @@ function getLightState(id, cb)
         return;
     }
 
-    var addr = devices[id].addr;
+    var bulb = new Buffer(devices[id].addr, 'hex');
 
-    lx.requestStatus(new Buffer(addr, 'hex'));
+    lx.requestStatus(bulb);
 
     if (cb) cb([]);
 }
