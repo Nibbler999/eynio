@@ -85,8 +85,7 @@ module.exports = function (log) {
         try {
             io.EventEmitter.prototype.emit.apply(this, arguments);
         } catch (e) {
-            log.error('Error handling event "' + name + '"');
-            log.error(arguments);
+            log.error('Error handling event', name, Array.prototype.slice.call(arguments, 1));
             log.error(e);
         }
     };
