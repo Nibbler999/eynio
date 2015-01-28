@@ -1,3 +1,4 @@
+"use strict";
 
 var netatmo = require('netatmo'), api;
 var Namer = require('../services/namer.js');

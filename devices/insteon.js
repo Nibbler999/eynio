@@ -1,3 +1,5 @@
+"use strict";
+
 var Insteon = require('home-controller').Insteon;
 
 var Namer = require('../services/namer.js');

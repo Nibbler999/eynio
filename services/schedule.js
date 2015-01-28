@@ -1,3 +1,4 @@
+"use strict";
 
 var scheduler = require('node-schedule');
 var conn;

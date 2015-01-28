@@ -1,3 +1,4 @@
+"use strict";
 
 var lg = require('lg-tv-api');
 var Namer = require('../services/namer.js');

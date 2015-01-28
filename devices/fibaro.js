@@ -1,3 +1,4 @@
+"use strict";
 
 var Fibaro = require('fibaro-api');
 var Namer = require('../services/namer.js');

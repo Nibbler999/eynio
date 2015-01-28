@@ -1,3 +1,4 @@
+"use strict";
 
 var WeMo = require('wemo');
 var Namer = require('../services/namer.js');

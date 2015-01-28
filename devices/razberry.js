@@ -1,3 +1,4 @@
+"use strict";
 
 var Namer = require('../services/namer.js');
 

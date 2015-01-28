@@ -1,3 +1,5 @@
+"use strict";
+
 var Itach = require('simple-itach');
 
 var Namer = require('../services/namer.js');
