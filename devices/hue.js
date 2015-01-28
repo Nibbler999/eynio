@@ -27,7 +27,7 @@ module.exports = function(c, l) {
                 return;
             }
     
-            if (result.length == 0) {
+            if (result.length === 0) {
                 return;
             }
     
@@ -82,7 +82,7 @@ module.exports = function(c, l) {
             });
         });
     });
-}
+};
 
 function loadLights(id)
 {
@@ -213,8 +213,10 @@ function setLightColor(id, color_string, color_format)
 
     var state = lightState.create();
     
+    var hsl;
+
     try {
-        var hsl = require('chroma-js')(color_string, color_format).hsl();
+        hsl = require('chroma-js')(color_string, color_format).hsl();
     } catch (e){
         log(e);
         return;

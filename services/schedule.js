@@ -44,7 +44,7 @@ module.exports = function(c, l) {
         conn.emit('schedule', schedule);
         if (cb) cb(schedule);
     });
-}
+};
 
 function saveSchedule()
 {

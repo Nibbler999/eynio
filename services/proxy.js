@@ -12,7 +12,7 @@ module.exports = function(c, l) {
     conn.on('proxyConnect', function (proxy) {
         proxyConnect(proxy);
     });
-}
+};
 
 function proxyConnect(proxy)
 {

@@ -42,31 +42,31 @@ Namer.listen = function(c, l) {
         delete customnames[id];
         Namer.bridgeRenamed(id);
     });
-}
+};
 
 Namer.save = function() {
     conn.emit('setConfig', { namer_customnames: JSON.stringify(customnames) });
-}
+};
 
 Namer.add = function(devices) {
 
     for (var id in devices) {
         realnames[id] = devices[id].name;
-    };
-}
+    }
+};
 
 Namer.getName = function(id) {
     return customnames[id] || realnames[id] || 'Unknown';
-}
+};
 
 Namer.deviceRenamed = function(id) {
     Namer.save();
     conn.emit('deviceRenamed', id, Namer.getName(id));
-}
+};
 
 Namer.bridgeRenamed = function(id) {
     Namer.save();
     conn.emit('bridgeRenamed', id, Namer.getName(id));
-}
+};
 
 module.exports = Namer;

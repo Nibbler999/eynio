@@ -32,7 +32,7 @@ module.exports = function(c, l) {
 
             res.on('end', function() {
 
-                var regex = /<a href="http:..([0-9.]+):25105">/
+                var regex = /<a href="http:..([0-9.]+):25105">/;
 
                 var matches = regex.exec(html);
 
@@ -66,7 +66,7 @@ module.exports = function(c, l) {
                             });
                         });
                         
-                        Namer.add(devices);
+                        Namer.add(lights);
 
                         startListening();
                     }); 
@@ -175,7 +175,7 @@ function setLightState(id, values)
 
 function setLightLevel(id, level)
 {
-    if (!devices.hasOwnProperty(id)) {
+    if (!lights.hasOwnProperty(id)) {
         return;
     }
 

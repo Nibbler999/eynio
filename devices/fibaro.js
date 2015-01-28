@@ -43,7 +43,7 @@ module.exports = function(c, l) {
                         name: device.name,
                         type: device.type,
                         dev: fibaro
-                    }
+                    };
                 });
 
                 Namer.add(devices);
@@ -52,7 +52,7 @@ module.exports = function(c, l) {
             }); 
         }); 
     });
-}
+};
 
 function startListening()
 {

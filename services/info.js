@@ -12,7 +12,7 @@ module.exports = function(c, l) {
     conn.on('getServerStatus', function (cb) {
        getServerStatus(cb);
     });
-}
+};
 
 function getServerStatus(cb)
 {

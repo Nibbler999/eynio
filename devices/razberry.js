@@ -22,7 +22,7 @@ module.exports = function(c, l) {
 
           if (!error && response.statusCode == 200) {
 
-                var regex = /<a href="http:..([0-9.]+):808.">/
+                var regex = /<a href="http:..([0-9.]+):808.">/;
 
                 var matches = regex.exec(body);
 
@@ -38,7 +38,7 @@ module.exports = function(c, l) {
             }
         });
     });
-}
+};
 
 function startListening()
 {
@@ -183,6 +183,6 @@ function update(cb)
 
         Namer.add(devices);
 
-        cb && cb();
+        if (cb) cb();
     });
 }

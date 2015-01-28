@@ -14,7 +14,7 @@ module.exports = function(c, l) {
     conn.on('makeMJPEG', function (camera) {
         makeMJPEG(camera);
     });
-}
+};
 
 function makeMJPEG(camera)
 {

@@ -44,7 +44,7 @@ module.exports = function(c, l) {
             Namer.add(devices);
         });
     });
-}
+};
 
 function startListening()
 {

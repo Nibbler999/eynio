@@ -78,7 +78,7 @@ module.exports = function (log) {
 
         var entries = ringbuffer.records.map(prettyLog.formatRecord).join('');
     
-        cb && cb(entries);
+        if (cb) cb(entries);
     });
 
     conn.emitLocal = function (name) {

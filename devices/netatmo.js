@@ -37,7 +37,7 @@ module.exports = function(c, l) {
 
         loadDevices(startListening);
     });
-}
+};
 
 function startListening()
 {
@@ -79,7 +79,7 @@ function loadDevices(cb)
                     _type: datatype,
                     name: device.module_name + ' ' + datatype,
                     value: device.dashboard_data[datatype === 'Co2' ? 'CO2' : datatype]
-                }
+                };
             });
         });
 
@@ -94,13 +94,13 @@ function loadDevices(cb)
                     _type: datatype,
                     name: module.module_name + ' ' + datatype,
                     value: module.dashboard_data[datatype]
-                }
+                };
             });
         });
 
         Namer.add(devices);
 
-        cb && cb(); 
+        if (cb) cb(); 
     });
 }
 

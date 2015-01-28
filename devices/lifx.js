@@ -63,7 +63,7 @@ module.exports = function(c, l) {
             startListening();
         });
     });
-}
+};
 
 function startListening()
 {

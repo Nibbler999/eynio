@@ -151,7 +151,7 @@ function sendKey(remoteid, key, cb)
         return;
     }
 
-    cmd = remote.keys[key].replace('1:1', remote.connector);
+    var cmd = remote.keys[key].replace('1:1', remote.connector);
 
     sendRawCommand(remote.deviceid, cmd + '\r', cb);
 }
