@@ -19,7 +19,7 @@ module.exports = function(c, l) {
 
     conn.once('accepted', function (cfg) {
 
-        hue.locateBridges(function(err, result) {
+        hue.nupnpSearch(function(err, result) {
 
             if (err) {
                 log('locateBridges: ' + err);
@@ -44,14 +44,6 @@ module.exports = function(c, l) {
                 }
     
                 bridges[result[0].id].name = config.name;
-            });
-
-            api.connect(function(err, config) {
-
-                if (err) {
-                    log('connect: ' + err);
-                    return;
-                }
 
                 // If auth failed this property is missing
                 if (!config.hasOwnProperty('ipaddress')) {
@@ -102,7 +94,7 @@ function loadLights(id)
 
         reply.lights.forEach(function(light) {
 
-            if (!light.reachable) {
+            if (!light.state.reachable) {
                 return;
             }
 
