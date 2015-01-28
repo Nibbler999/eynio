@@ -75,7 +75,7 @@ function startListening()
     });
 
     conn.on('getSwitchState', function (id, cb) {
-        getSwitchState(id);
+        getSwitchState(id, cb);
     });
 
     conn.on('getShutters', function (cb) {

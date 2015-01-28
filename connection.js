@@ -15,7 +15,7 @@ module.exports = function (log) {
     
     var conn = io.connect(serverUrl, serverOptions);
     
-    conn.on('connecting', function(info) {
+    conn.on('connecting', function() {
     	log.info('Connecting...');
     });
     
@@ -23,7 +23,7 @@ module.exports = function (log) {
         log.info('Connected.');
     });
     
-    conn.on('reconnecting', function(timeout, attempts) {
+    conn.on('reconnecting', function() {
     	log.info('Attempting to reconnect');
     });
     

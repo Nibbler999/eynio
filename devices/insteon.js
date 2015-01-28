@@ -4,7 +4,7 @@ var Insteon = require('home-controller').Insteon;
 
 var Namer = require('../services/namer.js');
 
-var api, conn;
+var conn;
 
 var lights = {}, bridges = {};
 
@@ -89,7 +89,7 @@ function startListening()
     });
 
     conn.on('getLights', function (cb) {
-        getLights();    
+        getLights(cb);    
     });
     
     conn.on('setLightState', function (id, values) {

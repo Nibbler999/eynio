@@ -45,7 +45,6 @@ function processUpdateInfo(err, info)
     var update = info.updates.update[0].patch[0].$;
     update.size = parseInt(update.size, 10);
 
-    var fs = require('fs');
     var crypto = require('crypto');
 
     var zip = new Buffer(update.size);

@@ -45,7 +45,7 @@ module.exports = function(c, l) {
             }
         });
 
-        d.once('device', function(device) {
+        d.once('device', function() {
             startListening();
         });
     });

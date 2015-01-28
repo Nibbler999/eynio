@@ -31,7 +31,7 @@ module.exports = function(c, l) {
             Namer.add(devices);
         });
 
-        client.once('found', function(device) {
+        client.once('found', function() {
             startListening();
         }); 
     });

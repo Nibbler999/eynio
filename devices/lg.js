@@ -23,22 +23,15 @@ module.exports = function(c, l) {
 
             for (var f in found) {
 
-            	lg.startPairing(found[f].uuid, '965887', function(err, response) {
-                    if (err) {
-                        console.log(err);
-                        console.log(response);
-                        return;
-                    }
-
-                    startListening();
-
-                });
+            	lg.startPairing(found[f].uuid, '965887');
 
                 log('Found a TV');
 
                 devices[found[f].uuid] = {
                     name: found[f].friendlyName
                 };
+
+                startListening();
             }
 
             Namer.add(devices);
