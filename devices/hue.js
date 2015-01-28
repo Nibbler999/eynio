@@ -189,7 +189,7 @@ function setLightState(id, values)
         return;
     }
 
-    var state = lightState.create().effect('none');
+    var state = lightState.create();
     
     if (values.hasOwnProperty('rgb')) {
         state = state.rgb.apply(state, values.rgb);
@@ -218,7 +218,7 @@ function setLightColor(id, color_string, color_format)
         return;
     }
 
-    var state = lightState.create().effect('none');
+    var state = lightState.create();
     
     try {
         var hsl = require('chroma-js')(color_string, color_format).hsl();
@@ -250,7 +250,7 @@ function setLightWhite(id, brightness, temperature)
 
     temperature = ((temperature * 346) / 100) + 154;
 
-    var state = lightState.create().effect('none');
+    var state = lightState.create();
 
     state.hsl(0, 0, 0).white(temperature, brightness).on();
 
@@ -273,7 +273,7 @@ function setLightLevel(id, level)
         return;
     }
 
-    var state = lightState.create().effect('none');
+    var state = lightState.create();
 
     if (level > 0) {
         state.brightness(level).on();
