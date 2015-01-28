@@ -77,6 +77,26 @@ function startListening()
         getSwitchState(id);
     });
 
+    conn.on('getShutters', function (cb) {
+        getShutters(cb);
+    });
+
+    conn.on('getShutterValue', function (id, cb) {
+        getShutterValue(id, cb);
+    });
+
+    conn.on('setShutterValue', function (id, value, cb) {
+        setShutterValue(id, value, cb);
+    });
+
+    conn.on('openShutter', function (id, cb) {
+        openShutter(id, cb);
+    });
+
+    conn.on('closeShutter', function (id, cb) {
+        closeShutter(id, cb);
+    });
+
     conn.on('getSensors', function (cb) {
         getSensors(cb);
     });
@@ -127,6 +147,21 @@ function getSensors(cb)
     conn.emit('sensors', sensors);
 
     if (cb) cb(sensors);
+}
+
+function getShutters(cb)
+{
+    var shutters = [];
+
+    for (var device in devices) {
+        if (devices[device].type == 'com.fibaro.FGR221') {
+            shutters.push({id: device, name: Namer.getName(device)});
+        }
+    }
+
+    conn.emit('shutters', shutters);
+
+    if (cb) cb(shutters);
 }
 
 function switchOn(id)
@@ -197,6 +232,35 @@ function getSensorValue(id, cb)
     });
 }
 
+function getShutterValue(id, cb)
+{
+    if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
+        return;
+    }
+
+    var deviceId = devices[id].id;
+
+    devices[id].dev.api.devices.get(deviceId, function(err, result) {
+
+        if (err) {
+            log('getShutterValue:' + err);
+            if (cb) cb(null);
+            return;
+        }
+
+        var ShutterValue = {
+            id: id,
+            name: Namer.getName(id),
+            value: result.properties.value
+        };
+
+        conn.emit('shutterValue', ShutterValue);
+    
+        if (cb) cb(ShutterValue);
+    });
+}
+
 function getSwitchState(id, cb)
 {
     if (!devices.hasOwnProperty(id)) {
@@ -219,5 +283,68 @@ function getSwitchState(id, cb)
         conn.emit('switchState', { id: id, state: switchState});
 
         if (cb) cb(switchState);
+    });
+}
+
+function setShutterValue(id, value, cb)
+{
+    if (!devices.hasOwnProperty(id)) {
+        return;
+    }
+
+    var deviceId = devices[id].id;
+
+    devices[id].dev.call('callAction', { 'deviceID': deviceId, 'name': 'setValue', 'arg1': value }, function(err, result) {
+
+        if (err) {
+            log('setShutterValue:' + err);
+            return;
+        }
+
+        conn.emit('shutterValue', { id: id, value: value});
+
+        if (cb) cb(value);
+    });
+}
+
+function openShutter(id, cb)
+{
+    if (!devices.hasOwnProperty(id)) {
+        return;
+    }
+
+    var deviceId = devices[id].id;
+
+    devices[id].dev.call('callAction', { 'deviceID': deviceId, 'name': 'open' }, function(err, result) {
+
+        if (err) {
+            log('openShutter:' + err);
+            return;
+        }
+
+        conn.emit('shutterValue', { id: id, value: 0});
+
+        if (cb) cb(0);
+    });
+}
+
+function closeShutter(id, cb)
+{
+    if (!devices.hasOwnProperty(id)) {
+        return;
+    }
+
+    var deviceId = devices[id].id;
+
+    devices[id].dev.call('callAction', { 'deviceID': deviceId, 'name': 'close' }, function(err, result) {
+
+        if (err) {
+            log('closeShutter:' + err);
+            return;
+        }
+
+        conn.emit('shutterValue', { id: id, value: 100});
+
+        if (cb) cb(100);
     });
 }
