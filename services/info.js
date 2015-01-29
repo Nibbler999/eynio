@@ -98,17 +98,13 @@ function updateApp()
 
 function reSpawnApp()
 {
-    var args = [].concat(process.argv);
-
-    args.shift();
+    var args = ['/s', '/c'].concat(process.argv);
 
     var cp_opt = {
-        stdio: 'inherit',
-        cwd: process.cwd(),
         detached: true
     };
 
-    require('child_process').spawn(process.execPath, args, cp_opt);
+    require('child_process').spawn('cmd', args, cp_opt);
 
     process.exit();
 }
