@@ -99,10 +99,23 @@ function loadLights(id)
                 return;
             }
 
+            var hsl = [(light.state.hue / 65534) * 359, light.state.sat / 254, light.state.bri / 254];
+            var chroma = require('chroma-js')(hsl, 'hsl');
+    
+            var state = {
+                on: light.state.on,
+                level: parseInt((light.state.bri / 254) * 100),
+                hsl: chroma.hsl(),
+                hsv: chroma.hsv(),
+                rgb: chroma.rgb(),
+                hex: chroma.hex()
+            };
+
             devices[id + ':' + light.id] = {
                 id: light.id,
                 name: light.name,
-                dev: bridges[id].api
+                dev: bridges[id].api,
+                state: state
             };
         });
     });
@@ -167,7 +180,7 @@ function getLights(cb)
     var lights = [];
 
     for (var device in devices) {
-        lights.push({id: device, name: devices[device].name});
+        lights.push({id: device, name: devices[device].name, state: devices[device].state});
     }
 
     conn.emit('lights', lights);
@@ -315,6 +328,8 @@ function getLightState(id, cb)
             rgb: chroma.rgb(),
             hex: chroma.hex()
         };
+
+        devices[id].state = state;
 
         conn.emit('lightState', { id: id, state: state });
 
