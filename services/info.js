@@ -68,11 +68,11 @@ function getIP()
 
 function getUpdateable()
 {
-    if (process.env['NHOME_CAN_UPDATE'] === '1') {
+    if (process.env.NHOME_CAN_UPDATE === '1') {
         return true;
     }
 
-    if (process.platform === 'win32') {
+    if (require('path').basename(process.argv[1], '.js') === 'update') {
         return true;
     }
 
@@ -82,13 +82,13 @@ function getUpdateable()
 function updateApp()
 {
     // Our NHome pi image - systemd will update app and respawn us 
-    if (process.env['NHOME_CAN_UPDATE'] === '1') {
+    if (process.env.NHOME_CAN_UPDATE === '1') {
         process.exit();
         return;
     }
 
-    // Windows - restarting app runs update.js again
-    if (process.platform === 'win32') {
+    // restarting app runs update.js again
+    if (require('path').basename(process.argv[1], '.js') === 'update') {
         reSpawnApp();
         return;
     }
