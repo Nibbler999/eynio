@@ -1,6 +1,7 @@
 "use strict";
 
 var Namer = require('../services/namer.js');
+var Cats = require('../services/cats.js');
 
 var conn, devices = {}, ip, bridges = {};
 
@@ -86,7 +87,11 @@ function getSwitches(cb)
     
         for (var device in devices) {
             if (devices[device].commandClasses.hasOwnProperty('37')) {
-                switches.push({id: device, name: Namer.getName(device)});
+                switches.push({
+                    id: device,
+                    name: Namer.getName(device),
+                    categories: Cats.getCats(device)
+                });
             }
         }
     

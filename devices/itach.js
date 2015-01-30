@@ -3,6 +3,7 @@
 var Itach = require('simple-itach');
 
 var Namer = require('../services/namer.js');
+var Cats = require('../services/cats.js');
 
 var conn;
 
@@ -110,7 +111,11 @@ function getRemotes(cb)
     var remotes = [];
 
     for (var device in devices) {
-        remotes.push({id: device, name: Namer.getName(device)});
+        remotes.push({
+            id: device,
+            name: Namer.getName(device),
+            categories: Cats.getCats(device)
+        });
     }
 
     conn.emit('remotes', remotes);

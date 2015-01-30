@@ -1,7 +1,9 @@
 "use strict";
 
 var WeMo = require('wemo');
+
 var Namer = require('../services/namer.js');
+var Cats = require('../services/cats.js');
 
 var conn, devices = {};
 
@@ -63,7 +65,11 @@ function getSwitches(cb)
     var switches = [];
 
     for (var device in devices) {
-        switches.push({id: device, name: Namer.getName(device)});
+        switches.push({
+            id: device,
+            name: Namer.getName(device),
+            categories: Cats.getCats(device)
+        });
     }
 
     conn.emit('switches', switches);

@@ -3,6 +3,7 @@
 var SamsungRemote = require('samsung-remote');
 
 var Namer = require('../services/namer.js');
+var Cats = require('../services/cats.js');
 
 var conn, devices = {};
 
@@ -72,7 +73,11 @@ function getMultiMedia(cb)
     var multimedia = [];
 
     for (var device in devices) {
-        multimedia.push({id: device, name: Namer.getName(device)});
+        multimedia.push({
+            id: device,
+            name: Namer.getName(device),
+            categories: Cats.getCats(device)
+        });
     }
 
     conn.emit('multimedia', multimedia);

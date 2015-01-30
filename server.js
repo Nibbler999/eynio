@@ -17,6 +17,7 @@ var log = require('./logger.js')(program.loglevel);
 var conn = require('./connection.js')(log);
 
 require('./services/namer.js').listen(conn, log);
+require('./services/cats.js').listen(conn, log);
 require('./services/schedule.js')(conn, log);
 require('./services/proxy.js')(conn, log);
 require('./services/info.js')(conn, log);

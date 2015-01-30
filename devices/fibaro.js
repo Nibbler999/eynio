@@ -2,6 +2,7 @@
 
 var Fibaro = require('fibaro-api');
 var Namer = require('../services/namer.js');
+var Cats = require('../services/cats.js');
 
 var conn, devices = {}, bridges = {};
 
@@ -126,7 +127,11 @@ function getSwitches(cb)
 
     for (var device in devices) {
         if (devices[device].type == 'com.fibaro.binarySwitch') {
-            switches.push({id: device, name: Namer.getName(device)});
+            switches.push({
+                id: device,
+                name: Namer.getName(device),
+                categories: Cats.getCats(device)
+            });
         }
     }
 
@@ -141,7 +146,12 @@ function getSensors(cb)
 
     for (var device in devices) {
         if (devices[device].type.match('Sensor')) {
-            sensors.push({id: device, name: Namer.getName(device), type: devices[device].type.replace('com.fibaro.', '').replace('Sensor', '')});
+            sensors.push({
+                id: device,
+                name: Namer.getName(device),
+                type: devices[device].type.replace('com.fibaro.', '').replace('Sensor', ''),
+                categories: Cats.getCats(device)
+            });
         }
     }
 
@@ -156,7 +166,11 @@ function getShutters(cb)
 
     for (var device in devices) {
         if (devices[device].type == 'com.fibaro.FGR221') {
-            shutters.push({id: device, name: Namer.getName(device)});
+            shutters.push({
+                id: device,
+                name: Namer.getName(device),
+                categories: Cats.getCats(device)
+            });
         }
     }
 

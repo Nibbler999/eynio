@@ -3,6 +3,7 @@
 var Insteon = require('home-controller').Insteon;
 
 var Namer = require('../services/namer.js');
+var Cats = require('../services/cats.js');
 
 var conn;
 
@@ -123,7 +124,11 @@ function getLights(cb)
     var l = [];
 
     for (var device in lights) {
-        l.push({id: device, name: Namer.getName(device)});
+        l.push({
+            id: device,
+            name: Namer.getName(device),
+            categories: Cats.getCats(device)
+        });
     }
 
     conn.emit('lights', l);

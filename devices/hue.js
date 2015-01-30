@@ -4,6 +4,8 @@ var hue = require("node-hue-api"),
     HueApi = hue.HueApi,
     lightState = hue.lightState;
 
+var Cats = require('../services/cats.js');
+
 var conn, devices = {}, bridges = {};
 
 var logger;
@@ -180,7 +182,12 @@ function getLights(cb)
     var lights = [];
 
     for (var device in devices) {
-        lights.push({id: device, name: devices[device].name, state: devices[device].state});
+        lights.push({
+            id: device,
+            name: devices[device].name,
+            state: devices[device].state,
+            categories: Cats.getCats(device)
+        });
     }
 
     conn.emit('lights', lights);

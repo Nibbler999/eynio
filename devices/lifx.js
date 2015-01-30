@@ -4,6 +4,7 @@ var lifx = require('lifx');
 var lx;
 
 var Namer = require('../services/namer.js');
+var Cats = require('../services/cats.js');
 
 var conn;
 
@@ -116,7 +117,11 @@ function getLights(cb)
     var lights = [];
 
     for (var device in devices) {
-        lights.push({id: device, name: Namer.getName(device)});
+        lights.push({
+            id: device,
+            name: Namer.getName(device),
+            categories: Cats.getCats(device)
+        });
     }
 
     conn.emit('lights', lights);

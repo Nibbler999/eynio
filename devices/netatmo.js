@@ -1,7 +1,9 @@
 "use strict";
 
 var netatmo = require('netatmo'), api;
+
 var Namer = require('../services/namer.js');
+var Cats = require('../services/cats.js');
 
 var conn, devices = {}, bridges = {};
 
@@ -126,7 +128,8 @@ function getSensors(cb)
             id: device,
             name: Namer.getName(device),
             type: devices[device].type,
-            value: devices[device].value
+            value: devices[device].value,
+            categories: Cats.getCats(device)
         });
     }
 
