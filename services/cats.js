@@ -58,7 +58,7 @@ Cats.listen = function(c, l) {
     });
 
     conn.on('catDeleteDevice', function (catid, deviceid) {
-        removeCatFromDevice(catid, devices[deviceid]);
+        removeCatFromDevice(catid, deviceid);
         Cats.update();
     });
 
