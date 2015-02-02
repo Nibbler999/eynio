@@ -39,32 +39,35 @@ module.exports = function (log) {
     
         log.debug('Received:', name, args);
 
-        var data = [], i = 0;
-    
-        var numListeners = conn.listeners(name).length;
-    
-        if (numListeners === 0) {
-            log.debug('Replied to', name, args, 'with empty response');
-            cb(null);
-            return;
-        }
-    
-        var mycb = function(result) {
-    
-            if (numListeners === 1) {
-                log.debug('Replied to', name, args, 'with result', result);
-                cb(result);
-            } else {
-                data = data.concat(result);
-                if (++i === numListeners) {
-                    log.debug('Replied to', name, args, 'with result array', data);
-                    cb(data);
-                }
+        if (cb) {
+
+            var data = [], i = 0;
+        
+            var numListeners = conn.listeners(name).length;
+        
+            if (numListeners === 0) {
+                log.debug('Replied to', name, args, 'with empty response');
+                cb(null);
+                return;
             }
-        };
-    
-        args.push(mycb);
-    
+        
+            var mycb = function(result) {
+        
+                if (numListeners === 1) {
+                    log.debug('Replied to', name, args, 'with result', result);
+                    cb(result);
+                } else {
+                    data = data.concat(result);
+                    if (++i === numListeners) {
+                        log.debug('Replied to', name, args, 'with result array', data);
+                        cb(data);
+                    }
+                }
+            };
+        
+            args.push(mycb);
+        }
+
         conn.emitLocal.apply(conn, [name].concat(args));
     });
 
