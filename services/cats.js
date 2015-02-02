@@ -20,13 +20,15 @@ Cats.listen = function(c, l) {
         }
     });
 
-    conn.on('catAdd', function (cat) {
+    conn.on('catAdd', function (cat, cb) {
         var catid = require('node-uuid').v4();
         categories[catid] = cat;
         Cats.update();
+
+        if (cb) cb(catid);
     });
 
-    conn.on('catDelete', function (catid) {
+    conn.on('catDelete', function (catid, cb) {
 
         delete categories[catid];
 
@@ -35,18 +37,23 @@ Cats.listen = function(c, l) {
         }
 
         Cats.update();
+
+        if (cb) cb();
     });
 
-    conn.on('catUpdate', function (catid, cat) {
+    conn.on('catUpdate', function (catid, cat, cb) {
         categories[catid] = cat;
         Cats.update();
+
+         if (cb) cb();
     });
 
-    conn.on('catList', function () {
+    conn.on('catList', function (cb) {
         conn.emit('catList', categories);
+        if (cb) cb(categories);
     });
 
-    conn.on('catAddDevice', function (catid, deviceid) {
+    conn.on('catAddDevice', function (catid, deviceid, cb) {
 
         if (!devices.hasOwnProperty(deviceid)) {
             devices[deviceid] = [];
@@ -55,14 +62,18 @@ Cats.listen = function(c, l) {
         devices[deviceid].push(catid);
 
         Cats.update();
+
+        if (cb) cb();
     });
 
-    conn.on('catDeleteDevice', function (catid, deviceid) {
+    conn.on('catDeleteDevice', function (catid, deviceid, cb) {
         removeCatFromDevice(catid, deviceid);
         Cats.update();
+
+        if (cb) cb();
     });
 
-    conn.on('catListDevices', function (catid) {
+    conn.on('catListDevices', function (catid, cb) {
 
         var devs = [];
     
@@ -74,10 +85,13 @@ Cats.listen = function(c, l) {
         }
 
         conn.emit('catList', devs);  
+        
+        if (cb) cb(devs);
     });
 
-    conn.on('catOfDevice', function (deviceid) {
-        conn.emit('catOfDevice', devices[deviceid] || []);  
+    conn.on('catOfDevice', function (deviceid, cb) {
+        conn.emit('catOfDevice', devices[deviceid] || []);
+        if (cb) cb(devices[deviceid] || []);
     });
 };
 
