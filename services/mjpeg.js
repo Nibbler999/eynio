@@ -18,7 +18,7 @@ module.exports = function(c, l) {
 
 function makeMJPEG(camera)
 {
-    logger.info('Creating MJPEG stream from ' + camera.url);
+    logger.debug('Creating MJPEG stream from ' + camera.url);
 
     require('tls').connect({host: 'nhome.ba', port: 8082}, function() {
 
@@ -40,7 +40,7 @@ function makeMJPEG(camera)
         });
 
         this.on('close', function() {
-            logger.info('Completed');
+            logger.debug('Completed');
         });
     });
 }

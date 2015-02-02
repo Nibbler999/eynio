@@ -16,7 +16,7 @@ module.exports = function(c, l) {
 
 function proxyConnect(proxy)
 {
-    logger.info('Creating proxy to ' + proxy.host + ':' + proxy.port);
+    logger.debug('Creating proxy to ' + proxy.host + ':' + proxy.port);
     
     var ext = require('net').connect(proxy.port, proxy.host, function() {
     
