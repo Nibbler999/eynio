@@ -55,10 +55,10 @@ module.exports = function(c, l) {
                     conn.emit('pushthebutton', config.name);
 
                     var registerInterval = setInterval(function () {
-                        log('Creating user');
+                        //log('Creating user');
                         api.createUser(result[0].ipaddress, null, 'NHome', function(err, user) {
                             if (err) {
-                                log('createUser: ' + err);
+                                //log('createUser: ' + err);
                                 return;
                             }
                             clearInterval(registerInterval);
