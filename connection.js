@@ -107,9 +107,9 @@ module.exports = function (log) {
             emit_orig.apply(conn, arguments);
         };
     
-        var on_orig = io.SocketNamespace.prototype.$emit;
+        var on_orig = io.Manager.prototype.emit;
     
-        io.SocketNamespace.prototype.$emit = function (name) {
+        io.Manager.prototype.emit = function (name) {
 
             if (name !== 'message') {
                 var args = Array.prototype.slice.call(arguments);
