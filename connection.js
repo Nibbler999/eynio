@@ -4,7 +4,7 @@ module.exports = function (log) {
 
     var io = require('socket.io-client');
     
-    var serverUrl = 'https://nhome.ba:8089?uuid=' + getUUID();
+    var serverUrl = 'https://nhome.ba?uuid=' + getUUID();
     
     log.debug('URL', serverUrl);
 
