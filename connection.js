@@ -4,7 +4,7 @@ module.exports = function (log) {
 
     var io = require('socket.io-client');
     
-    var serverUrl = 'https://nhome.ba?uuid=' + getUUID();
+    var serverUrl = 'https://nhome.ba:8089?uuid=' + getUUID();
     
     log.debug('URL', serverUrl);
 
@@ -87,7 +87,7 @@ module.exports = function (log) {
     conn.emitLocal = function (name) {
     
         try {
-            io.EventEmitter.prototype.emit.apply(this, arguments);
+            io.Manager.prototype.emit.apply(this, arguments);
         } catch (e) {
             log.error('Error handling event', name, Array.prototype.slice.call(arguments, 1));
             log.error(e);
