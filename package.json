@@ -11,7 +11,7 @@
     "node-hue-api": "1.0.0",
     "node-schedule": "0.1.15",
     "node-uuid": "1.4.1",
-    "request": "2.51.0",
+    "request": "2.53.0",
     "samsung-remote": "1.2.4",
     "simple-itach": "0.2.1",
     "socket.io-client": "*",
