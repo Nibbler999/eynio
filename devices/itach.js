@@ -113,8 +113,7 @@ function getRemotes(cb)
     for (var device in devices) {
         remotes.push({
             id: device,
-            name: Namer.getName(device),
-            categories: Cats.getCats(device)
+            name: Namer.getName(device)
         });
     }
 
@@ -244,6 +243,8 @@ function getCustomRemotes(cb)
         } else {
             r2.keys = [];
         }
+
+        r2.categories = Cats.getCats(r);
 
         customremotes.push(r2);
     }
