@@ -61,7 +61,7 @@ Section "NHomeServer"
   File /r "*.*"
 SectionEnd
 
-Section "Start Menu Shortcuts"
+Section "Start Menu Shortcuts (32bit)"
   SectionIn 1
   SetShellVarContext current
   CreateDirectory "$SMPROGRAMS\NHomeServer"
@@ -69,13 +69,13 @@ Section "Start Menu Shortcuts"
   CreateShortCut "$SMPROGRAMS\NHomeServer\NHomeServer.lnk" "$INSTDIR\node.exe" "update.js" "" 0
 SectionEnd
 
-Section "Desktop Icons"
+Section "Desktop Icons (32bit)"
   SectionIn 1
   SetShellVarContext current
   CreateShortCut "$DESKTOP\NHomeServer.lnk" "$INSTDIR\node.exe" "update.js" "" 0
 SectionEnd
 
-Section "Start Menu Shortcuts"
+Section "Start Menu Shortcuts (64bit)"
   SectionIn 2
   SetShellVarContext current
   CreateDirectory "$SMPROGRAMS\NHomeServer"
@@ -83,7 +83,7 @@ Section "Start Menu Shortcuts"
   CreateShortCut "$SMPROGRAMS\NHomeServer\NHomeServer.lnk" "$INSTDIR\node64.exe" "update.js" "" 0
 SectionEnd
 
-Section "Desktop Icons"
+Section "Desktop Icons (64bit)"
   SectionIn 2
   SetShellVarContext current
   CreateShortCut "$DESKTOP\NHomeServer.lnk" "$INSTDIR\node64.exe" "update.js" "" 0
