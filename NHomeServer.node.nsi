@@ -52,15 +52,17 @@ ComponentText "Select which optional components you want to install."
 
 DirText "Please select the installation folder."
 
-Section "NHomeServer program"
-  SectionIn RO
+InstType "NHomeServer 32bit"
+InstType "NHomeServer 64bit"
 
+Section "NHomeServer"
+  SectionIn 1 2 RO
   SetOutPath "$INSTDIR"
   File /r "*.*"
-  
 SectionEnd
 
 Section "Start Menu Shortcuts"
+  SectionIn 1
   SetShellVarContext current
   CreateDirectory "$SMPROGRAMS\NHomeServer"
   CreateShortCut "$SMPROGRAMS\NHomeServer\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
@@ -68,8 +70,23 @@ Section "Start Menu Shortcuts"
 SectionEnd
 
 Section "Desktop Icons"
+  SectionIn 1
   SetShellVarContext current
   CreateShortCut "$DESKTOP\NHomeServer.lnk" "$INSTDIR\node.exe" "update.js" "" 0
+SectionEnd
+
+Section "Start Menu Shortcuts"
+  SectionIn 2
+  SetShellVarContext current
+  CreateDirectory "$SMPROGRAMS\NHomeServer"
+  CreateShortCut "$SMPROGRAMS\NHomeServer\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
+  CreateShortCut "$SMPROGRAMS\NHomeServer\NHomeServer.lnk" "$INSTDIR\node64.exe" "update.js" "" 0
+SectionEnd
+
+Section "Desktop Icons"
+  SectionIn 2
+  SetShellVarContext current
+  CreateShortCut "$DESKTOP\NHomeServer.lnk" "$INSTDIR\node64.exe" "update.js" "" 0
 SectionEnd
 
 Section "Uninstall"
