@@ -97,28 +97,36 @@ function loadLights(id)
 
         reply.lights.forEach(function(light) {
 
-            if (!light.state.reachable) {
-                return;
-            }
+            var state = null;
 
-            var hsl = [(light.state.hue / 65534) * 359, light.state.sat / 254, light.state.bri / 254];
-            var chroma = require('chroma-js')(hsl, 'hsl');
+            if (light.hasOwnProperty('state')) {
+
+                if (!light.state.reachable) {
+                    return;
+                }
     
-            var state = {
-                on: light.state.on,
-                level: parseInt((light.state.bri / 254) * 100),
-                hsl: chroma.hsl(),
-                hsv: chroma.hsv(),
-                rgb: chroma.rgb(),
-                hex: chroma.hex()
-            };
+                var hsl = [(light.state.hue / 65534) * 359, light.state.sat / 254, light.state.bri / 254];
+                var chroma = require('chroma-js')(hsl, 'hsl');
+        
+                state = {
+                    on: light.state.on,
+                    level: parseInt((light.state.bri / 254) * 100),
+                    hsl: chroma.hsl(),
+                    hsv: chroma.hsv(),
+                    rgb: chroma.rgb(),
+                    hex: chroma.hex()
+                };
+            }
 
             devices[id + ':' + light.id] = {
                 id: light.id,
                 name: light.name,
-                dev: bridges[id].api,
-                state: state
+                dev: bridges[id].api
             };
+
+            if (state) {
+                devices[id + ':' + light.id].state = state;
+            }
         });
     });
 }
