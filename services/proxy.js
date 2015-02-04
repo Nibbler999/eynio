@@ -18,37 +18,11 @@ function proxyConnect(proxy)
 {
     logger.debug('Creating proxy to ' + proxy.host + ':' + proxy.port);
     
-    var ext = require('net').connect(proxy.port, proxy.host, function() {
-    
-        ext.write(proxy.request);
-    
-        require('tls').connect({host: 'nhome.ba', port: 8082}, function() {
+    var child = require('child_process').fork(__dirname + '/proxy-child.js');
 
-            this.setNoDelay();
-
-            this.write(proxy.id);
-
-            ext.pipe(this).pipe(ext);
-    
-            this.on('error', function(err) {
-                logger.trace(err);
-                ext.end();
-                ext.destroy();
-            });
-    
-            this.on('close', function() {
-                logger.trace('Client close');
-                ext.end();
-                ext.destroy();
-            });
-        });
+    child.on('message', function(m) {
+        logger.error(message);
     });
 
-    ext.on('error', function(err) {
-       logger.trace(err);
-    });
-    
-    ext.on('close', function() {
-        logger.trace('Server close');
-    });
+    child.send(proxy);
 }
