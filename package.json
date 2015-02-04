@@ -9,7 +9,7 @@
     "lg-tv-api": "0.1.2",
     "lifx": "0.2.1",
     "node-hue-api": "1.0.0",
-    "node-schedule": "0.1.13",
+    "node-schedule": "0.1.15",
     "node-uuid": "1.4.1",
     "request": "2.51.0",
     "samsung-remote": "1.2.4",
