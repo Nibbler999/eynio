@@ -20,8 +20,8 @@ function makeMJPEG(camera)
 
     var child = require('child_process').fork(__dirname + '/mjpeg-child.js');
 
-    child.on('message', function(m) {
-        logger.error(message);
+    child.on('message', function(message) {
+        logger.error(camera.url, message);
     });
 
     child.send(camera);

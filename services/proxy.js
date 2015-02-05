@@ -20,8 +20,8 @@ function proxyConnect(proxy)
     
     var child = require('child_process').fork(__dirname + '/proxy-child.js');
 
-    child.on('message', function(m) {
-        logger.error(message);
+    child.on('message', function(message) {
+        logger.error(proxy.host + ':' + proxy.port, message);
     });
 
     child.send(proxy);

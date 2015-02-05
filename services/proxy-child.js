@@ -14,7 +14,7 @@ process.on('message', function(proxy) {
             ext.pipe(this).pipe(ext);
     
             this.on('error', function(err) {
-                console.log(err);
+                process.send(err.message);
                 ext.end();
                 ext.destroy();
                 process.exit();
@@ -28,6 +28,10 @@ process.on('message', function(proxy) {
         });
     });
     
+    ext.on('error', function(err) {
+        process.send(err.message);
+    });
+
     ext.on('close', function() {
         process.exit();
     });

@@ -20,9 +20,9 @@ function updateSnapshot(camera, res)
                 res.write("\r\n");
 
             } else if (response) {
-                console.log(response);
+                process.send(response);
             } else {
-                console.log(error);
+                process.send(error.message);
             }
         });
     };
@@ -52,7 +52,7 @@ process.on('message', function(camera) {
         updateSnapshot(camera, this);
     
         this.on('error', function(err) {
-            console.log(err);
+            process.send(err.message);
         });
 
         this.on('close', function() {
