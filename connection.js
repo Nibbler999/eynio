@@ -7,13 +7,8 @@ module.exports = function (log) {
     var serverUrl = 'https://nhome.ba/server?uuid=' + getUUID();
     
     log.debug('URL', serverUrl);
-
-    var serverOptions = {
-        'reconnection limit': 18000,
-        'max reconnection attempts': Infinity
-    };
     
-    var conn = io(serverUrl, serverOptions);
+    var conn = io(serverUrl);
     
     log.info('Connecting...');
 
