@@ -165,7 +165,7 @@ function getShutters(cb)
     var shutters = [];
 
     for (var device in devices) {
-        if (devices[device].type == 'com.fibaro.FGR221') {
+        if (devices[device].type == 'com.fibaro.FGR221' || devices[device].type == 'com.fibaro.FGRM222') {
             shutters.push({
                 id: device,
                 name: Namer.getName(device),
