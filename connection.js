@@ -4,7 +4,7 @@ module.exports = function (log) {
 
     var io = require('socket.io-client');
     
-    var serverUrl = 'https://nhome.ba?uuid=' + getUUID();
+    var serverUrl = 'https://nhome.ba/server?uuid=' + getUUID();
     
     log.debug('URL', serverUrl);
 
@@ -13,7 +13,7 @@ module.exports = function (log) {
         'max reconnection attempts': Infinity
     };
     
-    var conn = io.connect(serverUrl, serverOptions);
+    var conn = io(serverUrl, serverOptions);
     
     conn.on('connecting', function() {
     	log.info('Connecting...');
@@ -34,19 +34,19 @@ module.exports = function (log) {
     conn.on('connect_failed', function() {
         log.error('Failed to connect to NHome');
     });
+
+    conn.on('command', function (command, cb) {
     
-    conn.on('message', function (name, args, cb) {
-    
-        log.debug('Received:', name, args);
+        log.debug('Received payload:', command.name, command.args);
 
         if (cb) {
 
             var data = [], i = 0;
         
-            var numListeners = conn.listeners(name).length;
+            var numListeners = conn.listeners(command.name).length;
         
             if (numListeners === 0) {
-                log.debug('Replied to', name, args, 'with empty response');
+                log.debug('Replied to', command.name, command.args, 'with empty response');
                 cb(null);
                 return;
             }
@@ -54,21 +54,21 @@ module.exports = function (log) {
             var mycb = function(result) {
         
                 if (numListeners === 1) {
-                    log.debug('Replied to', name, args, 'with result', result);
+                    log.debug('Replied to', command.name, command.args, 'with result', result);
                     cb(result);
                 } else {
                     data = data.concat(result);
                     if (++i === numListeners) {
-                        log.debug('Replied to', name, args, 'with result array', data);
+                        log.debug('Replied to', command.name, command.args, 'with result array', data);
                         cb(data);
                     }
                 }
             };
         
-            args.push(mycb);
+            command.args.push(mycb);
         }
 
-        conn.emitLocal.apply(conn, [name].concat(args));
+        conn.emitLocal.apply(conn, [command.name].concat(command.args));
     });
 
     conn.on('log', function (cb) {
@@ -95,7 +95,7 @@ module.exports = function (log) {
             log.error(e);
         }
     };
-
+/*
     if (log.debug()) {
 
         var emit_orig = conn.emit;
@@ -122,7 +122,7 @@ module.exports = function (log) {
             on_orig.apply(conn, arguments);
         };
     }
-
+*/
     return conn;
 };
 
