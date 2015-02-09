@@ -15,24 +15,22 @@ module.exports = function (log) {
     
     var conn = io(serverUrl, serverOptions);
     
-    conn.on('connecting', function() {
-    	log.info('Connecting...');
-    });
-    
+    log.info('Connecting...');
+
     conn.on('connect', function () {
         log.info('Connected.');
     });
     
+    conn.on('connect_error', function () {
+        log.error('Failed to connect to NHome.');
+    });
+
     conn.on('reconnecting', function() {
     	log.info('Attempting to reconnect');
     });
-    
+
     conn.on('disconnect', function () {
-        log.info('Disconnected');
-    });
-    
-    conn.on('connect_failed', function() {
-        log.error('Failed to connect to NHome');
+        log.error('Disconnected');
     });
 
     conn.on('command', function (command, cb) {
