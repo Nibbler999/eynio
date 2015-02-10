@@ -30,7 +30,17 @@ module.exports = function (log) {
 
     conn.on('command', function (command, cb) {
     
-        log.debug('Received payload:', command.name, command.args);
+        log.debug('Received payload:', command);
+
+        if (command.permissions) {
+
+            var permissions = require('./permissions.js');
+
+            if (!permissions.permitted_command(command)) {
+                if (cb) cb(false);
+                return false;
+            }
+        }
 
         if (cb) {
 
@@ -88,34 +98,7 @@ module.exports = function (log) {
             log.error(e);
         }
     };
-/*
-    if (log.debug()) {
 
-        var emit_orig = conn.emit;
-    
-        conn.emit = function () {
-
-            var args = Array.prototype.slice.call(arguments);
-            args.unshift('Emitted event');
-            log.debug.apply(log, args);
-
-            emit_orig.apply(conn, arguments);
-        };
-    
-        var on_orig = io.Manager.prototype.emit;
-    
-        io.Manager.prototype.emit = function (name) {
-
-            if (name !== 'message') {
-                var args = Array.prototype.slice.call(arguments);
-                args.unshift('Received event');
-                log.debug.apply(log, args);
-            }
-
-            on_orig.apply(conn, arguments);
-        };
-    }
-*/
     return conn;
 };
 
