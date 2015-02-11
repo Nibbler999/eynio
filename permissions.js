@@ -32,6 +32,10 @@ var filter_devices = [
     'getLights', 'getSwitches', 'getSensors', 'getRemotes', 'getCustomRemotes', 'getShutters'
 ];
 
+var filter_categories = [
+    'catList'
+];
+
 var permissions = {
 
     permitted_device: function (command, device) {
@@ -61,6 +65,10 @@ var permissions = {
         // TODO: lookup bridge of the device and check that gives us permission
 
         return false;
+    },
+
+    permitted_category: function (command, category) {
+        return command.permissions.categories.indexOf(category) !== -1;
     },
 
     permitted_command: function (command) {
@@ -102,9 +110,22 @@ var permissions = {
 
         if (filter_devices.indexOf(command.name) !== -1) {
             
-            response = response.filter(function(device) {
+            return response.filter(function(device) {
                 return permissions.permitted_device(command, device.id);
             });
+        }
+
+        if (filter_categories.indexOf(command.name) !== -1) {
+            
+            var filtered_response = {};
+
+            for (var category in response) {
+                if (permissions.permitted_category(command, category)) {
+                    filtered_response[category] = response[category];
+                }
+            }
+
+            return filtered_response;
         }
 
         return response;
