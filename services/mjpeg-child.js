@@ -1,3 +1,4 @@
+"use strict";
 
 var request = require('request');
 
@@ -36,7 +37,7 @@ function updateSnapshot(camera, res)
 
 process.on('message', function(camera) {
 
-    require('tls').connect({host: 'nhome.ba', port: 8082}, function() {
+    require('tls').connect({host: 'nhome.ba', servername: 'nhome.ba', port: 8082}, function() {
 
         this.setNoDelay();
 

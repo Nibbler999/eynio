@@ -1,3 +1,4 @@
+"use strict";
 
 process.on('message', function(proxy) {
 
@@ -5,7 +6,7 @@ process.on('message', function(proxy) {
     
         ext.write(proxy.request);
     
-        require('tls').connect({host: 'nhome.ba', port: 8082}, function() {
+        require('tls').connect({host: 'nhome.ba', servername: 'nhome.ba', port: 8082}, function() {
 
             this.setNoDelay();
 
