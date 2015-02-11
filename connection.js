@@ -56,6 +56,10 @@ module.exports = function (log) {
         
             var mycb = function(result) {
         
+                if (command.permissions) {
+                    result = permissions.filter_response(command, result);
+                }
+
                 if (numListeners === 1) {
                     log.debug('Replied to', command.name, command.args, 'with result', result);
                     cb(result);

@@ -28,7 +28,40 @@ var category_commands = [
     'catDelete', 'catUpdate', 'catAddDevice', 'catDeleteDevice', 'catListDevices'
 ];
 
+var filter_devices = [
+    'getLights', 'getSwitches', 'getSensors', 'getRemotes', 'getCustomRemotes', 'getShutters'
+];
+
 var permissions = {
+
+    permitted_device: function (command, device) {
+
+        // Device is permitted explicitly
+        if (command.permissions.devices.indexOf(device) !== -1) {
+            return true;
+        }
+
+        // Device permitted via category
+        if (command.permissions.categories.length > 0) {
+
+            var cats = Cats.getCats(device);
+
+            if (cats.length > 0) {
+
+                var catmatches = command.permissions.categories.filter(function(n) {
+                    return cats.indexOf(n) !== -1;
+                });
+    
+                if (catmatches.length > 0) {
+                    return true;
+                }
+            }
+        }
+
+        // TODO: lookup bridge of the device and check that gives us permission
+
+        return false;
+    },
 
     permitted_command: function (command) {
 
@@ -39,30 +72,7 @@ var permissions = {
 
         // Device based commands
         if (device_commands.indexOf(command.name) !== -1) {
-
-            // Device is permitted explicitly
-            if (command.permissions.devices.indexOf(command.args[0]) !== -1) {
-                return true;
-            }
-
-            // Device permitted via category
-            if (command.permissions.categories.length > 0) {
-
-                var cats = Cats.getCats(command.args[0]);
-    
-                if (cats.length > 0) {
-    
-                    var catmatches = command.permissions.categories.filter(function(n) {
-                        return cats.indexOf(n) !== -1;
-                    });
-        
-                    if (catmatches.length > 0) {
-                        return true;
-                    }
-                }
-            }
-
-            // TODO: lookup bridge of the device and check that gives us permission
+            return permissions.permitted_device(command, command.args[0]);
         }
 
         // Bridge based commands where the bridge is permitted
@@ -86,6 +96,18 @@ var permissions = {
         console.warn('Denied access', command);
 
         return false;
+    },
+
+    filter_response: function (command, response) {
+
+        if (filter_devices.indexOf(command.name) !== -1) {
+            
+            response = response.filter(function(device) {
+                return permissions.permitted_device(command, device.id);
+            });
+        }
+
+        return response;
     }
 };
 
