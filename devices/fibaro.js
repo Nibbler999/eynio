@@ -22,35 +22,9 @@ module.exports = function(c, l) {
 
         Fibaro.discover(function(info) {
 
-            var fibaro = new Fibaro(info.ip, 'admin', 'admin');
+            bridges[info.serial] = new Fibaro(info.ip, 'admin', 'admin');
 
-            bridges[info.serial] = info;
-
-            fibaro.api.devices.list(function (err, devicelist) {
-    
-                if (err) {
-                    log(err);
-                    return;
-                }
-
-                devicelist.forEach(function(device) {
-
-                    if (device.properties.disabled === '1') {
-                        return;
-                    }
-
-                    devices[info.mac + ':' + device.id] = {
-                        id: device.id,
-                        name: device.name,
-                        type: device.type,
-                        dev: fibaro
-                    };
-                });
-
-                Namer.add(devices);
-
-                startListening();
-            }); 
+            loadDevices(startListening);
         }); 
     });
 };
@@ -72,7 +46,9 @@ function startListening()
     });
 
     conn.on('getSwitches', function (cb) {
-        getSwitches(cb);
+        loadDevices(function() {
+            getSwitches(cb);
+        });
     });
 
     conn.on('getSwitchState', function (id, cb) {
@@ -80,7 +56,9 @@ function startListening()
     });
 
     conn.on('getShutters', function (cb) {
-        getShutters(cb);
+        loadDevices(function() {
+            getShutters(cb);
+        });
     });
 
     conn.on('getShutterValue', function (id, cb) {
@@ -100,11 +78,45 @@ function startListening()
     });
 
     conn.on('getSensors', function (cb) {
-        getSensors(cb);
+        loadDevices(function() {
+            getSensors(cb);
+        });
     });
 
     conn.on('getSensorValue', function (id, cb) {
         getSensorValue(id, cb);
+    });
+}
+
+function loadDevices(cb)
+{
+    Object.keys(bridges).forEach(function(serial) {
+
+        bridges[serial].api.devices.list(function (err, devicelist) {
+    
+            if (err) {
+                log(err);
+                return;
+            }
+    
+            devicelist.forEach(function(device) {
+    
+                if (device.properties.disabled === '1') {
+                    return;
+                }
+    
+                devices[serial + ':' + device.id] = {
+                    id: device.id,
+                    name: device.name,
+                    type: device.type,
+                    dev: bridges[serial]
+                };
+            });
+    
+            Namer.add(devices);
+    
+            if (cb) cb();
+        });
     });
 }
 
