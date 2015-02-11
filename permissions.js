@@ -5,7 +5,7 @@ var Cats = require('./services/cats.js');
 var always_permitted = [
     'getLights', 'getSwitches', 'getSensors', 'getRemotes', 'getCustomRemotes', 'getShutters',
     'addScheduleItem', 'deleteScheduleItem', 'saveSchedule', 'getSchedule',
-    'getServerStatus', 'getBridges', 'log', 'updateApp',
+    'getServerStatus', 'getBridges', 'log', 'updateApp', 'ping',
     'catAdd', 'catList'
 ];
 

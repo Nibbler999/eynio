@@ -16,6 +16,10 @@ module.exports = function(c, l) {
     conn.on('updateApp', function() {
         updateApp();        
     });
+
+    conn.on('ping', function (cb) {
+        if (cb) cb();
+    });
 };
 
 function getServerStatus(cb)
