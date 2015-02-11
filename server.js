@@ -33,6 +33,7 @@ require('./devices/fibaro.js')(conn, log);
 require('./devices/razberry.js')(conn, log);
 require('./devices/lifx.js')(conn, log);
 require('./devices/netatmo.js')(conn, log);
+//require('./devices/nhome.js')(conn, log);
 
 process.on('uncaughtException', function (err) {
 	log.error('uncaughtException:' + err);
