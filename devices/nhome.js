@@ -44,10 +44,6 @@ module.exports = function(c, l) {
         nhome.on('connect_error', function () {
             log('Failed to connect to NHome.');
         });
-
-        nhome.on('lightState', function(lightstate) {
-            conn.emit('lightState', lightstate);
-        });
     });
 };
 
@@ -83,7 +79,8 @@ function startListening()
         getShutters(cb);    
     });
 
-    var events = ['getLightState', 'setLightState', 'setLightColor', 'setLightWhite', 'setLightLevel',
+    var events = [
+        'getLightState', 'setLightState', 'setLightColor', 'setLightWhite', 'setLightLevel',
         'switchOn', 'switchOff', 'getSwitchState',
         'getSensorValue',
         'sendRemoteCommand', 'sendKey', 'learnKey', 'saveCustomRemote', 'updateCustomRemote', 'deleteCustomRemote',
@@ -95,6 +92,19 @@ function startListening()
             var args = Array.prototype.slice.call(arguments);
             args.unshift(eventName);
             nhome.emit.apply(nhome, args);
+        });
+    });
+
+    var broadcasts = [
+        'lightState', 'switchState', 'sensorValue', 'shutterValue',
+        'IRKeyLearned', 'customRemoteAdded', 'customRemoteUpdated', 'customRemoteDeleted' 
+    ];
+
+    broadcasts.forEach(function(eventName) {
+        nhome.on(eventName, function () {
+            var args = Array.prototype.slice.call(arguments);
+            args.unshift(eventName);
+            conn.emit.apply(conn, args);
         });
     });
 }
