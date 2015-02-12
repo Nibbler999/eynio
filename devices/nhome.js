@@ -1,11 +1,10 @@
 "use strict";
 
-var Namer = require('../services/namer.js');
 var Cats = require('../services/cats.js');
 
 var conn;
 
-var devices = {}, bridges = {}, nhome;
+var bridges = {}, nhome;
 
 var logger;
 
@@ -64,12 +63,39 @@ function startListening()
         getLights(cb);    
     });
 
-    conn.on('getLightState', function (id, cb) {
-        getLightState(id, cb);
+    conn.on('getSwitches', function (cb) {
+        getSwitches(cb);    
     });
 
-    conn.on('setLightState', function (id, values) {
-        setLightState(id, values);
+    conn.on('getSensors', function (cb) {
+        getSensors(cb);    
+    });
+
+    conn.on('getRemotes', function (cb) {
+        getRemotes(cb);    
+    });
+
+    conn.on('getCustomRemotes', function (cb) {
+        getCustomRemotes(cb);    
+    });
+
+    conn.on('getShutters', function (cb) {
+        getShutters(cb);    
+    });
+
+    var events = ['getLightState', 'setLightState', 'setLightColor', 'setLightWhite', 'setLightLevel',
+        'switchOn', 'switchOff', 'getSwitchState',
+        'getSensorValue',
+        'sendRemoteCommand', 'sendKey', 'learnKey', 'saveCustomRemote', 'updateCustomRemote', 'deleteCustomRemote',
+        'getShutterValue', 'setShutterValue', 'openShutter', 'closeShutter'
+    ];
+
+    events.forEach(function(eventName) {
+        conn.on(eventName, function () {
+            var args = Array.prototype.slice.call(arguments);
+            args.unshift(eventName);
+            nhome.emit.apply(nhome, args);
+        });
     });
 }
 
@@ -88,30 +114,84 @@ function sendBridgeInfo(cb)
 
 function getLights(cb)
 {
-    var l = [];
+    nhome.emit('getLights', function(devices) {
 
-    nhome.emit('getLights', function(lights) {
-
-        lights.forEach(function(light) {
-            l.push({
-                id: light.id,
-                name: light.name,
-                categories: Cats.getCats(light.id)
-            });
+        if (devices) devices.forEach(function(device) {
+            device.categories = Cats.getCats(device.id);
         });
 
-        conn.emit('lights', l);
+        conn.emit('lights', devices);
 
-        if (cb) cb(l);
+        if (cb) cb(devices);
     });
 }
 
-function getLightState(id, cb)
+function getSwitches(cb)
 {
-    nhome.emit('getLightState', id, cb);
+    nhome.emit('getSwitches', function(devices) {
+
+        if (devices) devices.forEach(function(device) {
+            device.categories = Cats.getCats(device.id);
+        });
+
+        conn.emit('switches', devices);
+
+        if (cb) cb(devices);
+    });
 }
 
-function setLightState(id, state)
+function getSensors(cb)
 {
-    nhome.emit('setLightState', id, state);
+    nhome.emit('getSensors', function(devices) {
+
+        if (devices) devices.forEach(function(device) {
+            device.categories = Cats.getCats(device.id);
+        });
+
+        conn.emit('sensors', devices);
+
+        if (cb) cb(devices);
+    });
+}
+
+function getRemotes(cb)
+{
+    nhome.emit('getRemotes', function(devices) {
+
+        if (devices) devices.forEach(function(device) {
+            device.categories = Cats.getCats(device.id);
+        });
+
+        conn.emit('remotes', devices);
+
+        if (cb) cb(devices);
+    });
+}
+
+function getCustomRemotes(cb)
+{
+    nhome.emit('getCustomRemotes', function(devices) {
+
+        if (devices) devices.forEach(function(device) {
+            device.categories = Cats.getCats(device.id);
+        });
+
+        conn.emit('customRemotes', devices);
+
+        if (cb) cb(devices);
+    });
+}
+
+function getShutters(cb)
+{
+    nhome.emit('getShutters', function(devices) {
+
+        if (devices) devices.forEach(function(device) {
+            device.categories = Cats.getCats(device.id);
+        });
+
+        conn.emit('shutters', devices);
+
+        if (cb) cb(devices);
+    });
 }
