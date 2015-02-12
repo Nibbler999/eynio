@@ -9,8 +9,6 @@ var devices = {}, bridges = {}, nhome;
 
 var logger;
 
-var apikey = 'xxx';
-
 function log()
 {
     logger.info.apply(logger, arguments);
@@ -23,9 +21,13 @@ module.exports = function(c, l) {
 
     conn.once('accepted', function (cfg) {
     
+        if (!cfg.nhome_apikey) {
+            return;
+        }
+
         var io = require('socket.io-client');
         
-        var serverUrl = 'https://nhome.ba/client?apikey=' + apikey;
+        var serverUrl = 'https://nhome.ba/client?apikey=' + cfg.nhome_apikey;
         
         nhome = io(serverUrl, {'force new connection': true});
         
@@ -35,7 +37,7 @@ module.exports = function(c, l) {
 
             log('Connected.');
 
-            bridges['nhome:' + apikey] = { };
+            bridges['nhome:' + cfg.nhome_apikey] = { };
 
             startListening();
         });
@@ -45,7 +47,6 @@ module.exports = function(c, l) {
         });
 
         nhome.on('lightState', function(lightstate) {
-            lightstate.id = 'xxx' + lightstate.id;
             conn.emit('lightState', lightstate);
         });
     });
@@ -92,13 +93,10 @@ function getLights(cb)
     nhome.emit('getLights', function(lights) {
 
         lights.forEach(function(light) {
-
-            var id = 'xxx' + light.id;
-
             l.push({
-                id: id,
+                id: light.id,
                 name: light.name,
-                categories: Cats.getCats(id)
+                categories: Cats.getCats(light.id)
             });
         });
 
@@ -110,19 +108,10 @@ function getLights(cb)
 
 function getLightState(id, cb)
 {
-    var remoteid = id.replace('xxx', '');
-
-    nhome.emit('getLightState', remoteid, function(state) {
-
-        conn.emit('lightState', { id: remoteid, state: state });
-
-        if (cb) cb(state);
-    });
+    nhome.emit('getLightState', id, cb);
 }
 
 function setLightState(id, state)
 {
-    var remoteid = id.replace('xxx', '');
-
-    nhome.emit('setLightState', remoteid, state);
+    nhome.emit('setLightState', id, state);
 }
