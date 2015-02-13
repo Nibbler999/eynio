@@ -3,26 +3,27 @@
   "version": "1.0.0",
   "dependencies": {
     "adm-zip": "0.4.4",
+    "bunyan": "1.3.2",
+    "bunyan-prettystream": "0.1.3",
     "chroma-js": "0.6.1",
+    "commander": "2.6.0",
     "fibaro-api": "0.1.1",
+    "firebase": "2.2.0",
     "home-controller": "0.5.2",
     "lg-tv-api": "0.1.2",
     "lifx": "0.2.1",
+    "netatmo": "1.1.1",
     "node-hue-api": "1.0.0",
     "node-schedule": "0.1.15",
     "node-uuid": "1.4.1",
+    "q": "1.0.1",
     "request": "2.53.0",
     "samsung-remote": "1.2.4",
     "simple-itach": "0.2.1",
     "socket.io-client": "1.3.3",
     "tcp-ping": "0.1.1",
     "wemo": "0.1.1",
-    "xml2js": "0.2.8",
-    "netatmo": "1.1.1",
-    "q": "1.0.1",
-    "bunyan": "1.3.2",
-    "bunyan-prettystream": "0.1.3",
-    "commander": "2.6.0"
+    "xml2js": "0.2.8"
   },
   "private": true
 }

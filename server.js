@@ -34,6 +34,7 @@ require('./devices/razberry.js')(conn, log);
 require('./devices/lifx.js')(conn, log);
 require('./devices/netatmo.js')(conn, log);
 require('./devices/nhome.js')(conn, log);
+require('./devices/nest.js')(conn, log);
 
 process.on('uncaughtException', function (err) {
 	log.error('uncaughtException:' + err);
