@@ -30,8 +30,23 @@ module.exports = function(c, l) {
                     } else {
 
                         dataRef.on('value', function (snapshot) {
+
                             var data = snapshot.val();
-                            console.log('nest', data);
+
+                            for (var structure in data.structures) {
+                               
+                                data.structures[structure].thermostats.forEach(function(thermostat) {
+
+                                    devices[thermostat] = {
+                                        id: thermostat,
+                                        name: data.structures[structure].name + ' ' + data.devices.thermostats[thermostat].name,
+                                        type: 'temperature',
+                                        value: data.devices.thermostats[thermostat].ambient_temperature_c
+                                    };
+                                });
+                            }
+
+                            Namer.add(devices);
                         });
 
                         startListening();
@@ -74,10 +89,37 @@ function sendBridgeInfo(cb)
 
 function getSensors(cb)
 {
+    var sensors = [];
 
+    for (var device in devices) {
+        sensors.push({
+            id: device,
+            name: Namer.getName(device),
+            type: devices[device].type,
+            categories: Cats.getCats(device)
+        });
+    }
+
+    conn.emit('sensors', sensors);
+
+    if (cb) cb(sensors);
 }
 
 function getSensorValue(id, cb)
 {
+    if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
+        return;
+    }
 
+    var sensorValue = {
+        id: id,
+        name: Namer.getName(id),
+        type: devices[id].type,
+        value: devices[id].value
+    };
+
+    conn.emit('sensorValue', sensorValue);
+
+    if (cb) cb(sensorValue);
 }
