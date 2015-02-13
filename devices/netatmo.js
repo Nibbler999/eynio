@@ -1,6 +1,6 @@
 "use strict";
 
-var netatmo = require('netatmo'), api;
+var api;
 
 var Namer = require('../services/namer.js');
 var Cats = require('../services/cats.js');
@@ -14,32 +14,40 @@ module.exports = function(c, l) {
     conn = c;
     logger = l.child({component: 'netatmo'});
 
-    conn.once('accepted', function (cfg) {
-
-        if (!cfg.netatmo_username) {
-            return;
-        }
-
-        var auth = {
-            "client_id": "548eda57197759e5529dbbf6",
-            "client_secret": "erW1fhPiTF63UMTHoLGEPduv3C0v",
-            "username": cfg.netatmo_username,
-            "password": cfg.netatmo_password,
-        };
-
-        api = new netatmo(auth);
-
-        api.on("error", function(error) {
-            if (error.message === 'Authenticate error: invalid_grant') {
-                logger.error('Failed to authenticate. Check username and password.');
-            } else {
-                logger.error(error);
-            }
-        });
-
-        loadDevices(startListening);
+    conn.once('accepted', function () {
+        getToken();
     });
 };
+
+function getToken()
+{
+    conn.emit('getOAuth2Token', 'netatmo', token_callback);
+}
+
+function token_callback(token)
+{
+    if (token.access_token) {
+
+        if (api) {
+            api.authenticate(token);
+        } else {
+
+            var netatmo = require('netatmo');
+
+            api = new netatmo(token);
+
+            api.on("error", function(error) {
+                logger.error(error);
+            });
+
+            loadDevices(startListening);
+        }
+
+        if (token.expires_in > 0) {
+            setTimeout(getToken, token.expires_in * 1000);
+        }
+    }
+}
 
 function startListening()
 {
