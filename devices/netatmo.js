@@ -26,7 +26,7 @@ function getToken()
 
 function token_callback(token)
 {
-    if (token.access_token) {
+    if (token && token.access_token) {
 
         if (api) {
             api.authenticate(token);
