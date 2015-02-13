@@ -14,11 +14,11 @@ module.exports = function(c, l) {
     conn = c;
     logger = l.child({component: 'Nest'});
 
-    conn.once('accepted', function (cfg) {
+    conn.once('accepted', function () {
 
         conn.emit('getOAuth2Token', 'nest', function(token) {
 
-            if (token.access_token) {
+            if (token && token.access_token) {
 
                 var Firebase = require('firebase');
                 var dataRef = new Firebase('wss://developer-api.nest.com');
