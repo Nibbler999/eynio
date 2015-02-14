@@ -44,7 +44,7 @@ module.exports = function (log) {
 
         if (cb) {
 
-            var data = [], i = 0;
+            var data = [], i = 0, mycb, mycb_timedout, mycb_timer;
         
             var numListeners = conn.listeners(command.name).length;
         
@@ -52,32 +52,58 @@ module.exports = function (log) {
                 log.debug('Replied to', command.name, command.args, 'with empty response');
                 cb(null);
                 return;
-            }
-        
-            var mycb = function(result) {
-        
-                if (command.permissions) {
-                    result = permissions.filter_response(command, result);
-                }
+            } else if (numListeners === 1) {
+            
+                mycb_timedout = function() {
+                    log.warn('Timeout waiting for', command.name, command.args);
+                    cb(null);
+                };
 
-                if (numListeners === 1) {
+                mycb = function(result) {
+                    
+                    clearTimeout(mycb_timer);
+                    
+                    if (command.permissions) {
+                        result = permissions.filter_response(command, result);
+                    }
+
                     log.debug('Replied to', command.name, command.args, 'with result', result);
+                    
                     cb(result);
-                } else {
+                };
+            
+            } else {
+                    
+                mycb_timedout = function() {
+                    log.warn('Timeout waiting for', command.name, command.args);
+                    cb(data);
+                };
+                
+                mycb = function(result) {
+                    
+                    if (command.permissions) {
+                        result = permissions.filter_response(command, result);
+                    }
+
                     data = data.concat(result);
+                    
                     if (++i === numListeners) {
+                        clearTimeout(mycb_timer);
                         log.debug('Replied to', command.name, command.args, 'with result array', data);
                         cb(data);
                     }
-                }
-            };
-        
+                };
+            }
+
+            // If device does not respond in 5 seconds return partial result if available or null
+            mycb_timer = setTimeout(mycb_timedout, 5000);
+            
             command.args.push(mycb);
         }
 
         conn.emitLocal.apply(conn, [command.name].concat(command.args));
     });
-
+    
     conn.on('log', function (cb) {
     
         var PrettyStream = require('bunyan-prettystream');
