@@ -7,8 +7,12 @@ module.exports = function (log) {
     var serverUrl = 'https://nhome.ba/server?uuid=' + getUUID();
     
     log.debug('URL', serverUrl);
+   
+    var serverOpts = {
+        transports: ['websocket']
+    };
     
-    var conn = io(serverUrl);
+    var conn = io(serverUrl, serverOpts);
     
     log.info('Connecting...');
 
