@@ -32,9 +32,9 @@ function token_callback(token)
             api.authenticate(token);
         } else {
 
-            var netatmo = require('netatmo');
+            var Netatmo = require('netatmo');
 
-            api = new netatmo(token);
+            api = new Netatmo(token);
 
             api.on("error", function(error) {
                 logger.error(error);

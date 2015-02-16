@@ -77,6 +77,10 @@ function startListening()
         closeShutter(id, cb);
     });
 
+    conn.on('stopShutter', function (id, cb) {
+        stopShutter(id, cb);
+    });
+    
     conn.on('getSensors', function (cb) {
         loadDevices(function() {
             getSensors(cb);
@@ -375,3 +379,23 @@ function closeShutter(id, cb)
         if (cb) cb(100);
     });
 }
+
+function stopShutter(id, cb)
+{
+    if (!devices.hasOwnProperty(id)) {
+        return;
+    }
+
+    var deviceId = devices[id].id;
+
+    devices[id].dev.call('callAction', { 'deviceID': deviceId, 'name': 'stop' }, function(err, result) {
+
+        if (err) {
+            log('stopShutter:' + err);
+            return;
+        }
+
+        getShutterValue(id, cb);
+    });
+}
+
