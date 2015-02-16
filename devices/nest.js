@@ -1,7 +1,5 @@
 "use strict";
 
-var api;
-
 var Namer = require('../services/namer.js');
 var Cats = require('../services/cats.js');
 
@@ -23,7 +21,7 @@ module.exports = function(c, l) {
                 var Firebase = require('firebase');
                 var dataRef = new Firebase('wss://developer-api.nest.com');
 
-                dataRef.authWithCustomToken(token.access_token, function(error, authData) {
+                dataRef.authWithCustomToken(token.access_token, function(error) {
 
                     if (error) {
                         console.error("Login Failed!", error);
