@@ -21,7 +21,7 @@ module.exports = function(c, l) {
 
         require('request')('http://find.z-wave.me/', function (error, response, body) {
 
-          if (!error && response.statusCode == 200) {
+          if (!error && response.statusCode === 200) {
 
                 var regex = /<a href="http:..([0-9.]+):808.">/;
 
@@ -175,7 +175,7 @@ function update(cb)
 
         for (var d in status.devices) {
 
-            if (d == '1') {
+            if (d === '1') {
                 continue;
             }
 

@@ -139,7 +139,7 @@ function startUPnPServer()
 		                var value  = property[p][0];
 		                var device = devices[id];
 		                
-		                device.value = (value === '1');
+		                device.value = value === '1';
 		                
 		                if (device.type === 'switch') {
 

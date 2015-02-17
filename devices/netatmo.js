@@ -156,7 +156,7 @@ function getSensorValue(id, cb)
     var options = {
         scale: 'max',
         type: devices[id]._type,
-        date_end: 'last',
+        date_end: 'last'
     };
     
     if (devices[id].hasOwnProperty('main_device')) {

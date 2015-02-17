@@ -55,11 +55,11 @@ function getIP()
                 continue;
             }
 
-            if (interfaces[i][j].family == 'IPv6' && interfaces[i][j].address.substr(0, 4) == 'fe80') {
+            if (interfaces[i][j].family === 'IPv6' && interfaces[i][j].address.substr(0, 4) === 'fe80') {
                 continue;
             }
 
-            if (interfaces[i][j].family == 'IPv6' && interfaces[i][j].address.substr(0, 4) == '2001') {
+            if (interfaces[i][j].family === 'IPv6' && interfaces[i][j].address.substr(0, 4) === '2001') {
                 continue;
             }
 
