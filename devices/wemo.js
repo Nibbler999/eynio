@@ -149,7 +149,7 @@ function startUPnPServer()
 		                    var sensorValue = {
                                 id: id,
                                 name: Namer.getName(id),
-                                type: device.type,
+                                type: 'motion',
                                 value: value === '1'
                             };
                             
