@@ -33,7 +33,7 @@ module.exports = function(c, l) {
             };
 
             Namer.add(devices);
-  
+
             subscribe(device);
         });
 
@@ -138,9 +138,11 @@ function startUPnPServer()
 		                var value  = property[p][0];
 		                var device = devices[id];
 		                
-		                if (device.type === 'switch') {
+		                device.value = (value === '1');
 		                
-                            var switchState = { on: value === '1'};
+		                if (device.type === 'switch') {
+
+                            var switchState = { on: device.value };
 
                             conn.emit('switchState', { id: id, state: switchState});
                             
@@ -150,7 +152,7 @@ function startUPnPServer()
                                 id: id,
                                 name: Namer.getName(id),
                                 type: 'motion',
-                                value: value === '1'
+                                value: device.value
                             };
                             
                             conn.emit('sensorValue', sensorValue);
@@ -175,6 +177,7 @@ function getSwitches(cb)
             switches.push({
                 id: device,
                 name: Namer.getName(device),
+                value: devices[device].value,
                 categories: Cats.getCats(device)
             });
         }
@@ -247,6 +250,7 @@ function getSensors(cb)
             sensors.push({
                 id: device,
                 name: Namer.getName(device),
+                value: devices[device].value,
                 type: 'motion',
                 categories: Cats.getCats(device)
             });
