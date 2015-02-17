@@ -12,7 +12,7 @@ function updateSnapshot(camera, res)
             if (!error && response.statusCode === 200) {
 
                 timer = setTimeout(refresh, 1000);
-    
+
                 res.write("--myboundary\r\n");
                 res.write("Content-Type: image/jpeg\r\n");
                 res.write("Content-Length: " + body.length + "\r\n");
@@ -27,7 +27,7 @@ function updateSnapshot(camera, res)
             }
         });
     };
-    
+
     res.on('close', function() {
         clearTimeout(timer);
     });
@@ -42,7 +42,7 @@ process.on('message', function(camera) {
         this.setNoDelay();
 
         this.write(camera.id);
-    
+
         this.write("HTTP/1.1 200 OK\r\n");
         this.write("Content-Type: multipart/x-mixed-replace; boundary=myboundary\r\n");
         this.write("Cache-Control: no-cache\r\n");
@@ -51,7 +51,7 @@ process.on('message', function(camera) {
         this.write("\r\n");
 
         updateSnapshot(camera, this);
-    
+
         this.on('error', function(err) {
             process.send(err.message);
         });

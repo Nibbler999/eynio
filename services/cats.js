@@ -33,7 +33,7 @@ Cats.listen = function(c, l) {
         delete categories[catid];
 
         for (var deviceid in devices) {
-            removeCatFromDevice(catid, deviceid); 
+            removeCatFromDevice(catid, deviceid);
         }
 
         Cats.update();
@@ -45,7 +45,7 @@ Cats.listen = function(c, l) {
         categories[catid] = cat;
         Cats.update();
 
-         if (cb) cb();
+        if (cb) cb();
     });
 
     conn.on('catList', function (cb) {
@@ -76,16 +76,16 @@ Cats.listen = function(c, l) {
     conn.on('catListDevices', function (catid, cb) {
 
         var devs = [];
-    
+
         for (var deviceid in devices) {
-    
+
             if (devices[deviceid].indexOf(catid) !== -1) {
                 devs.push(deviceid);
             }
         }
 
-        conn.emit('catList', devs);  
-        
+        conn.emit('catList', devs);
+
         if (cb) cb(devs);
     });
 

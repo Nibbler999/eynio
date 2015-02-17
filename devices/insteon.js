@@ -22,7 +22,7 @@ module.exports = function(c, l) {
     logger = l.child({component: 'Insteon'});
 
     conn.once('accepted', function (cfg) {
-    
+
         var html = '';
 
         require('http').get("http://connect.insteon.com/getinfo.asp", function(res) {
@@ -54,11 +54,11 @@ module.exports = function(c, l) {
                 });
 
                 insteon.connect(host, function() {
-        
+
                     log('Connected');
-           
+
                     insteon.links(function(error, info) {
-                        
+
                         info.forEach(function(device) {
                             insteon.info(device.id, function(error, info) {
                                 if (info.isLighting) {
@@ -66,11 +66,11 @@ module.exports = function(c, l) {
                                 }
                             });
                         });
-                        
+
                         Namer.add(lights);
 
                         startListening();
-                    }); 
+                    });
                 });
 
             });
@@ -90,9 +90,9 @@ function startListening()
     });
 
     conn.on('getLights', function (cb) {
-        getLights(cb);    
+        getLights(cb);
     });
-    
+
     conn.on('setLightState', function (id, values) {
         setLightState(id, values);
     });
@@ -219,5 +219,5 @@ function getLightState(id, cb)
         var lightState = { on: on, level: level };
         conn.emit('lightState', { id: id, state: lightState});
         if (cb) cb(lightState);
-    });  
+    });
 }

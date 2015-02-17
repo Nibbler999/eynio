@@ -55,7 +55,7 @@ var permissions = {
                 var catmatches = command.permissions.categories.filter(function(n) {
                     return cats.indexOf(n) !== -1;
                 });
-    
+
                 if (catmatches.length > 0) {
                     return true;
                 }
@@ -109,14 +109,14 @@ var permissions = {
     filter_response: function (command, response) {
 
         if (filter_devices.indexOf(command.name) !== -1) {
-            
+
             return response.filter(function(device) {
                 return permissions.permitted_device(command, device.id);
             });
         }
 
         if (filter_categories.indexOf(command.name) !== -1) {
-            
+
             var filtered_response = {};
 
             for (var category in response) {

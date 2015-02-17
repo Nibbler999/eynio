@@ -46,19 +46,19 @@ function startListening()
     log('Ready for commands');
 
     conn.on('setVolumeUp', function (id) {
-        setVolumeUp(id);    
+        setVolumeUp(id);
     });
 
     conn.on('setVolumeDown', function (id) {
-        setVolumeDown(id);    
+        setVolumeDown(id);
     });
 
     conn.on('setChannelUp', function (id) {
-        setChannelUp(id);    
+        setChannelUp(id);
     });
 
     conn.on('setChannelDown', function (id) {
-        setChannelDown(id);    
+        setChannelDown(id);
     });
 
     conn.on('getMultiMedia', function (cb) {

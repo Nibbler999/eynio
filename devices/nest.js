@@ -32,7 +32,7 @@ module.exports = function(c, l) {
                             var data = snapshot.val();
 
                             for (var structure in data.structures) {
-                               
+
                                 data.structures[structure].thermostats.forEach(function(thermostat) {
 
                                     devices[thermostat] = {

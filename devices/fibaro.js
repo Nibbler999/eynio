@@ -25,7 +25,7 @@ module.exports = function(c, l) {
             bridges[info.serial] = new Fibaro(info.ip, 'admin', 'admin');
 
             loadDevices(startListening);
-        }); 
+        });
     });
 };
 
@@ -38,9 +38,9 @@ function startListening()
     });
 
     conn.on('switchOn', function (id) {
-        switchOn(id);    
+        switchOn(id);
     });
-    
+
     conn.on('switchOff', function (id) {
         switchOff(id);
     });
@@ -80,7 +80,7 @@ function startListening()
     conn.on('stopShutter', function (id, cb) {
         stopShutter(id, cb);
     });
-    
+
     conn.on('getSensors', function (cb) {
         loadDevices(function() {
             getSensors(cb);
@@ -97,18 +97,18 @@ function loadDevices(cb)
     Object.keys(bridges).forEach(function(serial) {
 
         bridges[serial].api.devices.list(function (err, devicelist) {
-    
+
             if (err) {
                 log(err);
                 return;
             }
-    
+
             devicelist.forEach(function(device) {
-    
+
                 if (device.properties.disabled === '1') {
                     return;
                 }
-    
+
                 devices[serial + ':' + device.id] = {
                     id: device.id,
                     name: device.name,
@@ -116,9 +116,9 @@ function loadDevices(cb)
                     dev: bridges[serial]
                 };
             });
-    
+
             Namer.add(devices);
-    
+
             if (cb) cb();
         });
     });
@@ -258,7 +258,7 @@ function getSensorValue(id, cb)
         };
 
         conn.emit('sensorValue', sensorValue);
-    
+
         if (cb) cb(sensorValue);
     });
 }
@@ -287,7 +287,7 @@ function getShutterValue(id, cb)
         };
 
         conn.emit('shutterValue', ShutterValue);
-    
+
         if (cb) cb(ShutterValue);
     });
 }

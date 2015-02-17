@@ -19,19 +19,19 @@ module.exports = function(c, l) {
     logger = l.child({component: 'NHomeSlave'});
 
     conn.once('accepted', function (cfg) {
-    
+
         if (!cfg.nhome_apikey) {
             return;
         }
 
         var io = require('socket.io-client');
-        
+
         var serverUrl = 'https://nhome.ba/client?apikey=' + cfg.nhome_apikey;
-        
+
         nhome = io(serverUrl, {'force new connection': true});
-        
+
         log('Connecting...');
-    
+
         nhome.on('connect', function () {
 
             log('Connected.');
@@ -56,27 +56,27 @@ function startListening()
     });
 
     conn.on('getLights', function (cb) {
-        getLights(cb);    
+        getLights(cb);
     });
 
     conn.on('getSwitches', function (cb) {
-        getSwitches(cb);    
+        getSwitches(cb);
     });
 
     conn.on('getSensors', function (cb) {
-        getSensors(cb);    
+        getSensors(cb);
     });
 
     conn.on('getRemotes', function (cb) {
-        getRemotes(cb);    
+        getRemotes(cb);
     });
 
     conn.on('getCustomRemotes', function (cb) {
-        getCustomRemotes(cb);    
+        getCustomRemotes(cb);
     });
 
     conn.on('getShutters', function (cb) {
-        getShutters(cb);    
+        getShutters(cb);
     });
 
     var events = [
@@ -97,7 +97,7 @@ function startListening()
 
     var broadcasts = [
         'lightState', 'switchState', 'sensorValue', 'shutterValue',
-        'IRKeyLearned', 'customRemoteAdded', 'customRemoteUpdated', 'customRemoteDeleted' 
+        'IRKeyLearned', 'customRemoteAdded', 'customRemoteUpdated', 'customRemoteDeleted'
     ];
 
     broadcasts.forEach(function(eventName) {

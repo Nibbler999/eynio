@@ -21,7 +21,7 @@ module.exports = function(c, l) {
 
         require('request')('http://find.z-wave.me/', function (error, response, body) {
 
-          if (!error && response.statusCode === 200) {
+            if (!error && response.statusCode === 200) {
 
                 var regex = /<a href="http:..([0-9.]+):808.">/;
 
@@ -30,9 +30,9 @@ module.exports = function(c, l) {
                 if (!matches) {
                     return;
                 }
-    
+
                 ip = matches[1];
-    
+
                 bridges['raz:' + ip] = ip;
 
                 update(startListening);
@@ -50,9 +50,9 @@ function startListening()
     });
 
     conn.on('switchOn', function (id) {
-        switchOn(id);    
+        switchOn(id);
     });
-    
+
     conn.on('switchOff', function (id) {
         switchOff(id);
     });
@@ -84,7 +84,7 @@ function getSwitches(cb)
     update(function() {
 
         var switches = [];
-    
+
         for (var device in devices) {
             if (devices[device].commandClasses.hasOwnProperty('37')) {
                 switches.push({
@@ -94,7 +94,7 @@ function getSwitches(cb)
                 });
             }
         }
-    
+
         conn.emit('switches', switches);
 
         if (cb) cb(switches);

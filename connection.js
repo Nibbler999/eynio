@@ -3,23 +3,23 @@
 module.exports = function (log) {
 
     var io = require('socket.io-client');
-    
+
     var serverUrl = 'https://nhome.ba/server?uuid=' + getUUID();
-    
+
     log.debug('URL', serverUrl);
-   
+
     var serverOpts = {
         transports: ['websocket']
     };
-    
+
     var conn = io(serverUrl, serverOpts);
-    
+
     log.info('Connecting...');
 
     conn.on('connect', function () {
         log.info('Connected.');
     });
-    
+
     conn.on('connect_error', function () {
         log.error('Failed to connect to NHome.');
     });
@@ -33,7 +33,7 @@ module.exports = function (log) {
     });
 
     conn.on('command', function (command, cb) {
-    
+
         log.debug('Received payload:', command);
 
         if (command.permissions) {
@@ -49,48 +49,48 @@ module.exports = function (log) {
         if (cb) {
 
             var data = [], i = 0, mycb, mycb_timedout, mycb_timer;
-        
+
             var numListeners = conn.listeners(command.name).length;
-        
+
             if (numListeners === 0) {
                 log.debug('Replied to', command.name, command.args, 'with empty response');
                 cb(null);
                 return;
             } else if (numListeners === 1) {
-            
+
                 mycb_timedout = function() {
                     log.warn('Timeout waiting for', command.name, command.args);
                     cb(null);
                 };
 
                 mycb = function(result) {
-                    
+
                     clearTimeout(mycb_timer);
-                    
+
                     if (command.permissions) {
                         result = permissions.filter_response(command, result);
                     }
 
                     log.debug('Replied to', command.name, command.args, 'with result', result);
-                    
+
                     cb(result);
                 };
-            
+
             } else {
-                    
+
                 mycb_timedout = function() {
                     log.warn('Timeout waiting for', command.name, command.args);
                     cb(data);
                 };
-                
+
                 mycb = function(result) {
-                    
+
                     if (command.permissions) {
                         result = permissions.filter_response(command, result);
                     }
 
                     data = data.concat(result);
-                    
+
                     if (++i === numListeners) {
                         clearTimeout(mycb_timer);
                         log.debug('Replied to', command.name, command.args, 'with result array', data);
@@ -101,30 +101,30 @@ module.exports = function (log) {
 
             // If device does not respond in 5 seconds return partial result if available or null
             mycb_timer = setTimeout(mycb_timedout, 5000);
-            
+
             command.args.push(mycb);
         }
 
         conn.emitLocal.apply(conn, [command.name].concat(command.args));
     });
-    
+
     conn.on('log', function (cb) {
-    
+
         var PrettyStream = require('bunyan-prettystream');
-    
+
         var prettyLog = new PrettyStream({mode: 'short', useColor: false});
-    
+
         var ringbuffer = log.streams[1].stream;
 
         var entries = ringbuffer.records.map(prettyLog.formatRecord).join('');
-    
+
         conn.emit('log', entries);
 
         if (cb) cb(entries);
     });
 
     conn.emitLocal = function (name) {
-    
+
         try {
             io.Manager.prototype.emit.apply(this, arguments);
         } catch (e) {

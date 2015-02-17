@@ -52,7 +52,7 @@ function processUpdateInfo(err, info)
     var shasum = crypto.createHash(update.hashFunction);
 
     https.get(update.URL, function(res) {
-    
+
         console.log('Downloading update');
 
         var downloadedBytes = 0;
@@ -62,7 +62,7 @@ function processUpdateInfo(err, info)
             d.copy(zip, downloadedBytes);
             downloadedBytes += d.length;
         });
-    
+
         res.on('end', function() {
 
             if (downloadedBytes !== update.size) {
@@ -84,16 +84,16 @@ function processUpdateInfo(err, info)
             console.log('Applying update');
 
             var AdmZip = require('adm-zip');
-            
+
             var archive = new AdmZip(zip);
-            
+
             archive.extractAllTo('.', true);
 
             console.log('Update complete');
 
             require('./server.js');
         });
-    
+
     }).on('error', function(e) {
         console.error(e);
         require('./server.js');

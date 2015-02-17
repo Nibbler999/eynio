@@ -23,7 +23,7 @@ module.exports = function(c, l) {
     logger = l.child({component: 'LIFX'});
 
     conn.once('accepted', function (cfg) {
-    
+
         lx = lifx.init();
 
         lx.on('bulbstate', function(b) {
@@ -32,7 +32,7 @@ module.exports = function(c, l) {
 
             var hsv = [(b.hue / 65535) * 360, b.saturation / 65535, b.brightness / 65535];
             var chroma = require('chroma-js')(hsv, 'hsv');
-    
+
             var state = {
                 on: b.on,
                 level: parseInt(((b.dim + 32768) / 65535) * 100),
@@ -41,7 +41,7 @@ module.exports = function(c, l) {
                 rgb: chroma.rgb(),
                 hex: chroma.hex()
             };
-    
+
             conn.emit('lightState', { id: id, state: state });
         });
 
@@ -75,9 +75,9 @@ function startListening()
     });
 
     conn.on('getLights', function (cb) {
-        getLights(cb);    
+        getLights(cb);
     });
-    
+
     conn.on('setLightState', function (id, values) {
         setLightState(id, values);
     });
@@ -178,7 +178,7 @@ function setLightColor(id, color_string, color_format)
 
     if (isNaN(hsv[0])) {
         hsv[0] = 0;
-    } 
+    }
 
     var temp = 3500;
 

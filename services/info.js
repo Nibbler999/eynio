@@ -10,11 +10,11 @@ module.exports = function(c, l) {
     logger = l.child({component: 'Info'});
 
     conn.on('getServerStatus', function (cb) {
-       getServerStatus(cb);
+        getServerStatus(cb);
     });
 
     conn.on('updateApp', function() {
-        updateApp();        
+        updateApp();
     });
 
     conn.on('ping', function (cb) {
@@ -85,7 +85,7 @@ function getUpdateable()
 
 function updateApp()
 {
-    // Our NHome pi image - systemd will update app and respawn us 
+    // Our NHome pi image - systemd will update app and respawn us
     if (process.env.NHOME_CAN_UPDATE === '1') {
         process.exit();
         return;

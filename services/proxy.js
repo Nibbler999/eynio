@@ -17,7 +17,7 @@ module.exports = function(c, l) {
 function proxyConnect(proxy)
 {
     logger.debug('Creating proxy to ' + proxy.host + ':' + proxy.port);
-    
+
     var child = require('child_process').fork(__dirname + '/proxy-child.js');
 
     child.on('message', function(message) {

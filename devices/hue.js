@@ -28,11 +28,11 @@ module.exports = function(c, l) {
                 log('locateBridges: ' + err);
                 return;
             }
-    
+
             if (result.length === 0) {
                 return;
             }
-    
+
             log('Found a bridge');
 
             var api = new HueApi(result[0].ipaddress, cfg.hue_apikey || 'none');
@@ -45,7 +45,7 @@ module.exports = function(c, l) {
                     log(err);
                     return;
                 }
-    
+
                 bridges[result[0].id].name = config.name;
 
                 // If auth failed this property is missing
@@ -104,10 +104,10 @@ function loadLights(id)
                 if (!light.state.reachable) {
                     return;
                 }
-    
+
                 var hsl = [(light.state.hue / 65534) * 359, light.state.sat / 254, light.state.bri / 254];
                 var chroma = require('chroma-js')(hsl, 'hsl');
-        
+
                 state = {
                     on: light.state.on,
                     level: parseInt((light.state.bri / 254) * 100),
@@ -140,9 +140,9 @@ function startListening()
     });
 
     conn.on('getLights', function (cb) {
-        getLights(cb);    
+        getLights(cb);
     });
-    
+
     conn.on('setLightState', function (id, values) {
         setLightState(id, values);
     });
@@ -211,7 +211,7 @@ function setLightState(id, values)
     }
 
     var state = lightState.create();
-    
+
     if (values.hasOwnProperty('rgb')) {
         state = state.rgb.apply(state, values.rgb);
         values.hue = state.hue;
@@ -240,12 +240,12 @@ function setLightColor(id, color_string, color_format)
     }
 
     var state = lightState.create();
-    
+
     var hsl;
 
     try {
         hsl = require('chroma-js')(color_string, color_format).hsl();
-    } catch (e){
+    } catch (e) {
         log(e);
         return;
     }
@@ -368,7 +368,7 @@ function setDeviceName(id, name)
             devices[id].name = name;
             conn.emit('deviceRenamed', id, name);
         }
-    });    
+    });
 }
 
 function addNewDevices(id)

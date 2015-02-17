@@ -61,9 +61,9 @@ function startListening()
     });
 
     conn.on('getRemotes', function (cb) {
-        getRemotes(cb);    
+        getRemotes(cb);
     });
-    
+
     conn.on('sendRemoteCommand', function (id, cmd, cb) {
         sendRawCommand(id, cmd, cb);
     });
@@ -177,7 +177,7 @@ function learnKey(remoteid, key)
         }
 
         saveCode(remoteid, key, res);
-    
+
         conn.emit('IRKeyLearned', { remoteid: remoteid, key: key });
     });
 }

@@ -83,7 +83,7 @@ function loadDevices(cb)
 
             device.data_type.forEach(function(datatype) {
 
-              devices[device._id + '-' + datatype] = {
+                devices[device._id + '-' + datatype] = {
                     id: device._id,
                     type: datatype.toLowerCase(),
                     _type: datatype,
@@ -97,7 +97,7 @@ function loadDevices(cb)
 
             module.data_type.forEach(function(datatype) {
 
-              devices[module.main_device + '-' + module._id + '-' + datatype] = {
+                devices[module.main_device + '-' + module._id + '-' + datatype] = {
                     id: module._id,
                     main_device: module.main_device,
                     type: datatype.toLowerCase(),
@@ -110,7 +110,7 @@ function loadDevices(cb)
 
         Namer.add(devices);
 
-        if (cb) cb(); 
+        if (cb) cb();
     });
 }
 
@@ -158,7 +158,7 @@ function getSensorValue(id, cb)
         type: devices[id]._type,
         date_end: 'last'
     };
-    
+
     if (devices[id].hasOwnProperty('main_device')) {
         options.device_id = devices[id].main_device;
         options.module_id = devices[id].id;
@@ -184,7 +184,7 @@ function getSensorValue(id, cb)
         devices[id].value = sensorValue.value;
 
         conn.emit('sensorValue', sensorValue);
-    
+
         if (cb) cb(sensorValue);
     });
 }
