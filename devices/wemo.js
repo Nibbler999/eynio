@@ -27,7 +27,7 @@ module.exports = function(c, l) {
 
             devices[device.serialNumber] = {
                 name: device.friendlyName,
-                type: device.modelName === 'Sensor' ? 'sensor' : 'switch',
+                type: device.deviceType === 'urn:Belkin:device:sensor:1' ? 'sensor' : 'switch',
                 value: device.binaryState === '1',
                 dev: new WeMo(device.ip, device.port)
             };
