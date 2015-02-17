@@ -154,6 +154,7 @@ function getSensors(cb)
             sensors.push({
                 id: device,
                 name: Namer.getName(device),
+                type: 'motion_sensor',
                 categories: Cats.getCats(device)
             });
         }
