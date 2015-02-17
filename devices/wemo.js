@@ -24,9 +24,10 @@ module.exports = function(c, l) {
         var client = WeMo.Search();
 
         client.on('found', function(device) {
-
+            
             devices[device.serialNumber] = {
                 name: device.friendlyName,
+                type: device.modelName === 'Sensor' ? 'sensor' : 'switch',
                 dev: new WeMo(device.ip, device.port)
             };
 
@@ -58,6 +59,14 @@ function startListening()
     conn.on('getSwitchState', function (id, cb) {
         getSwitchState(id, cb);
     });
+    
+    conn.on('getSensors', function (cb) {
+        getSensors(cb);
+    });
+    
+    conn.on('getSensorValue', function (id, cb) {
+        getSensorValue(id, cb);
+    });
 }
 
 function getSwitches(cb)
@@ -65,11 +74,13 @@ function getSwitches(cb)
     var switches = [];
 
     for (var device in devices) {
-        switches.push({
-            id: device,
-            name: Namer.getName(device),
-            categories: Cats.getCats(device)
-        });
+        if (devices[device].type === 'switch') {
+            switches.push({
+                id: device,
+                name: Namer.getName(device),
+                categories: Cats.getCats(device)
+            });
+        }
     }
 
     conn.emit('switches', switches);
@@ -133,3 +144,51 @@ function getSwitchState(id, cb)
         if (cb) cb(switchState);
     });
 }
+
+function getSensors(cb)
+{
+    var sensors = [];
+
+    for (var device in devices) {
+        if (devices[device].type === 'sensor') {
+            sensors.push({
+                id: device,
+                name: Namer.getName(device),
+                categories: Cats.getCats(device)
+            });
+        }
+    }
+
+    conn.emit('sensors', sensors);
+
+    if (cb) cb(sensors);
+}
+
+function getSensorValue(id, cb)
+{
+    if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
+        return;
+    }
+
+    devices[id].dev.getBinaryState(function(err, result) {
+
+        if (err) {
+            log('getSwitchState:' + err);
+            if (cb) cb(null);
+            return;
+        }
+
+        var sensorValue = {
+            id: id,
+            name: Namer.getName(id),
+            type: 'motion_sensor',
+            value: result === '1'
+        };
+
+        conn.emit('sensorValue', sensorValue);
+    
+        if (cb) cb(sensorValue);
+    });
+}
+
