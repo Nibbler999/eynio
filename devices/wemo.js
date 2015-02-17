@@ -127,6 +127,7 @@ function startUPnPServer()
 		    
 		        if (err) {
 			        logger.error(err);
+			        logger.error(data);
 		        }
 		
 		        var property = json['e:propertyset']['e:property'][0];
