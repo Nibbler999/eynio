@@ -88,7 +88,7 @@ function subscribe(device)
             'TIMEOUT': 'Second-600'
         }
     };
-			
+            
     var sub_request = require('http').request(subscribeoptions, function(res) {
         subscriptions[res.headers.sid] = device.serialNumber;
         setTimeout(subscribe, 600 * 1000, device);
@@ -100,7 +100,7 @@ function subscribe(device)
 
     sub_request.end();
 }
-			
+            
 function startUPnPServer()
 {
     var http = require('http');
@@ -109,47 +109,47 @@ function startUPnPServer()
         
         var data = '';
 
-	    req.setEncoding('utf8');
+        req.setEncoding('utf8');
 
         req.on('data', function(chunk) {
             data += chunk;
-		});
+        });
 
-		req.on('end', function() {
-		    
-		    var id = subscriptions[req.headers.sid];
-		    
-		    if (!id) {
-		        return;
-		    }
-		    
-		    require('xml2js').parseString(data, function(err, json) {
-		    
-		        if (err) {
-			        logger.error(err);
-			        logger.error(data);
-		        }
-		
-		        var property = json['e:propertyset']['e:property'][0];
-		        
-		        for (var p in property) {
-		        
-		            if (p === 'BinaryState') {
+        req.on('end', function() {
+            
+            var id = subscriptions[req.headers.sid];
+            
+            if (!id) {
+                return;
+            }
+            
+            require('xml2js').parseString(data, function(err, json) {
+            
+                if (err) {
+                    logger.error(err);
+                    logger.error(data);
+                }
+        
+                var property = json['e:propertyset']['e:property'][0];
+                
+                for (var p in property) {
+                
+                    if (p === 'BinaryState') {
 
-		                var value  = property[p][0];
-		                var device = devices[id];
-		                
-		                device.value = value === '1';
-		                
-		                if (device.type === 'switch') {
+                        var value  = property[p][0];
+                        var device = devices[id];
+                        
+                        device.value = value === '1';
+                        
+                        if (device.type === 'switch') {
 
                             var switchState = { on: device.value };
 
                             conn.emit('switchState', { id: id, state: switchState});
                             
-		                } else if (device.type === 'sensor') {
-		                
-		                    var sensorValue = {
+                        } else if (device.type === 'sensor') {
+                        
+                            var sensorValue = {
                                 id: id,
                                 name: Namer.getName(id),
                                 type: 'motion',
@@ -158,14 +158,14 @@ function startUPnPServer()
                             
                             conn.emit('sensorValue', sensorValue);
                         }
-		            }
-		        }
-		    });
-		    
-		    res.writeHead(200, {'Content-Type': 'text/plain'});
+                    }
+                }
+            });
+            
+            res.writeHead(200, {'Content-Type': 'text/plain'});
             res.end('OK\n');
-		});
-		
+        });
+        
     }).listen(3001);
 }
 

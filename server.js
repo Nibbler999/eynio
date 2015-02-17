@@ -37,6 +37,6 @@ require('./devices/nhome.js')(conn, log);
 require('./devices/nest.js')(conn, log);
 
 process.on('uncaughtException', function (err) {
-	log.error('uncaughtException:' + err);
-	log.error(err.stack);
+    log.error('uncaughtException:' + err);
+    log.error(err.stack);
 });

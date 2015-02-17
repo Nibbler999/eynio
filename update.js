@@ -101,6 +101,6 @@ function processUpdateInfo(err, info)
 }
 
 process.on('uncaughtException', function (err) {
-	console.log('uncaughtException:' + err);
-	console.log(err.stack);
+    console.log('uncaughtException:' + err);
+    console.log(err.stack);
 });

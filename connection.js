@@ -25,7 +25,7 @@ module.exports = function (log) {
     });
 
     conn.on('reconnecting', function() {
-    	log.info('Attempting to reconnect');
+        log.info('Attempting to reconnect');
     });
 
     conn.on('disconnect', function () {
