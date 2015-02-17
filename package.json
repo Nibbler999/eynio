@@ -10,6 +10,7 @@
     "fibaro-api": "0.1.1",
     "firebase": "2.2.0",
     "home-controller": "0.5.2",
+    "ip": "0.3.2",
     "lg-tv-api": "0.1.2",
     "lifx": "0.2.1",
     "netatmo": "1.1.1",

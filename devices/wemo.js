@@ -5,7 +5,7 @@ var WeMo = require('wemo');
 var Namer = require('../services/namer.js');
 var Cats = require('../services/cats.js');
 
-var conn, devices = {};
+var conn, devices = {}, subscriptions = {};
 
 var logger;
 
@@ -24,18 +24,22 @@ module.exports = function(c, l) {
         var client = WeMo.Search();
 
         client.on('found', function(device) {
-            
+            console.log('d', device);
             devices[device.serialNumber] = {
                 name: device.friendlyName,
                 type: device.modelName === 'Sensor' ? 'sensor' : 'switch',
+                value: device.binaryState === '1',
                 dev: new WeMo(device.ip, device.port)
             };
 
             Namer.add(devices);
+  
+            subscribe(device);
         });
 
         client.once('found', function() {
             startListening();
+            startUPnPServer();
         }); 
     });
 };
@@ -69,6 +73,99 @@ function startListening()
     });
 }
 
+function subscribe(device)
+{
+    var ipaddress = require('ip').address();
+                
+    var subscribeoptions = {
+        host: device.ip,
+        port: device.port,
+        path: '/upnp/event/basicevent1',
+        method: 'SUBSCRIBE',
+        headers: {
+            'CALLBACK': '<http://' + ipaddress +':3001/>',
+            'NT': 'upnp:event',
+            'TIMEOUT': 'Second-600'
+        }
+    };
+			
+    var sub_request = require('http').request(subscribeoptions, function(res) {
+        subscriptions[res.headers.sid] = device.serialNumber;
+        setTimeout(subscribe, 600 * 1000, device);
+    });
+
+    sub_request.on('error', function (e) {
+        logger.error('event subscription error', e);
+    });
+
+    sub_request.end();
+}
+			
+function startUPnPServer()
+{
+    var http = require('http');
+
+    http.createServer(function (req, res) {
+        
+        var data = '';
+
+	    req.setEncoding('utf8');
+
+        req.on('data', function(chunk) {
+            data += chunk;
+		});
+
+		req.on('end', function() {
+		    
+		    var id = subscriptions[req.headers.sid];
+		    
+		    if (!id) {
+		        return;
+		    }
+		    
+		    require('xml2js').parseString(data, function(err, json) {
+		    
+		        if (err) {
+			        console.log(err);
+		        }
+		
+		        var property = json['e:propertyset']['e:property'][0];
+		        
+		        for (var p in property) {
+		        
+		            if (p === 'BinaryState') {
+
+		                var value  = property[p][0];
+		                var device = devices[id];
+		                
+		                if (device.type === 'switch') {
+		                
+                            var switchState = { on: value === '1'};
+
+                            conn.emit('switchState', { id: id, state: switchState});
+                            
+		                } else if (device.type === 'sensor') {
+		                
+		                    var sensorValue = {
+                                id: id,
+                                name: Namer.getName(id),
+                                type: device.type,
+                                value: value === '1'
+                            };
+                            
+                            conn.emit('sensorValue', sensorValue);
+                        }
+		            }
+		        }
+		    });
+		    
+		    res.writeHead(200, {'Content-Type': 'text/plain'});
+            res.end('OK\n');
+		});
+		
+    }).listen(3001);
+}
+
 function getSwitches(cb)
 {
     var switches = [];
@@ -100,8 +197,6 @@ function switchOn(id)
             log('switchOn:' + err);
             return;
         }
-
-        getSwitchState(id);
     });
 }
 
@@ -117,8 +212,6 @@ function switchOff(id)
             log('switchOff:' + err);
             return;
         }
-
-        getSwitchState(id);
     });
 }
 
