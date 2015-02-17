@@ -154,7 +154,7 @@ function getSensors(cb)
             sensors.push({
                 id: device,
                 name: Namer.getName(device),
-                type: 'motion_sensor',
+                type: 'sensor_motion',
                 categories: Cats.getCats(device)
             });
         }
@@ -183,7 +183,7 @@ function getSensorValue(id, cb)
         var sensorValue = {
             id: id,
             name: Namer.getName(id),
-            type: 'motion_sensor',
+            type: 'sensor_motion',
             value: result === '1'
         };
 
