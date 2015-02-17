@@ -24,7 +24,7 @@ module.exports = function(c, l) {
         var client = WeMo.Search();
 
         client.on('found', function(device) {
-            console.log('d', device);
+
             devices[device.serialNumber] = {
                 name: device.friendlyName,
                 type: device.modelName === 'Sensor' ? 'sensor' : 'switch',
@@ -126,7 +126,7 @@ function startUPnPServer()
 		    require('xml2js').parseString(data, function(err, json) {
 		    
 		        if (err) {
-			        console.log(err);
+			        logger.error(err);
 		        }
 		
 		        var property = json['e:propertyset']['e:property'][0];
