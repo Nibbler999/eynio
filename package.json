@@ -23,7 +23,7 @@
     "simple-itach": "0.2.1",
     "socket.io-client": "~1.3.4",
     "tcp-ping": "0.1.1",
-    "wemo": "0.1.1",
+    "wemo": "0.2.0",
     "xml2js": "0.4.5"
   },
   "private": true
