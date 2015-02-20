@@ -1,0 +1,10 @@
+{
+  "indent": 4,
+  "node": true,
+  "enforceall": true,
+  "nocomma": false,
+  "camelcase": false,
+  "curly": false,
+  "forin": false,
+  "singleGroups": false
+}
