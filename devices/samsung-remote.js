@@ -19,23 +19,20 @@ module.exports = function(c, l) {
     conn = c;
     logger = l.child({component: 'Samsung TV'});
 
-    conn.once('accepted', function (cfg) {
+    require('tcp-ping').probe('172.20.15.127', 55000, function(err, available) {
 
-        require('tcp-ping').probe('172.20.15.127', 55000, function(err, available) {
+        if (!available) {
+            return;
+        }
 
-            if (!available) {
-                return;
-            }
+        devices['Samsung-172.20.15.127'] = {
+            name: 'Samsung TV',
+            dev: new SamsungRemote({ ip: '172.20.15.127'})
+        };
 
-            devices['Samsung-172.20.15.127'] = {
-                name: 'Samsung TV',
-                dev: new SamsungRemote({ ip: '172.20.15.127'})
-            };
+        Namer.add(devices);
 
-            Namer.add(devices);
-
-            startListening();
-        });
+        startListening();
     });
 };
 

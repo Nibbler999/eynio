@@ -19,28 +19,25 @@ module.exports = function(c, l) {
     conn = c;
     logger = l.child({component: 'WeMo'});
 
-    conn.once('accepted', function (cfg) {
+    var client = WeMo.Search();
 
-        var client = WeMo.Search();
+    client.on('found', function(device) {
 
-        client.on('found', function(device) {
+        devices[device.serialNumber] = {
+            name: device.friendlyName,
+            type: device.deviceType === 'urn:Belkin:device:sensor:1' ? 'sensor' : 'switch',
+            value: device.binaryState === '1',
+            dev: new WeMo(device.ip, device.port)
+        };
 
-            devices[device.serialNumber] = {
-                name: device.friendlyName,
-                type: device.deviceType === 'urn:Belkin:device:sensor:1' ? 'sensor' : 'switch',
-                value: device.binaryState === '1',
-                dev: new WeMo(device.ip, device.port)
-            };
+        Namer.add(devices);
 
-            Namer.add(devices);
+        subscribe(device);
+    });
 
-            subscribe(device);
-        });
-
-        client.once('found', function() {
-            startListening();
-            startUPnPServer();
-        });
+    client.once('found', function() {
+        startListening();
+        startUPnPServer();
     });
 };
 

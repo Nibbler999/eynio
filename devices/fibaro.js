@@ -18,14 +18,11 @@ module.exports = function(c, l) {
     conn = c;
     logger = l.child({component: 'Fibaro'});
 
-    conn.once('accepted', function (cfg) {
+    Fibaro.discover(function(info) {
 
-        Fibaro.discover(function(info) {
+        bridges[info.serial] = new Fibaro(info.ip, 'admin', 'admin');
 
-            bridges[info.serial] = new Fibaro(info.ip, 'admin', 'admin');
-
-            loadDevices(startListening);
-        });
+        loadDevices(startListening);
     });
 };
 

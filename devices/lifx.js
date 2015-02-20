@@ -22,47 +22,44 @@ module.exports = function(c, l) {
     conn = c;
     logger = l.child({component: 'LIFX'});
 
-    conn.once('accepted', function (cfg) {
+    lx = lifx.init();
 
-        lx = lifx.init();
+    lx.on('bulbstate', function(b) {
 
-        lx.on('bulbstate', function(b) {
+        var id = 'lifx-' + b.addr.toString('hex');
 
-            var id = 'lifx-' + b.addr.toString('hex');
+        var hsv = [(b.hue / 65535) * 360, b.saturation / 65535, b.brightness / 65535];
+        var chroma = require('chroma-js')(hsv, 'hsv');
 
-            var hsv = [(b.hue / 65535) * 360, b.saturation / 65535, b.brightness / 65535];
-            var chroma = require('chroma-js')(hsv, 'hsv');
+        var state = {
+            on: b.on,
+            level: parseInt(((b.dim + 32768) / 65535) * 100, 10),
+            hsl: chroma.hsl(),
+            hsv: chroma.hsv(),
+            rgb: chroma.rgb(),
+            hex: chroma.hex()
+        };
 
-            var state = {
-                on: b.on,
-                level: parseInt(((b.dim + 32768) / 65535) * 100, 10),
-                hsl: chroma.hsl(),
-                hsv: chroma.hsv(),
-                rgb: chroma.rgb(),
-                hex: chroma.hex()
-            };
+        conn.emit('lightState', { id: id, state: state });
+    });
 
-            conn.emit('lightState', { id: id, state: state });
-        });
+    lx.on('bulb', function(b) {
 
-        lx.on('bulb', function(b) {
+        var addr = b.addr.toString('hex');
 
-            var addr = b.addr.toString('hex');
+        devices['lifx-' + addr] = {
+            name: b.name || 'Un-named',
+            addr: addr
+        };
 
-            devices['lifx-' + addr] = {
-                name: b.name || 'Un-named',
-                addr: addr
-            };
+        Namer.add(devices);
+    });
 
-            Namer.add(devices);
-        });
-
-        lx.on('gateway', function(g) {
-            log('Gateway found');
-            g.id = g.site.toString('hex');
-            bridges[g.id] = g;
-            startListening();
-        });
+    lx.on('gateway', function(g) {
+        log('Gateway found');
+        g.id = g.site.toString('hex');
+        bridges[g.id] = g;
+        startListening();
     });
 };
 

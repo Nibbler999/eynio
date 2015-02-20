@@ -14,9 +14,7 @@ module.exports = function(c, l) {
     conn = c;
     logger = l.child({component: 'netatmo'});
 
-    conn.once('accepted', function () {
-        getToken();
-    });
+    getToken();
 };
 
 function getToken()

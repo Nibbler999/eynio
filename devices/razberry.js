@@ -17,27 +17,24 @@ module.exports = function(c, l) {
     conn = c;
     logger = l.child({component: 'RaZberry'});
 
-    conn.once('accepted', function (cfg) {
+    require('request')('http://find.z-wave.me/', function (error, response, body) {
 
-        require('request')('http://find.z-wave.me/', function (error, response, body) {
+        if (!error && response.statusCode === 200) {
 
-            if (!error && response.statusCode === 200) {
+            var regex = /<a href="http:..([0-9.]+):808.">/;
 
-                var regex = /<a href="http:..([0-9.]+):808.">/;
+            var matches = regex.exec(body);
 
-                var matches = regex.exec(body);
-
-                if (!matches) {
-                    return;
-                }
-
-                ip = matches[1];
-
-                bridges['raz:' + ip] = ip;
-
-                update(startListening);
+            if (!matches) {
+                return;
             }
-        });
+
+            ip = matches[1];
+
+            bridges['raz:' + ip] = ip;
+
+            update(startListening);
+        }
     });
 };
 

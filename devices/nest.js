@@ -12,47 +12,44 @@ module.exports = function(c, l) {
     conn = c;
     logger = l.child({component: 'Nest'});
 
-    conn.once('accepted', function () {
+    conn.emit('getOAuth2Token', 'nest', function(token) {
 
-        conn.emit('getOAuth2Token', 'nest', function(token) {
+        if (token && token.access_token) {
 
-            if (token && token.access_token) {
+            var Firebase = require('firebase');
+            var dataRef = new Firebase('wss://developer-api.nest.com');
 
-                var Firebase = require('firebase');
-                var dataRef = new Firebase('wss://developer-api.nest.com');
+            dataRef.authWithCustomToken(token.access_token, function(error) {
 
-                dataRef.authWithCustomToken(token.access_token, function(error) {
+                if (error) {
+                    console.error("Login Failed!", error);
+                } else {
 
-                    if (error) {
-                        console.error("Login Failed!", error);
-                    } else {
+                    dataRef.on('value', function (snapshot) {
 
-                        dataRef.on('value', function (snapshot) {
+                        var data = snapshot.val();
 
-                            var data = snapshot.val();
+                        function addThermostat(thermostat) {
 
-                            function addThermostat(thermostat) {
+                            devices[thermostat] = {
+                                id: thermostat,
+                                name: data.structures[structure].name + ' ' + data.devices.thermostats[thermostat].name,
+                                type: 'temperature',
+                                value: data.devices.thermostats[thermostat].ambient_temperature_c
+                            };
+                        }
 
-                                devices[thermostat] = {
-                                    id: thermostat,
-                                    name: data.structures[structure].name + ' ' + data.devices.thermostats[thermostat].name,
-                                    type: 'temperature',
-                                    value: data.devices.thermostats[thermostat].ambient_temperature_c
-                                };
-                            }
+                        for (var structure in data.structures) {
+                            data.structures[structure].thermostats.forEach(addThermostat);
+                        }
 
-                            for (var structure in data.structures) {
-                                data.structures[structure].thermostats.forEach(addThermostat);
-                            }
+                        Namer.add(devices);
+                    });
 
-                            Namer.add(devices);
-                        });
-
-                        startListening();
-                    }
-                });
-            }
-        });
+                    startListening();
+                }
+            });
+        }
     });
 };
 

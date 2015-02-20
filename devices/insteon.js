@@ -21,64 +21,62 @@ module.exports = function(c, l) {
     conn = c;
     logger = l.child({component: 'Insteon'});
 
-    conn.once('accepted', function (cfg) {
+    var html = '';
 
-        var html = '';
+    require('http').get("http://connect.insteon.com/getinfo.asp", function(res) {
 
-        require('http').get("http://connect.insteon.com/getinfo.asp", function(res) {
-
-            res.on('data', function(d) {
-                html += d.toString();
-            });
-
-            res.on('end', function() {
-
-                var regex = /<a href="http:..([0-9.]+):25105">/;
-
-                var matches = regex.exec(html);
-
-                if (!matches) {
-                    return;
-                }
-
-                var host = matches[1];
-
-                log('Hub found');
-
-                var insteon = new Insteon();
-
-                bridges['insteon:' + host] = insteon;
-
-                insteon.on('error', function(err) {
-                    log(err);
-                });
-
-                insteon.connect(host, function() {
-
-                    log('Connected');
-
-                    insteon.links(function(error, info) {
-
-                        info.forEach(function(device) {
-                            insteon.info(device.id, function(error, info) {
-                                if (info.isLighting) {
-                                    lights[device.id] = insteon.light(device.id);
-                                }
-                            });
-                        });
-
-                        Namer.add(lights);
-
-                        startListening();
-                    });
-                });
-
-            });
-
-        }).on('error', function(e) {
-            console.log("Got error: " + e.message);
+        res.on('data', function(d) {
+            html += d.toString();
         });
+
+        res.on('end', function() {
+
+            var regex = /<a href="http:..([0-9.]+):25105">/;
+
+            var matches = regex.exec(html);
+
+            if (!matches) {
+                return;
+            }
+
+            var host = matches[1];
+
+            log('Hub found');
+
+            var insteon = new Insteon();
+
+            bridges['insteon:' + host] = insteon;
+
+            insteon.on('error', function(err) {
+                log(err);
+            });
+
+            insteon.connect(host, function() {
+
+                log('Connected');
+
+                insteon.links(function(error, info) {
+
+                    info.forEach(function(device) {
+                        insteon.info(device.id, function(error, info) {
+                            if (info.isLighting) {
+                                lights[device.id] = insteon.light(device.id);
+                            }
+                        });
+                    });
+
+                    Namer.add(lights);
+
+                    startListening();
+                });
+            });
+
+        });
+
+    }).on('error', function(e) {
+        console.log("Got error: " + e.message);
     });
+
 };
 
 function startListening()

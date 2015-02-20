@@ -19,25 +19,22 @@ module.exports = function(c, l) {
     conn = c;
     logger = l.child({component: 'LG'});
 
-    conn.once('accepted', function (cfg) {
+    lg.discovery(function(found) {
 
-        lg.discovery(function(found) {
+        for (var f in found) {
 
-            for (var f in found) {
+            lg.startPairing(found[f].uuid, '965887');
 
-                lg.startPairing(found[f].uuid, '965887');
+            log('Found a TV');
 
-                log('Found a TV');
+            devices[found[f].uuid] = {
+                name: found[f].friendlyName
+            };
 
-                devices[found[f].uuid] = {
-                    name: found[f].friendlyName
-                };
+            startListening();
+        }
 
-                startListening();
-            }
-
-            Namer.add(devices);
-        });
+        Namer.add(devices);
     });
 };
 
