@@ -136,10 +136,10 @@ function startUPnPServer()
 
                     if (p === 'BinaryState') {
 
-                        var value  = property[p][0];
+                        var value  = parseInt(property[p][0], 10);
                         var device = devices[id];
 
-                        device.value = value === '1';
+                        device.value = value >= 1;
 
                         if (device.type === 'switch') {
 
@@ -234,7 +234,9 @@ function getSwitchState(id, cb)
             return;
         }
 
-        var switchState = { on: result === '1'};
+        var state = parseInt(result, 10);
+        
+        var switchState = { on: state >= 1 };
 
         conn.emit('switchState', { id: id, state: switchState});
 
