@@ -235,7 +235,7 @@ function getSwitchState(id, cb)
         }
 
         var state = parseInt(result, 10);
-        
+
         var switchState = { on: state >= 1 };
 
         conn.emit('switchState', { id: id, state: switchState});

@@ -33,14 +33,14 @@ module.exports = function(c, l) {
 
                             function addThermostat(thermostat) {
 
-                                    devices[thermostat] = {
-                                        id: thermostat,
-                                        name: data.structures[structure].name + ' ' + data.devices.thermostats[thermostat].name,
-                                        type: 'temperature',
-                                        value: data.devices.thermostats[thermostat].ambient_temperature_c
-                                    };
-                             }
-                                
+                                devices[thermostat] = {
+                                    id: thermostat,
+                                    name: data.structures[structure].name + ' ' + data.devices.thermostats[thermostat].name,
+                                    type: 'temperature',
+                                    value: data.devices.thermostats[thermostat].ambient_temperature_c
+                                };
+                            }
+
                             for (var structure in data.structures) {
                                 data.structures[structure].thermostats.forEach(addThermostat);
                             }

@@ -144,7 +144,9 @@ function setLightState(id, values)
         lx.lightsOff(bulb);
     }
 
-    setTimeout(function() { lx.requestStatus(bulb); }, 1000);
+    setTimeout(function() {
+        lx.requestStatus(bulb);
+    }, 1000);
 }
 
 function setLightLevel(id, level)
@@ -163,7 +165,9 @@ function setLightLevel(id, level)
         lx.lightsOff(bulb);
     }
 
-    setTimeout(function() { lx.requestStatus(bulb); }, 1000);
+    setTimeout(function() {
+        lx.requestStatus(bulb);
+    }, 1000);
 }
 
 function setLightColor(id, color_string, color_format)
@@ -188,7 +192,9 @@ function setLightColor(id, color_string, color_format)
         logger.error(e);
     }
 
-    setTimeout(function() { lx.requestStatus(bulb); }, 1000);
+    setTimeout(function() {
+        lx.requestStatus(bulb);
+    }, 1000);
 }
 
 function setLightWhite(id, brightness, temperature)
@@ -207,7 +213,9 @@ function setLightWhite(id, brightness, temperature)
         logger.error(e);
     }
 
-    setTimeout(function() { lx.requestStatus(bulb); }, 1000);
+    setTimeout(function() {
+        lx.requestStatus(bulb);
+    }, 1000);
 }
 
 function getLightState(id, cb)
