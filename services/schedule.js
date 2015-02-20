@@ -1,6 +1,5 @@
 "use strict";
 
-var scheduler = require('node-schedule');
 var conn;
 var jobs = [];
 var schedule = [];
@@ -64,6 +63,8 @@ function reloadSchedule()
         return;
     }
 
+    var scheduler = require('node-schedule');
+     
     schedule.forEach(function (s) {
 
         var j = scheduler.scheduleJob(s.dateTime, function() {

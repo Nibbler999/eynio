@@ -1,7 +1,5 @@
 "use strict";
 
-var SamsungRemote = require('samsung-remote');
-
 var Namer = require('../services/namer.js');
 var Cats = require('../services/cats.js');
 
@@ -25,6 +23,8 @@ module.exports = function(c, l) {
             return;
         }
 
+        var SamsungRemote = require('samsung-remote');
+        
         devices['Samsung-172.20.15.127'] = {
             name: 'Samsung TV',
             dev: new SamsungRemote({ ip: '172.20.15.127'})

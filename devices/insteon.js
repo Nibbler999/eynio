@@ -1,7 +1,5 @@
 "use strict";
 
-var Insteon = require('home-controller').Insteon;
-
 var Namer = require('../services/namer.js');
 var Cats = require('../services/cats.js');
 
@@ -43,6 +41,8 @@ module.exports = function(c, l) {
 
             log('Hub found');
 
+            var Insteon = require('home-controller').Insteon;
+            
             var insteon = new Insteon();
 
             bridges['insteon:' + host] = insteon;
