@@ -31,9 +31,7 @@ module.exports = function(c, l) {
 
                             var data = snapshot.val();
 
-                            for (var structure in data.structures) {
-
-                                data.structures[structure].thermostats.forEach(function(thermostat) {
+                            function addThermostat(thermostat) {
 
                                     devices[thermostat] = {
                                         id: thermostat,
@@ -41,7 +39,10 @@ module.exports = function(c, l) {
                                         type: 'temperature',
                                         value: data.devices.thermostats[thermostat].ambient_temperature_c
                                     };
-                                });
+                             }
+                                
+                            for (var structure in data.structures) {
+                                data.structures[structure].thermostats.forEach(addThermostat);
                             }
 
                             Namer.add(devices);

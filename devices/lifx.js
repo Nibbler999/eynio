@@ -35,7 +35,7 @@ module.exports = function(c, l) {
 
             var state = {
                 on: b.on,
-                level: parseInt(((b.dim + 32768) / 65535) * 100),
+                level: parseInt(((b.dim + 32768) / 65535) * 100, 10),
                 hsl: chroma.hsl(),
                 hsv: chroma.hsv(),
                 rgb: chroma.rgb(),
@@ -156,7 +156,7 @@ function setLightLevel(id, level)
     var bulb = new Buffer(devices[id].addr, 'hex');
 
     if (level > 0) {
-        var brightness = parseInt((level / 100) * 65535) - 32768;
+        var brightness = parseInt((level / 100) * 65535, 10) - 32768;
         lx.lightsOn(bulb);
         lx.setBrightness(brightness, 0, bulb);
     } else {
@@ -183,7 +183,7 @@ function setLightColor(id, color_string, color_format)
     var temp = 3500;
 
     try {
-        lx.lightsColour(parseInt(hsv[0] / 360 * 65535), parseInt(hsv[1] * 65535), parseInt(hsv[2] * 65535), temp, 0, bulb);
+        lx.lightsColour(parseInt(hsv[0] / 360 * 65535, 10), parseInt(hsv[1] * 65535, 10), parseInt(hsv[2] * 65535, 10), temp, 0, bulb);
     } catch (e) {
         logger.error(e);
     }
@@ -202,7 +202,7 @@ function setLightWhite(id, brightness, temperature)
     temperature = ((temperature * 6500) / 100) + 2500;
 
     try {
-        lx.lightsColour(0, 0, parseInt(brightness / 100 * 65535), temperature, 0, bulb);
+        lx.lightsColour(0, 0, parseInt(brightness / 100 * 65535, 10), temperature, 0, bulb);
     } catch (e) {
         logger.error(e);
     }

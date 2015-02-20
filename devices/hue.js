@@ -110,7 +110,7 @@ function loadLights(id)
 
                 state = {
                     on: light.state.on,
-                    level: parseInt((light.state.bri / 254) * 100),
+                    level: parseInt((light.state.bri / 254) * 100, 10),
                     hsl: chroma.hsl(),
                     hsv: chroma.hsv(),
                     rgb: chroma.rgb(),
@@ -337,7 +337,7 @@ function getLightState(id, cb)
 
         var state = {
             on: result.state.on,
-            level: parseInt((result.state.bri / 254) * 100),
+            level: parseInt((result.state.bri / 254) * 100, 10),
             hsl: chroma.hsl(),
             hsv: chroma.hsv(),
             rgb: chroma.rgb(),

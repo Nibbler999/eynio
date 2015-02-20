@@ -48,7 +48,7 @@ function makeMJPEG(camera)
             updateSnapshot(camera, this);
             
             this.on('error', function(err) {
-                logger.error(camera.url, error.message);
+                logger.error(camera.url, err.message);
             });
         });
     }
@@ -64,7 +64,7 @@ function updateSnapshot(camera, res)
 
     request(camera.url, options, function (error, response, body) {
     
-        if (!error && response.statusCode == 200) {
+        if (!error && response.statusCode === 200) {
 
             timer = setTimeout(refresh, 1000);
             
