@@ -1,8 +1,8 @@
 "use strict";
 
-module.exports = function (log) {
+module.exports = function (log, local) {
 
-    var io = require('socket.io-client');
+    var io = require('socket.io/node_modules/socket.io-client');
 
     var serverUrl = 'https://nhome.ba/server?uuid=' + getUUID();
 
@@ -32,7 +32,58 @@ module.exports = function (log) {
         log.error('Disconnected');
     });
 
-    conn.on('command', function (command, cb) {
+    conn.on('command', command_handler);
+
+    var local_io = require('socket.io')(local);
+
+    var wildcard = require('socketio-wildcard')();
+
+    local_io.of('/client').use(wildcard);
+
+    local_io.of('/client').on('connection', function (local_socket) {
+
+        local_socket.on('*', function (packet) {
+
+            var args = [].slice.apply(packet.data);
+            var name = args.shift();
+            
+            var cb = typeof(args[args.length - 1]) === 'function' ? args.pop() : null;
+            
+            var command = {
+                name: name,
+                args: args
+            };
+
+            command_handler(command, cb);
+        });
+    });
+
+    conn.on('log', function (cb) {
+
+        var PrettyStream = require('bunyan-prettystream');
+
+        var prettyLog = new PrettyStream({mode: 'short', useColor: false});
+
+        var ringbuffer = log.streams[1].stream;
+
+        var entries = ringbuffer.records.map(prettyLog.formatRecord).join('');
+
+        conn.emit('log', entries);
+
+        if (cb) cb(entries);
+    });
+
+    conn.emitLocal = function (name) {
+
+        try {
+            io.Manager.prototype.emit.apply(this, arguments);
+        } catch (e) {
+            log.error('Error handling event', name, Array.prototype.slice.call(arguments, 1));
+            log.error(e);
+        }
+    };
+
+    function command_handler (command, cb) {
 
         log.debug('Received payload:', command);
 
@@ -106,32 +157,7 @@ module.exports = function (log) {
         }
 
         conn.emitLocal.apply(conn, [command.name].concat(command.args));
-    });
-
-    conn.on('log', function (cb) {
-
-        var PrettyStream = require('bunyan-prettystream');
-
-        var prettyLog = new PrettyStream({mode: 'short', useColor: false});
-
-        var ringbuffer = log.streams[1].stream;
-
-        var entries = ringbuffer.records.map(prettyLog.formatRecord).join('');
-
-        conn.emit('log', entries);
-
-        if (cb) cb(entries);
-    });
-
-    conn.emitLocal = function (name) {
-
-        try {
-            io.Manager.prototype.emit.apply(this, arguments);
-        } catch (e) {
-            log.error('Error handling event', name, Array.prototype.slice.call(arguments, 1));
-            log.error(e);
-        }
-    };
+    }
 
     return conn;
 };

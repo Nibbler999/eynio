@@ -14,7 +14,8 @@ program
   .parse(process.argv);
 
 var log = require('./logger.js')(program.loglevel);
-var conn = require('./connection.js')(log);
+var local = require('./local.js')(log);
+var conn = require('./connection.js')(log, local);
 
 require('./services/namer.js').listen(conn, log);
 require('./services/cats.js').listen(conn, log);
