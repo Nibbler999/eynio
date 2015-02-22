@@ -1,0 +1,132 @@
+<% include internal_header_view.html %>
+<% include internal_nav_view.html %>
+
+<script id="socketio" src="/socket.io/socket.io.js"></script>
+
+<script src="/js/jquery-1.11.1.min.js"></script>
+
+<script src="/js/common.js"></script>
+<script src="/js/devices.js"></script>
+<script src="/js/remotes.js"></script>
+<script src="/js/sensors.js"></script>
+<script src="/js/lights.js"></script>
+<script src="/js/switches.js"></script>
+<script src="/js/shutters.js"></script>
+<script src="/js/categories.js"></script>
+<script src="/js/color-picker.js"></script>
+<script src="/js/jquery.ratelimit.js"></script>
+
+<p class="hidden" id="server_offline">Selected Home Server is not currently connected</p>
+
+<div class="block hidden" id="block_devices">
+    <div class="block_header">Devices
+        <div class="block_header_settings">
+            <div>
+                <div class="settings_add_remote">Add new remote</div>
+                <div class="settings_add_category">Add new category</div>
+                <div class="settings_add_device">Add new device</div>
+            </div>
+        </div>
+    </div>
+    <div class="block_body">
+
+        <div class="subblock generic">
+            <div class="subblock_header">Generic group</div>
+            <div class="subblock_body">
+                <div class="clearer"></div>
+                <div id="all_lights">
+                    All lights: <span id="all_lights_on" class="highlight">on</span> / 
+                    <span id="all_lights_off" class="highlight">off</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="block hidden add_device_menu">
+    <div class="block_header">Add new device</div>
+    <div class="add_device_subtitle">Please select device you want to add</div>
+
+    <div class="menuoption">
+        <label for="add_device_nhome">NHome</label>
+        <input type="radio" name="add_device_type" value="nhome" id="add_device_nhome" />
+    </div>
+
+    <div class="add_device_navigation">
+        <button class="cancel">Cancel</button>
+        <button class="next">Next</button>
+    </div>
+</div>
+
+<div class="block hidden add_device_nhome">
+    <div class="block_header">Add NHome</div>
+    <div class="add_device_subtitle">Enter the API key for the remote NHome server</div>
+
+    <div class="menuoption">
+        <input type="text" id="add_device_nhome_apikey" placeholder="API key" />
+    </div>
+
+    <div class="add_device_navigation">
+        <button class="cancel">Cancel</button>
+        <button class="next">Finish</button>
+    </div>
+</div>
+
+<div class="block hidden edit_device renameable edit_switch">
+    <div class="block_header">Edit switch</div>
+
+    <div class="menuoption">
+        <input type="text" name="device_name" placeholder="Name" />
+    </div>
+
+    <div class="edit_device_navigation">
+        <button class="cancel">Cancel</button>
+        <button class="save">Save</button>
+    </div>
+</div>
+
+<div class="block hidden edit_device renameable edit_light">
+    <div class="block_header">Edit light</div>
+
+    <div class="menuoption">
+        <input type="text" name="device_name" placeholder="Name" />
+    </div>
+
+    <div class="edit_device_navigation">
+        <button class="cancel">Cancel</button>
+        <button class="save">Save</button>
+    </div>
+</div>
+
+<div class="block hidden edit_device renameable edit_sensor">
+    <div class="block_header">Edit sensor</div>
+
+    <div class="menuoption">
+        <input type="text" name="device_name" placeholder="Name" />
+    </div>
+
+    <div class="edit_device_navigation">
+        <button class="cancel">Cancel</button>
+        <button class="save">Save</button>
+    </div>
+</div>
+
+<div class="block hidden edit_device edit_remote">
+    <div class="block_header">Edit remote</div>
+
+    <div class="menuoption">
+        <input type="text" name="device_name" placeholder="Name" />
+    </div>
+
+    <div class="edit_device_navigation">
+        <button class="cancel">Cancel</button>
+        <button class="save">Save</button>
+    </div>
+</div>
+
+<% include devices_remotes_view.html %>
+<% include devices_lights_view.html %>
+<% include devices_categories_view.html %>
+
+<% include internal_footer_view.html %>

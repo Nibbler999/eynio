@@ -1,0 +1,80 @@
+<% include internal_header_view.html %>
+<% include internal_nav_view.html %>
+
+<div class="block" id="block_downloads">
+    <div class="block_header">Downloads</div>
+    <div class="block_body">
+        <div class="subblock">
+            <div class="subblock_header">Server</div>
+            <div class="subblock_body">
+                <div class="downloads">
+                    <div class="downloads_fedora">
+                        <a href="https://nhome.s3.amazonaws.com/NHomeServer.rpm">Fedora RPM</a>
+                    </div>
+                    <div class="downloads_windows">
+                        <a href="https://nhome.s3.amazonaws.com/NHomeServer.exe">Windows Installer</a>
+                    </div>
+                    <div class="downloads_zip">
+                        <a href="https://nhome.s3.amazonaws.com/NHomeServer.zip">Generic zip</a>
+                    </div>
+                    <div class="downloads_pi">
+                        <a href="https://nhome.s3.amazonaws.com/NHomePi-NOOBS.zip">Pi (NOOBS installer)</a>
+                    </div>
+                    <div class="downloads_pi">
+                        <a href="https://nhome.s3.amazonaws.com/NHomePi.img.xz">Pi (raw image)</a>
+                    </div>
+                    <div class="downloads_pi">
+                        <a href="https://nhome.s3.amazonaws.com/NHomePi2-NOOBS.zip">Pi 2 (NOOBS installer)</a>
+                    </div>
+                    <div class="downloads_pi">
+                        <a href="https://nhome.s3.amazonaws.com/NHomePi2.img.xz">Pi 2 (raw image)</a>
+                    </div>
+                    <div class="downloads_zip">
+                        <a href="https://nhome.s3.amazonaws.com/NHome.spk">Synology NAS</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div class="subblock">
+            <div class="subblock_header">Desktop</div>
+            <div class="subblock_body">
+                <div class="downloads">
+                    <div class="downloads_windows">
+                        <a href="https://nhome.s3.amazonaws.com/NHomeDesktop.exe">Windows Installer</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="block" id="block_repos">
+    <div class="block_header">Repositories</div>
+    <div class="block_body">
+        <div class="subblock">
+            <div class="subblock_header">Synology</div>
+            <div class="subblock_body">
+                <p>Package Center - Settings - Package Sources</p>
+                <pre>https://updates.neosoft.ba/syno.php</pre>
+            </div>
+        </div>
+        <div class="subblock">
+            <div class="subblock_header">Yum</div>
+            <div class="subblock_body">
+<pre>
+[neosoft]
+name=neosoft
+baseurl=https://neosoft-yum.s3.amazonaws.com
+enabled=1
+gpgkey=https://neosoft-yum.s3.amazonaws.com/RPM-GPG-KEY-neosoft
+</pre>
+<p>#> yum install NHomeServer<p>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<% include internal_footer_view.html %>

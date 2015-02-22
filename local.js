@@ -22,31 +22,31 @@ module.exports = function (l) {
     app.use(express.static('local/public'));
 
     app.get('/', function (req, res) {
-        res.render('dashboard');
+        res.render('dashboard_view');
     });
 
     app.get('/dashboard', function (req, res) {
-        res.render('dashboard');
+        res.render('dashboard_view');
     });
 
     app.get('/schedule', function (req, res) {
-        res.render('schedule');
+        res.render('schedule_view');
     });
 
     app.get('/devices', function (req, res) {
-        res.render('devices');
+        res.render('devices_view');
     });
 
     app.get('/support', function (req, res) {
-        res.render('support');
+        res.render('support_view');
     });
 
     app.get('/downloads', function (req, res) {
-        res.render('downloads');
+        res.render('downloads_view');
     });
 
     app.get('/security', function (req, res) {
-        res.render('security');
+        res.render('security_view');
     });
 
     return server;
