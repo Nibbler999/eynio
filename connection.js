@@ -34,13 +34,13 @@ module.exports = function (log, local) {
 
     conn.on('command', command_handler);
 
-    var local_io = require('socket.io')(local);
+    var local_io = require('socket.io')(local).of('/client');
 
     var wildcard = require('socketio-wildcard')();
 
-    local_io.of('/client').use(wildcard);
+    local_io.use(wildcard);
 
-    local_io.of('/client').on('connection', function (local_socket) {
+    local_io.on('connection', function (local_socket) {
 
         local_socket.on('*', function (packet) {
 
@@ -57,6 +57,17 @@ module.exports = function (log, local) {
             command_handler(command, cb);
         });
     });
+
+    var emit = conn.emit;
+    
+    conn.emit = function() {
+
+        emit.apply(conn, arguments);
+
+        if (typeof(arguments[arguments.length - 1]) !== 'function') {
+            local_io.emit.apply(local_io, arguments);
+        }
+    };
 
     conn.on('log', function (cb) {
 
