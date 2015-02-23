@@ -16,7 +16,7 @@ module.exports = function (l) {
 
     app.engine('.html', ejs.__express);
 
-    app.set('views', 'local/views')
+    app.set('views', 'local/views');
     app.set('view engine', '.html');
 
     app.use(express.static('local/public'));

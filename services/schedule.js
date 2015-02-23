@@ -64,7 +64,7 @@ function reloadSchedule()
     }
 
     var scheduler = require('node-schedule');
-     
+
     schedule.forEach(function (s) {
 
         var j = scheduler.scheduleJob(s.dateTime, function() {

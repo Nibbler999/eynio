@@ -46,9 +46,9 @@ module.exports = function (log, local) {
 
             var args = [].slice.apply(packet.data);
             var name = args.shift();
-            
+
             var cb = typeof(args[args.length - 1]) === 'function' ? args.pop() : null;
-            
+
             var command = {
                 name: name,
                 args: args
@@ -59,7 +59,7 @@ module.exports = function (log, local) {
     });
 
     var emit = conn.emit;
-    
+
     conn.emit = function() {
 
         emit.apply(conn, arguments);
@@ -94,7 +94,7 @@ module.exports = function (log, local) {
         }
     };
 
-    function command_handler (command, cb) {
+    function command_handler(command, cb) {
 
         log.debug('Received payload:', command);
 
