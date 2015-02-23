@@ -4,7 +4,7 @@ Release:        auto
 Summary:        NHomeServer
 Group:          NHomeServer
 License:        None
-Requires:       /usr/bin/node
+Requires:       nodejs(engine)
 
 Source0:        %{name}.tar.gz
 
