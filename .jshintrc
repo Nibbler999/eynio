@@ -6,5 +6,6 @@
   "camelcase": false,
   "curly": false,
   "forin": false,
-  "singleGroups": false
+  "singleGroups": false,
+  "shadow": "outer"
 }

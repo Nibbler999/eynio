@@ -22,10 +22,10 @@ module.exports = function(c, l) {
 
     conn.once('configured', function (cfg) {
 
-        hue.nupnpSearch(function(err, result) {
+        hue.nupnpSearch(function(search_err, result) {
 
-            if (err) {
-                log('locateBridges: ' + err);
+            if (search_err) {
+                log('locateBridges: ' + search_err);
                 return;
             }
 
@@ -39,10 +39,10 @@ module.exports = function(c, l) {
 
             bridges[result[0].id] = { api: api };
 
-            api.config(function(err, config) {
+            api.config(function(config_err, config) {
 
-                if (err) {
-                    log(err);
+                if (config_err) {
+                    log(config_err);
                     return;
                 }
 
@@ -56,9 +56,9 @@ module.exports = function(c, l) {
 
                     var registerInterval = setInterval(function () {
                         //log('Creating user');
-                        api.createUser(result[0].ipaddress, null, 'NHome', function(err, user) {
-                            if (err) {
-                                //log('createUser: ' + err);
+                        api.createUser(result[0].ipaddress, null, 'NHome', function(createUser_err, user) {
+                            if (createUser_err) {
+                                //log('createUser: ' + createUser_err);
                                 return;
                             }
                             clearInterval(registerInterval);

@@ -108,18 +108,18 @@ function sendBridgeInfo(cb)
 
 function getRemotes(cb)
 {
-    var remotes = [];
+    var r = [];
 
     for (var device in devices) {
-        remotes.push({
+        r.push({
             id: device,
             name: Namer.getName(device)
         });
     }
 
-    conn.emit('remotes', remotes);
+    conn.emit('remotes', r);
 
-    if (cb) cb(remotes);
+    if (cb) cb(r);
 }
 
 function sendRawCommand(id, cmd, cb)
