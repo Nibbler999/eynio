@@ -17,7 +17,7 @@
     "lifx": "0.2.1",
     "netatmo": "1.1.1",
     "node-hue-api": "1.0.0",
-    "node-schedule": "0.1.15",
+    "node-schedule": "0.1.16",
     "node-uuid": "1.4.1",
     "q": "1.0.1",
     "request": "2.53.0",
