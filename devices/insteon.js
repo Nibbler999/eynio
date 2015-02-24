@@ -42,7 +42,7 @@ module.exports = function(c, l) {
             log('Hub found');
 
             var Insteon = require('home-controller').Insteon;
-            
+
             var insteon = new Insteon();
 
             bridges['insteon:' + host] = insteon;

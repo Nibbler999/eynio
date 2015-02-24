@@ -23,10 +23,10 @@ module.exports = function(c, l) {
     conn = c;
     logger = l.child({component: 'iTach'});
 
-    conn.once('accepted', function (cfg) {
+    conn.once('configured', function (cfg) {
 
         if (cfg.itach_remotes) {
-            remotes = JSON.parse(cfg.itach_remotes);
+            remotes = cfg.itach_remotes;
         }
 
         var d = new Itach.discovery();
@@ -191,7 +191,7 @@ function saveCode(remoteid, key, code)
 
 function saveRemotes()
 {
-    conn.emit('setConfig', { itach_remotes: JSON.stringify(remotes) });
+    require('../configuration.js').set('itach_remotes', remotes);
 }
 
 function saveCustomRemote(r)

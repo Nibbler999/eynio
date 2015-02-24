@@ -24,7 +24,7 @@ module.exports = function(c, l) {
         }
 
         var SamsungRemote = require('samsung-remote');
-        
+
         devices['Samsung-172.20.15.127'] = {
             name: 'Samsung TV',
             dev: new SamsungRemote({ ip: '172.20.15.127'})

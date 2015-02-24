@@ -18,7 +18,7 @@ module.exports = function(c, l) {
     conn = c;
     logger = l.child({component: 'NHomeSlave'});
 
-    conn.once('accepted', function (cfg) {
+    conn.once('configured', function (cfg) {
 
         if (!cfg.nhome_apikey) {
             return;

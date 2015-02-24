@@ -20,7 +20,7 @@ module.exports = function(c, l) {
     conn = c;
     logger = l.child({component: 'Hue'});
 
-    conn.once('accepted', function (cfg) {
+    conn.once('configured', function (cfg) {
 
         hue.nupnpSearch(function(err, result) {
 
@@ -68,7 +68,7 @@ module.exports = function(c, l) {
                             api = new HueApi(result[0].ipaddress, user);
 
                             // Send username to web server
-                            conn.emit('setConfig', { hue_apikey: user});
+                            require('../configuration.js').set('hue_apikey', user);
 
                             startListening();
 

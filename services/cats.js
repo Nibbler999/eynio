@@ -1,23 +1,18 @@
 "use strict";
 
-var Cats = {}, categories = {}, devices = {}, conn;
-
 var logger;
 
-Cats.listen = function(c, l) {
+var categories, devices;
 
-    conn = c;
+var Cats = {};
+
+Cats.listen = function(conn, l) {
+
     logger = l.child({component: 'Cats'});
 
-    conn.once('accepted', function (cfg) {
-
-        if (cfg.cats_categories) {
-            categories = JSON.parse(cfg.cats_categories);
-        }
-
-        if (cfg.cats_devices) {
-            devices = JSON.parse(cfg.cats_devices);
-        }
+    conn.once('configured', function (cfg) {
+        categories = cfg.cats_categories || {};
+        devices = cfg.cats_devices || {};
     });
 
     conn.on('catAdd', function (cat, cb) {
@@ -100,10 +95,11 @@ Cats.getCats = function(deviceid) {
 };
 
 Cats.save = function() {
-    conn.emit('setConfig', {
-        cats_categories: JSON.stringify(categories),
-        cats_devices: JSON.stringify(devices)
-    });
+
+    var cfg = require('../configuration.js');
+
+    cfg.set('cats_categories', categories);
+    cfg.set('cats_devices', devices);
 };
 
 Cats.update = function() {

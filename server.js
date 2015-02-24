@@ -13,9 +13,11 @@ program
   .option('-l, --loglevel [level]', 'Log level (fatal, error, warn, info, debug, trace) [info]', 'info')
   .parse(process.argv);
 
-var log = require('./logger.js')(program.loglevel);
+var log   = require('./logger.js')(program.loglevel);
 var local = require('./local.js')(log);
-var conn = require('./connection.js')(log, local);
+var conn  = require('./connection.js')(log, local);
+
+require('./configuration.js').listen(conn, log);
 
 require('./services/namer.js').listen(conn, log);
 require('./services/cats.js').listen(conn, log);

@@ -6,7 +6,7 @@ Namer.add(devices);
 name: Namer.getName(device)
 */
 
-var realnames = {}, customnames = {}, conn;
+var realnames = {}, customnames, conn;
 
 var Namer = {};
 
@@ -17,10 +17,8 @@ Namer.listen = function(c, l) {
     conn = c;
     logger = l.child({component: 'Namer'});
 
-    conn.once('accepted', function (cfg) {
-        if (cfg.namer_customnames) {
-            customnames = JSON.parse(cfg.namer_customnames);
-        }
+    conn.once('configured', function (cfg) {
+        customnames = cfg.namer_customnames || {};
     });
 
     conn.on('setDeviceName', function (id, name) {
@@ -45,7 +43,8 @@ Namer.listen = function(c, l) {
 };
 
 Namer.save = function() {
-    conn.emit('setConfig', { namer_customnames: JSON.stringify(customnames) });
+    var cfg = require('../configuration.js');
+    cfg.set('namer_customnames', customnames);
 };
 
 Namer.add = function(devices) {

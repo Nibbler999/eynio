@@ -19,7 +19,7 @@ module.exports = function (l) {
     app.set('views', 'local/views');
     app.set('view engine', '.html');
 
-    app.use(express.static('local/public'));
+    app.use(express['static']('local/public'));
 
     app.get('/', function (req, res) {
         res.render('dashboard_view');

@@ -11,10 +11,10 @@ module.exports = function(c, l) {
     conn = c;
     logger = l.child({component: 'Schedule'});
 
-    conn.once('accepted', function (cfg) {
+    conn.once('configured', function (cfg) {
 
         if (cfg.schedule) {
-            schedule = JSON.parse(cfg.schedule);
+            schedule = cfg.schedule;
             reloadSchedule();
         }
     });
@@ -47,7 +47,9 @@ module.exports = function(c, l) {
 
 function saveSchedule()
 {
-    conn.emit('setConfig', { schedule: JSON.stringify(schedule) });
+    var cfg = require('../configuration.js');
+    cfg.set('schedule', schedule);
+
     reloadSchedule();
 }
 
