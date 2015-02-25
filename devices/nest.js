@@ -121,7 +121,7 @@ function getThermostatValue(id, cb)
         value: devices[id].value
     };
 
-    conn.emit('thermostatValue', thermosetValue);
+    conn.emit('thermostatValue', thermostatValue);
 
     if (cb) cb(thermostatValue);
 }
