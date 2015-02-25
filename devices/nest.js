@@ -7,6 +7,8 @@ var conn, devices = {}, bridges = {};
 
 var logger;
 
+var dataRef;
+
 module.exports = function(c, l) {
 
     conn = c;
@@ -17,7 +19,7 @@ module.exports = function(c, l) {
         if (token && token.access_token) {
 
             var Firebase = require('firebase');
-            var dataRef = new Firebase('wss://developer-api.nest.com');
+            dataRef = new Firebase('wss://developer-api.nest.com');
 
             dataRef.authWithCustomToken(token.access_token, function(error) {
 
@@ -30,12 +32,12 @@ module.exports = function(c, l) {
                         var data = snapshot.val();
 
                         function addThermostat(thermostat) {
-
+                            
                             devices[thermostat] = {
                                 id: thermostat,
                                 name: data.structures[structure].name + ' ' + data.devices.thermostats[thermostat].name,
-                                type: 'temperature',
-                                value: data.devices.thermostats[thermostat].ambient_temperature_c
+                                value: data.devices.thermostats[thermostat].ambient_temperature_c,
+                                target: data.devices.thermostats[thermostat].target_temperature_c
                             };
                         }
 
@@ -61,12 +63,16 @@ function startListening()
         sendBridgeInfo(cb);
     });
 
-    conn.on('getSensors', function (cb) {
-        getSensors(cb);
+    conn.on('getThermostats', function (cb) {
+        getThermostats(cb);
     });
 
-    conn.on('getSensorValue', function (id, cb) {
-        getSensorValue(id, cb);
+    conn.on('getThermostatValue', function (id, cb) {
+        getThermostatValue(id, cb);
+    });
+    
+    conn.on('setThermostatValue', function (id, value, cb) {
+        setThermostatValue(id, value, cb);
     });
 }
 
@@ -83,39 +89,61 @@ function sendBridgeInfo(cb)
     if (cb) cb(bridgeInfo);
 }
 
-function getSensors(cb)
+function getThermostats(cb)
 {
-    var sensors = [];
+    var thermostats = [];
 
     for (var device in devices) {
-        sensors.push({
+        thermostats.push({
             id: device,
             name: Namer.getName(device),
-            type: devices[device].type,
+            value: devices[device].value,
+            target: devices[device].target,
             categories: Cats.getCats(device)
         });
     }
 
-    conn.emit('sensors', sensors);
+    conn.emit('thermostats', thermostats);
 
-    if (cb) cb(sensors);
+    if (cb) cb(thermostats);
 }
 
-function getSensorValue(id, cb)
+function getThermosetValue(id, cb)
 {
     if (!devices.hasOwnProperty(id)) {
         if (cb) cb([]);
         return;
     }
 
-    var sensorValue = {
+    var thermosetValue = {
         id: id,
         name: Namer.getName(id),
-        type: devices[id].type,
         value: devices[id].value
     };
 
-    conn.emit('sensorValue', sensorValue);
+    conn.emit('thermosetValue', thermosetValue);
 
-    if (cb) cb(sensorValue);
+    if (cb) cb(thermosetValue);
 }
+
+function setThermostatValue(id, value, cb)
+{
+    if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
+        return;
+    }
+
+    var path = 'devices/thermostats/' + devices[id].id + '/target_temperature_c';
+    
+    dataRef.child(path).set(value, function (result) {
+        if (result === null) {
+            if (cb) cb(true);
+        } else {
+            if (cb) cb(result.message);
+            logger.error(result.message);
+        }
+    }); 
+    
+    if (cb) cb();
+}
+
