@@ -143,7 +143,5 @@ function setThermostatValue(id, value, cb)
             logger.error(result.message);
         }
     }); 
-    
-    if (cb) cb();
 }
 
