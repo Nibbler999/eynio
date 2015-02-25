@@ -102,7 +102,7 @@ function loadDevices(cb)
 
             devicelist.forEach(function(device) {
 
-                if (device.properties.disabled === '1') {
+                if (!device.enabled || !device.visible) {
                     return;
                 }
 
