@@ -108,22 +108,22 @@ function getThermostats(cb)
     if (cb) cb(thermostats);
 }
 
-function getThermosetValue(id, cb)
+function getThermostatValue(id, cb)
 {
     if (!devices.hasOwnProperty(id)) {
         if (cb) cb([]);
         return;
     }
 
-    var thermosetValue = {
+    var thermostatValue = {
         id: id,
         name: Namer.getName(id),
         value: devices[id].value
     };
 
-    conn.emit('thermosetValue', thermosetValue);
+    conn.emit('thermostatValue', thermosetValue);
 
-    if (cb) cb(thermosetValue);
+    if (cb) cb(thermostatValue);
 }
 
 function setThermostatValue(id, value, cb)
