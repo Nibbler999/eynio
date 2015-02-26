@@ -23,32 +23,28 @@ module.exports = function(c, l) {
     conn = c;
     logger = l.child({component: 'iTach'});
 
-    conn.once('configured', function (cfg) {
+    var cfg = require('../configuration.js');
+    remotes = cfg.get('itach_remotes', {});
 
-        if (cfg.itach_remotes) {
-            remotes = cfg.itach_remotes;
+    var d = new Itach.discovery();
+
+    d.on('device', function(device) {
+
+        if (!devices.hasOwnProperty(device.UUID)) {
+
+            log('Discovered device');
+
+            devices[device.UUID] = {
+                name: device.Model,
+                dev: new Itach(device.host)
+            };
+
+            Namer.add(devices);
         }
+    });
 
-        var d = new Itach.discovery();
-
-        d.on('device', function(device) {
-
-            if (!devices.hasOwnProperty(device.UUID)) {
-
-                log('Discovered device');
-
-                devices[device.UUID] = {
-                    name: device.Model,
-                    dev: new Itach(device.host)
-                };
-
-                Namer.add(devices);
-            }
-        });
-
-        d.once('device', function() {
-            startListening();
-        });
+    d.once('device', function() {
+        startListening();
     });
 };
 

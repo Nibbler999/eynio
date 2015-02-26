@@ -17,9 +17,8 @@ Namer.listen = function(c, l) {
     conn = c;
     logger = l.child({component: 'Namer'});
 
-    conn.once('configured', function (cfg) {
-        customnames = cfg.namer_customnames || {};
-    });
+    var cfg = require('../configuration.js');
+    customnames = cfg.get('namer_customnames', {});
 
     conn.on('setDeviceName', function (id, name) {
         customnames[id] = name;

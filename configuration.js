@@ -1,42 +1,19 @@
 "use strict";
 
-var Configuration = {}, conf = {}, conn;
+var Configuration = {}, conf = {};
 
 var logger;
 
-Configuration.listen = function (c, l) {
+Configuration.load = function (l, cb) {
 
-    conn = c;
     logger = l.child({component: 'Config'});
 
-    // Temporary
-    conn.once('accepted', function (cfg) {
-
-        if (Object.keys(cfg).length === 0) {
-
-            load(function(success) {
-                if (success) {
-                    conn.emitLocal('configured', conf);
-                }
-            });
-
-            return;
+    load(function(success) {
+        if (success) {
+            cb();
+        } else {
+            logger.error('Failed to load config');
         }
-
-        for (var id in cfg) {
-            try {
-                conf[id] = JSON.parse(cfg[id]);
-            } catch (e) {
-                conf[id] = cfg[id];
-            }
-        }
-
-        save(function (success) {
-            if (success) {
-                conn.emit('deleteConfig');
-                conn.emitLocal('configured', conf);
-            }
-        });
     });
 };
 

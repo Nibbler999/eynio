@@ -11,13 +11,12 @@ module.exports = function(c, l) {
     conn = c;
     logger = l.child({component: 'Schedule'});
 
-    conn.once('configured', function (cfg) {
+    var cfg = require('../configuration.js');
+    schedule = cfg.get('schedule', []);
 
-        if (cfg.schedule) {
-            schedule = cfg.schedule;
-            reloadSchedule();
-        }
-    });
+    if (schedule.length > 0) {
+        reloadSchedule();
+    }
 
     conn.on('saveSchedule', function (newSchedule) {
         schedule = newSchedule;

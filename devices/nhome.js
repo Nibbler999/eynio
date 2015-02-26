@@ -18,32 +18,32 @@ module.exports = function(c, l) {
     conn = c;
     logger = l.child({component: 'NHomeSlave'});
 
-    conn.once('configured', function (cfg) {
+    var cfg = require('../configuration.js');
+    var apikey = cfg.get('nhome_apikey', false);
 
-        if (!cfg.nhome_apikey) {
-            return;
-        }
+    if (!apikey) {
+        return;
+    }
 
-        var io = require('socket.io-client');
+    var io = require('socket.io-client');
 
-        var serverUrl = 'https://nhome.ba/client?apikey=' + cfg.nhome_apikey;
+    var serverUrl = 'https://nhome.ba/client?apikey=' + apikey;
 
-        nhome = io(serverUrl, {'force new connection': true});
+    nhome = io(serverUrl, {'force new connection': true});
 
-        log('Connecting...');
+    log('Connecting...');
 
-        nhome.on('connect', function () {
+    nhome.on('connect', function () {
 
-            log('Connected.');
+        log('Connected.');
 
-            bridges['nhome:' + cfg.nhome_apikey] = { };
+        bridges['nhome:' + apikey] = { };
 
-            startListening();
-        });
+        startListening();
+    });
 
-        nhome.on('connect_error', function () {
-            log('Failed to connect to NHome.');
-        });
+    nhome.on('connect_error', function () {
+        log('Failed to connect to NHome.');
     });
 };
 

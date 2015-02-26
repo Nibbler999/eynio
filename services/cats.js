@@ -10,10 +10,10 @@ Cats.listen = function(conn, l) {
 
     logger = l.child({component: 'Cats'});
 
-    conn.once('configured', function (cfg) {
-        categories = cfg.cats_categories || {};
-        devices = cfg.cats_devices || {};
-    });
+    var cfg = require('../configuration.js');
+
+    categories = cfg.get('cats_categories', {});
+    devices = cfg.get('cats_devices', {});
 
     conn.on('catAdd', function (cat, cb) {
         var catid = require('node-uuid').v4();

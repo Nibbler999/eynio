@@ -20,68 +20,68 @@ module.exports = function(c, l) {
     conn = c;
     logger = l.child({component: 'Hue'});
 
-    conn.once('configured', function (cfg) {
+    var cfg = require('../configuration.js');
+    var hue_apikey = cfg.get('hue_apikey', 'none');
 
-        hue.nupnpSearch(function(search_err, result) {
+    hue.nupnpSearch(function(search_err, result) {
 
-            if (search_err) {
-                log('locateBridges: ' + search_err);
+        if (search_err) {
+            log('locateBridges: ' + search_err);
+            return;
+        }
+
+        if (result.length === 0) {
+            return;
+        }
+
+        log('Found a bridge');
+
+        var api = new HueApi(result[0].ipaddress, hue_apikey);
+
+        bridges[result[0].id] = { api: api };
+
+        api.config(function(config_err, config) {
+
+            if (config_err) {
+                log(config_err);
                 return;
             }
 
-            if (result.length === 0) {
-                return;
+            bridges[result[0].id].name = config.name;
+
+            // If auth failed this property is missing
+            if (!config.hasOwnProperty('ipaddress')) {
+
+                log('Need to create user');
+                conn.emit('pushthebutton', config.name);
+
+                var registerInterval = setInterval(function () {
+                    //log('Creating user');
+                    api.createUser(result[0].ipaddress, null, 'NHome', function(createUser_err, user) {
+                        if (createUser_err) {
+                            //log('createUser: ' + createUser_err);
+                            return;
+                        }
+                        clearInterval(registerInterval);
+                        log('User ' + user + ' created');
+
+                        // Connect with newly created user
+                        api = new HueApi(result[0].ipaddress, user);
+
+                        // Send username to web server
+                        cfg.set('hue_apikey', user);
+
+                        startListening();
+
+                        loadLights(result[0].id);
+                    });
+                }, 5000);
+
+            } else {
+                log('Authentication ok');
+                startListening();
+                loadLights(result[0].id);
             }
-
-            log('Found a bridge');
-
-            var api = new HueApi(result[0].ipaddress, cfg.hue_apikey || 'none');
-
-            bridges[result[0].id] = { api: api };
-
-            api.config(function(config_err, config) {
-
-                if (config_err) {
-                    log(config_err);
-                    return;
-                }
-
-                bridges[result[0].id].name = config.name;
-
-                // If auth failed this property is missing
-                if (!config.hasOwnProperty('ipaddress')) {
-
-                    log('Need to create user');
-                    conn.emit('pushthebutton', config.name);
-
-                    var registerInterval = setInterval(function () {
-                        //log('Creating user');
-                        api.createUser(result[0].ipaddress, null, 'NHome', function(createUser_err, user) {
-                            if (createUser_err) {
-                                //log('createUser: ' + createUser_err);
-                                return;
-                            }
-                            clearInterval(registerInterval);
-                            log('User ' + user + ' created');
-
-                            // Connect with newly created user
-                            api = new HueApi(result[0].ipaddress, user);
-
-                            // Send username to web server
-                            require('../configuration.js').set('hue_apikey', user);
-
-                            startListening();
-
-                            loadLights(result[0].id);
-                        });
-                    }, 5000);
-
-                } else {
-                    log('Authentication ok');
-                    startListening();
-                    loadLights(result[0].id);
-                }
-            });
         });
     });
 };

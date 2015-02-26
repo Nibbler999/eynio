@@ -8,29 +8,25 @@ var Cams = function(conn, l) {
 
     logger = l.child({component: 'Cameras'});
 
-    conn.once('configured', function (cfg) {
+    // var cfg = require('../configuration.js');
+    // cameras = cfg.get('cameras', {});
 
-        //if (cfg.cameras) {
-        //    cameras = cfg.cameras;
-        //}
+    // Temporary
+    conn.emit('getCameras', function (cams) {
 
-        // Temporary
-        conn.emit('getCameras', function (cams) {
+        cams.forEach(function (cam) {
 
-            cams.forEach(function (cam) {
+            var id = cam.id;
 
-                var id = cam.id;
+            delete cam.id;
+            delete cam.server;
+            delete cam.play_mp4;
+            delete cam.play_mjpeg;
 
-                delete cam.id;
-                delete cam.server;
-                delete cam.play_mp4;
-                delete cam.play_mjpeg;
-
-                cameras[id] = cam;
-            });
-
-            Cams.save();
+            cameras[id] = cam;
         });
+
+        Cams.save();
     });
 
     conn.on('getCameras', function (cb) {
