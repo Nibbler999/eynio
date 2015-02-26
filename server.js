@@ -24,8 +24,7 @@ require('./configuration.js').load(log, configured);
 
 function configured()
 {
-    var local = require('./local.js')(log);
-    var conn  = require('./connection.js')(log, local);
+    var conn  = require('./connection.js')(log);
 
     require('./services/namer.js').listen(conn, log);
     require('./services/cats.js').listen(conn, log);

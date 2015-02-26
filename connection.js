@@ -1,6 +1,13 @@
 "use strict";
 
-module.exports = function (log, local) {
+var events = require('events');
+var util = require('util');
+
+var wrapper, log;
+
+module.exports = function (l) {
+
+    log = l;
 
     var io = require('socket.io/node_modules/socket.io-client');
 
@@ -34,40 +41,15 @@ module.exports = function (log, local) {
 
     conn.on('command', command_handler);
 
-    var local_io = require('socket.io')(local).of('/client');
-
-    var wildcard = require('socketio-wildcard')();
-
-    local_io.use(wildcard);
-
-    local_io.on('connection', function (local_socket) {
-
-        local_socket.on('*', function (packet) {
-
-            var args = [].slice.apply(packet.data);
-            var name = args.shift();
-
-            var cb = typeof(args[args.length - 1]) === 'function' ? args.pop() : null;
-
-            var command = {
-                name: name,
-                args: args
-            };
-
-            command_handler(command, cb);
-        });
+    // Temporary
+    conn.on('makeMJPEG', function (camera) {
+        wrapper.emitLocal('makeMJPEG', camera);
     });
 
-    var emit = conn.emit;
-
-    conn.emit = function() {
-
-        emit.apply(conn, arguments);
-
-        if (typeof(arguments[arguments.length - 1]) !== 'function') {
-            local_io.emit.apply(local_io, arguments);
-        }
-    };
+    // Temporary
+    conn.on('proxyConnect', function (proxy) {
+        wrapper.emitLocal('proxyConnect', proxy);
+    });
 
     conn.on('log', function (cb) {
 
@@ -84,94 +66,152 @@ module.exports = function (log, local) {
         if (cb) cb(entries);
     });
 
-    conn.emitLocal = function (name) {
+    wrapper = setupConnWrapper(conn);
 
-        try {
-            io.Manager.prototype.emit.apply(this, arguments);
-        } catch (e) {
-            log.error('Error handling event', name, Array.prototype.slice.call(arguments, 1));
-            log.error(e);
-        }
+    return wrapper;
+};
+
+function setupConnWrapper(conn)
+{
+    // Local express + socket.io server
+    var local = setupLocalServer();
+
+    var Wrapper = function () {
+
+        events.EventEmitter.call(this);
+
+        // Temporary - get devices to call a function like 'broadcast'
+        var emit = this.emit;
+
+        // Emits to both main server and the local server
+        this.emit = function() {
+
+            // Main server
+            conn.emit.apply(conn, arguments);
+
+            // Only emit 'broadcast' type events to local server, not request/response
+            if (typeof(arguments[arguments.length - 1]) !== 'function') {
+                local.emit.apply(local, arguments);
+            }
+        };
+
+        // Emits an event locally as if it came from the main server
+        this.emitLocal = function () {
+            emit.apply(this, arguments);
+        };
     };
 
-    function command_handler(command, cb) {
+    util.inherits(Wrapper, events.EventEmitter);
 
-        log.debug('Received payload:', command);
+    return new Wrapper();
+}
 
-        if (command.permissions) {
+function setupLocalServer()
+{
+    var server = require('./local.js')(log);
 
-            var permissions = require('./permissions.js');
+    var io = require('socket.io')(server).of('/client');
 
-            if (!permissions.permitted_command(command)) {
-                if (cb) cb(false);
-                return false;
-            }
+    var wildcard = require('socketio-wildcard')();
+
+    io.use(wildcard);
+
+    io.on('connection', function (socket) {
+
+        socket.on('*', function (packet) {
+
+            var args = packet.data;
+            var name = args.shift();
+
+            var cb = typeof(args[args.length - 1]) === 'function' ? args.pop() : null;
+
+            var command = {
+                name: name,
+                args: args
+            };
+
+            command_handler(command, cb);
+        });
+    });
+
+    return io;
+}
+
+function command_handler(command, cb)
+{
+    log.debug('Received payload:', command);
+
+    if (command.permissions) {
+
+        var permissions = require('./permissions.js');
+
+        if (!permissions.permitted_command(command)) {
+            if (cb) cb(false);
+            return false;
         }
-
-        if (cb) {
-
-            var data = [], i = 0, mycb, mycb_timedout, mycb_timer;
-
-            var numListeners = conn.listeners(command.name).length;
-
-            if (numListeners === 0) {
-                log.debug('Replied to', command.name, command.args, 'with empty response');
-                cb(null);
-                return;
-            } else if (numListeners === 1) {
-
-                mycb_timedout = function() {
-                    log.warn('Timeout waiting for', command.name, command.args);
-                    cb(null);
-                };
-
-                mycb = function(result) {
-
-                    clearTimeout(mycb_timer);
-
-                    if (command.permissions) {
-                        result = permissions.filter_response(command, result);
-                    }
-
-                    log.debug('Replied to', command.name, command.args, 'with result', result);
-
-                    cb(result);
-                };
-
-            } else {
-
-                mycb_timedout = function() {
-                    log.warn('Timeout waiting for', command.name, command.args);
-                    cb(data);
-                };
-
-                mycb = function(result) {
-
-                    if (command.permissions) {
-                        result = permissions.filter_response(command, result);
-                    }
-
-                    data = data.concat(result);
-
-                    if (++i === numListeners) {
-                        clearTimeout(mycb_timer);
-                        log.debug('Replied to', command.name, command.args, 'with result array', data);
-                        cb(data);
-                    }
-                };
-            }
-
-            // If device does not respond in 5 seconds return partial result if available or null
-            mycb_timer = setTimeout(mycb_timedout, 5000);
-
-            command.args.push(mycb);
-        }
-
-        conn.emitLocal.apply(conn, [command.name].concat(command.args));
     }
 
-    return conn;
-};
+    if (cb) {
+
+        var data = [], i = 0, mycb, mycb_timedout, mycb_timer;
+
+        var numListeners = events.EventEmitter.listenerCount(wrapper, command.name);
+
+        if (numListeners === 0) {
+            log.debug('Replied to', command.name, command.args, 'with empty response');
+            cb(null);
+            return;
+        } else if (numListeners === 1) {
+
+            mycb_timedout = function() {
+                log.warn('Timeout waiting for', command.name, command.args);
+                cb(null);
+            };
+
+            mycb = function(result) {
+
+                clearTimeout(mycb_timer);
+
+                if (command.permissions) {
+                    result = permissions.filter_response(command, result);
+                }
+
+                log.debug('Replied to', command.name, command.args, 'with result', result);
+
+                cb(result);
+            };
+
+        } else {
+
+            mycb_timedout = function() {
+                log.warn('Timeout waiting for', command.name, command.args);
+                cb(data);
+            };
+
+            mycb = function(result) {
+
+                if (command.permissions) {
+                    result = permissions.filter_response(command, result);
+                }
+
+                data = data.concat(result);
+
+                if (++i === numListeners) {
+                    clearTimeout(mycb_timer);
+                    log.debug('Replied to', command.name, command.args, 'with result array', data);
+                    cb(data);
+                }
+            };
+        }
+
+        // If device does not respond in 5 seconds return partial result if available or null
+        mycb_timer = setTimeout(mycb_timedout, 5000);
+
+        command.args.push(mycb);
+    }
+
+    wrapper.emitLocal.apply(wrapper, [command.name].concat(command.args));
+}
 
 function getUUID()
 {
