@@ -3,7 +3,7 @@
 var Namer = require('../services/namer.js');
 var Cats = require('../services/cats.js');
 
-var conn, devices = {}, bridges = {};
+var conn, thermostats = {}, sensors = {}, bridges = {};
 
 var logger;
 
@@ -32,12 +32,18 @@ module.exports = function(c, l) {
                         var data = snapshot.val();
 
                         function addThermostat(thermostat) {
-                            
-                            devices[thermostat] = {
+
+                            thermostats[thermostat] = {
                                 id: thermostat,
                                 name: data.structures[structure].name + ' ' + data.devices.thermostats[thermostat].name,
                                 value: data.devices.thermostats[thermostat].ambient_temperature_c,
                                 target: data.devices.thermostats[thermostat].target_temperature_c
+                            };
+
+                            sensors[thermostat + '-humidity'] = {
+                                name: data.structures[structure].name + ' ' + data.devices.thermostats[thermostat].name + ' humidity',
+                                type: 'humidity',
+                                value: data.devices.thermostats[thermostat].humidity
                             };
                         }
 
@@ -45,7 +51,8 @@ module.exports = function(c, l) {
                             data.structures[structure].thermostats.forEach(addThermostat);
                         }
 
-                        Namer.add(devices);
+                        Namer.add(thermostats);
+                        Namer.add(sensors);
                     });
 
                     startListening();
@@ -70,9 +77,17 @@ function startListening()
     conn.on('getThermostatValue', function (id, cb) {
         getThermostatValue(id, cb);
     });
-    
+
     conn.on('setThermostatValue', function (id, value, cb) {
         setThermostatValue(id, value, cb);
+    });
+
+    conn.on('getSensors', function (cb) {
+        getSensors(cb);
+    });
+
+    conn.on('getSensorValue', function (id, cb) {
+        getSensorValue(id, cb);
     });
 }
 
@@ -91,26 +106,26 @@ function sendBridgeInfo(cb)
 
 function getThermostats(cb)
 {
-    var thermostats = [];
+    var t = [];
 
-    for (var device in devices) {
-        thermostats.push({
+    for (var device in thermostats) {
+        t.push({
             id: device,
             name: Namer.getName(device),
-            value: devices[device].value,
-            target: devices[device].target,
+            value: thermostats[device].value,
+            target: thermostats[device].target,
             categories: Cats.getCats(device)
         });
     }
 
-    conn.emit('thermostats', thermostats);
+    conn.emit('thermostats', t);
 
-    if (cb) cb(thermostats);
+    if (cb) cb(t);
 }
 
 function getThermostatValue(id, cb)
 {
-    if (!devices.hasOwnProperty(id)) {
+    if (!thermostats.hasOwnProperty(id)) {
         if (cb) cb([]);
         return;
     }
@@ -118,7 +133,7 @@ function getThermostatValue(id, cb)
     var thermostatValue = {
         id: id,
         name: Namer.getName(id),
-        value: devices[id].value
+        value: thermostats[id].value
     };
 
     conn.emit('thermostatValue', thermostatValue);
@@ -128,13 +143,13 @@ function getThermostatValue(id, cb)
 
 function setThermostatValue(id, value, cb)
 {
-    if (!devices.hasOwnProperty(id)) {
+    if (!thermostats.hasOwnProperty(id)) {
         if (cb) cb([]);
         return;
     }
 
-    var path = 'devices/thermostats/' + devices[id].id + '/target_temperature_c';
-    
+    var path = 'devices/thermostats/' + thermostats[id].id + '/target_temperature_c';
+
     dataRef.child(path).set(value, function (result) {
         if (result === null) {
             if (cb) cb(true);
@@ -142,6 +157,42 @@ function setThermostatValue(id, value, cb)
             if (cb) cb(result.message);
             logger.error(result.message);
         }
-    }); 
+    });
 }
 
+function getSensors(cb)
+{
+    var s = [];
+
+    for (var device in sensors) {
+        s.push({
+            id: device,
+            name: Namer.getName(device),
+            type: sensors[device].type,
+            categories: Cats.getCats(device)
+        });
+    }
+
+    conn.emit('sensors', s);
+
+    if (cb) cb(s);
+}
+
+function getSensorValue(id, cb)
+{
+    if (!sensors.hasOwnProperty(id)) {
+        if (cb) cb([]);
+        return;
+    }
+
+    var sensorValue = {
+        id: id,
+        name: Namer.getName(id),
+        type: sensors[id].type,
+        value: sensors[id].value
+    };
+
+    conn.emit('sensorValue', sensorValue);
+
+    if (cb) cb(sensorValue);
+}
