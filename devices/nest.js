@@ -40,6 +40,9 @@ module.exports = function(c, l) {
                                 target: data.devices.thermostats[thermostat].target_temperature_c
                             };
 
+                            // Broadcast change
+                            getThermostatValue(thermostat);
+                            
                             sensors[thermostat + '-humidity'] = {
                                 name: data.structures[structure].name + ' ' + data.devices.thermostats[thermostat].name + ' humidity',
                                 type: 'humidity',
@@ -133,7 +136,8 @@ function getThermostatValue(id, cb)
     var thermostatValue = {
         id: id,
         name: Namer.getName(id),
-        value: thermostats[id].value
+        value: thermostats[id].value,
+        target: thermostats[id].target
     };
 
     conn.emit('thermostatValue', thermostatValue);
