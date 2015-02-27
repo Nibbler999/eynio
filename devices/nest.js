@@ -42,7 +42,7 @@ module.exports = function(c, l) {
 
                             // Broadcast change
                             getThermostatValue(thermostat);
-                            
+
                             sensors[thermostat + '-humidity'] = {
                                 name: data.structures[structure].name + ' ' + data.devices.thermostats[thermostat].name + ' humidity',
                                 type: 'humidity',
