@@ -2,6 +2,8 @@
 
 var logger;
 
+var Cats = require('../services/cats.js');
+
 var cameras = {};
 
 var Cams = function(conn, l) {
@@ -33,6 +35,10 @@ var Cams = function(conn, l) {
 
         var cam_array = hash_to_array(cameras);
 
+        cam_array.forEach(function (camera) {
+            camera.categories = Cats.getCats(camera.id);
+        });
+
         conn.emit('cameras', cam_array);
 
         if (cb) cb(cam_array);
@@ -51,9 +57,11 @@ var Cams = function(conn, l) {
 
     conn.on('updateCamera', function (cameraid, camera, cb) {
 
-        cameras[cameraid] = camera;
+        for (var prop in camera) {
+            cameras[cameraid][prop] = camera[prop];
+        }
 
-        conn.emit('cameraUpdated', camera);
+        conn.emit('cameraUpdated', cameras[cameraid]);
 
         Cams.save();
 
