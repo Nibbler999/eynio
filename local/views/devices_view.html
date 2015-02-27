@@ -13,6 +13,7 @@
 <script src="/js/switches.js"></script>
 <script src="/js/shutters.js"></script>
 <script src="/js/thermostats.js"></script>
+<script src="/js/cameras.js"></script>
 <script src="/js/categories.js"></script>
 <script src="/js/color-picker.js"></script>
 <script src="/js/jquery.ratelimit.js"></script>
@@ -50,6 +51,11 @@
     <div class="add_device_subtitle">Please select device you want to add</div>
 
     <div class="menuoption">
+        <label for="add_device_camera">Camera</label>
+        <input type="radio" name="add_device_type" value="camera" id="add_device_camera" />
+    </div>
+
+    <div class="menuoption">
         <label for="add_device_nhome">NHome</label>
         <input type="radio" name="add_device_type" value="nhome" id="add_device_nhome" />
     </div>
@@ -66,6 +72,40 @@
 
     <div class="menuoption">
         <input type="text" id="add_device_nhome_apikey" placeholder="API key" />
+    </div>
+
+    <div class="add_device_navigation">
+        <button class="cancel">Cancel</button>
+        <button class="next">Finish</button>
+    </div>
+</div>
+
+<div class="block hidden add_device_camera">
+    <div class="block_header">Add camera</div>
+    <div class="add_device_subtitle">Please enter your camera details below</div>
+
+    <div class="menuoption">
+        <input type="text" id="add_device_camera_name" placeholder="Name" />
+    </div>
+
+    <div class="menuoption">
+        <input type="text" id="add_device_camera_mjpeg" placeholder="MJPEG URL" />
+    </div>
+
+    <div class="menuoption">
+        <input type="text" id="add_device_camera_snapshot" placeholder="JPEG snapshot URL" />
+    </div>
+
+    <div class="menuoption">
+        <input type="text" id="add_device_camera_rtsp" placeholder="RTSP URL" />
+    </div>
+
+    <div class="menuoption">
+        <input type="text" id="add_device_camera_auth_name" placeholder="Username (if required)" />
+    </div>
+
+    <div class="menuoption">        
+        <input type="password" id="add_device_camera_auth_pass" placeholder="Password (if required)" />
     </div>
 
     <div class="add_device_navigation">
@@ -118,6 +158,39 @@
 
     <div class="menuoption">
         <input type="text" name="device_name" placeholder="Name" />
+    </div>
+
+    <div class="edit_device_navigation">
+        <button class="cancel">Cancel</button>
+        <button class="save">Save</button>
+    </div>
+</div>
+
+<div class="block hidden edit_device edit_camera">
+    <div class="block_header">Edit camera</div>
+
+    <div class="menuoption">
+        <input type="text" id="edit_device_camera_name" placeholder="Name" />
+    </div>
+
+    <div class="menuoption">
+        <input type="text" id="edit_device_camera_mjpeg" placeholder="MJPEG URL" />
+    </div>
+
+    <div class="menuoption">
+        <input type="text" id="edit_device_camera_snapshot" placeholder="JPEG snapshot URL" />
+    </div>
+
+    <div class="menuoption">
+        <input type="text" id="edit_device_camera_rtsp" placeholder="RTSP URL" />
+    </div>
+
+    <div class="menuoption">
+        <input type="text" id="edit_device_camera_auth_name" placeholder="Username (if required)" />
+    </div>
+
+    <div class="menuoption">        
+        <input type="password" id="edit_device_camera_auth_pass" placeholder="Password (if required)" />
     </div>
 
     <div class="edit_device_navigation">

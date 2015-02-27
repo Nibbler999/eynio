@@ -19,34 +19,65 @@ module.exports = function (l) {
     app.set('views', 'local/views');
     app.set('view engine', '.html');
 
+    app.use(function (req, res, next) {
+
+        var ip = req.ip.replace(/^::ffff:/, '');
+
+        if (!require('ip').isPrivate(ip)) {
+            res.status(403).send('Access via local network IP only');
+            res.end();
+        } else {
+            next();
+        }
+    });
+
     app.use(express['static']('local/public'));
 
+    var locals = {
+        page: '',
+        menu: {
+            dashboard: 'Dashboard',
+            schedule:  'Schedule',
+            devices:   'Devices',
+            downloads: 'Downloads',
+            support:   'Support',
+            security:  'Security'
+        }
+    };
+
     app.get('/', function (req, res) {
-        res.render('dashboard_view');
+        locals.page = 'dashboard';
+        res.render('dashboard_view', locals);
     });
 
     app.get('/dashboard', function (req, res) {
-        res.render('dashboard_view');
+        locals.page = 'dashboard';
+        res.render('dashboard_view', locals);
     });
 
     app.get('/schedule', function (req, res) {
-        res.render('schedule_view');
+        locals.page = 'schedule';
+        res.render('schedule_view', locals);
     });
 
     app.get('/devices', function (req, res) {
-        res.render('devices_view');
-    });
-
-    app.get('/support', function (req, res) {
-        res.render('support_view');
+        locals.page = 'devices';
+        res.render('devices_view', locals);
     });
 
     app.get('/downloads', function (req, res) {
-        res.render('downloads_view');
+        locals.page = 'downloads';
+        res.render('downloads_view', locals);
+    });
+
+    app.get('/support', function (req, res) {
+        locals.page = 'support';
+        res.render('support_view', locals);
     });
 
     app.get('/security', function (req, res) {
-        res.render('security_view');
+        locals.page = 'security';
+        res.render('cam_view', locals);
     });
 
     return server;

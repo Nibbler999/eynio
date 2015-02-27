@@ -1,35 +1,30 @@
 <div id="nav">
 <div id="navmenu">
-<div id="nav_dashboard">
-    <div class="navicon"></div><a href="/dashboard">Dashboard</a>
-</div>
-<div id="nav_schedule">
-    <div class="navicon"></div><a href="/schedule">Schedule</a>
-</div>
-<div id="nav_devices">
-    <div class="navicon"></div><a href="/devices">Devices</a>
-</div>
-<div class="submenu" id="filter_light">
-    <div class="navicon_filter"></div><a href="#lights">Light Bulbs</a>
-</div>
-<div class="submenu" id="filter_switch">
-    <div class="navicon_filter"></div><a href="#switches">Switches</a>
-</div>
-<div class="submenu" id="filter_sensor">
-    <div class="navicon_filter"></div><a href="#sensors">Sensors</a>
-</div>
-<div class="submenu" id="filter_remote">
-    <div class="navicon_filter"></div><a href="#remotes">Remotes</a>
-</div>
-<div class="submenu" id="filter_shutters">
-    <div class="navicon_filter"></div><a href="#shutters">Shutters</a>
-</div>
-<div id="nav_downloads">
-    <div class="navicon"></div><a href="/downloads">Downloads</a>
-</div>
-<div id="nav_support">
-    <div class="navicon"></div><a href="/support">Support</a>
-</div>
+  <% for (var link in menu) { %>
+    <div id="nav_<%- link %>" <% if (page === link) { %>class="active" <% } %>>
+        <div class="navicon"></div><a href="/<%- link %>"><%= menu[link] %></a>
+    </div>
+    <% if (link === 'devices' && page === link) { %>
+        <div class="submenu" id="filter_light">
+            <div class="navicon_filter"></div><a href="#lights">Light Bulbs</a>
+        </div>
+        <div class="submenu" id="filter_switch">
+            <div class="navicon_filter"></div><a href="#switches">Switches</a>
+        </div>
+        <div class="submenu" id="filter_sensor">
+            <div class="navicon_filter"></div><a href="#sensors">Sensors</a>
+        </div>
+        <div class="submenu" id="filter_remote">
+            <div class="navicon_filter"></div><a href="#remotes">Remotes</a>
+        </div>
+        <div class="submenu" id="filter_camera">
+            <div class="navicon_filter"></div><a href="#cameras">Cameras</a>
+        </div>
+        <div class="submenu" id="filter_shutters">
+            <div class="navicon_filter"></div><a href="#shutters">Shutters</a>
+        </div>
+    <% } %>
+  <% } %>
 </div>
 </div>
 <div id="content">
