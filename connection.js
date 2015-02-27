@@ -27,12 +27,15 @@ module.exports = function (l) {
         log.info('Connected.');
     });
 
-    conn.on('connect_error', function () {
+    conn.once('connect_error', function (error) {
+        log.debug('connect_error', error);
         log.error('Failed to connect to NHome.');
     });
 
-    conn.on('reconnecting', function() {
-        log.info('Attempting to reconnect');
+    conn.on('reconnecting', function (count) {
+        if (count === 1) {
+            log.info('Attempting to reconnect');
+        }
     });
 
     conn.on('disconnect', function () {
