@@ -46,12 +46,12 @@ module.exports = function (l) {
 
     // Temporary
     conn.on('makeMJPEG', function (camera) {
-        wrapper.emitLocal('makeMJPEG', camera);
+        wrapper.emit('makeMJPEG', camera);
     });
 
     // Temporary
     conn.on('proxyConnect', function (proxy) {
-        wrapper.emitLocal('proxyConnect', proxy);
+        wrapper.emit('proxyConnect', proxy);
     });
 
     conn.on('log', function (cb) {
