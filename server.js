@@ -36,10 +36,8 @@ function configured()
 
     require('./devices/hue.js')(conn, log);
     require('./devices/wemo.js')(conn, log);
-    require('./devices/lg.js')(conn, log);
     require('./devices/insteon.js')(conn, log);
     require('./devices/itach.js')(conn, log);
-    require('./devices/samsung-remote.js')(conn, log);
     require('./devices/fibaro.js')(conn, log);
     require('./devices/razberry.js')(conn, log);
     require('./devices/lifx.js')(conn, log);
