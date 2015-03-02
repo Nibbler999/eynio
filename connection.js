@@ -11,7 +11,7 @@ module.exports = function (l) {
 
     var io = require('socket.io/node_modules/socket.io-client');
 
-    var serverUrl = 'https://nhome.ba/server?uuid=' + getUUID();
+    var serverUrl = 'https://nhome.ba/server?uuid=' + getUUID() + '&version=' + getVersion();
 
     log.debug('URL', serverUrl);
 
@@ -233,3 +233,10 @@ function getUUID()
 
     return fs.readFileSync(uuidFile, { encoding: 'utf8'});
 }
+
+function getVersion()
+{
+    delete require.cache[require.resolve('./package.json')];
+    return require('./package.json').version;
+}
+
