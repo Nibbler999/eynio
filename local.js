@@ -16,7 +16,7 @@ module.exports = function (l) {
 
     app.engine('.html', ejs.__express);
 
-    app.set('views', 'local/views');
+    app.set('views', require('path').join(__dirname, 'local', 'views'));
     app.set('view engine', '.html');
 
     app.use(function (req, res, next) {
@@ -31,7 +31,7 @@ module.exports = function (l) {
         }
     });
 
-    app.use(express['static']('local/public'));
+    app.use(express['static'](require('path').join(__dirname, 'local', 'public')));
 
     var locals = {
         page: '',
