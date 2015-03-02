@@ -44,7 +44,7 @@ Cats.listen = function(conn, l) {
     });
 
     conn.on('catList', function (cb) {
-        conn.emit('catList', categories);
+        conn.broadcast('catList', categories);
         if (cb) cb(categories);
     });
 
@@ -79,13 +79,13 @@ Cats.listen = function(conn, l) {
             }
         }
 
-        conn.emit('catList', devs);
+        conn.broadcast('catList', devs);
 
         if (cb) cb(devs);
     });
 
     conn.on('catOfDevice', function (deviceid, cb) {
-        conn.emit('catOfDevice', devices[deviceid] || []);
+        conn.broadcast('catOfDevice', devices[deviceid] || []);
         if (cb) cb(devices[deviceid] || []);
     });
 };

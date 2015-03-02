@@ -14,7 +14,7 @@ var Cams = function(conn, l) {
     // cameras = cfg.get('cameras', {});
 
     // Temporary
-    conn.emit('getCameras', function (cams) {
+    conn.send('getCameras', function (cams) {
 
         cams.forEach(function (cam) {
 
@@ -39,7 +39,7 @@ var Cams = function(conn, l) {
             camera.categories = Cats.getCats(camera.id);
         });
 
-        conn.emit('cameras', cam_array);
+        conn.broadcast('cameras', cam_array);
 
         if (cb) cb(cam_array);
     });
@@ -48,7 +48,7 @@ var Cams = function(conn, l) {
 
         delete cameras[cameraid];
 
-        conn.emit('cameraDeleted', cameraid);
+        conn.broadcast('cameraDeleted', cameraid);
 
         Cams.save();
 
@@ -61,7 +61,7 @@ var Cams = function(conn, l) {
             cameras[cameraid][prop] = camera[prop];
         }
 
-        conn.emit('cameraUpdated', cameras[cameraid]);
+        conn.broadcast('cameraUpdated', cameras[cameraid]);
 
         Cams.save();
 
@@ -70,7 +70,7 @@ var Cams = function(conn, l) {
 
     conn.on('getCamera', function (cameraid, cb) {
 
-        conn.emit('camera', cameras[cameraid]);
+        conn.broadcast('camera', cameras[cameraid]);
 
         if (cb) cb(cameras[cameraid]);
     });

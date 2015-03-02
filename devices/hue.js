@@ -53,7 +53,7 @@ module.exports = function(c, l) {
             if (!config.hasOwnProperty('ipaddress')) {
 
                 log('Need to create user');
-                conn.emit('pushthebutton', config.name);
+                conn.broadcast('pushthebutton', config.name);
 
                 var registerInterval = setInterval(function () {
                     //log('Creating user');
@@ -180,7 +180,7 @@ function sendBridgeInfo(cb)
         bridgeInfo.push({ name: bridges[bridge].name, id: bridge });
     }
 
-    conn.emit('bridgeInfo', bridgeInfo);
+    conn.broadcast('bridgeInfo', bridgeInfo);
 
     if (cb) cb(bridgeInfo);
 }
@@ -198,7 +198,7 @@ function getLights(cb)
         });
     }
 
-    conn.emit('lights', lights);
+    conn.broadcast('lights', lights);
 
     if (cb) cb(lights);
 }
@@ -346,7 +346,7 @@ function getLightState(id, cb)
 
         devices[id].state = state;
 
-        conn.emit('lightState', { id: id, state: state });
+        conn.broadcast('lightState', { id: id, state: state });
 
         if (cb) cb(state);
     });
@@ -366,7 +366,7 @@ function setDeviceName(id, name)
 
         if (result) {
             devices[id].name = name;
-            conn.emit('deviceRenamed', id, name);
+            conn.broadcast('deviceRenamed', id, name);
         }
     });
 }

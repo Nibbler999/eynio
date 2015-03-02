@@ -19,7 +19,7 @@ module.exports = function(c, l) {
 
 function getToken()
 {
-    conn.emit('getOAuth2Token', 'netatmo', token_callback);
+    conn.send('getOAuth2Token', 'netatmo', token_callback);
 }
 
 function token_callback(token)
@@ -120,7 +120,7 @@ function sendBridgeInfo(cb)
         bridgeInfo.push({ name: 'netatmo', id: bridge });
     }
 
-    conn.emit('bridgeInfo', bridgeInfo);
+    conn.broadcast('bridgeInfo', bridgeInfo);
 
     if (cb) cb(bridgeInfo);
 }
@@ -139,7 +139,7 @@ function getSensors(cb)
         });
     }
 
-    conn.emit('sensors', sensors);
+    conn.broadcast('sensors', sensors);
 
     if (cb) cb(sensors);
 }
@@ -181,7 +181,7 @@ function getSensorValue(id, cb)
 
         devices[id].value = sensorValue.value;
 
-        conn.emit('sensorValue', sensorValue);
+        conn.broadcast('sensorValue', sensorValue);
 
         if (cb) cb(sensorValue);
     });

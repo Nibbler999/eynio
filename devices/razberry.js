@@ -71,7 +71,7 @@ function sendBridgeInfo(cb)
         bridgeInfo.push({ name: 'RaZberry', id: bridge });
     }
 
-    conn.emit('bridgeInfo', bridgeInfo);
+    conn.broadcast('bridgeInfo', bridgeInfo);
 
     if (cb) cb(bridgeInfo);
 }
@@ -92,7 +92,7 @@ function getSwitches(cb)
             }
         }
 
-        conn.emit('switches', switches);
+        conn.broadcast('switches', switches);
 
         if (cb) cb(switches);
     });
@@ -114,7 +114,7 @@ function switchOn(id)
         }
 
         if (response.statusCode === 200) {
-            conn.emit('switchState', { id: id, state: { on: true }});
+            conn.broadcast('switchState', { id: id, state: { on: true }});
         }
     });
 }
@@ -135,7 +135,7 @@ function switchOff(id)
         }
 
         if (response.statusCode === 200) {
-            conn.emit('switchState', { id: id, state: { on: false }});
+            conn.broadcast('switchState', { id: id, state: { on: false }});
         }
     });
 }
@@ -149,7 +149,7 @@ function getSwitchState(id, cb)
 
     update(function() {
         var switchState = { on: devices[id].commandClasses['37'].data.level.value};
-        conn.emit('switchState', { id: id, state: switchState});
+        conn.broadcast('switchState', { id: id, state: switchState});
         if (cb) cb(switchState);
     });
 }

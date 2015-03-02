@@ -59,12 +59,12 @@ Namer.getName = function(id) {
 
 Namer.deviceRenamed = function(id) {
     Namer.save();
-    conn.emit('deviceRenamed', id, Namer.getName(id));
+    conn.broadcast('deviceRenamed', id, Namer.getName(id));
 };
 
 Namer.bridgeRenamed = function(id) {
     Namer.save();
-    conn.emit('bridgeRenamed', id, Namer.getName(id));
+    conn.broadcast('bridgeRenamed', id, Namer.getName(id));
 };
 
 module.exports = Namer;

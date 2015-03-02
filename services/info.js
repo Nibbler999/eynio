@@ -30,7 +30,7 @@ function getServerStatus(cb)
         updateable: getUpdateable()
     };
 
-    conn.emit('serverStatus', status);
+    conn.broadcast('serverStatus', status);
 
     if (cb) cb(status);
 }

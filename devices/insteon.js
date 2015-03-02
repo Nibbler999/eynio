@@ -112,7 +112,7 @@ function sendBridgeInfo(cb)
         bridgeInfo.push({ name: 'Insteon', id: bridge });
     }
 
-    conn.emit('bridgeInfo', bridgeInfo);
+    conn.broadcast('bridgeInfo', bridgeInfo);
 
     if (cb) cb(bridgeInfo);
 }
@@ -129,7 +129,7 @@ function getLights(cb)
         });
     }
 
-    conn.emit('lights', l);
+    conn.broadcast('lights', l);
 
     if (cb) cb(l);
 }
@@ -215,7 +215,7 @@ function getLightState(id, cb)
     light.level(function(err, level) {
         var on = level > 0;
         var lightState = { on: on, level: level };
-        conn.emit('lightState', { id: id, state: lightState});
+        conn.broadcast('lightState', { id: id, state: lightState});
         if (cb) cb(lightState);
     });
 }

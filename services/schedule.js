@@ -39,7 +39,7 @@ module.exports = function(c, l) {
     });
 
     conn.on('getSchedule', function (cb) {
-        conn.emit('schedule', schedule);
+        conn.broadcast('schedule', schedule);
         if (cb) cb(schedule);
     });
 };
@@ -71,7 +71,7 @@ function reloadSchedule()
         var j = scheduler.scheduleJob(s.dateTime, function() {
             var params = [s.emit];
             params = params.concat(s.params);
-            conn.emitLocal.apply(conn, params);
+            conn.broadcastLocal.apply(conn, params);
         });
 
         jobs.push(j);

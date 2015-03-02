@@ -142,7 +142,7 @@ function startUPnPServer()
 
                             var switchState = { on: device.value };
 
-                            conn.emit('switchState', { id: id, state: switchState});
+                            conn.broadcast('switchState', { id: id, state: switchState});
 
                         } else if (device.type === 'sensor') {
 
@@ -153,7 +153,7 @@ function startUPnPServer()
                                 value: device.value
                             };
 
-                            conn.emit('sensorValue', sensorValue);
+                            conn.broadcast('sensorValue', sensorValue);
                         }
                     }
                 }
@@ -181,7 +181,7 @@ function getSwitches(cb)
         }
     }
 
-    conn.emit('switches', switches);
+    conn.broadcast('switches', switches);
 
     if (cb) cb(switches);
 }
@@ -235,7 +235,7 @@ function getSwitchState(id, cb)
 
         var switchState = { on: state >= 1 };
 
-        conn.emit('switchState', { id: id, state: switchState});
+        conn.broadcast('switchState', { id: id, state: switchState});
 
         if (cb) cb(switchState);
     });
@@ -257,7 +257,7 @@ function getSensors(cb)
         }
     }
 
-    conn.emit('sensors', sensors);
+    conn.broadcast('sensors', sensors);
 
     if (cb) cb(sensors);
 }
@@ -284,7 +284,7 @@ function getSensorValue(id, cb)
             value: result === '1'
         };
 
-        conn.emit('sensorValue', sensorValue);
+        conn.broadcast('sensorValue', sensorValue);
 
         if (cb) cb(sensorValue);
     });

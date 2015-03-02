@@ -104,7 +104,7 @@ function startListening()
         nhome.on(eventName, function () {
             var args = Array.prototype.slice.call(arguments);
             args.unshift(eventName);
-            conn.emit.apply(conn, args);
+            conn.broadcast.apply(conn, args);
         });
     });
 }
@@ -117,7 +117,7 @@ function sendBridgeInfo(cb)
         bridgeInfo.push({ name: 'NHome Slave', id: bridge });
     }
 
-    conn.emit('bridgeInfo', bridgeInfo);
+    conn.broadcast('bridgeInfo', bridgeInfo);
 
     if (cb) cb(bridgeInfo);
 }
@@ -130,7 +130,7 @@ function getLights(cb)
             device.categories = Cats.getCats(device.id);
         });
 
-        conn.emit('lights', devices);
+        conn.broadcast('lights', devices);
 
         if (cb) cb(devices);
     });
@@ -144,7 +144,7 @@ function getSwitches(cb)
             device.categories = Cats.getCats(device.id);
         });
 
-        conn.emit('switches', devices);
+        conn.broadcast('switches', devices);
 
         if (cb) cb(devices);
     });
@@ -158,7 +158,7 @@ function getSensors(cb)
             device.categories = Cats.getCats(device.id);
         });
 
-        conn.emit('sensors', devices);
+        conn.broadcast('sensors', devices);
 
         if (cb) cb(devices);
     });
@@ -172,7 +172,7 @@ function getRemotes(cb)
             device.categories = Cats.getCats(device.id);
         });
 
-        conn.emit('remotes', devices);
+        conn.broadcast('remotes', devices);
 
         if (cb) cb(devices);
     });
@@ -186,7 +186,7 @@ function getCustomRemotes(cb)
             device.categories = Cats.getCats(device.id);
         });
 
-        conn.emit('customRemotes', devices);
+        conn.broadcast('customRemotes', devices);
 
         if (cb) cb(devices);
     });
@@ -200,7 +200,7 @@ function getShutters(cb)
             device.categories = Cats.getCats(device.id);
         });
 
-        conn.emit('shutters', devices);
+        conn.broadcast('shutters', devices);
 
         if (cb) cb(devices);
     });

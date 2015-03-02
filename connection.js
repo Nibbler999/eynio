@@ -64,7 +64,7 @@ module.exports = function (l) {
 
         var entries = ringbuffer.records.map(prettyLog.formatRecord).join('');
 
-        conn.emit('log', entries);
+        conn.broadcast('log', entries);
 
         if (cb) cb(entries);
     });
@@ -83,24 +83,20 @@ function setupConnWrapper(conn)
 
         events.EventEmitter.call(this);
 
-        // Temporary - get devices to call a function like 'broadcast'
-        var emit = this.emit;
-
         // Emits to both main server and the local server
-        this.emit = function() {
-
-            // Main server
+        this.broadcast = function() {
             conn.emit.apply(conn, arguments);
+            local.emit.apply(local, arguments);
+        };
 
-            // Only emit 'broadcast' type events to local server, not request/response
-            if (typeof(arguments[arguments.length - 1]) !== 'function') {
-                local.emit.apply(local, arguments);
-            }
+        // Emits to main server only
+        this.send = function() {
+            conn.emit.apply(conn, arguments);
         };
 
         // Emits an event locally as if it came from the main server
         this.emitLocal = function () {
-            emit.apply(this, arguments);
+            this.emit.apply(this, arguments);
         };
     };
 

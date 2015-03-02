@@ -97,7 +97,7 @@ function sendBridgeInfo(cb)
         bridgeInfo.push({ name: Namer.getName(device), id: device });
     }
 
-    conn.emit('bridgeInfo', bridgeInfo);
+    conn.broadcast('bridgeInfo', bridgeInfo);
 
     if (cb) cb(bridgeInfo);
 }
@@ -113,7 +113,7 @@ function getRemotes(cb)
         });
     }
 
-    conn.emit('remotes', r);
+    conn.broadcast('remotes', r);
 
     if (cb) cb(r);
 }
@@ -174,7 +174,7 @@ function learnKey(remoteid, key)
 
         saveCode(remoteid, key, res);
 
-        conn.emit('IRKeyLearned', { remoteid: remoteid, key: key });
+        conn.broadcast('IRKeyLearned', { remoteid: remoteid, key: key });
     });
 }
 
@@ -199,7 +199,7 @@ function saveCustomRemote(r)
 
     saveRemotes();
 
-    conn.emit('customRemoteAdded', r);
+    conn.broadcast('customRemoteAdded', r);
 }
 
 function updateCustomRemote(r)
@@ -214,7 +214,7 @@ function updateCustomRemote(r)
 
     saveRemotes();
 
-    conn.emit('customRemoteUpdated', r);
+    conn.broadcast('customRemoteUpdated', r);
 }
 
 function deleteCustomRemote(id)
@@ -223,7 +223,7 @@ function deleteCustomRemote(id)
 
     saveRemotes();
 
-    conn.emit('customRemoteDeleted', id);
+    conn.broadcast('customRemoteDeleted', id);
 }
 
 function getCustomRemotes(cb)
@@ -245,7 +245,7 @@ function getCustomRemotes(cb)
         customremotes.push(r2);
     }
 
-    conn.emit('customRemotes', customremotes);
+    conn.broadcast('customRemotes', customremotes);
 
     if (cb) cb(customremotes);
 }

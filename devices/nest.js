@@ -14,7 +14,7 @@ module.exports = function(c, l) {
     conn = c;
     logger = l.child({component: 'Nest'});
 
-    conn.emit('getOAuth2Token', 'nest', function(token) {
+    conn.send('getOAuth2Token', 'nest', function(token) {
 
         if (token && token.access_token) {
 
@@ -102,7 +102,7 @@ function sendBridgeInfo(cb)
         bridgeInfo.push({ name: 'nest', id: bridge });
     }
 
-    conn.emit('bridgeInfo', bridgeInfo);
+    conn.broadcast('bridgeInfo', bridgeInfo);
 
     if (cb) cb(bridgeInfo);
 }
@@ -121,7 +121,7 @@ function getThermostats(cb)
         });
     }
 
-    conn.emit('thermostats', t);
+    conn.broadcast('thermostats', t);
 
     if (cb) cb(t);
 }
@@ -140,7 +140,7 @@ function getThermostatValue(id, cb)
         target: thermostats[id].target
     };
 
-    conn.emit('thermostatValue', thermostatValue);
+    conn.broadcast('thermostatValue', thermostatValue);
 
     if (cb) cb(thermostatValue);
 }
@@ -177,7 +177,7 @@ function getSensors(cb)
         });
     }
 
-    conn.emit('sensors', s);
+    conn.broadcast('sensors', s);
 
     if (cb) cb(s);
 }
@@ -196,7 +196,7 @@ function getSensorValue(id, cb)
         value: sensors[id].value
     };
 
-    conn.emit('sensorValue', sensorValue);
+    conn.broadcast('sensorValue', sensorValue);
 
     if (cb) cb(sensorValue);
 }

@@ -129,7 +129,7 @@ function sendBridgeInfo(cb)
         bridgeInfo.push({ name: 'Fibaro', id: bridge });
     }
 
-    conn.emit('bridgeInfo', bridgeInfo);
+    conn.broadcast('bridgeInfo', bridgeInfo);
 
     if (cb) cb(bridgeInfo);
 }
@@ -148,7 +148,7 @@ function getSwitches(cb)
         }
     }
 
-    conn.emit('switches', switches);
+    conn.broadcast('switches', switches);
 
     if (cb) cb(switches);
 }
@@ -168,7 +168,7 @@ function getSensors(cb)
         }
     }
 
-    conn.emit('sensors', sensors);
+    conn.broadcast('sensors', sensors);
 
     if (cb) cb(sensors);
 }
@@ -187,7 +187,7 @@ function getShutters(cb)
         }
     }
 
-    conn.emit('shutters', shutters);
+    conn.broadcast('shutters', shutters);
 
     if (cb) cb(shutters);
 }
@@ -207,7 +207,7 @@ function switchOn(id)
             return;
         }
 
-        conn.emit('switchState', { id: id, state: { on: true }});
+        conn.broadcast('switchState', { id: id, state: { on: true }});
     });
 }
 
@@ -226,7 +226,7 @@ function switchOff(id)
             return;
         }
 
-        conn.emit('switchState', { id: id, state: { on: false }});
+        conn.broadcast('switchState', { id: id, state: { on: false }});
     });
 }
 
@@ -254,7 +254,7 @@ function getSensorValue(id, cb)
             value: result.properties.value
         };
 
-        conn.emit('sensorValue', sensorValue);
+        conn.broadcast('sensorValue', sensorValue);
 
         if (cb) cb(sensorValue);
     });
@@ -283,7 +283,7 @@ function getShutterValue(id, cb)
             value: result.properties.value
         };
 
-        conn.emit('shutterValue', ShutterValue);
+        conn.broadcast('shutterValue', ShutterValue);
 
         if (cb) cb(ShutterValue);
     });
@@ -308,7 +308,7 @@ function getSwitchState(id, cb)
 
         var switchState = { on: result.properties.value === '1' };
 
-        conn.emit('switchState', { id: id, state: switchState});
+        conn.broadcast('switchState', { id: id, state: switchState});
 
         if (cb) cb(switchState);
     });
@@ -329,7 +329,7 @@ function setShutterValue(id, value, cb)
             return;
         }
 
-        conn.emit('shutterValue', { id: id, value: value});
+        conn.broadcast('shutterValue', { id: id, value: value});
 
         if (cb) cb(value);
     });
@@ -350,7 +350,7 @@ function openShutter(id, cb)
             return;
         }
 
-        conn.emit('shutterValue', { id: id, value: 0});
+        conn.broadcast('shutterValue', { id: id, value: 0});
 
         if (cb) cb(0);
     });
@@ -371,7 +371,7 @@ function closeShutter(id, cb)
             return;
         }
 
-        conn.emit('shutterValue', { id: id, value: 100});
+        conn.broadcast('shutterValue', { id: id, value: 100});
 
         if (cb) cb(100);
     });

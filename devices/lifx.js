@@ -40,7 +40,7 @@ module.exports = function(c, l) {
             hex: chroma.hex()
         };
 
-        conn.emit('lightState', { id: id, state: state });
+        conn.broadcast('lightState', { id: id, state: state });
     });
 
     lx.on('bulb', function(b) {
@@ -104,7 +104,7 @@ function sendBridgeInfo(cb)
         bridgeInfo.push({ name: 'LIFX', id: bridge });
     }
 
-    conn.emit('bridgeInfo', bridgeInfo);
+    conn.broadcast('bridgeInfo', bridgeInfo);
 
     if (cb) cb(bridgeInfo);
 }
@@ -121,7 +121,7 @@ function getLights(cb)
         });
     }
 
-    conn.emit('lights', lights);
+    conn.broadcast('lights', lights);
 
     if (cb) cb(lights);
 }
