@@ -93,11 +93,6 @@ function setupConnWrapper(conn)
         this.send = function() {
             conn.emit.apply(conn, arguments);
         };
-
-        // Emits an event locally as if it came from the main server
-        this.emitLocal = function () {
-            this.emit.apply(this, arguments);
-        };
     };
 
     util.inherits(Wrapper, events.EventEmitter);
@@ -209,7 +204,7 @@ function command_handler(command, cb)
         command.args.push(mycb);
     }
 
-    wrapper.emitLocal.apply(wrapper, [command.name].concat(command.args));
+    wrapper.emit.apply(wrapper, [command.name].concat(command.args));
 }
 
 function getUUID()

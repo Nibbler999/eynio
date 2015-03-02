@@ -71,7 +71,7 @@ function reloadSchedule()
         var j = scheduler.scheduleJob(s.dateTime, function() {
             var params = [s.emit];
             params = params.concat(s.params);
-            conn.emitLocal.apply(conn, params);
+            conn.emit.apply(conn, params);
         });
 
         jobs.push(j);
