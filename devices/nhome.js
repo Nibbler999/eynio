@@ -83,6 +83,10 @@ function startListening()
         getShutters(cb);
     });
 
+    conn.on('getCameras', function (cb) {
+        getCameras(cb);
+    });
+    
     var events = [
         'getLightState', 'setLightState', 'setLightColor', 'setLightWhite', 'setLightLevel',
         'switchOn', 'switchOff', 'getSwitchState',
@@ -218,3 +222,18 @@ function getShutters(cb)
         if (cb) cb(devices);
     });
 }
+
+function getCameras(cb)
+{
+    nhome.emit('getCameras', function(devices) {
+
+        if (devices) devices.forEach(function(device) {
+            device.categories = Cats.getCats(device.id);
+        });
+
+        conn.broadcast('cameras', devices);
+
+        if (cb) cb(devices);
+    });
+}
+
