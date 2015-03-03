@@ -26,6 +26,7 @@ module.exports = function(c, l) {
         devices[device.serialNumber] = {
             name: device.friendlyName,
             type: device.deviceType === 'urn:Belkin:device:sensor:1' ? 'sensor' : 'switch',
+            subtype: device.type === 'sensor' ? 'motion' : '',
             value: device.binaryState === '1',
             dev: new WeMo(device.ip, device.port)
         };
@@ -44,6 +45,10 @@ module.exports = function(c, l) {
 function startListening()
 {
     log('Ready for commands');
+
+    conn.on('getDevices', function (cb) {
+        getDevices(cb);
+    });
 
     conn.on('switchOn', function (id) {
         switchOn(id);
@@ -164,6 +169,24 @@ function startUPnPServer()
         });
 
     }).listen(3001);
+}
+
+function getDevices(cb)
+{
+    var all = [];
+
+    for (var device in devices) {
+        all.push({
+            id: device,
+            name: Namer.getName(device),
+            value: devices[device].value,
+            type: devices[device].type,
+            subtype: devices[device].subtype,
+            categories: Cats.getCats(device)
+        });
+    }
+
+    if (cb) cb(all);
 }
 
 function getSwitches(cb)

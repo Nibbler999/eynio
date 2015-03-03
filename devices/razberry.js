@@ -46,6 +46,10 @@ function startListening()
         sendBridgeInfo(cb);
     });
 
+    conn.on('getDevices', function (cb) {
+        getDevices(cb);
+    });
+
     conn.on('switchOn', function (id) {
         switchOn(id);
     });
@@ -74,6 +78,27 @@ function sendBridgeInfo(cb)
     conn.broadcast('bridgeInfo', bridgeInfo);
 
     if (cb) cb(bridgeInfo);
+}
+
+function getDevices(cb)
+{
+    update(function() {
+
+        var all = [];
+
+        for (var device in devices) {
+            if (devices[device].commandClasses.hasOwnProperty('37')) {
+                all.push({
+                    id: device,
+                    name: Namer.getName(device),
+                    categories: Cats.getCats(device),
+                    type: 'switch'
+                });
+            }
+        }
+
+        if (cb) cb(all);
+    });
 }
 
 function getSwitches(cb)

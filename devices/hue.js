@@ -139,6 +139,10 @@ function startListening()
         sendBridgeInfo(cb);
     });
 
+    conn.on('getDevices', function (cb) {
+        getDevices(cb);
+    });
+
     conn.on('getLights', function (cb) {
         getLights(cb);
     });
@@ -185,6 +189,7 @@ function sendBridgeInfo(cb)
     if (cb) cb(bridgeInfo);
 }
 
+// Deprecated
 function getLights(cb)
 {
     var lights = [];
@@ -201,6 +206,23 @@ function getLights(cb)
     conn.broadcast('lights', lights);
 
     if (cb) cb(lights);
+}
+
+function getDevices(cb)
+{
+    var all = [];
+
+    for (var device in devices) {
+        all.push({
+            id: device,
+            name: devices[device].name,
+            state: devices[device].state,
+            categories: Cats.getCats(device),
+            type: 'light'
+        });
+    }
+
+    if (cb) cb(all);
 }
 
 // Deprecated

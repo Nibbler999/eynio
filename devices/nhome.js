@@ -21,7 +21,7 @@ module.exports = function(c, l) {
     conn.on('setSubNHome', function (server, cb) {
         setSubNHome(server, cb);
     });
-    
+
     var cfg = require('../configuration.js');
     var apikey = cfg.get('nhome_apikey', false);
 
@@ -54,9 +54,13 @@ module.exports = function(c, l) {
 function startListening()
 {
     log('Ready for commands');
-    
+
     conn.on('getBridges', function(cb) {
         sendBridgeInfo(cb);
+    });
+
+    conn.on('getDevices', function (cb) {
+        getDevices(cb);
     });
 
     conn.on('getLights', function (cb) {
@@ -86,7 +90,7 @@ function startListening()
     conn.on('getCameras', function (cb) {
         getCameras(cb);
     });
-    
+
     var events = [
         'getLightState', 'setLightState', 'setLightColor', 'setLightWhite', 'setLightLevel',
         'switchOn', 'switchOff', 'getSwitchState',
@@ -120,9 +124,9 @@ function startListening()
 function setSubNHome(server, cb)
 {
     var cfg = require('../configuration.js');
-    
+
     cfg.set('nhome_apikey', server.apikey);
-    
+
     if (cb) cb();
 }
 
@@ -137,6 +141,18 @@ function sendBridgeInfo(cb)
     conn.broadcast('bridgeInfo', bridgeInfo);
 
     if (cb) cb(bridgeInfo);
+}
+
+function getDevices(cb)
+{
+    nhome.emit('getDevices', function(devices) {
+
+        if (devices) devices.forEach(function(device) {
+            device.categories = Cats.getCats(device.id);
+        });
+
+        if (cb) cb(devices);
+    });
 }
 
 function getLights(cb)

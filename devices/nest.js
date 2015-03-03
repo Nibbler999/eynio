@@ -73,6 +73,10 @@ function startListening()
         sendBridgeInfo(cb);
     });
 
+    conn.on('getDevices', function (cb) {
+        getDevices(cb);
+    });
+
     conn.on('getThermostats', function (cb) {
         getThermostats(cb);
     });
@@ -105,6 +109,35 @@ function sendBridgeInfo(cb)
     conn.broadcast('bridgeInfo', bridgeInfo);
 
     if (cb) cb(bridgeInfo);
+}
+
+function getDevices(cb)
+{
+    var all = [];
+
+    for (var device in thermostats) {
+        all.push({
+            id: device,
+            name: Namer.getName(device),
+            value: thermostats[device].value,
+            target: thermostats[device].target,
+            categories: Cats.getCats(device),
+            type: 'thermostat'
+        });
+    }
+
+    for (device in sensors) {
+        all.push({
+            id: device,
+            name: Namer.getName(device),
+            value: sensors[device].value,
+            categories: Cats.getCats(device),
+            type: 'sensor',
+            subtype: 'humidity'
+        });
+    }
+
+    if (cb) cb(all);
 }
 
 function getThermostats(cb)

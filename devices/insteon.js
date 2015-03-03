@@ -87,6 +87,10 @@ function startListening()
         sendBridgeInfo(cb);
     });
 
+    conn.on('getDevices', function (cb) {
+        getDevices(cb);
+    });
+
     conn.on('getLights', function (cb) {
         getLights(cb);
     });
@@ -115,6 +119,22 @@ function sendBridgeInfo(cb)
     conn.broadcast('bridgeInfo', bridgeInfo);
 
     if (cb) cb(bridgeInfo);
+}
+
+function getDevices(cb)
+{
+    var all = [];
+
+    for (var device in lights) {
+        all.push({
+            id: device,
+            name: Namer.getName(device),
+            categories: Cats.getCats(device),
+            type: 'light'
+        });
+    }
+
+    if (cb) cb(all);
 }
 
 function getLights(cb)

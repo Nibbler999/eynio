@@ -34,6 +34,12 @@ function startListening()
         sendBridgeInfo(cb);
     });
 
+    conn.on('getDevices', function (cb) {
+        loadDevices(function() {
+            getDevices(cb);
+        });
+    });
+
     conn.on('switchOn', function (id) {
         switchOn(id);
     });
@@ -109,7 +115,7 @@ function loadDevices(cb)
                 devices[serial + ':' + device.id] = {
                     id: device.id,
                     name: device.name,
-                    type: device.type,
+                    type: getType(device.type),
                     dev: bridges[serial]
                 };
             });
@@ -132,6 +138,26 @@ function sendBridgeInfo(cb)
     conn.broadcast('bridgeInfo', bridgeInfo);
 
     if (cb) cb(bridgeInfo);
+}
+
+function getDevices(cb)
+{
+    var all = [], type;
+
+    for (var device in devices) {
+
+        type = getType(devices[device].type);
+
+        all.push({
+            id: device,
+            name: Namer.getName(device),
+            categories: Cats.getCats(device),
+            type: type.type,
+            subtype: type.subtype
+        });
+    }
+
+    if (cb) cb(all);
 }
 
 function getSwitches(cb)
@@ -394,5 +420,24 @@ function stopShutter(id, cb)
 
         getShutterValue(id, cb);
     });
+}
+
+function getType(name)
+{
+    var info = {
+        type: 'Unknown',
+        subtype: ''
+    };
+
+    if (name === 'com.fibaro.binarySwitch') {
+        info.type = 'switch';
+    } else if (name === 'com.fibaro.FGR221' || name === 'com.fibaro.FGRM222') {
+        info.type = 'shutter';
+    } else if (name.match('Sensor')) {
+        info.type = 'sensor';
+        info.subtype = name.replace('com.fibaro.', '').replace('Sensor', '');
+    }
+
+    return info;
 }
 
