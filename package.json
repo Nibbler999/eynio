@@ -13,6 +13,7 @@
     "firebase": "2.2.1",
     "home-controller": "0.5.2",
     "ip": "0.3.2",
+    "jpeg-stream": "^0.1.0",
     "lifx": "0.2.1",
     "netatmo": "1.1.1",
     "node-hue-api": "1.0.0",

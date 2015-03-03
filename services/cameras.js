@@ -10,26 +10,8 @@ var Cams = function(conn, l) {
 
     logger = l.child({component: 'Cameras'});
 
-    // var cfg = require('../configuration.js');
-    // cameras = cfg.get('cameras', {});
-
-    // Temporary
-    conn.send('getCameras', function (cams) {
-
-        cams.forEach(function (cam) {
-
-            var id = cam.id;
-
-            delete cam.id;
-            delete cam.server;
-            delete cam.play_mp4;
-            delete cam.play_mjpeg;
-
-            cameras[id] = cam;
-        });
-
-        Cams.save();
-    });
+    var cfg = require('../configuration.js');
+    cameras = cfg.get('cameras', {});
 
     conn.on('getCameras', function (cb) {
 
@@ -40,6 +22,18 @@ var Cams = function(conn, l) {
         });
 
         conn.broadcast('cameras', cam_array);
+
+        if (cb) cb(cam_array);
+    });
+
+    conn.on('getDevices', function (cb) {
+
+        var cam_array = hash_to_array(cameras);
+
+        cam_array.forEach(function (camera) {
+            camera.categories = Cats.getCats(camera.id);
+            camera.type = 'camera';
+        });
 
         if (cb) cb(cam_array);
     });
@@ -55,13 +49,13 @@ var Cams = function(conn, l) {
         if (cb) cb();
     });
 
-    conn.on('updateCamera', function (cameraid, camera, cb) {
+    conn.on('updateCamera', function (camera, cb) {
 
         for (var prop in camera) {
-            cameras[cameraid][prop] = camera[prop];
+            cameras[camera.id][prop] = camera[prop];
         }
 
-        conn.broadcast('cameraUpdated', cameras[cameraid]);
+        conn.broadcast('cameraUpdated', cameras[camera.id]);
 
         Cams.save();
 

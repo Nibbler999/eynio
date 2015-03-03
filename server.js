@@ -31,7 +31,7 @@ function configured()
     require('./services/schedule.js')(conn, log);
     require('./services/proxy.js')(conn, log);
     require('./services/info.js')(conn, log);
-    require('./services/mjpeg.js')(conn, log);
+    require('./services/streaming.js')(conn, log);
     require('./services/cameras.js')(conn, log);
 
     require('./devices/hue.js')(conn, log);
