@@ -18,22 +18,22 @@ module.exports = function(c, l) {
         reloadSchedule();
     }
 
-    conn.on('saveSchedule', function (newSchedule) {
+    conn.on('saveSchedule', function (newSchedule, cb) {
         schedule = newSchedule;
-        saveSchedule();
+        saveSchedule(cb);
         logger.info('Set new schedule');
     });
 
-    conn.on('addScheduleItem', function (item) {
+    conn.on('addScheduleItem', function (item, cb) {
         schedule.push(item);
-        saveSchedule();
+        saveSchedule(cb);
         logger.info('Added new schedule item');
     });
 
-    conn.on('deleteScheduleItem', function (index) {
+    conn.on('deleteScheduleItem', function (index, cb) {
         if (index < schedule.length) {
             schedule.splice(index, 1);
-            saveSchedule();
+            saveSchedule(cb);
             logger.info('Deleted schedule item');
         }
     });
@@ -44,15 +44,15 @@ module.exports = function(c, l) {
     });
 };
 
-function saveSchedule()
+function saveSchedule(cb)
 {
     var cfg = require('../configuration.js');
     cfg.set('schedule', schedule);
 
-    reloadSchedule();
+    reloadSchedule(cb);
 }
 
-function reloadSchedule()
+function reloadSchedule(cb)
 {
     jobs.forEach(function (j) {
         j.cancel();
@@ -61,6 +61,7 @@ function reloadSchedule()
     logger.info('Cleared schedule');
 
     if (!schedule) {
+        if (cb) cb([]);
         return;
     }
 
@@ -78,4 +79,6 @@ function reloadSchedule()
 
         logger.info('Scheduled job');
     });
+
+    if (cb) cb(schedule);
 }

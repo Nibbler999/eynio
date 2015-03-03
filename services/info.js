@@ -13,14 +13,14 @@ module.exports = function(c, l) {
         getServerStatus(cb);
     });
 
-    conn.on('updateApp', function() {
-        updateApp();
+    conn.on('updateApp', function (cb) {
+        updateApp(cb);
     });
 
     conn.on('ping', function (cb) {
         if (cb) cb();
     });
-    
+
     conn.on('log', function (cb) {
         getLog(cb);
     });
@@ -88,7 +88,7 @@ function getLog(cb)
 
     if (cb) cb(entries);
 }
-               
+
 function getUpdateable()
 {
     if (process.env.NHOME_CAN_UPDATE === '1') {
@@ -102,8 +102,10 @@ function getUpdateable()
     return false;
 }
 
-function updateApp()
+function updateApp(cb)
 {
+    if (cb) cb();
+
     // Our NHome pi image - systemd will update app and respawn us
     if (process.env.NHOME_CAN_UPDATE === '1') {
         process.exit();

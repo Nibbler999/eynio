@@ -55,7 +55,7 @@ module.exports = function (l) {
     });
 
     wrapper = setupConnWrapper(conn);
-    
+
     return wrapper;
 };
 
