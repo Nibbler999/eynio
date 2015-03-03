@@ -70,8 +70,8 @@ function startStreaming(cameraid)
 
     } else if (camera.mjpeg) {
 
-        var JPEGStream = require('jpeg-stream');
-        var parser = new JPEGStream;
+        var MjpegConsumer = require("mjpeg-consumer");
+        var consumer = new MjpegConsumer();
 
         var parts = require('url').parse(camera.mjpeg);
 
@@ -83,7 +83,7 @@ function startStreaming(cameraid)
 
             var lastFrame = 0;
 
-            res.pipe(parser).on('data', function (image) {
+            res.pipe(consumer).on('data', function (image) {
 
                 if (lastFrame && Date.now() - lastFrame < 1000) {
                     return;
