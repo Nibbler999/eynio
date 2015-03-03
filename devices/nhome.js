@@ -18,6 +18,10 @@ module.exports = function(c, l) {
     conn = c;
     logger = l.child({component: 'NHomeSlave'});
 
+    conn.on('setSubNHome', function (server, cb) {
+        setSubNHome(server, cb);
+    });
+    
     var cfg = require('../configuration.js');
     var apikey = cfg.get('nhome_apikey', false);
 
@@ -50,7 +54,7 @@ module.exports = function(c, l) {
 function startListening()
 {
     log('Ready for commands');
-
+    
     conn.on('getBridges', function(cb) {
         sendBridgeInfo(cb);
     });
@@ -107,6 +111,15 @@ function startListening()
             conn.broadcast.apply(conn, args);
         });
     });
+}
+
+function setSubNHome(server, cb)
+{
+    var cfg = require('../configuration.js');
+    
+    cfg.set('nhome_apikey', server.apikey);
+    
+    if (cb) cb();
 }
 
 function sendBridgeInfo(cb)
