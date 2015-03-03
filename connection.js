@@ -54,23 +54,8 @@ module.exports = function (l) {
         wrapper.emit('proxyConnect', proxy);
     });
 
-    conn.on('log', function (cb) {
-
-        var PrettyStream = require('bunyan-prettystream');
-
-        var prettyLog = new PrettyStream({mode: 'short', useColor: false});
-
-        var ringbuffer = log.streams[1].stream;
-
-        var entries = ringbuffer.records.map(prettyLog.formatRecord).join('');
-
-        conn.broadcast('log', entries);
-
-        if (cb) cb(entries);
-    });
-
     wrapper = setupConnWrapper(conn);
-
+    
     return wrapper;
 };
 

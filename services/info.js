@@ -20,6 +20,10 @@ module.exports = function(c, l) {
     conn.on('ping', function (cb) {
         if (cb) cb();
     });
+    
+    conn.on('log', function (cb) {
+        getLog(cb);
+    });
 };
 
 function getServerStatus(cb)
@@ -70,6 +74,21 @@ function getIP()
     return addresses.join(', ');
 }
 
+function getLog(cb)
+{
+    var PrettyStream = require('bunyan-prettystream');
+
+    var prettyLog = new PrettyStream({mode: 'short', useColor: false});
+
+    var ringbuffer = logger.streams[1].stream;
+
+    var entries = ringbuffer.records.map(prettyLog.formatRecord).join('');
+
+    conn.broadcast('log', entries);
+
+    if (cb) cb(entries);
+}
+               
 function getUpdateable()
 {
     if (process.env.NHOME_CAN_UPDATE === '1') {
