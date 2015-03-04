@@ -50,11 +50,15 @@ function startStreaming(cameraid)
 
         var refresh = function () {
 
+            var start = Date.now();
+
             request(camera.snapshot, options, function (error, response, body) {
 
                 if (!error && response.statusCode === 200) {
 
-                    timers[cameraid] = setTimeout(refresh, 1000);
+                    var elapsed = Date.now() - start;
+
+                    timers[cameraid] = setTimeout(refresh, Math.max(1000 - elapsed, 0));
 
                     var frame = {
                         camera: cameraid,
