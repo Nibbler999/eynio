@@ -115,7 +115,7 @@ function loadDevices(cb)
                 devices[serial + ':' + device.id] = {
                     id: device.id,
                     name: device.name,
-                    type: getType(device.type),
+                    type: device.type,
                     dev: bridges[serial]
                 };
             });
