@@ -31,7 +31,7 @@ function startStreaming(cameraid)
         logger.debug('Unknown camera', cameraid);
         return;
     }
-    
+
     var auth;
 
     if (camera.snapshot) {
@@ -111,7 +111,7 @@ function startStreaming(cameraid)
     } else if (camera.rtsp) {
 
         var JPEGStream = require('jpeg-stream');
-        var parser = new JPEGStream;
+        var parser = new JPEGStream();
 
         var proc = procs[cameraid] = require('child_process').spawn('ffmpeg', ['-re', '-i', camera.rtsp, '-f', 'image2', '-vf', 'fps=1', '-updatefirst', '1', '-']);
 
