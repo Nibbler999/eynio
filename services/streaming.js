@@ -90,7 +90,15 @@ function startStreaming(cameraid)
 
         requests[cameraid] = require('http').get(parts, function(res) {
 
+            var lastFrame = 0;
+
             res.pipe(consumer).on('data', function (image) {
+
+                if (lastFrame && Date.now() - lastFrame < 1000) {
+                    return;
+                }
+
+                lastFrame = Date.now();
 
                 var frame = {
                     camera: cameraid,
@@ -105,7 +113,7 @@ function startStreaming(cameraid)
             });
 
         }).on('error', function (err) {
-            logger.error(camera.mjpeg, err);
+           logger.error(camera.mjpeg, err);
         });
 
     } else if (camera.rtsp) {
