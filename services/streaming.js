@@ -58,7 +58,7 @@ function startStreaming(cameraid)
 
                     var elapsed = Date.now() - start;
 
-                    timers[cameraid] = setTimeout(refresh, Math.max(1000 - elapsed, 0));
+                    timers[cameraid] = setTimeout(refresh, Math.max(2000 - elapsed, 0));
 
                     var frame = {
                         camera: cameraid,
@@ -94,7 +94,7 @@ function startStreaming(cameraid)
 
             res.pipe(consumer).on('data', function (image) {
 
-                if (lastFrame && Date.now() - lastFrame < 1000) {
+                if (lastFrame && Date.now() - lastFrame < 2000) {
                     return;
                 }
 
