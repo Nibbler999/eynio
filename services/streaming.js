@@ -27,6 +27,11 @@ function startStreaming(cameraid)
 
     var camera = cameras[cameraid];
 
+    if (!camera) {
+        logger.debug('Unknown camera', cameraid);
+        return;
+    }
+    
     var auth;
 
     if (camera.snapshot) {
