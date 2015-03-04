@@ -189,7 +189,12 @@ function command_handler(command, cb)
         command.args.push(mycb);
     }
 
-    wrapper.emit.apply(wrapper, [command.name].concat(command.args));
+    try {
+        wrapper.emit.apply(wrapper, [command.name].concat(command.args));
+    } catch (e) {
+        log.error('Error handling command', command.name, command.args);
+        log.error(e);
+    }
 }
 
 function getUUID()
