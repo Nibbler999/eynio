@@ -16,12 +16,11 @@ module.exports = function (l) {
     log.debug('URL', serverUrl);
 
     var serverOpts = {
-        transports: ['websocket']
+        transports: ['websocket'],
+        autoConnect: false
     };
 
     var conn = io(serverUrl, serverOpts);
-
-    log.info('Connecting...');
 
     conn.on('connect', function () {
         log.info('Connected.');
@@ -78,6 +77,8 @@ function setupConnWrapper(conn)
         this.send = function() {
             conn.emit.apply(conn, arguments);
         };
+
+        this.connect = conn.connect.bind(conn);
     };
 
     util.inherits(Wrapper, events.EventEmitter);

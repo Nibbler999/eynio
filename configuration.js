@@ -10,6 +10,7 @@ Configuration.load = function (l, cb) {
 
     load(function(success) {
         if (success) {
+            logger.debug('Configuration data', conf);
             cb();
         } else {
             logger.error('Failed to load config');
@@ -26,6 +27,7 @@ Configuration.get = function (key, def) {
 };
 
 Configuration.set = function (key, value) {
+    logger.debug('Set', key, 'to', value);
     conf[key] = value;
     save();
     return value;
@@ -49,6 +51,8 @@ function getConfFile()
 function load(cb)
 {
     var filepath = getConfFile();
+
+    logger.debug('Configuration file', filepath);
 
     require('fs').readFile(filepath, { encoding: 'utf8'}, function (err, data) {
         if (err) {

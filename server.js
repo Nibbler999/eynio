@@ -20,11 +20,15 @@ process.on('uncaughtException', function (err) {
     log.error(err.stack);
 });
 
+log.debug('Loading configuration');
+
 require('./configuration.js').load(log, configured);
 
 function configured()
 {
     var conn  = require('./connection.js')(log);
+
+    log.debug('Loading modules');
 
     require('./services/namer.js').listen(conn, log);
     require('./services/cats.js').listen(conn, log);
@@ -44,5 +48,9 @@ function configured()
     require('./devices/netatmo.js')(conn, log);
     require('./devices/nhome.js')(conn, log);
     require('./devices/nest.js')(conn, log);
+
+    log.info('Connecting...');
+
+    conn.connect();
 }
 
