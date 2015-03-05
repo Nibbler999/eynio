@@ -54,19 +54,19 @@ function startStreaming(cameraid)
 
         var url = getURL(camera, 'snapshot');
         
-        args = ['-re', '-framerate', 1, '-f', 'image2', '-vcodec', 'mjpeg', '-loop', 1, '-i', url, '-f', 'mpjpeg', '-r', 1, '-'];
+        args = ['-re', '-framerate', 1, '-f', 'image2', '-vcodec', 'mjpeg', '-loop', 1, '-i', url, '-f', 'mpjpeg', '-qscale:v', 5, '-vf', 'scale=-1:120', '-r', 1, '-'];
         
     } else if (camera.mjpeg) {
 
         var url = getURL(camera, 'mjpeg');
         
-        args = ['-i', url, '-f', 'mpjpeg', '-r', 1, '-'];
+        args = ['-i', url, '-f', 'mpjpeg', '-qscale:v', 5, '-vf', 'scale=-1:120', '-r', 1, '-'];
 
     } else if (camera.rtsp) {
     
         var url = getURL(camera, 'rtsp');
         
-        args = ['-i', url, '-f', 'mpjpeg', '-r', 1, '-'];
+        args = ['-i', url, '-f', 'mpjpeg', '-qscale:v', 5, '-vf', 'scale=-1:120', '-r', 1, '-'];
         
     } else {
         return false;
