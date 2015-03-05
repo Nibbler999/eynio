@@ -2,7 +2,7 @@
 
 var conn;
 
-var logger, timers = {}, requests = {}, procs = {};
+var logger, procs = {};
 
 module.exports = function(c, l) {
 
@@ -18,6 +18,18 @@ module.exports = function(c, l) {
     });
 };
 
+function getURL(camera, format)
+{
+    var url = camera[format];
+    
+    if (camera.auth_name) {
+        var p = require('url').parse(url);
+        url = p.protocol + '//' + camera.auth_name + ':' + camera.auth_pass + '@' + p.host + p.path;
+    }
+        
+    return url;
+}
+        
 function startStreaming(cameraid)
 {
     logger.debug('Creating stream from ' + cameraid);
@@ -34,117 +46,53 @@ function startStreaming(cameraid)
 
     var auth;
 
+    var MjpegConsumer = require("mjpeg-consumer");
+    var consumer = new MjpegConsumer();
+    var proc, args;
+    
     if (camera.snapshot) {
 
-        if (camera.auth_name) {
-
-            auth = {
-                user: camera.auth_name,
-                pass: camera.auth_pass
-            };
-        }
-
-        var options = {encoding: null, auth: auth };
-
-        var request = require('request');
-
-        var refresh = function () {
-
-            var start = Date.now();
-
-            request(camera.snapshot, options, function (error, response, body) {
-
-                if (!error && response.statusCode === 200) {
-
-                    var elapsed = Date.now() - start;
-
-                    timers[cameraid] = setTimeout(refresh, Math.max(2000 - elapsed, 0));
-
-                    var frame = {
-                        camera: cameraid,
-                        image: body
-                    };
-
-                    conn.broadcast('cameraFrame', frame);
-
-                } else if (response) {
-                    logger.error(camera.url, response);
-                } else {
-                    logger.error(camera.url, error.message);
-                }
-            });
-        };
-
-        refresh();
-
+        var url = getURL(camera, 'snapshot');
+        
+        args = ['-re', '-framerate', 1, '-f', 'image2', '-vcodec', 'mjpeg', '-loop', 1, '-i', url, '-f', 'image2', '-r', 1, '-updatefirst', '1', '-'];
+        
     } else if (camera.mjpeg) {
 
-        var MjpegConsumer = require("mjpeg-consumer");
-        var consumer = new MjpegConsumer();
-
-        var parts = require('url').parse(camera.mjpeg);
-
-        if (camera.auth_name) {
-            parts.auth = camera.auth_name + ':' + camera.auth_pass;
-        }
-
-        requests[cameraid] = require('http').get(parts, function(res) {
-
-            var lastFrame = 0;
-
-            res.pipe(consumer).on('data', function (image) {
-
-                if (lastFrame && Date.now() - lastFrame < 2000) {
-                    return;
-                }
-
-                lastFrame = Date.now();
-
-                var frame = {
-                    camera: cameraid,
-                    image: image
-                };
-
-                conn.broadcast('cameraFrame', frame);
-            });
-
-            res.on('error', function (err) {
-                logger.error(camera.mjpeg, err);
-            });
-
-        }).on('error', function (err) {
-           logger.error(camera.mjpeg, err);
-        });
+        var url = getURL(camera, 'mjpeg');
+        
+        args = ['-i', url, '-f', 'image2', '-r', 1, '-updatefirst', '1', '-'];
 
     } else if (camera.rtsp) {
-
-        var JPEGStream = require('jpeg-stream');
-        var parser = new JPEGStream();
-
-        var proc = procs[cameraid] = require('child_process').spawn('ffmpeg', ['-re', '-i', camera.rtsp, '-f', 'image2', '-vf', 'fps=1', '-updatefirst', '1', '-']);
-
-        proc.stdout.pipe(parser).on('data', function (image) {
-
-            var frame = {
-                camera: cameraid,
-                image: image
-            };
-
-            conn.broadcast('cameraFrame', frame);
+    
+        var url = getURL(camera, 'rtsp');
+        
+        args = ['-i', url, '-f', 'image2', '-r', 1, '-updatefirst', '1', '-'];
+        
+    } else {
+        return false;
+    }
+    
+    proc = procs[cameraid] = require('child_process').spawn('ffmpeg', args);
+    
+    if (logger.debug()) {
+        proc.stderr.on('data', function (data) {
+            logger.debug('ffmpeg', url, data.toString());
         });
     }
+     
+    proc.stdout.pipe(consumer).on('data', function (image) {
+
+        var frame = {
+            camera: cameraid,
+            image: image
+        };
+
+        conn.broadcast('cameraFrame', frame);
+    });
 }
 
 function stopStreaming(cameraid)
 {
-    if (timers[cameraid]) {
-        clearTimeout(timers[cameraid]);
-    }
-
-    if (requests[cameraid]) {
-        requests[cameraid].abort();
-    }
-
     if (procs[cameraid]) {
         procs[cameraid].kill();
     }
