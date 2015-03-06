@@ -56,7 +56,7 @@ function startStreaming(cameraid, options)
 
         url = getURL(camera, 'mjpeg');
 
-        args = ['-f', 'mjpeg', '-i', url];
+        args = ['-i', url];
 
     } else if (camera.rtsp) {
 
@@ -66,6 +66,10 @@ function startStreaming(cameraid, options)
 
     } else {
         return false;
+    }
+
+    if (camera.auth_name) {
+        args.unshift('-auth_type', 'basic');
     }
 
     args.push('-f', 'mpjpeg', '-qscale:v', 5);
