@@ -9,12 +9,12 @@ module.exports = function(c, l) {
     conn = c;
     logger = l.child({component: 'Streaming'});
 
-    conn.on('startStreaming', function (cameraid) {
-        startStreaming(cameraid);
+    conn.on('startStreaming', function (cameraid, options) {
+        startStreaming(cameraid, options);
     });
 
-    conn.on('stopStreaming', function (cameraid) {
-        stopStreaming(cameraid);
+    conn.on('stopStreaming', function (cameraid, options) {
+        stopStreaming(cameraid, options);
     });
 };
 
@@ -30,7 +30,7 @@ function getURL(camera, format)
     return url;
 }
 
-function startStreaming(cameraid)
+function startStreaming(cameraid, options)
 {
     logger.debug('Creating stream from ' + cameraid);
 
@@ -50,25 +50,37 @@ function startStreaming(cameraid)
 
         url = getURL(camera, 'snapshot');
 
-        args = ['-f', 'image2', '-re', '-framerate', 1, '-vcodec', 'mjpeg', '-loop', 1, '-i', url, '-f', 'mpjpeg', '-qscale:v', 5, '-r', 1, '-'];
+        args = ['-f', 'image2', '-re', '-framerate', options.framerate, '-vcodec', 'mjpeg', '-loop', 1, '-i', url];
 
     } else if (camera.mjpeg) {
 
         url = getURL(camera, 'mjpeg');
 
-        args = ['-f', 'mjpeg', '-i', url, '-f', 'mpjpeg', '-qscale:v', 5, '-vf', 'scale=-1:120', '-r', 1, '-'];
+        args = ['-f', 'mjpeg', '-i', url];
 
     } else if (camera.rtsp) {
 
         url = getURL(camera, 'rtsp');
 
-        args = ['-f', 'rtsp', '-i', url, '-f', 'mpjpeg', '-qscale:v', 5, '-vf', 'scale=-1:120', '-r', 1, '-'];
+        args = ['-f', 'rtsp', '-i', url];
 
     } else {
         return false;
     }
 
-    var proc = procs[cameraid] = require('child_process').spawn('ffmpeg', args);
+    args.push('-f', 'mpjpeg', '-qscale:v', 5);
+    
+    if (options.width > 0 || options.height > 0) {
+        args.push('-vf', 'scale=' + options.width + ':' + options.height);
+    }
+    
+    args.push('-r', options.framerate);
+    
+    args.push('-');
+    
+    var key = cameraKey(cameraid, options);
+    
+    var proc = procs[key] = require('child_process').spawn('ffmpeg', args);
 
     if (logger.debug()) {
     
@@ -86,6 +98,7 @@ function startStreaming(cameraid)
 
         var frame = {
             camera: cameraid,
+            options: options,
             image: image
         };
 
@@ -93,10 +106,17 @@ function startStreaming(cameraid)
     });
 }
 
-function stopStreaming(cameraid)
+function stopStreaming(cameraid, options)
 {
-    if (procs[cameraid]) {
-        procs[cameraid].kill('SIGKILL');
+    var key = cameraKey(cameraid, options);
+    
+    if (procs[key]) {
+        procs[key].kill('SIGKILL');
     }
+}
+
+function cameraKey(cameraid, options)
+{
+    return [cameraid, options.width, options.height, options.framerate].join('-');
 }
 
