@@ -50,19 +50,19 @@ function startStreaming(cameraid)
 
         url = getURL(camera, 'snapshot');
 
-        args = ['-re', '-framerate', 1, '-f', 'image2', '-vcodec', 'mjpeg', '-loop', 1, '-i', url, '-f', 'mpjpeg', '-qscale:v', 5, '-vf', 'scale=-1:120', '-r', 1, '-'];
+        args = ['-f', 'image2', '-re', '-framerate', 1, '-vcodec', 'mjpeg', '-loop', 1, '-i', url, '-f', 'mpjpeg', '-qscale:v', 5, '-r', 1, '-'];
 
     } else if (camera.mjpeg) {
 
         url = getURL(camera, 'mjpeg');
 
-        args = ['-i', url, '-f', 'mpjpeg', '-qscale:v', 5, '-vf', 'scale=-1:120', '-r', 1, '-'];
+        args = ['-f', 'mjpeg', '-i', url, '-f', 'mpjpeg', '-qscale:v', 5, '-vf', 'scale=-1:120', '-r', 1, '-'];
 
     } else if (camera.rtsp) {
 
         url = getURL(camera, 'rtsp');
 
-        args = ['-i', url, '-f', 'mpjpeg', '-qscale:v', 5, '-vf', 'scale=-1:120', '-r', 1, '-'];
+        args = ['-f', 'rtsp', '-i', url, '-f', 'mpjpeg', '-qscale:v', 5, '-vf', 'scale=-1:120', '-r', 1, '-'];
 
     } else {
         return false;
@@ -71,6 +71,9 @@ function startStreaming(cameraid)
     var proc = procs[cameraid] = require('child_process').spawn('ffmpeg', args);
 
     if (logger.debug()) {
+    
+        logger.debug('ffmpeg', args.join(' '));
+        
         proc.stderr.on('data', function (data) {
             logger.debug('ffmpeg', url, data.toString());
         });
@@ -93,7 +96,7 @@ function startStreaming(cameraid)
 function stopStreaming(cameraid)
 {
     if (procs[cameraid]) {
-        procs[cameraid].kill();
+        procs[cameraid].kill('SIGKILL');
     }
 }
 
