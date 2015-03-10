@@ -51,6 +51,14 @@ function startStreaming(cameraid, options)
 
     var key = cameraKey(cameraid, options);
 
+    var ffmpeg_opts = {
+        stdio: [
+            'pipe', // stdin
+            'pipe', // stdout
+            logger.debug() ? 'pipe' : 'ignore' // stderr
+        ]
+    };
+
     if (camera.snapshot) {
 
         var auth;
@@ -66,7 +74,7 @@ function startStreaming(cameraid, options)
             args.push('-qscale:v', 5);
             args.push('-f', 'mpjpeg', '-');
 
-            ffmpeg = procs[key] = require('child_process').spawn('ffmpeg', args);
+            ffmpeg = procs[key] = require('child_process').spawn('ffmpeg', args, ffmpeg_opts);
 
             if (logger.debug()) {
 
@@ -174,7 +182,7 @@ function startStreaming(cameraid, options)
                 args.push('-qscale:v', 5);
                 args.push('-f', 'mpjpeg', '-');
 
-                ffmpeg = require('child_process').spawn('ffmpeg', args);
+                ffmpeg = require('child_process').spawn('ffmpeg', args, ffmpeg_opts);
 
                 if (logger.debug()) {
 
@@ -225,7 +233,7 @@ function startStreaming(cameraid, options)
 
         args.push('-');
 
-        ffmpeg = procs[key] = require('child_process').spawn('ffmpeg', args);
+        ffmpeg = procs[key] = require('child_process').spawn('ffmpeg', args, ffmpeg_opts);
 
         if (logger.debug()) {
 
