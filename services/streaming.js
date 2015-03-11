@@ -147,10 +147,8 @@ function startStreaming(cameraid, options)
                         }); 
                     }
 
-                } else if (response) {
-                    logger.error(camera.url, response);
                 } else {
-                    logger.error(camera.url, error.message);
+                    logger.error(camera.url, res.statusCode, res.statusMessage);
                 }
 
             }).on('error', function(e) {
