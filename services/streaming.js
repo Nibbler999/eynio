@@ -144,7 +144,7 @@ function startStreaming(cameraid, options)
                             };
 
                             conn.broadcast('cameraFrame', frame);
-                        }); 
+                        });
                     }
 
                 } else {

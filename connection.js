@@ -44,11 +44,6 @@ module.exports = function (l) {
     conn.on('command', command_handler);
 
     // Temporary
-    conn.on('makeMJPEG', function (camera) {
-        wrapper.emit('makeMJPEG', camera);
-    });
-
-    // Temporary
     conn.on('proxyConnect', function (proxy) {
         wrapper.emit('proxyConnect', proxy);
     });
@@ -90,13 +85,26 @@ function setupLocalServer()
 {
     var server = require('./local.js')(log);
 
-    var io = require('socket.io')(server).of('/client');
+    var io = require('socket.io')(server);
 
     var wildcard = require('socketio-wildcard')();
 
-    io.use(wildcard);
+    io.of('/client').use(wildcard);
 
-    io.on('connection', function (socket) {
+    io.of('/client').on('connection', function (socket) {
+
+        socket.on('requestStreaming', function (cameraid, options) {
+
+            // TODO: .clients() support ?
+            var room = 'camera-' + cameraKey(cameraid, options);
+            socket.join(room);
+
+            command_handler({name: 'startStreaming', args: [cameraid, options]});
+
+            socket.on('disconnect', function () {
+                command_handler({name: 'stopStreaming', args: [cameraid, options]});
+            });
+        });
 
         socket.on('*', function (packet) {
 
@@ -114,7 +122,47 @@ function setupLocalServer()
         });
     });
 
-    return io;
+    io.of('/server').use(wildcard);
+
+    io.of('/server').on('connection', function (socket) {
+
+        socket.on('cameraFrame', function (frame) {
+            io.of('/client').to('camera-' + cameraKey(frame.camera, frame.options)).emit('cameraFrame', frame);
+        });
+
+        socket.on('*', function (packet) {
+
+            var args = packet.data;
+            var name = args.shift();
+
+            if (socket.listeners(name).length === 0) {
+                io.of('/client').emit.apply(io.of('/client'), [name].concat(args));
+            }
+        });
+    });
+
+    var client = require('./node_modules/socket.io/node_modules/socket.io-client');
+
+    var serverUrl = 'http://localhost:8080/server';
+
+    var serverOpts = {
+        transports: ['websocket']
+    };
+
+    var conn = client.connect(serverUrl, serverOpts);
+
+    return conn;
+}
+
+function cameraKey(cameraid, options)
+{
+    if (!options) options = {
+        width: -1,
+        height: 120,
+        framerate: 1
+    };
+
+    return [cameraid, options.width, options.height, options.framerate].join('-');
 }
 
 function command_handler(command, cb)
