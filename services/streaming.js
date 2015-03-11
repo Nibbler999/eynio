@@ -107,7 +107,7 @@ function startStreaming(cameraid, options)
 
             var start = Date.now();
 
-            http.get(camera.snapshot, function(res) {
+            requests[key] = http.get(camera.snapshot, function(res) {
 
                 if (res.statusCode === 200) {
 
