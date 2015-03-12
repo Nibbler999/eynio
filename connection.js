@@ -64,8 +64,12 @@ function setupConnWrapper(conn)
 
         // Emits to both main server and the local server
         this.broadcast = function() {
+
             conn.emit.apply(conn, arguments);
-            local.emit.apply(local, arguments);
+
+            if (local.server.sockets.length) {
+                local.client.emit.apply(local.client, arguments);
+            }
         };
 
         // Emits to main server only
@@ -151,7 +155,10 @@ function setupLocalServer()
 
     var conn = client.connect(serverUrl, serverOpts);
 
-    return conn;
+    return {
+        client: conn,
+        server: io.of('/client')
+    };
 }
 
 function cameraKey(cameraid, options)
