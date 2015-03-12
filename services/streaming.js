@@ -22,16 +22,24 @@ module.exports = function(c, l) {
 
 function checkFFmpeg()
 {
-    var ffmpeg = require('child_process').spawn('ffmpeg', ['-version']);
+    try {
 
-    ffmpeg.on('error', function () {
+        var ffmpeg = require('child_process').spawn('ffmpeg', ['-version']);
+
+        ffmpeg.on('error', function () {
+            have_ffmpeg = false;
+        });
+
+        ffmpeg.stdout.once('data', function (data) {
+            logger.debug(data.toString());
+            have_ffmpeg = true;
+        });
+
+    } catch (e) {
+        logger.warn(e);
         have_ffmpeg = false;
-    });
-
-    ffmpeg.stdout.once('data', function (data) {
-        logger.debug(data.toString());
-        have_ffmpeg = true;
-    });
+        return;
+    }
 }
 
 function startStreaming(cameraid, options)
