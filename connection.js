@@ -48,6 +48,25 @@ module.exports = function (l) {
         wrapper.emit('proxyConnect', proxy);
     });
 
+    if (process.platform === 'linux') {
+
+        var netreport = require('child_process').spawn('netreport');
+
+        netreport.on('error', function (e) {
+           log.debug(e.message);
+        });
+
+        process.on('SIGIO', function() {
+            if (conn.connected) {
+                log.debug('Advised network is not connected');
+                conn.disconnect();
+            } else {
+                log.debug('Advised network is connected');
+                conn.connect();
+            }
+        });
+    }
+
     wrapper = setupConnWrapper(conn);
 
     return wrapper;
