@@ -33,6 +33,11 @@ Configuration.set = function (key, value) {
     return value;
 };
 
+Configuration.setAll = function (newconfig) {
+    conf = newconfig;
+    save();
+};
+
 function getConfFile()
 {
     var home = process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;

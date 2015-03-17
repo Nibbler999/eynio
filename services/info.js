@@ -24,6 +24,23 @@ module.exports = function(c, l) {
     conn.on('log', function (cb) {
         getLog(cb);
     });
+
+    conn.on('configBackup', function (cb) {
+
+        var cfg = require('../configuration.js');
+        var config = cfg.getAll();
+
+        if (cb) cb(config);
+    });
+
+    conn.on('configRestore', function (newconfig, cb) {
+
+        var cfg = require('../configuration.js');
+
+        cfg.setAll(newconfig);
+
+        if (cb) cb();
+    });
 };
 
 function getServerStatus(cb)

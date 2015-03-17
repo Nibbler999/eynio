@@ -53,7 +53,7 @@ module.exports = function (l) {
         var netreport = require('child_process').spawn('netreport');
 
         netreport.on('error', function (e) {
-           log.debug(e.message);
+            log.debug(e.message);
         });
 
         process.on('SIGIO', function() {
