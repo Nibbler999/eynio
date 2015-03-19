@@ -17,7 +17,7 @@
     "lifx": "0.2.1",
     "mjpeg-consumer": "0.4.0",
     "netatmo": "1.1.1",
-    "node-hue-api": "1.0.0",
+    "node-hue-api": "1.0.5",
     "node-schedule": "0.2.6",
     "node-uuid": "1.4.1",
     "q": "1.0.1",
