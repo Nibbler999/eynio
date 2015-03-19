@@ -108,7 +108,7 @@ function loadDevices(cb)
 
             devicelist.forEach(function(device) {
 
-                if (!device.enabled || !device.visible) {
+                if (!device.enabled || !device.visible || device.baseType === '') {
                     return;
                 }
 
@@ -116,6 +116,7 @@ function loadDevices(cb)
                     id: device.id,
                     name: device.name,
                     type: device.type,
+                    value: getValue(device.properties.value),
                     dev: bridges[serial]
                 };
             });
@@ -153,7 +154,8 @@ function getDevices(cb)
             name: Namer.getName(device),
             categories: Cats.getCats(device),
             type: type.type,
-            subtype: type.subtype
+            subtype: type.subtype,
+            value: devices[device].value
         });
     }
 
@@ -439,5 +441,18 @@ function getType(name)
     }
 
     return info;
+}
+
+function getValue(value)
+{
+    if (value === 'false') {
+        value = false;
+    } else if (value === 'true') {
+        value = true;
+    } else if (!isNaN(parseFloat(value))) {
+        value = parseFloat(value);
+    }
+
+    return value;
 }
 
