@@ -133,7 +133,7 @@ function streamSnapshot(cameraid, camera, options)
             logger.debug('ffmpeg', args.join(' '));
 
             ffmpeg.stderr.on('data', function (data) {
-                logger.debug('ffmpeg', camera.mjpeg, data.toString());
+                logger.debug('ffmpeg', camera.snapshot, data.toString());
             });
         }
 
@@ -202,7 +202,12 @@ function streamSnapshot(cameraid, camera, options)
                 }
 
             } else {
-                logger.error(camera.url, res.statusCode, res.statusMessage);
+
+                if (ffmpeg) {
+                    ffmpeg.kill('SIGKILL');
+                }
+
+                logger.error(camera.snapshot, res.statusCode, res.statusMessage);
             }
 
         }).on('error', function(e) {
@@ -258,30 +263,37 @@ function streamMJPEG(cameraid, camera, options)
 
     requests[key] = require('http').get(parts, function(res) {
 
-        var source = res.pipe(consumer).pipe(limiter);
+        if (res.statusCode === 200) {
 
-        if (ffmpeg) {
+            var source = res.pipe(consumer).pipe(limiter);
 
-            source.pipe(ffmpeg.stdin);
+            if (ffmpeg) {
 
-            var ffmpeg_consumer = new MjpegConsumer();
-            source = ffmpeg.stdout.pipe(ffmpeg_consumer);
+                source.pipe(ffmpeg.stdin);
+
+                var ffmpeg_consumer = new MjpegConsumer();
+                source = ffmpeg.stdout.pipe(ffmpeg_consumer);
+            }
+
+            source.on('data', function (image) {
+
+                var frame = {
+                    camera: cameraid,
+                    options: options,
+                    image: image
+                };
+
+                conn.broadcast('cameraFrame', frame);
+            });
+
+        } else {
+
+            if (ffmpeg) {
+                ffmpeg.kill('SIGKILL');
+            }
+
+            logger.error(camera.mjpeg, res.statusCode, res.statusMessage);
         }
-
-        source.on('data', function (image) {
-
-            var frame = {
-                camera: cameraid,
-                options: options,
-                image: image
-            };
-
-            conn.broadcast('cameraFrame', frame);
-        });
-
-        res.on('error', function (err) {
-            logger.error(camera.mjpeg, err);
-        });
 
     }).on('error', function (err) {
         logger.error(camera.mjpeg, err);
