@@ -1,22 +1,22 @@
 <% include internal_header_view.html %>
 <% include internal_nav_view.html %>
 
-<script id="socketio" src="/socket.io/socket.io.js"></script>
+<script defer id="socketio" src="/socket.io/socket.io.js"></script>
 
-<script src="/js/jquery-1.11.1.min.js"></script>
+<script defer src="/js/jquery-1.11.1.min.js"></script>
 
-<script src="/js/common.js"></script>
-<script src="/js/devices.js"></script>
-<script src="/js/remotes.js"></script>
-<script src="/js/sensors.js"></script>
-<script src="/js/lights.js"></script>
-<script src="/js/switches.js"></script>
-<script src="/js/shutters.js"></script>
-<script src="/js/thermostats.js"></script>
-<script src="/js/cameras.js"></script>
-<script src="/js/categories.js"></script>
-<script src="/js/color-picker.js"></script>
-<script src="/js/jquery.ratelimit.js"></script>
+<script defer src="/js/common.js"></script>
+<script defer src="/js/devices.js"></script>
+<script defer src="/js/remotes.js"></script>
+<script defer src="/js/sensors.js"></script>
+<script defer src="/js/lights.js"></script>
+<script defer src="/js/switches.js"></script>
+<script defer src="/js/shutters.js"></script>
+<script defer src="/js/thermostats.js"></script>
+<script defer src="/js/cameras.js"></script>
+<script defer src="/js/categories.js"></script>
+<script defer src="/js/color-picker.js"></script>
+<script defer src="/js/jquery.ratelimit.js"></script>
 
 <p class="hidden" id="server_offline">Selected Home Server is not currently connected</p>
 
@@ -195,6 +195,7 @@
 
     <div class="edit_device_navigation">
         <button class="cancel">Cancel</button>
+        <button class="delete">Delete</button>
         <button class="save">Save</button>
     </div>
 </div>
