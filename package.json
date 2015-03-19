@@ -19,7 +19,7 @@
     "netatmo": "1.1.1",
     "node-hue-api": "1.0.5",
     "node-schedule": "0.2.6",
-    "node-uuid": "1.4.1",
+    "node-uuid": "1.4.3",
     "q": "1.0.1",
     "request": "2.53.0",
     "simple-itach": "0.2.1",
