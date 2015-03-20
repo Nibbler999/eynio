@@ -81,18 +81,25 @@ function load(cb)
 
 function save(cb)
 {
-    var filepath = getConfFile();
+    try {
 
-    var content = JSON.stringify(conf);
+        var filepath = getConfFile();
+        var content = JSON.stringify(conf);
 
-    require('fs').writeFile(filepath, content, { encoding: 'utf8'}, function (err) {
-        if (err) {
-            logger.error(err);
-            if (cb) cb(false);
-        } else {
-            if (cb) cb(true);
-        }
-    });
+        require('fs').writeFileSync(filepath, content, { encoding: 'utf8'});
+
+        if (cb) process.nextTick(function() {
+            cb(true);
+        });
+
+    } catch (err) {
+
+        logger.error(err);
+
+        if (cb) process.nextTick(function() {
+            cb(false);
+        });
+    }
 }
 
 function init(cb)
