@@ -80,11 +80,6 @@ module.exports = function (l) {
         res.render('cam_view', locals);
     });
 
-    app.get('/security/stream/:cameraid', function (req, res) {
-        locals.cameraid = req.params.cameraid;
-        res.render('stream_view', locals);
-    });
-
     app.get('/stream-mjpeg/:cameraid', function (req, res) {
         streamMJPEG(req, res);
     });
