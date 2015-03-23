@@ -65,18 +65,30 @@ function startStreaming(cameraid, options)
         ]
     };
 
-    if (camera.snapshot) {
+    var parts = require('url').parse(camera.snapshot || camera.mjpeg || camera.rtsp);
 
-        streamSnapshot(cameraid, camera, options);
+    var tcpp = require('tcp-ping');
 
-    } else if (camera.mjpeg) {
+    tcpp.probe(parts.hostname, parts.port, function (err, available) {
 
-        streamMJPEG(cameraid, camera, options);
+        if (!available) {
+            logger.error('Camera at', parts.hostname + ':' + parts.port, 'is not available');
+            return;
+        }
 
-    } else if (camera.rtsp) {
+        if (camera.snapshot) {
 
-        streamRTSP(cameraid, camera, options);
-    }
+            streamSnapshot(cameraid, camera, options);
+
+        } else if (camera.mjpeg) {
+
+            streamMJPEG(cameraid, camera, options);
+
+        } else if (camera.rtsp) {
+
+            streamRTSP(cameraid, camera, options);
+        }
+    });
 }
 
 function stopStreaming(cameraid, options)
