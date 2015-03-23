@@ -37,7 +37,7 @@ module.exports = function(c, l) {
 
     log('Connecting...');
 
-    nhome.on('connect', function () {
+    nhome.once('connect', function () {
 
         log('Connected.');
 
