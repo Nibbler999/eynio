@@ -72,11 +72,17 @@ Section "Desktop Icons"
   CreateShortCut "$DESKTOP\NHomeServer.lnk" "$INSTDIR\node.exe" "update.js" "" 0
 SectionEnd
 
+Section "Start on boot"
+  SetShellVarContext current
+  CreateShortCut "$SMSTARTUP\NHomeServer.lnk" "$INSTDIR\node.exe" "update.js" "" 0
+SectionEnd
+
 Section "Uninstall"
   SetShellVarContext current
   Delete /rebootok "$DESKTOP\NHomeServer.lnk"
   Delete /rebootok "$SMPROGRAMS\NHomeServer\NHomeServer.lnk"
   Delete /rebootok "$SMPROGRAMS\NHomeServer\Uninstall.lnk"
+  Delete /rebootok "$SMSTARTUP\NHomeServer.lnk"
   RMDir "$SMPROGRAMS\NHomeServer"
   RMDir /r /rebootok "$APPDATA\Neosoft\NHomeServer"
   RMDir /r /rebootok "$INSTDIR"
