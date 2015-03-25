@@ -154,13 +154,22 @@ function getFFmpegStream(options)
     var ffmpeg_consumer = new MjpegConsumer();
     ffmpeg.stdout.pipe(ffmpeg_consumer);
 
-    var duplex = new stream.Duplex({
-        read: function() { },
-        write: function(chunk, encoding, next) {
-            ffmpeg.stdin.write(chunk);
-            next();
-        }
-    });
+    var Duplex = stream.Duplex;
+    var util = require('util');
+    util.inherits(Streamer, Duplex);
+
+    function Streamer(opt) {
+        Duplex.call(this, opt);
+    }
+
+    Streamer.prototype._read = function() { };
+
+    Streamer.prototype._write = function(chunk, encoding, next) {
+        ffmpeg.stdin.write(chunk);
+        next();
+    };
+
+    var duplex = new Streamer();
 
     duplex.on('unpipe', function () {
         ffmpeg.stdin.end();
@@ -175,21 +184,28 @@ function getFFmpegStream(options)
 
 function getSocketIOStream(cameraid, options)
 {
-    var writable = new stream.Writable({
+    var Writable = stream.Writable;
+    var util = require('util');
+    util.inherits(Streamer, Writable);
 
-        write: function (chunk, encoding, next) {
+    function Streamer(opt) {
+        Writable.call(this, opt);
+    }
 
-            var frame = {
-                camera: cameraid,
-                options: options,
-                image: chunk
-            };
+    Streamer.prototype._write = function(chunk, encoding, next) {
 
-            conn.broadcast('cameraFrame', frame);
+        var frame = {
+            camera: cameraid,
+            options: options,
+            image: chunk
+        };
 
-            next();
-        }
-    });
+        conn.broadcast('cameraFrame', frame);
+
+        next();
+    };
+
+    var writable = new Streamer();
 
     return writable;
 }
@@ -269,15 +285,23 @@ function streamSnapshot(cameraid, camera, options, cb)
 
     refresh();
 
-    var readable = new stream.Readable({
-        read: function() { }
-    });
+    var Readable = stream.Readable;
+    var util = require('util');
+    util.inherits(Streamer, Readable);
 
-    readable.end = function () {
-        clearTimeout(timer);
-        req.abort();
-        this.readable = false;
-    };
+    function Streamer(opt) {
+        Readable.call(this, opt);
+
+        this.end = function () {
+            clearTimeout(timer);
+            req.abort();
+            this.readable = false;
+        };
+    }
+
+    Streamer.prototype._read = function() { };
+
+    var readable = new Streamer();
 
     cb(readable);
 }
