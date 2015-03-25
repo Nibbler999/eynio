@@ -1,8 +1,12 @@
 "use strict";
 
+var stream = require('stream');
+
 var conn, have_ffmpeg;
 
-var logger, ffmpeg_opts, procs = {}, requests = {}, timers = {};
+var logger, ffmpeg_opts;
+
+var sources = {}, destinations = {}, scalers = {}, pipes = {};
 
 module.exports = function(c, l) {
 
@@ -57,14 +61,6 @@ function startStreaming(cameraid, options)
         return;
     }
 
-    ffmpeg_opts = {
-        stdio: [
-            'pipe', // stdin
-            'pipe', // stdout
-            logger.debug() ? 'pipe' : 'ignore' // stderr
-        ]
-    };
-
     var parts = require('url').parse(camera.snapshot || camera.mjpeg || camera.rtsp);
 
     var tcpp = require('tcp-ping');
@@ -76,38 +72,148 @@ function startStreaming(cameraid, options)
             return;
         }
 
-        if (camera.snapshot) {
+        var play = function (source) {
 
-            streamSnapshot(cameraid, camera, options);
+            var key = cameraKey(cameraid, options);
 
-        } else if (camera.mjpeg) {
+            var sio = destinations[key] = getSocketIOStream(cameraid, options);
 
-            streamMJPEG(cameraid, camera, options);
+            sio.on('pipe', function () {
+                if (!pipes[cameraid]) pipes[cameraid] = 0;
+                pipes[cameraid]++;
+            });
 
-        } else if (camera.rtsp) {
+            sio.on('unpipe', function () {
+                if (--pipes[cameraid] === 0) {
+                    sources[cameraid].end();
+                }
+            });
 
-            streamRTSP(cameraid, camera, options);
+            if (have_ffmpeg && (options.width > 0 || options.height > 0)) {
+
+                var ffmpeg = scalers[key] = getFFmpegStream(options);
+
+                source.pipe(ffmpeg).pipe(sio);
+
+            } else {
+                source.pipe(sio);
+            }
+        };
+
+        if (sources[cameraid] && sources[cameraid].readable) {
+
+            play(sources[cameraid]);
+
+        } else {
+
+            var cb = function (source) {
+
+                sources[cameraid] = source;
+
+                play(source);
+            };
+
+            getSourceStream(cameraid, camera, options, cb);
         }
     });
+}
+
+function getFFmpegStream(options)
+{
+    var MjpegConsumer = require('mjpeg-consumer');
+
+    ffmpeg_opts = {
+        stdio: [
+            'pipe', // stdin
+            'pipe', // stdout
+            logger.debug() ? 'pipe' : 'ignore' // stderr
+        ]
+    };
+
+    var args = ['-f', 'mjpeg', '-i', '-'];
+    args.push('-vf', 'scale=' + options.width + ':' + options.height);
+    args.push('-qscale:v', 5);
+    args.push('-f', 'mpjpeg', '-');
+
+    var ffmpeg = require('child_process').spawn('ffmpeg', args, ffmpeg_opts);
+
+    ffmpeg.on('error', function(e) {
+        ffmpeg = false;
+        logger.error('ffmpeg', e);
+    });
+
+    if (logger.debug()) {
+
+        logger.debug('ffmpeg', args.join(' '));
+
+        ffmpeg.stderr.on('data', function (data) {
+            logger.debug('ffmpeg', data.toString());
+        });
+    }
+
+    var ffmpeg_consumer = new MjpegConsumer();
+    ffmpeg.stdout.pipe(ffmpeg_consumer);
+
+    var duplex = new stream.Duplex({
+        read: function() { },
+        write: function(chunk, encoding, next) {
+            ffmpeg.stdin.write(chunk);
+            next();
+        }
+    });
+
+    duplex.on('unpipe', function () {
+        ffmpeg.stdin.end();
+    });
+
+    ffmpeg_consumer.on('data', function (chunk) {
+        duplex.push(chunk);
+    });
+
+    return duplex;
+}
+
+function getSocketIOStream(cameraid, options)
+{
+    var writable = new stream.Writable({
+
+        write: function (chunk, encoding, next) {
+
+            var frame = {
+                camera: cameraid,
+                options: options,
+                image: chunk
+            };
+
+            conn.broadcast('cameraFrame', frame);
+
+            next();
+        }
+    });
+
+    return writable;
+}
+
+function getSourceStream(cameraid, camera, options, cb)
+{
+    if (camera.snapshot) {
+        streamSnapshot(cameraid, camera, options, cb);
+    } else if (camera.mjpeg) {
+        streamMJPEG(cameraid, camera, options, cb);
+    } else if (camera.rtsp) {
+        streamRTSP(cameraid, camera, options, cb);
+    }
 }
 
 function stopStreaming(cameraid, options)
 {
     var key = cameraKey(cameraid, options);
 
-    if (timers[key]) {
-        clearTimeout(timers[key]);
-        delete timers[key];
-    }
-
-    if (procs[key]) {
-        procs[key].kill('SIGKILL');
-        delete procs[key];
-    }
-
-    if (requests[key]) {
-        requests[key].abort();
-        delete requests[key];
+    if (scalers[key]) {
+        scalers[key].unpipe(destinations[key]);
+        sources[cameraid].unpipe(scalers[key]);
+    } else if (sources[cameraid]) {
+        sources[cameraid].unpipe(destinations[key]);
     }
 }
 
@@ -116,55 +222,12 @@ function cameraKey(cameraid, options)
     return [cameraid, options.width, options.height, options.framerate].join('-');
 }
 
-function streamSnapshot(cameraid, camera, options)
+function streamSnapshot(cameraid, camera, options, cb)
 {
-    var auth;
-
-    var key = cameraKey(cameraid, options);
+    var auth, timer, req;
 
     if (camera.auth_name) {
         auth = camera.auth_name + ':' + camera.auth_pass;
-    }
-
-    if (have_ffmpeg && (options.width > 0 || options.height > 0)) {
-
-        var args = ['-f', 'mjpeg', '-i', '-'];
-        args.push('-vf', 'scale=' + options.width + ':' + options.height);
-        args.push('-qscale:v', 5);
-        args.push('-f', 'mpjpeg', '-');
-
-        var ffmpeg = procs[key] = require('child_process').spawn('ffmpeg', args, ffmpeg_opts);
-
-        ffmpeg.on('error', function(e) {
-            logger.error('ffmpeg', e);
-            delete procs[key];
-        });
-
-        if (logger.debug()) {
-
-            logger.debug('ffmpeg', args.join(' '));
-
-            ffmpeg.stderr.on('data', function (data) {
-                logger.debug('ffmpeg', camera.snapshot, data.toString());
-            });
-        }
-
-        var MjpegConsumer = require('mjpeg-consumer');
-
-        var ffmpeg_consumer = new MjpegConsumer();
-
-        ffmpeg.stdout.pipe(ffmpeg_consumer);
-
-        ffmpeg_consumer.on('data', function (image) {
-
-            var frame = {
-                camera: cameraid,
-                options: options,
-                image: image
-            };
-
-            conn.broadcast('cameraFrame', frame);
-        });
     }
 
     var http = require('http');
@@ -173,67 +236,54 @@ function streamSnapshot(cameraid, camera, options)
 
         var start = Date.now();
 
-        requests[key] = http.get(camera.snapshot, function(res) {
+        req = http.get(camera.snapshot, function(res) {
 
             if (res.statusCode === 200) {
 
                 var elapsed = Date.now() - start;
 
-                timers[key] = setTimeout(refresh, Math.max(1000 - elapsed, 0));
+                timer = setTimeout(refresh, Math.max(1000 - elapsed, 0));
 
-                if (procs[key]) {
+                var body;
 
-                    res.on('data', function (chunk) {
-                        if (procs[key]) {
-                            procs[key].stdin.write(chunk);
-                        }
-                    });
+                res.on('data', function (chunk) {
+                    if (body) {
+                        body = Buffer.concat([body, chunk]);
+                    } else {
+                        body = new Buffer(chunk);
+                    }
+                });
 
-                } else {
-
-                    var body;
-
-                    res.on('data', function (chunk) {
-                        if (body) {
-                            body = Buffer.concat([body, chunk]);
-                        } else {
-                            body = new Buffer(chunk);
-                        }
-                    });
-
-                    res.on('end', function() {
-
-                        var frame = {
-                            camera: cameraid,
-                            options: options,
-                            image: body
-                        };
-
-                        conn.broadcast('cameraFrame', frame);
-                    });
-                }
+                res.on('end', function() {
+                    readable.push(body);
+                });
 
             } else {
-
-                if (ffmpeg) {
-                    ffmpeg.kill('SIGKILL');
-                }
-
                 logger.error(camera.snapshot, res.statusCode, res.statusMessage);
             }
 
         }).on('error', function(e) {
-            console.log("Got error: " + e.message);
+            logger.error(camera.snapshot, e);
         });
     };
 
     refresh();
+
+    var readable = new stream.Readable({
+        read: function() { }
+    });
+
+    readable.end = function () {
+        clearTimeout(timer);
+        req.abort();
+        this.readable = false;
+    };
+
+    cb(readable);
 }
 
-function streamMJPEG(cameraid, camera, options)
+function streamMJPEG(cameraid, camera, options, cb)
 {
-    var key = cameraKey(cameraid, options);
-
     var MjpegConsumer = require('mjpeg-consumer');
 
     var consumer = new MjpegConsumer();
@@ -243,67 +293,23 @@ function streamMJPEG(cameraid, camera, options)
 
     var parts = require('url').parse(camera.mjpeg);
 
-    var ffmpeg;
-
     if (camera.auth_name) {
         parts.auth = camera.auth_name + ':' + camera.auth_pass;
     }
 
-    if (have_ffmpeg && (options.width > 0 || options.height > 0)) {
-
-        var args = ['-f', 'mjpeg', '-i', '-'];
-        args.push('-vf', 'scale=' + options.width + ':' + options.height);
-        args.push('-qscale:v', 5);
-        args.push('-f', 'mpjpeg', '-');
-
-        ffmpeg = require('child_process').spawn('ffmpeg', args, ffmpeg_opts);
-
-        ffmpeg.on('error', function(e) {
-            ffmpeg = false;
-            logger.error('ffmpeg', e);
-        });
-
-        if (logger.debug()) {
-
-            logger.debug('ffmpeg', args.join(' '));
-
-            ffmpeg.stderr.on('data', function (data) {
-                logger.debug('ffmpeg', camera.mjpeg, data.toString());
-            });
-        }
-    }
-
-    requests[key] = require('http').get(parts, function(res) {
+    var req = require('http').get(parts, function(res) {
 
         if (res.statusCode === 200) {
 
             var source = res.pipe(consumer).pipe(limiter);
 
-            if (ffmpeg) {
-
-                source.pipe(ffmpeg.stdin);
-
-                var ffmpeg_consumer = new MjpegConsumer();
-                source = ffmpeg.stdout.pipe(ffmpeg_consumer);
-            }
-
-            source.on('data', function (image) {
-
-                var frame = {
-                    camera: cameraid,
-                    options: options,
-                    image: image
-                };
-
-                conn.broadcast('cameraFrame', frame);
+            source.on('end', function () {
+                req.abort();
             });
 
+            cb(source);
+
         } else {
-
-            if (ffmpeg) {
-                ffmpeg.kill('SIGKILL');
-            }
-
             logger.error(camera.mjpeg, res.statusCode, res.statusMessage);
         }
 
@@ -312,14 +318,12 @@ function streamMJPEG(cameraid, camera, options)
     });
 }
 
-function streamRTSP(cameraid, camera, options)
+function streamRTSP(cameraid, camera, options, cb)
 {
     if (!have_ffmpeg) {
         logger.error('Need ffmpeg for RTSP streaming');
         return false;
     }
-
-    var key = cameraKey(cameraid, options);
 
     var url = camera.rtsp;
 
@@ -330,21 +334,16 @@ function streamRTSP(cameraid, camera, options)
 
     var args = ['-f', 'rtsp', '-i', url];
 
-    args.push('-f', 'mpjpeg', '-qscale:v', 5);
-
-    if (options.width > 0 || options.height > 0) {
-        args.push('-vf', 'scale=' + options.width + ':' + options.height);
-    }
+    args.push('-f', 'mpjpeg');
 
     args.push('-r', options.framerate);
 
     args.push('-');
 
-    var ffmpeg = procs[key] = require('child_process').spawn('ffmpeg', args, ffmpeg_opts);
+    var ffmpeg = require('child_process').spawn('ffmpeg', args, ffmpeg_opts);
 
     ffmpeg.on('error', function(e) {
         logger.error('ffmpeg', e);
-        delete procs[key];
     });
 
     if (logger.debug()) {
@@ -360,15 +359,12 @@ function streamRTSP(cameraid, camera, options)
 
     var ffmpeg_consumer = new MjpegConsumer();
 
-    ffmpeg.stdout.pipe(ffmpeg_consumer).on('data', function (image) {
+    ffmpeg.stdout.pipe(ffmpeg_consumer);
 
-        var frame = {
-            camera: cameraid,
-            options: options,
-            image: image
-        };
-
-        conn.broadcast('cameraFrame', frame);
+    ffmpeg_consumer.on('end', function() {
+        ffmpeg.kill('SIGKILL');
     });
+
+    cb(ffmpeg_consumer);
 }
 
