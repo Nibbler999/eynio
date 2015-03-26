@@ -22,13 +22,19 @@ module.exports = function (l) {
 
     var conn = io(serverUrl, serverOpts);
 
+    var connect_errors = 0;
+
     conn.on('connect', function () {
         log.info('Connected.');
+        connect_errors = 0;
     });
 
-    conn.once('connect_error', function (error) {
-        log.debug('connect_error', error);
-        log.error('Failed to connect to NHome.');
+    conn.on('connect_error', function (error) {
+        if (connect_errors === 0) {
+            log.debug('connect_error', error);
+            log.error('Failed to connect to NHome.');
+            connect_errors++;
+        }
     });
 
     conn.on('reconnecting', function (count) {
