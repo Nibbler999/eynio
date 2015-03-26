@@ -50,7 +50,7 @@ ffmpeg.getScaler = function (options) {
 
     var args = ['-f', 'mjpeg', '-i', '-'];
     args.push('-vf', 'scale=' + options.width + ':' + options.height);
-    args.push('-qscale:v', 5);
+    args.push('-qscale:v', 9);
     args.push('-f', 'mpjpeg', '-');
 
     var child = require('child_process').spawn('ffmpeg', args, ffmpeg.opts);
