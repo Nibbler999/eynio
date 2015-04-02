@@ -9,11 +9,6 @@ var conn, devices = {}, subscriptions = {};
 
 var logger;
 
-function log()
-{
-    logger.info.apply(logger, arguments);
-}
-
 module.exports = function(c, l) {
 
     conn = c;
@@ -44,7 +39,7 @@ module.exports = function(c, l) {
 
 function startListening()
 {
-    log('Ready for commands');
+    logger.info('Ready for commands');
 
     conn.on('getDevices', function (cb) {
         getDevices(cb);
@@ -218,7 +213,7 @@ function switchOn(id)
     devices[id].dev.setBinaryState(1, function(err, result) {
 
         if (err) {
-            log('switchOn:' + err);
+            logger.error('switchOn', err);
             return;
         }
     });
@@ -233,7 +228,7 @@ function switchOff(id)
     devices[id].dev.setBinaryState(0, function(err, result) {
 
         if (err) {
-            log('switchOff:' + err);
+            logger.error('switchOff',  err);
             return;
         }
     });
@@ -249,7 +244,7 @@ function getSwitchState(id, cb)
     devices[id].dev.getBinaryState(function(err, result) {
 
         if (err) {
-            log('getSwitchState:' + err);
+            logger.error('getSwitchState', err);
             if (cb) cb(null);
             return;
         }
@@ -295,7 +290,7 @@ function getSensorValue(id, cb)
     devices[id].dev.getBinaryState(function(err, result) {
 
         if (err) {
-            log('getSwitchState:' + err);
+            logger.error('getSwitchState', err);
             if (cb) cb(null);
             return;
         }
