@@ -3,7 +3,7 @@
 var Cats = require('./services/cats.js');
 
 var always_permitted = [
-    'getLights', 'getSwitches', 'getSensors', 'getRemotes', 'getCustomRemotes', 'getShutters', 'getThermostats', 'getDevices',
+    'getRemotes', 'getCustomRemotes',
     'addScheduleItem', 'deleteScheduleItem', 'saveSchedule', 'getSchedule',
     'getServerStatus', 'getBridges', 'log', 'updateApp', 'ping',
     'catAdd', 'catList'
@@ -30,7 +30,7 @@ var category_commands = [
 ];
 
 var filter_devices = [
-    'getLights', 'getSwitches', 'getSensors', 'getRemotes', 'getCustomRemotes', 'getShutters', 'getThermostats', 'getDevices'
+    'getRemotes', 'getCustomRemotes', 'getDevices'
 ];
 
 var filter_categories = [
