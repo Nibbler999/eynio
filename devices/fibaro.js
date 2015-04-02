@@ -48,20 +48,8 @@ function startListening()
         switchOff(id);
     });
 
-    conn.on('getSwitches', function (cb) {
-        loadDevices(function() {
-            getSwitches(cb);
-        });
-    });
-
     conn.on('getSwitchState', function (id, cb) {
         getSwitchState(id, cb);
-    });
-
-    conn.on('getShutters', function (cb) {
-        loadDevices(function() {
-            getShutters(cb);
-        });
     });
 
     conn.on('getShutterValue', function (id, cb) {
@@ -82,12 +70,6 @@ function startListening()
 
     conn.on('stopShutter', function (id, cb) {
         stopShutter(id, cb);
-    });
-
-    conn.on('getSensors', function (cb) {
-        loadDevices(function() {
-            getSensors(cb);
-        });
     });
 
     conn.on('getSensorValue', function (id, cb) {
@@ -160,64 +142,6 @@ function getDevices(cb)
     }
 
     if (cb) cb(all);
-}
-
-function getSwitches(cb)
-{
-    var switches = [];
-
-    for (var device in devices) {
-        if (devices[device].type === 'com.fibaro.binarySwitch') {
-            switches.push({
-                id: device,
-                name: Namer.getName(device),
-                categories: Cats.getCats(device)
-            });
-        }
-    }
-
-    conn.broadcast('switches', switches);
-
-    if (cb) cb(switches);
-}
-
-function getSensors(cb)
-{
-    var sensors = [];
-
-    for (var device in devices) {
-        if (devices[device].type.match('Sensor')) {
-            sensors.push({
-                id: device,
-                name: Namer.getName(device),
-                type: devices[device].type.replace('com.fibaro.', '').replace('Sensor', ''),
-                categories: Cats.getCats(device)
-            });
-        }
-    }
-
-    conn.broadcast('sensors', sensors);
-
-    if (cb) cb(sensors);
-}
-
-function getShutters(cb)
-{
-    var shutters = [];
-
-    for (var device in devices) {
-        if (devices[device].type === 'com.fibaro.FGR221' || devices[device].type === 'com.fibaro.FGRM222') {
-            shutters.push({
-                id: device,
-                name: Namer.getName(device),
-                categories: Cats.getCats(device)
-            });
-        }
-    }
-
-    conn.broadcast('shutters', shutters);
-
-    if (cb) cb(shutters);
 }
 
 function switchOn(id)

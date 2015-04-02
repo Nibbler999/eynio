@@ -58,10 +58,6 @@ function startListening()
         switchOff(id);
     });
 
-    conn.on('getSwitches', function (cb) {
-        getSwitches(cb);
-    });
-
     conn.on('getSwitchState', function (id, cb) {
         getSwitchState(id, cb);
     });
@@ -98,28 +94,6 @@ function getDevices(cb)
         }
 
         if (cb) cb(all);
-    });
-}
-
-function getSwitches(cb)
-{
-    update(function() {
-
-        var switches = [];
-
-        for (var device in devices) {
-            if (devices[device].commandClasses.hasOwnProperty('37')) {
-                switches.push({
-                    id: device,
-                    name: Namer.getName(device),
-                    categories: Cats.getCats(device)
-                });
-            }
-        }
-
-        conn.broadcast('switches', switches);
-
-        if (cb) cb(switches);
     });
 }
 

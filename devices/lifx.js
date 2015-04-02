@@ -75,10 +75,6 @@ function startListening()
         getDevices(cb);
     });
 
-    conn.on('getLights', function (cb) {
-        getLights(cb);
-    });
-
     conn.on('setLightState', function (id, values) {
         setLightState(id, values);
     });
@@ -127,23 +123,6 @@ function getDevices(cb)
     }
 
     if (cb) cb(all);
-}
-
-function getLights(cb)
-{
-    var lights = [];
-
-    for (var device in devices) {
-        lights.push({
-            id: device,
-            name: Namer.getName(device),
-            categories: Cats.getCats(device)
-        });
-    }
-
-    conn.broadcast('lights', lights);
-
-    if (cb) cb(lights);
 }
 
 // deprecated

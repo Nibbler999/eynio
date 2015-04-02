@@ -53,16 +53,8 @@ function startListening()
         switchOff(id);
     });
 
-    conn.on('getSwitches', function (cb) {
-        getSwitches(cb);
-    });
-
     conn.on('getSwitchState', function (id, cb) {
         getSwitchState(id, cb);
-    });
-
-    conn.on('getSensors', function (cb) {
-        getSensors(cb);
     });
 
     conn.on('getSensorValue', function (id, cb) {
@@ -184,26 +176,6 @@ function getDevices(cb)
     if (cb) cb(all);
 }
 
-function getSwitches(cb)
-{
-    var switches = [];
-
-    for (var device in devices) {
-        if (devices[device].type === 'switch') {
-            switches.push({
-                id: device,
-                name: Namer.getName(device),
-                value: devices[device].value,
-                categories: Cats.getCats(device)
-            });
-        }
-    }
-
-    conn.broadcast('switches', switches);
-
-    if (cb) cb(switches);
-}
-
 function switchOn(id)
 {
     if (!devices.hasOwnProperty(id)) {
@@ -261,27 +233,6 @@ function getSwitchState(id, cb)
 
         if (cb) cb(switchState);
     });
-}
-
-function getSensors(cb)
-{
-    var sensors = [];
-
-    for (var device in devices) {
-        if (devices[device].type === 'sensor') {
-            sensors.push({
-                id: device,
-                name: Namer.getName(device),
-                value: devices[device].value,
-                type: 'motion',
-                categories: Cats.getCats(device)
-            });
-        }
-    }
-
-    conn.broadcast('sensors', sensors);
-
-    if (cb) cb(sensors);
 }
 
 function getSensorValue(id, cb)

@@ -63,32 +63,12 @@ function startListening()
         getDevices(cb);
     });
 
-    conn.on('getLights', function (cb) {
-        getLights(cb);
-    });
-
-    conn.on('getSwitches', function (cb) {
-        getSwitches(cb);
-    });
-
-    conn.on('getSensors', function (cb) {
-        getSensors(cb);
-    });
-
     conn.on('getRemotes', function (cb) {
         getRemotes(cb);
     });
 
     conn.on('getCustomRemotes', function (cb) {
         getCustomRemotes(cb);
-    });
-
-    conn.on('getShutters', function (cb) {
-        getShutters(cb);
-    });
-
-    conn.on('getCameras', function (cb) {
-        getCameras(cb);
     });
 
     var events = [
@@ -155,48 +135,6 @@ function getDevices(cb)
     });
 }
 
-function getLights(cb)
-{
-    nhome.emit('getLights', function(devices) {
-
-        if (devices) devices.forEach(function(device) {
-            device.categories = Cats.getCats(device.id);
-        });
-
-        conn.broadcast('lights', devices);
-
-        if (cb) cb(devices);
-    });
-}
-
-function getSwitches(cb)
-{
-    nhome.emit('getSwitches', function(devices) {
-
-        if (devices) devices.forEach(function(device) {
-            device.categories = Cats.getCats(device.id);
-        });
-
-        conn.broadcast('switches', devices);
-
-        if (cb) cb(devices);
-    });
-}
-
-function getSensors(cb)
-{
-    nhome.emit('getSensors', function(devices) {
-
-        if (devices) devices.forEach(function(device) {
-            device.categories = Cats.getCats(device.id);
-        });
-
-        conn.broadcast('sensors', devices);
-
-        if (cb) cb(devices);
-    });
-}
-
 function getRemotes(cb)
 {
     nhome.emit('getRemotes', function(devices) {
@@ -220,34 +158,6 @@ function getCustomRemotes(cb)
         });
 
         conn.broadcast('customRemotes', devices);
-
-        if (cb) cb(devices);
-    });
-}
-
-function getShutters(cb)
-{
-    nhome.emit('getShutters', function(devices) {
-
-        if (devices) devices.forEach(function(device) {
-            device.categories = Cats.getCats(device.id);
-        });
-
-        conn.broadcast('shutters', devices);
-
-        if (cb) cb(devices);
-    });
-}
-
-function getCameras(cb)
-{
-    nhome.emit('getCameras', function(devices) {
-
-        if (devices) devices.forEach(function(device) {
-            device.categories = Cats.getCats(device.id);
-        });
-
-        conn.broadcast('cameras', devices);
 
         if (cb) cb(devices);
     });

@@ -143,10 +143,6 @@ function startListening()
         getDevices(cb);
     });
 
-    conn.on('getLights', function (cb) {
-        getLights(cb);
-    });
-
     conn.on('setLightState', function (id, values) {
         setLightState(id, values);
     });
@@ -187,25 +183,6 @@ function sendBridgeInfo(cb)
     conn.broadcast('bridgeInfo', bridgeInfo);
 
     if (cb) cb(bridgeInfo);
-}
-
-// Deprecated
-function getLights(cb)
-{
-    var lights = [];
-
-    for (var device in devices) {
-        lights.push({
-            id: device,
-            name: devices[device].name,
-            state: devices[device].state,
-            categories: Cats.getCats(device)
-        });
-    }
-
-    conn.broadcast('lights', lights);
-
-    if (cb) cb(lights);
 }
 
 function getDevices(cb)

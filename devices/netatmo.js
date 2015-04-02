@@ -61,12 +61,6 @@ function startListening()
         });
     });
 
-    conn.on('getSensors', function (cb) {
-        loadDevices(function() {
-            getSensors(cb);
-        });
-    });
-
     conn.on('getSensorValue', function (id, cb) {
         getSensorValue(id, cb);
     });
@@ -147,25 +141,6 @@ function getDevices(cb)
     }
 
     if (cb) cb(all);
-}
-
-function getSensors(cb)
-{
-    var sensors = [];
-
-    for (var device in devices) {
-        sensors.push({
-            id: device,
-            name: Namer.getName(device),
-            type: devices[device].type,
-            value: devices[device].value,
-            categories: Cats.getCats(device)
-        });
-    }
-
-    conn.broadcast('sensors', sensors);
-
-    if (cb) cb(sensors);
 }
 
 function getSensorValue(id, cb)

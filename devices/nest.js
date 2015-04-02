@@ -77,20 +77,12 @@ function startListening()
         getDevices(cb);
     });
 
-    conn.on('getThermostats', function (cb) {
-        getThermostats(cb);
-    });
-
     conn.on('getThermostatValue', function (id, cb) {
         getThermostatValue(id, cb);
     });
 
     conn.on('setThermostatValue', function (id, value, cb) {
         setThermostatValue(id, value, cb);
-    });
-
-    conn.on('getSensors', function (cb) {
-        getSensors(cb);
     });
 
     conn.on('getSensorValue', function (id, cb) {
@@ -140,25 +132,6 @@ function getDevices(cb)
     if (cb) cb(all);
 }
 
-function getThermostats(cb)
-{
-    var t = [];
-
-    for (var device in thermostats) {
-        t.push({
-            id: device,
-            name: Namer.getName(device),
-            value: thermostats[device].value,
-            target: thermostats[device].target,
-            categories: Cats.getCats(device)
-        });
-    }
-
-    conn.broadcast('thermostats', t);
-
-    if (cb) cb(t);
-}
-
 function getThermostatValue(id, cb)
 {
     if (!thermostats.hasOwnProperty(id)) {
@@ -195,24 +168,6 @@ function setThermostatValue(id, value, cb)
             logger.error(result.message);
         }
     });
-}
-
-function getSensors(cb)
-{
-    var s = [];
-
-    for (var device in sensors) {
-        s.push({
-            id: device,
-            name: Namer.getName(device),
-            type: sensors[device].type,
-            categories: Cats.getCats(device)
-        });
-    }
-
-    conn.broadcast('sensors', s);
-
-    if (cb) cb(s);
 }
 
 function getSensorValue(id, cb)
