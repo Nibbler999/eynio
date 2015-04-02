@@ -55,7 +55,7 @@ module.exports = function(c, l) {
         Namer.add(devices);
     });
 
-    lx.on('gateway', function(g) {
+    lx.once('gateway', function(g) {
         log('Gateway found');
         g.id = g.site.toString('hex');
         bridges[g.id] = g;
