@@ -216,6 +216,8 @@ function switchOn(id)
             logger.error('switchOn', err);
             return;
         }
+
+        conn.broadcast('switchState', { id: id, state: { on: true }});
     });
 }
 
@@ -231,6 +233,8 @@ function switchOff(id)
             logger.error('switchOff',  err);
             return;
         }
+
+        conn.broadcast('switchState', { id: id, state: { on: false }});
     });
 }
 
