@@ -72,7 +72,7 @@ function startListening()
     });
 
     var events = [
-        'getLightState', 'setLightState', 'setLightColor', 'setLightWhite', 'setLightLevel',
+        'getLightState', 'setLightState', 'setLightColor', 'setLightWhite',
         'switchOn', 'switchOff', 'getSwitchState',
         'getSensorValue',
         'sendRemoteCommand', 'sendKey', 'learnKey', 'saveCustomRemote', 'updateCustomRemote', 'deleteCustomRemote',

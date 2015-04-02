@@ -87,10 +87,6 @@ function startListening()
         setLightWhite(id, brightness, temperature);
     });
 
-    conn.on('setLightLevel', function (id, level) {
-        setLightLevel(id, level);
-    });
-
     conn.on('getLightState', function (id, cb) {
         getLightState(id, cb);
     });
@@ -136,27 +132,6 @@ function setLightState(id, values)
 
     if (values.on) {
         lx.lightsOn(bulb);
-    } else {
-        lx.lightsOff(bulb);
-    }
-
-    setTimeout(function() {
-        lx.requestStatus(bulb);
-    }, 1000);
-}
-
-function setLightLevel(id, level)
-{
-    if (!devices.hasOwnProperty(id)) {
-        return;
-    }
-
-    var bulb = new Buffer(devices[id].addr, 'hex');
-
-    if (level > 0) {
-        var brightness = parseInt((level / 100) * 65535, 10) - 32768;
-        lx.lightsOn(bulb);
-        lx.setBrightness(brightness, 0, bulb);
     } else {
         lx.lightsOff(bulb);
     }

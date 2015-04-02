@@ -10,7 +10,7 @@ var always_permitted = [
 ];
 
 var device_commands = [
-    'getLightState', 'setLightColor', 'setLightWhite', 'setLightLevel', 'setLightState',
+    'getLightState', 'setLightColor', 'setLightWhite', 'setLightState',
     'switchOn', 'switchOff', 'getSwitchState',
     'getSensorValue',
     'sendRemoteCommand', 'sendKey', 'learnKey', 'saveCustomRemote', 'updateCustomRemote', 'deleteCustomRemote',

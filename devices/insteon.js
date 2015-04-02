@@ -95,10 +95,6 @@ function startListening()
         setLightState(id, values);
     });
 
-    conn.on('setLightLevel', function (id, level) {
-        setLightLevel(id, level);
-    });
-
     conn.on('getLightState', function (id, cb) {
         getLightState(id, cb);
     });
@@ -168,33 +164,6 @@ function setLightState(id, values)
         light.level(parseInt(values.bri, 10), function(err) {
             if (err) {
                 log('light.level: ' + err);
-                return;
-            }
-            getLightState(id);
-        });
-    }
-}
-
-function setLightLevel(id, level)
-{
-    if (!lights.hasOwnProperty(id)) {
-        return;
-    }
-
-    var light = lights[id];
-
-    if (level > 0) {
-        light.turnOn(level, function(err) {
-            if (err) {
-                log('light.turnOn: ' + err);
-                return;
-            }
-            getLightState(id);
-        });
-    } else {
-        light.turnOffFast(function(err) {
-            if (err) {
-                log('light.turnOff: ' + err);
                 return;
             }
             getLightState(id);

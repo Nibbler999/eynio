@@ -155,10 +155,6 @@ function startListening()
         setLightWhite(id, brightness, temperature);
     });
 
-    conn.on('setLightLevel', function (id, level) {
-        setLightLevel(id, level);
-    });
-
     conn.on('getLightState', function (id, cb) {
         getLightState(id, cb);
     });
@@ -280,33 +276,6 @@ function setLightWhite(id, brightness, temperature)
 
         if (err) {
             log('api.setLightWhite:' + err);
-            return;
-        }
-
-        if (result) {
-            getLightState(id);
-        }
-    });
-}
-
-function setLightLevel(id, level)
-{
-    if (!devices.hasOwnProperty(id)) {
-        return;
-    }
-
-    var state = lightState.create();
-
-    if (level > 0) {
-        state.brightness(level).on();
-    } else {
-        state.off();
-    }
-
-    devices[id].dev.setLightState(devices[id].id, state, function(err, result) {
-
-        if (err) {
-            log('api.setLightLevel:' + err);
             return;
         }
 
