@@ -21,20 +21,20 @@ module.exports = function(c, l) {
     conn.on('saveSchedule', function (newSchedule, cb) {
         schedule = newSchedule;
         saveSchedule(cb);
-        logger.info('Set new schedule');
+        logger.debug('Set new schedule');
     });
 
     conn.on('addScheduleItem', function (item, cb) {
         schedule.push(item);
         saveSchedule(cb);
-        logger.info('Added new schedule item');
+        logger.debug('Added new schedule item');
     });
 
     conn.on('deleteScheduleItem', function (index, cb) {
         if (index < schedule.length) {
             schedule.splice(index, 1);
             saveSchedule(cb);
-            logger.info('Deleted schedule item');
+            logger.debug('Deleted schedule item');
         }
     });
 
@@ -58,7 +58,7 @@ function reloadSchedule(cb)
         j.cancel();
     });
 
-    logger.info('Cleared schedule');
+    logger.debug('Cleared schedule');
 
     if (!schedule) {
         if (cb) cb([]);
@@ -77,7 +77,7 @@ function reloadSchedule(cb)
 
         jobs.push(j);
 
-        logger.info('Scheduled job');
+        logger.debug('Scheduled job');
     });
 
     if (cb) cb(schedule);
