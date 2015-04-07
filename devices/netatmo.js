@@ -72,6 +72,7 @@ function loadDevices(cb)
 
         if (err) {
             logger.error('getDevicelist', err);
+            if (cb) cb();
             return false;
         }
 
