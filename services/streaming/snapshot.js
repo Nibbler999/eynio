@@ -43,7 +43,7 @@ module.exports = function (logger, camera, options, cb) {
             }
 
         }).on('error', function(e) {
-            logger.error(camera.snapshot, e);
+            logger.debug(camera.snapshot, e);
         });
     };
 
