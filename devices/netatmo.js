@@ -51,18 +51,16 @@ function startListening()
 {
     logger.info('Ready for commands');
 
-    conn.on('getBridges', function(cb) {
-        sendBridgeInfo(cb);
+    conn.on('getBridges', function (command) {
+        getBridges.apply(command, command.args);
     });
 
-    conn.on('getDevices', function (cb) {
-        loadDevices(function() {
-            getDevices(cb);
-        });
+    conn.on('getDevices', function (command) {
+        getDevices.apply(command, command.args);
     });
 
-    conn.on('getSensorValue', function (id, cb) {
-        getSensorValue(id, cb);
+    conn.on('getSensorValue', function (command) {
+        getSensorValue.apply(command, command.args);
     });
 }
 
@@ -113,7 +111,7 @@ function loadDevices(cb)
     });
 }
 
-function sendBridgeInfo(cb)
+function getBridges(cb)
 {
     var bridgeInfo = [];
 
@@ -128,20 +126,22 @@ function sendBridgeInfo(cb)
 
 function getDevices(cb)
 {
-    var all = [];
+    loadDevices(function() {
+        var all = [];
 
-    for (var device in devices) {
-        all.push({
-            id: device,
-            name: Namer.getName(device),
-            type: 'sensor',
-            subtype: devices[device].type,
-            value: devices[device].value,
-            categories: Cats.getCats(device)
-        });
-    }
+        for (var device in devices) {
+            all.push({
+                id: device,
+                name: Namer.getName(device),
+                type: 'sensor',
+                subtype: devices[device].type,
+                value: devices[device].value,
+                categories: Cats.getCats(device)
+            });
+        }
 
-    if (cb) cb(all);
+        if (cb) cb(all);
+    });
 }
 
 function getSensorValue(id, cb)

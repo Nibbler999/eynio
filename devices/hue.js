@@ -135,40 +135,40 @@ function startListening()
 {
     log('Ready for commands');
 
-    conn.on('getBridges', function(cb) {
-        sendBridgeInfo(cb);
+    conn.on('getBridges', function (command) {
+        getBridges.apply(command, command.args);
     });
 
-    conn.on('getDevices', function (cb) {
-        getDevices(cb);
+    conn.on('getDevices', function (command) {
+        getDevices.apply(command, command.args);
     });
 
-    conn.on('setLightState', function (id, values) {
-        setLightState(id, values);
+    conn.on('setLightState', function (command) {
+        setLightState.apply(command, command.args);
     });
 
-    conn.on('setLightColor', function (id, color_string, color_format) {
-        setLightColor(id, color_string, color_format);
+    conn.on('setLightColor', function (command) {
+        setLightColor.apply(command, command.args);
     });
 
-    conn.on('setLightWhite', function (id, brightness, temperature) {
-        setLightWhite(id, brightness, temperature);
+    conn.on('setLightWhite', function (command) {
+        setLightWhite.apply(command, command.args);
     });
 
-    conn.on('getLightState', function (id, cb) {
-        getLightState(id, cb);
+    conn.on('getLightState', function (command) {
+        getLightState.apply(command, command.args);
     });
 
-    conn.on('setDeviceName', function (id, name) {
-        setDeviceName(id, name);
+    conn.on('setDeviceName', function (command) {
+        setDeviceName.apply(command, command.args);
     });
 
-    conn.on('addNewDevices', function (id) {
-        addNewDevices(id);
+    conn.on('addNewDevices', function (command) {
+        addNewDevices.apply(command, command.args);
     });
 }
 
-function sendBridgeInfo(cb)
+function getBridges(cb)
 {
     var bridgeInfo = [];
 

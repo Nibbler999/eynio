@@ -83,24 +83,24 @@ function startListening()
 {
     log('Ready for commands');
 
-    conn.on('getBridges', function(cb) {
-        sendBridgeInfo(cb);
+    conn.on('getBridges', function (command) {
+        getBridges.apply(command, command.args);
     });
 
-    conn.on('getDevices', function (cb) {
-        getDevices(cb);
+    conn.on('getDevices', function (command) {
+        getDevices.apply(command, command.args);
     });
 
-    conn.on('setLightState', function (id, values) {
-        setLightState(id, values);
+    conn.on('setLightState', function (command) {
+        setLightState.apply(command, command.args);
     });
 
-    conn.on('getLightState', function (id, cb) {
-        getLightState(id, cb);
+    conn.on('getLightState', function (command) {
+        getLightState.apply(command, command.args);
     });
 }
 
-function sendBridgeInfo(cb)
+function getBridges(cb)
 {
     var bridgeInfo = [];
 

@@ -41,24 +41,24 @@ function startListening()
 {
     logger.info('Ready for commands');
 
-    conn.on('getDevices', function (cb) {
-        getDevices(cb);
+    conn.on('getDevices', function (command) {
+        getDevices.apply(command, command.args);
     });
 
-    conn.on('switchOn', function (id) {
-        switchOn(id);
+    conn.on('switchOn', function (command) {
+        switchOn.apply(command, command.args);
     });
 
-    conn.on('switchOff', function (id) {
-        switchOff(id);
+    conn.on('switchOff', function (command) {
+        switchOff.apply(command, command.args);
     });
 
-    conn.on('getSwitchState', function (id, cb) {
-        getSwitchState(id, cb);
+    conn.on('getSwitchState', function (command) {
+        getSwitchState.apply(command, command.args);
     });
 
-    conn.on('getSensorValue', function (id, cb) {
-        getSensorValue(id, cb);
+    conn.on('getSensorValue', function (command) {
+        getSensorValue.apply(command, command.args);
     });
 }
 

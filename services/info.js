@@ -4,42 +4,33 @@ var conn;
 
 var logger;
 
-module.exports = function(c, l) {
+module.exports = function (c, l) {
 
     conn = c;
     logger = l.child({component: 'Info'});
 
-    conn.on('getServerStatus', function (cb) {
-        getServerStatus(cb);
+    conn.on('getServerStatus', function (command) {
+        getServerStatus.apply(command, command.args);
     });
 
-    conn.on('updateApp', function (cb) {
-        updateApp(cb);
+    conn.on('updateApp', function (command) {
+        updateApp.apply(command, command.args);
     });
 
-    conn.on('ping', function (cb) {
-        if (cb) cb();
+    conn.on('ping', function (command) {
+        ping.apply(command, command.args);
     });
 
-    conn.on('log', function (cb) {
-        getLog(cb);
+    conn.on('log', function (command) {
+        getLog.apply(command, command.args);
     });
 
-    conn.on('configBackup', function (cb) {
-
-        var cfg = require('../configuration.js');
-        var config = cfg.getAll();
-
-        if (cb) cb(config);
+    conn.on('configBackup', function (command) {
+        configBackup.apply(command, command.args);
     });
 
-    conn.on('configRestore', function (newconfig, cb) {
-
-        var cfg = require('../configuration.js');
-
-        cfg.setAll(newconfig);
-
-        if (cb) cb();
+    conn.on('configRestore', function (command) {
+        configRestore.apply(command, command.args);
     });
 };
 
@@ -150,3 +141,26 @@ function reSpawnApp()
 
     process.exit();
 }
+
+function ping(cb)
+{
+    if (cb) cb();
+}
+
+function configBackup(cb)
+{
+    var cfg = require('../configuration.js');
+    var config = cfg.getAll();
+
+    if (cb) cb(config);
+}
+
+function configRestore(newconfig, cb)
+{
+    var cfg = require('../configuration.js');
+
+    cfg.setAll(newconfig);
+
+    if (cb) cb();
+}
+

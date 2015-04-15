@@ -252,7 +252,7 @@ function command_handler(command, cb)
     }
 
     try {
-        wrapper.emit.apply(wrapper, [command.name].concat(command.args));
+        wrapper.emit(command.name, command);
     } catch (e) {
         log.error('Error handling command', command.name, command.args);
         log.error(e);

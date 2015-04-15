@@ -30,50 +30,48 @@ function startListening()
 {
     log('Ready for commands');
 
-    conn.on('getBridges', function(cb) {
-        sendBridgeInfo(cb);
+    conn.on('getBridges', function (command) {
+        getBridges.apply(command, command.args);
     });
 
-    conn.on('getDevices', function (cb) {
-        loadDevices(function() {
-            getDevices(cb);
-        });
+    conn.on('getDevices', function (command) {
+        getDevices.apply(command, command.args);
     });
 
-    conn.on('switchOn', function (id) {
-        switchOn(id);
+    conn.on('switchOn', function (command) {
+        switchOn.apply(command, command.args);
     });
 
-    conn.on('switchOff', function (id) {
-        switchOff(id);
+    conn.on('switchOff', function (command) {
+        switchOff.apply(command, command.args);
     });
 
-    conn.on('getSwitchState', function (id, cb) {
-        getSwitchState(id, cb);
+    conn.on('getSwitchState', function (command) {
+        getSwitchState.apply(command, command.args);
     });
 
-    conn.on('getShutterValue', function (id, cb) {
-        getShutterValue(id, cb);
+    conn.on('getShutterValue', function (command) {
+        getShutterValue.apply(command, command.args);
     });
 
-    conn.on('setShutterValue', function (id, value, cb) {
-        setShutterValue(id, value, cb);
+    conn.on('setShutterValue', function (command) {
+        setShutterValue.apply(command, command.args);
     });
 
-    conn.on('openShutter', function (id, cb) {
-        openShutter(id, cb);
+    conn.on('openShutter', function (command) {
+        openShutter.apply(command, command.args);
     });
 
-    conn.on('closeShutter', function (id, cb) {
-        closeShutter(id, cb);
+    conn.on('closeShutter', function (command) {
+        closeShutter.apply(command, command.args);
     });
 
-    conn.on('stopShutter', function (id, cb) {
-        stopShutter(id, cb);
+    conn.on('stopShutter', function (command) {
+        stopShutter.apply(command, command.args);
     });
 
-    conn.on('getSensorValue', function (id, cb) {
-        getSensorValue(id, cb);
+    conn.on('getSensorValue', function (command) {
+        getSensorValue.apply(command, command.args);
     });
 }
 
@@ -110,7 +108,7 @@ function loadDevices(cb)
     });
 }
 
-function sendBridgeInfo(cb)
+function getBridges(cb)
 {
     var bridgeInfo = [];
 
@@ -125,23 +123,25 @@ function sendBridgeInfo(cb)
 
 function getDevices(cb)
 {
-    var all = [], type;
+    loadDevices(function() {
+        var all = [], type;
 
-    for (var device in devices) {
+        for (var device in devices) {
 
-        type = getType(devices[device].type);
+            type = getType(devices[device].type);
 
-        all.push({
-            id: device,
-            name: Namer.getName(device),
-            categories: Cats.getCats(device),
-            type: type.type,
-            subtype: type.subtype,
-            value: devices[device].value
-        });
-    }
+            all.push({
+                id: device,
+                name: Namer.getName(device),
+                categories: Cats.getCats(device),
+                type: type.type,
+                subtype: type.subtype,
+                value: devices[device].value
+            });
+        }
 
-    if (cb) cb(all);
+        if (cb) cb(all);
+    });
 }
 
 function switchOn(id)

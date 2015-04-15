@@ -20,26 +20,46 @@ Namer.listen = function (c, l) {
     var cfg = require('../configuration.js');
     customnames = cfg.get('namer_customnames', {});
 
-    conn.on('setDeviceName', function (id, name, cb) {
-        customnames[id] = name;
-        Namer.deviceRenamed(id, cb);
+    conn.on('setDeviceName', function (command) {
+        setDeviceName.apply(command, command.args);
     });
 
-    conn.on('resetDeviceName', function (id, cb) {
-        delete customnames[id];
-        Namer.deviceRenamed(id, cb);
+    conn.on('resetDeviceName', function (command) {
+        resetDeviceName.apply(command, command.args);
     });
 
-    conn.on('setBridgeName', function (id, name, cb) {
-        customnames[id] = name;
-        Namer.bridgeRenamed(id, cb);
+    conn.on('setBridgeName', function (command) {
+        setBridgeName.apply(command, command.args);
     });
 
-    conn.on('resetBridgeName', function (id, cb) {
-        delete customnames[id];
-        Namer.bridgeRenamed(id, cb);
+    conn.on('resetBridgeName', function (command) {
+        resetBridgeName.apply(command, command.args);
     });
 };
+
+function setDeviceName(id, name, cb)
+{
+    customnames[id] = name;
+    Namer.deviceRenamed(id, cb);
+}
+
+function resetDeviceName(id, cb)
+{
+    delete customnames[id];
+    Namer.deviceRenamed(id, cb);
+}
+
+function setBridgeName(id, name, cb)
+{
+    customnames[id] = name;
+    Namer.bridgeRenamed(id, cb);
+}
+
+function resetBridgeName(id, cb)
+{
+    delete customnames[id];
+    Namer.bridgeRenamed(id, cb);
+}
 
 Namer.save = function () {
     var cfg = require('../configuration.js');

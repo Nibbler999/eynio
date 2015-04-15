@@ -18,33 +18,54 @@ module.exports = function(c, l) {
         reloadSchedule();
     }
 
-    conn.on('saveSchedule', function (newSchedule, cb) {
-        schedule = newSchedule;
-        saveSchedule(cb);
-        logger.debug('Set new schedule');
+    conn.on('saveSchedule', function (command) {
+        saveSchedule.apply(command, command.args);
     });
 
-    conn.on('addScheduleItem', function (item, cb) {
-        schedule.push(item);
-        saveSchedule(cb);
-        logger.debug('Added new schedule item');
+    conn.on('addScheduleItem', function (command) {
+        addScheduleItem.apply(command, command.args);
     });
 
-    conn.on('deleteScheduleItem', function (index, cb) {
-        if (index < schedule.length) {
-            schedule.splice(index, 1);
-            saveSchedule(cb);
-            logger.debug('Deleted schedule item');
-        }
+    conn.on('deleteScheduleItem', function (command) {
+        deleteScheduleItem.apply(command, command.args);
     });
 
-    conn.on('getSchedule', function (cb) {
-        conn.broadcast('schedule', schedule);
-        if (cb) cb(schedule);
+    conn.on('getSchedule', function (command) {
+        getSchedule.apply(command, command.args);
     });
 };
 
-function saveSchedule(cb)
+function saveSchedule(newSchedule, cb)
+{
+    schedule = newSchedule;
+    save(cb);
+    logger.debug('Set new schedule');
+}
+
+function addScheduleItem(item, cb)
+{
+    schedule.push(item);
+    save(cb);
+    logger.debug('Added new schedule item');
+}
+
+function deleteScheduleItem(index, cb)
+{
+    if (index < schedule.length) {
+        schedule.splice(index, 1);
+        save(cb);
+        logger.debug('Deleted schedule item');
+    }
+}
+
+function getSchedule(cb)
+{
+    conn.broadcast('schedule', schedule);
+
+    if (cb) cb(schedule);
+}
+
+function save(cb)
 {
     var cfg = require('../configuration.js');
     cfg.set('schedule', schedule);

@@ -18,8 +18,8 @@ module.exports = function(c, l) {
     conn = c;
     logger = l.child({component: 'NHomeSlave'});
 
-    conn.on('setSubNHome', function (server, cb) {
-        setSubNHome(server, cb);
+    conn.on('setSubNHome', function (command) {
+        setSubNHome.apply(command, command.args);
     });
 
     var cfg = require('../configuration.js');
@@ -55,20 +55,20 @@ function startListening()
 {
     log('Ready for commands');
 
-    conn.on('getBridges', function(cb) {
-        sendBridgeInfo(cb);
+    conn.on('getBridges', function (command) {
+        getBridges.apply(command, command.args);
     });
 
-    conn.on('getDevices', function (cb) {
-        getDevices(cb);
+    conn.on('getDevices', function (command) {
+        getDevices.apply(command, command.args);
     });
 
-    conn.on('getRemotes', function (cb) {
-        getRemotes(cb);
+    conn.on('getRemotes', function (command) {
+        getRemotes.apply(command, command.args);
     });
 
-    conn.on('getCustomRemotes', function (cb) {
-        getCustomRemotes(cb);
+    conn.on('getCustomRemotes', function (command) {
+        getCustomRemotes.apply(command, command.args);
     });
 
     var events = [
@@ -80,8 +80,8 @@ function startListening()
     ];
 
     events.forEach(function(eventName) {
-        conn.on(eventName, function () {
-            var args = Array.prototype.slice.call(arguments);
+        conn.on(eventName, function (command) {
+            var args = Array.prototype.slice.call(command.args);
             args.unshift(eventName);
             nhome.emit.apply(nhome, args);
         });
@@ -93,8 +93,8 @@ function startListening()
     ];
 
     broadcasts.forEach(function(eventName) {
-        nhome.on(eventName, function () {
-            var args = Array.prototype.slice.call(arguments);
+        nhome.on(eventName, function (command) {
+            var args = Array.prototype.slice.call(command.args);
             args.unshift(eventName);
             conn.broadcast.apply(conn, args);
         });
@@ -110,7 +110,7 @@ function setSubNHome(server, cb)
     if (cb) cb();
 }
 
-function sendBridgeInfo(cb)
+function getBridges(cb)
 {
     var bridgeInfo = [];
 

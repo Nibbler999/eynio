@@ -9,8 +9,8 @@ module.exports = function(c, l) {
     conn = c;
     logger = l.child({component: 'Proxy'});
 
-    conn.on('proxyConnect', function (proxy) {
-        proxyConnect(proxy);
+    conn.on('proxyConnect', function (command) {
+        proxyConnect.apply(command, command.args);
     });
 };
 

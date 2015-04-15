@@ -15,12 +15,12 @@ module.exports = function(c, l) {
 
     ffmpeg = require('./streaming/ffmpeg.js')(logger);
 
-    conn.on('startStreaming', function (cameraid, options) {
-        startStreaming(cameraid, options);
+    conn.on('startStreaming', function (command) {
+        startStreaming.apply(command, command.args);
     });
 
-    conn.on('stopStreaming', function (cameraid, options) {
-        stopStreaming(cameraid, options);
+    conn.on('stopStreaming', function (command) {
+        stopStreaming.apply(command, command.args);
     });
 
     ffmpeg.check();

@@ -69,28 +69,28 @@ function startListening()
 {
     logger.info('Ready for commands');
 
-    conn.on('getBridges', function(cb) {
-        sendBridgeInfo(cb);
+    conn.on('getBridges', function (command) {
+        getBridges.apply(command, command.args);
     });
 
-    conn.on('getDevices', function (cb) {
-        getDevices(cb);
+    conn.on('getDevices', function (command) {
+        getDevices.apply(command, command.args);
     });
 
-    conn.on('getThermostatValue', function (id, cb) {
-        getThermostatValue(id, cb);
+    conn.on('getThermostatValue', function (command) {
+        getThermostatValue.apply(command, command.args);
     });
 
-    conn.on('setThermostatValue', function (id, value, cb) {
-        setThermostatValue(id, value, cb);
+    conn.on('setThermostatValue', function (command) {
+        setThermostatValue.apply(command, command.args);
     });
 
-    conn.on('getSensorValue', function (id, cb) {
-        getSensorValue(id, cb);
+    conn.on('getSensorValue', function (command) {
+        getSensorValue.apply(command, command.args);
     });
 }
 
-function sendBridgeInfo(cb)
+function getBridges(cb)
 {
     var bridgeInfo = [];
 

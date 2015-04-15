@@ -52,44 +52,44 @@ function startListening()
 {
     log('Ready for commands');
 
-    conn.on('getBridges', function(cb) {
-        sendBridgeInfo(cb);
+    conn.on('getBridges', function (command) {
+        getBridges.apply(command, command.args);
     });
 
-    conn.on('getRemotes', function (cb) {
-        getRemotes(cb);
+    conn.on('getRemotes', function (command) {
+        getRemotes.apply(command, command.args);
     });
 
-    conn.on('sendRemoteCommand', function (id, cmd, cb) {
-        sendRawCommand(id, cmd, cb);
+    conn.on('sendRemoteCommand', function (command) {
+        sendRemoteCommand.apply(command, command.args);
     });
 
-    conn.on('sendKey', function (remoteid, key, cb) {
-        sendKey(remoteid, key, cb);
+    conn.on('sendKey', function (command) {
+        sendKey.apply(command, command.args);
     });
 
-    conn.on('learnKey', function (remoteid, key) {
-        learnKey(remoteid, key);
+    conn.on('learnKey', function (command) {
+        learnKey.apply(command, command.args);
     });
 
-    conn.on('saveCustomRemote', function (remote) {
-        saveCustomRemote(remote);
+    conn.on('saveCustomRemote', function (command) {
+        saveCustomRemote.apply(command, command.args);
     });
 
-    conn.on('deleteCustomRemote', function (remoteid) {
-        deleteCustomRemote(remoteid);
+    conn.on('deleteCustomRemote', function (command) {
+        deleteCustomRemote.apply(command, command.args);
     });
 
-    conn.on('updateCustomRemote', function (remote) {
-        updateCustomRemote(remote);
+    conn.on('updateCustomRemote', function (command) {
+        updateCustomRemote.apply(command, command.args);
     });
 
-    conn.on('getCustomRemotes', function (cb) {
-        getCustomRemotes(cb);
+    conn.on('getCustomRemotes', function (command) {
+        getCustomRemotes.apply(command, command.args);
     });
 }
 
-function sendBridgeInfo(cb)
+function getBridges(cb)
 {
     var bridgeInfo = [];
 
@@ -118,7 +118,7 @@ function getRemotes(cb)
     if (cb) cb(r);
 }
 
-function sendRawCommand(id, cmd, cb)
+function sendRemoteCommand(id, cmd, cb)
 {
     if (!devices.hasOwnProperty(id)) {
         if (cb) cb([]);
@@ -153,7 +153,7 @@ function sendKey(remoteid, key, cb)
 
     var cmd = remote.keys[key].replace('1:1', remote.connector);
 
-    sendRawCommand(remote.deviceid, cmd + '\r', cb);
+    sendRemoteCommand(remote.deviceid, cmd + '\r', cb);
 }
 
 function learnKey(remoteid, key)
