@@ -26,7 +26,7 @@ module.exports = function(c, l) {
     ffmpeg.check();
 };
 
-function startStreaming(cameraid, options)
+function startStreaming(cameraid, options, cb)
 {
     logger.debug('Creating stream from ' + cameraid);
 
@@ -47,10 +47,13 @@ function startStreaming(cameraid, options)
 
         if (!available) {
             logger.error('Camera at', parts.hostname + ':' + parts.port, 'is not available');
+            if (cb) cb(false);
             return;
         }
 
         runStream(cameraid, camera, options);
+
+        if (cb) cb(true);
     });
 }
 
