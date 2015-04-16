@@ -333,7 +333,7 @@ function closeShutter(id, cb)
             return;
         }
 
-        self.log(Namer.getName(id), 'shutter-open');
+        self.log(Namer.getName(id), 'shutter-close');
 
         conn.broadcast('shutterValue', { id: id, value: 100});
 
