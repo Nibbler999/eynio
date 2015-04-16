@@ -192,6 +192,17 @@ function command_handler(command, cb)
         }
     }
 
+    command.log = function (device, action) {
+
+        var entry = {
+            user: command.user,
+            device: device,
+            action: action
+        };
+
+        wrapper.send('appendActionLog', entry);
+    };
+
     if (cb) {
 
         var data = [], i = 0, mycb, mycb_timedout, mycb_timer;

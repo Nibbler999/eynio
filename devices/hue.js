@@ -215,6 +215,8 @@ function setLightState(id, values)
         delete values.rgb;
     }
 
+    var self = this;
+
     devices[id].dev.setLightState(devices[id].id, values, function(err, result) {
 
         if (err) {
@@ -223,6 +225,13 @@ function setLightState(id, values)
         }
 
         if (result) {
+
+            if (values.on) {
+                self.log(devices[id].name, 'light-on');
+            } else {
+                self.log(devices[id].name, 'light-off');
+            }
+
             getLightState(id);
         }
     });

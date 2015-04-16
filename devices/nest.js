@@ -158,10 +158,13 @@ function setThermostatValue(id, value, cb)
         return;
     }
 
+    var self = this;
+
     var path = 'devices/thermostats/' + thermostats[id].id + '/target_temperature_c';
 
     dataRef.child(path).set(value, function (result) {
         if (result === null) {
+            self.log(Namer.getName(id), 'thermostat-set');
             if (cb) cb(true);
         } else {
             if (cb) cb(result.message);

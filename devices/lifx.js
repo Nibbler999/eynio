@@ -132,8 +132,10 @@ function setLightState(id, values)
 
     if (values.on) {
         lx.lightsOn(bulb);
+        this.log(Namer.getName(id), 'light-on');
     } else {
         lx.lightsOff(bulb);
+        this.log(Namer.getName(id), 'light-off');
     }
 
     setTimeout(function() {

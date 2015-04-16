@@ -151,6 +151,7 @@ function switchOn(id)
     }
 
     var deviceId = devices[id].id;
+    var self = this;
 
     devices[id].dev.api.devices.turnOn(deviceId, function(err, result) {
 
@@ -158,6 +159,8 @@ function switchOn(id)
             log('switchOn:' + err);
             return;
         }
+
+        self.log(Namer.getName(id), 'switch-on');
 
         conn.broadcast('switchState', { id: id, state: { on: true }});
     });
@@ -170,6 +173,7 @@ function switchOff(id)
     }
 
     var deviceId = devices[id].id;
+    var self = this;
 
     devices[id].dev.api.devices.turnOff(deviceId, function(err, result) {
 
@@ -177,6 +181,8 @@ function switchOff(id)
             log('switchOff:' + err);
             return;
         }
+
+        self.log(Namer.getName(id), 'switch-off');
 
         conn.broadcast('switchState', { id: id, state: { on: false }});
     });
@@ -190,7 +196,7 @@ function getSensorValue(id, cb)
     }
 
     var deviceId = devices[id].id;
-
+    
     devices[id].dev.api.devices.get(deviceId, function(err, result) {
 
         if (err) {
@@ -294,6 +300,7 @@ function openShutter(id, cb)
     }
 
     var deviceId = devices[id].id;
+    var self = this;
 
     devices[id].dev.call('callAction', { 'deviceID': deviceId, 'name': 'open' }, function(err, result) {
 
@@ -301,6 +308,8 @@ function openShutter(id, cb)
             log('openShutter:' + err);
             return;
         }
+
+        self.log(Namer.getName(id), 'shutter-open');
 
         conn.broadcast('shutterValue', { id: id, value: 0});
 
@@ -315,6 +324,7 @@ function closeShutter(id, cb)
     }
 
     var deviceId = devices[id].id;
+    var self = this;
 
     devices[id].dev.call('callAction', { 'deviceID': deviceId, 'name': 'close' }, function(err, result) {
 
@@ -322,6 +332,8 @@ function closeShutter(id, cb)
             log('closeShutter:' + err);
             return;
         }
+
+        self.log(Namer.getName(id), 'shutter-open');
 
         conn.broadcast('shutterValue', { id: id, value: 100});
 

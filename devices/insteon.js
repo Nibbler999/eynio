@@ -137,6 +137,7 @@ function setLightState(id, values)
     }
 
     var light = lights[id];
+    var self = this;
 
     if (values.hasOwnProperty('on')) {
 
@@ -146,6 +147,9 @@ function setLightState(id, values)
                     log('light.turnOnFast: ' + err);
                     return;
                 }
+
+                self.log(Namer.getName(id), 'light-on');
+
                 getLightState(id);
             });
         } else {
@@ -154,6 +158,9 @@ function setLightState(id, values)
                     log('light.turnOffFast: ' + err);
                     return;
                 }
+
+                self.log(Namer.getName(id), 'light-off');
+
                 getLightState(id);
             });
         }

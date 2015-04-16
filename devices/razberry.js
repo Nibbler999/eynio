@@ -104,6 +104,7 @@ function switchOn(id)
     }
 
     var device = devices[id].id;
+    var self = this;
 
     require('request')('http://' + ip + ':8083/ZWaveAPI/Run/devices[' + device + '].instances[0].commandClasses[0x25].Set(255)', function(err, response) {
 
@@ -113,6 +114,7 @@ function switchOn(id)
         }
 
         if (response.statusCode === 200) {
+            self.log(Namer.getName(id), 'switch-on');
             conn.broadcast('switchState', { id: id, state: { on: true }});
         }
     });
@@ -125,6 +127,7 @@ function switchOff(id)
     }
 
     var device = devices[id].id;
+    var self = this;
 
     require('request')('http://' + ip + ':8083/ZWaveAPI/Run/devices[' + device + '].instances[0].commandClasses[0x25].Set(0)', function(err, response) {
 
@@ -134,6 +137,7 @@ function switchOff(id)
         }
 
         if (response.statusCode === 200) {
+            self.log(Namer.getName(id), 'switch-off');
             conn.broadcast('switchState', { id: id, state: { on: false }});
         }
     });

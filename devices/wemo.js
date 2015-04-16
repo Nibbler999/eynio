@@ -182,12 +182,16 @@ function switchOn(id)
         return;
     }
 
+    var self = this;
+
     devices[id].dev.setBinaryState(1, function(err, result) {
 
         if (err) {
             logger.error('switchOn', err);
             return;
         }
+
+        self.log(Namer.getName(id), 'switch-on');
 
         conn.broadcast('switchState', { id: id, state: { on: true }});
     });
@@ -199,12 +203,16 @@ function switchOff(id)
         return;
     }
 
+    var self = this;
+
     devices[id].dev.setBinaryState(0, function(err, result) {
 
         if (err) {
             logger.error('switchOff',  err);
             return;
         }
+
+        self.log(Namer.getName(id), 'switch-off');
 
         conn.broadcast('switchState', { id: id, state: { on: false }});
     });
