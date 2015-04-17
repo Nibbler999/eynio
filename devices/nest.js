@@ -50,8 +50,30 @@ module.exports = function(c, l) {
                             };
                         }
 
+                        function addSmokeAlarm(alarm) {
+
+                            sensors[alarm + '-smoke'] = {
+                                name: data.structures[structure].name + ' ' + data.devices.smoke_co_alarms[alarm].name + ' Smoke',
+                                type: 'smoke-alarm',
+                                value: data.devices.smoke_co_alarms[alarm].smoke_alarm_state != 'ok'
+                            };
+
+                            sensors[alarm + '-co'] = {
+                                name: data.structures[structure].name + ' ' + data.devices.smoke_co_alarms[alarm].name + ' CO',
+                                type: 'co-alarm',
+                                value: data.devices.smoke_co_alarms[alarm].co_alarm_state != 'ok'
+                            };
+                        }
+
                         for (var structure in data.structures) {
-                            data.structures[structure].thermostats.forEach(addThermostat);
+
+                            if (data.structures[structure].thermostats && data.devices.thermostats) {
+                                data.structures[structure].thermostats.forEach(addThermostat);
+                            }
+
+                            if (data.structures[structure].smoke_co_alarms && data.devices.smoke_co_alarms) {
+                                data.structures[structure].smoke_co_alarms.forEach(addSmokeAlarm);
+                            }
                         }
 
                         Namer.add(thermostats);
@@ -125,7 +147,7 @@ function getDevices(cb)
             value: sensors[device].value,
             categories: Cats.getCats(device),
             type: 'sensor',
-            subtype: 'humidity'
+            subtype: sensors[device].type
         });
     }
 
