@@ -88,8 +88,23 @@ function loadDevices(cb)
 
             devicelist.forEach(function(device) {
 
-                if (!device.enabled || !device.visible || device.baseType === '') {
-                    return;
+                // HC2
+                if (device.hasOwnProperty('baseType')) {
+
+                    if (!device.enabled || !device.visible || device.baseType === '') {
+                        return;
+                    }
+
+                // HCL
+                } else {
+
+                    if (['unknown_device', 'HC_user', 'weather'].indexOf(device.type) !== -1 ) {
+                        return;
+                    }
+
+                    if (device.properties.disabled === '1') {
+                        return;
+                    }
                 }
 
                 devices[serial + ':' + device.id] = {
@@ -374,6 +389,9 @@ function getType(name)
     } else if (name.match('Sensor')) {
         info.type = 'sensor';
         info.subtype = name.replace('com.fibaro.', '').replace('Sensor', '');
+    } else if (name.match('_sensor')) {
+        info.type = 'sensor';
+        info.subtype = name.replace('_sensor', '');
     }
 
     return info;
