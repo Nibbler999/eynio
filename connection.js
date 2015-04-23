@@ -37,6 +37,10 @@ module.exports = function (l) {
         }
     });
 
+    conn.on('connect_timeout', function () {
+        log.debug('connect_timeout');
+    });
+
     conn.on('reconnecting', function (count) {
         if (count === 1) {
             log.info('Attempting to reconnect');
