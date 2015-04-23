@@ -60,6 +60,10 @@ function startListening()
     conn.on('getSensorValue', function (command) {
         getSensorValue.apply(command, command.args);
     });
+
+    conn.on('setDevicePowerState', function (command) {
+        setDevicePowerState.apply(command, command.args);
+    });
 }
 
 function subscribe(device)
@@ -216,6 +220,15 @@ function switchOff(id)
 
         conn.broadcast('switchState', { id: id, state: { on: false }});
     });
+}
+
+function setDevicePowerState(id, on)
+{
+    if (on) {
+        switchOn(id);
+    } else {
+        switchOff(id);
+    }
 }
 
 function getSwitchState(id, cb)

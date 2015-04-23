@@ -76,7 +76,8 @@ function startListening()
         'switchOn', 'switchOff', 'getSwitchState',
         'getSensorValue',
         'sendRemoteCommand', 'sendKey', 'learnKey', 'saveCustomRemote', 'updateCustomRemote', 'deleteCustomRemote',
-        'getShutterValue', 'setShutterValue', 'openShutter', 'closeShutter'
+        'getShutterValue', 'setShutterValue', 'openShutter', 'closeShutter',
+        'setDevicePowerState'
     ];
 
     events.forEach(function(eventName) {

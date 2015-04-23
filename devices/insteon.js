@@ -98,6 +98,10 @@ function startListening()
     conn.on('getLightState', function (command) {
         getLightState.apply(command, command.args);
     });
+
+    conn.on('setDevicePowerState', function (command) {
+        setDevicePowerState.apply(command, command.args);
+    });
 }
 
 function getBridges(cb)
@@ -176,6 +180,11 @@ function setLightState(id, values)
             getLightState(id);
         });
     }
+}
+
+function setDevicePowerState(id, on)
+{
+    setLightState(id, {on: on});
 }
 
 function getLightState(id, cb)

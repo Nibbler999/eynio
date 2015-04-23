@@ -61,6 +61,10 @@ function startListening()
     conn.on('getSwitchState', function (command) {
         getSwitchState.apply(command, command.args);
     });
+
+    conn.on('setDevicePowerState', function (command) {
+        setDevicePowerState.apply(command, command.args);
+    });
 }
 
 function getBridges(cb)
@@ -141,6 +145,15 @@ function switchOff(id)
             conn.broadcast('switchState', { id: id, state: { on: false }});
         }
     });
+}
+
+function setDevicePowerState(id, on)
+{
+    if (on) {
+        switchOn(id);
+    } else {
+        switchOff(id);
+    }
 }
 
 function getSwitchState(id, cb)
