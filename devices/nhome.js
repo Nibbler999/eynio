@@ -94,8 +94,8 @@ function startListening()
     ];
 
     broadcasts.forEach(function(eventName) {
-        nhome.on(eventName, function (command) {
-            var args = Array.prototype.slice.call(command.args);
+        nhome.on(eventName, function () {
+            var args = Array.prototype.slice.call(arguments);
             args.unshift(eventName);
             conn.broadcast.apply(conn, args);
         });
