@@ -43,6 +43,10 @@ module.exports = function (l) {
         }
     });
 
+    conn.on('reconnect_error', function (error) {
+        log.debug('reconnect_error', error);
+    });
+
     conn.on('disconnect', function () {
         log.error('Disconnected');
     });
