@@ -102,7 +102,7 @@ function loadDevices(cb)
                 // HCL
                 } else {
 
-                    if (['unknown_device', 'HC_user', 'weather'].indexOf(device.type) !== -1 ) {
+                    if (['unknown_device', 'HC_user', 'weather'].indexOf(device.type) !== -1) {
                         return;
                     }
 
@@ -224,7 +224,7 @@ function getSensorValue(id, cb)
     }
 
     var deviceId = devices[id].id;
-    
+
     devices[id].dev.api.devices.get(deviceId, function(err, result) {
 
         if (err) {
