@@ -47,6 +47,10 @@ module.exports = function (l) {
         log.debug('reconnect_error', error);
     });
 
+    conn.on('reconnect_failed', function () {
+        log.debug('reconnect_failed');
+    });
+
     conn.on('disconnect', function () {
         log.error('Disconnected');
     });
