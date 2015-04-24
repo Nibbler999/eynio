@@ -91,9 +91,24 @@ function reloadSchedule(cb)
     schedule.forEach(function (s) {
 
         var j = scheduler.scheduleJob(s.dateTime, function() {
-            var params = [s.emit];
-            params = params.concat(s.params);
-            conn.emit.apply(conn, params);
+
+            var command = {
+                name: s.emit,
+                args: s.params
+            };
+
+            command.log = function (device, action) {
+
+                var entry = {
+                    user: s.name,
+                    device: device,
+                    action: action
+                };
+
+                conn.send('appendActionLog', entry);
+            };
+
+            conn.emit(command.name, command);
         });
 
         jobs.push(j);

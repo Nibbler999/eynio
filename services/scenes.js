@@ -80,9 +80,24 @@ function setScene(sceneid, cb)
     }
 
     scene.actions.forEach(function (action) {
-        var params = [action.emit];
-        params = params.concat(action.params);
-        conn.emit.apply(conn, params);
+
+        var command = {
+            name: action.emit,
+            args: action.params
+        };
+
+        command.log = function (device, logaction) {
+
+            var entry = {
+                user: scene.name,
+                device: device,
+                action: logaction
+            };
+
+            conn.send('appendActionLog', entry);
+        };
+
+        conn.emit(command.name, command);
     });
 
     if (cb) cb(true);
