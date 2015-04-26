@@ -2,7 +2,9 @@
 
 var stream = require('stream');
 var http = require('http');
+var https = require('https');
 var util = require('util');
+var url = require('url');
 
 module.exports = function (logger, camera, options, cb) {
 
@@ -12,11 +14,18 @@ module.exports = function (logger, camera, options, cb) {
         auth = camera.auth_name + ':' + camera.auth_pass;
     }
 
+    var options = url.parse(camera.snapshot);
+
+    var httpx = options.protocol === 'https:' ? https : http;
+
+    var keepAliveAgent = new httpx.Agent({ keepAlive: true });
+    options.agent = keepAliveAgent;
+
     var refresh = function () {
 
         var start = Date.now();
 
-        req = http.get(camera.snapshot, function(res) {
+        req = httpx.get(options, function(res) {
 
             if (res.statusCode === 200) {
 

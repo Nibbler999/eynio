@@ -4,6 +4,8 @@ var stream = require('stream');
 var MjpegConsumer = require('mjpeg-consumer');
 var Limiter = require('write-limiter');
 var http = require('http');
+var https = require('https');
+var url = require('url');
 
 module.exports = function (logger, camera, options, cb) {
 
@@ -11,13 +13,15 @@ module.exports = function (logger, camera, options, cb) {
 
     var limiter = new Limiter(1000 / options.framerate);
 
-    var parts = require('url').parse(camera.mjpeg);
+    var parts = url.parse(camera.mjpeg);
+
+    var httpx = parts.protocol === 'https:' ? https : http;
 
     if (camera.auth_name) {
         parts.auth = camera.auth_name + ':' + camera.auth_pass;
     }
-
-    var req = http.get(parts, function(res) {
+    
+    var req = httpx.get(parts, function(res) {
 
         if (res.statusCode === 200) {
 
