@@ -395,7 +395,7 @@ function getType(name)
         subtype: ''
     };
 
-    if (name === 'com.fibaro.binarySwitch') {
+    if (name === 'com.fibaro.binarySwitch' || name === 'binary_light') {
         info.type = 'switch';
     } else if (name === 'com.fibaro.FGR221' || name === 'com.fibaro.FGRM222') {
         info.type = 'shutter';
