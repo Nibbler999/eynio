@@ -55,13 +55,13 @@ module.exports = function(c, l) {
                             sensors[alarm + '-smoke'] = {
                                 name: data.structures[structure].name + ' ' + data.devices.smoke_co_alarms[alarm].name + ' Smoke',
                                 type: 'smoke-alarm',
-                                value: data.devices.smoke_co_alarms[alarm].smoke_alarm_state != 'ok'
+                                value: data.devices.smoke_co_alarms[alarm].smoke_alarm_state !== 'ok'
                             };
 
                             sensors[alarm + '-co'] = {
                                 name: data.structures[structure].name + ' ' + data.devices.smoke_co_alarms[alarm].name + ' CO',
                                 type: 'co-alarm',
-                                value: data.devices.smoke_co_alarms[alarm].co_alarm_state != 'ok'
+                                value: data.devices.smoke_co_alarms[alarm].co_alarm_state !== 'ok'
                             };
                         }
 
