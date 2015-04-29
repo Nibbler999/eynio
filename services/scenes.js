@@ -67,7 +67,9 @@ function deleteScene(sceneid, cb)
 
 function getScenes(cb)
 {
-    if (cb) cb(scenes);
+    var scene_array = hash_to_array(scenes);
+
+    if (cb) cb(scene_array);
 }
 
 function setScene(sceneid, cb)
@@ -108,5 +110,25 @@ function save()
     var cfg = require('../configuration.js');
 
     cfg.set('scenes', scenes);
+}
+
+function hash_to_array(hash)
+{
+    var array = [], object;
+
+    for (var key in hash) {
+
+        object = {
+            id: key
+        };
+
+        for (var key2 in hash[key]) {
+            object[key2] = hash[key][key2];
+        }
+
+        array.push(object);
+    }
+
+    return array;
 }
 
