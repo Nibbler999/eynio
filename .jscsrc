@@ -1,9 +1,0 @@
-{
-    "preset": "crockford",
-    "requireMultipleVarDecl": null,
-    "requireSpaceAfterKeywords": null,
-    "disallowNewlineBeforeBlockStatements": null,
-    "disallowDanglingUnderscores": null,
-    "disallowKeywords": null,
-    "requireCurlyBraces": null
-}
