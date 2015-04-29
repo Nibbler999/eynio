@@ -8,6 +8,12 @@ var conn, logger, ffmpeg;
 
 var sources = {}, destinations = {}, scalers = {}, pipes = {};
 
+var ports_by_protocol = {
+    'http:' : 80,
+    'https:': 443,
+    'rtsp:' : 514
+};
+
 module.exports = function(c, l) {
 
     conn = c;
@@ -43,10 +49,12 @@ function startStreaming(cameraid, options, cb)
 
     var parts = require('url').parse(camera.snapshot || camera.mjpeg || camera.rtsp);
 
-    tcpp.probe(parts.hostname, parts.port, function (err, available) {
+    var port = parts.port || ports_by_protocol[parts.protocol];
+
+    tcpp.probe(parts.hostname, port, function (err, available) {
 
         if (!available) {
-            logger.error('Camera at', parts.hostname + ':' + parts.port, 'is not available');
+            logger.error('Camera at', parts.hostname + ':' + port, 'is not available');
             if (cb) cb(false);
             return;
         }
