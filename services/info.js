@@ -32,6 +32,10 @@ module.exports = function (c, l) {
     conn.on('configRestore', function (command) {
         configRestore.apply(command, command.args);
     });
+
+    conn.on('configSet', function (command) {
+        configSet.apply(command, command.args);
+    });
 };
 
 function getServerStatus(cb)
@@ -162,5 +166,14 @@ function configRestore(newconfig, cb)
     cfg.setAll(newconfig);
 
     if (cb) cb();
+}
+
+function configSet(key, value, cb)
+{
+    var cfg = require('../configuration.js');
+
+    cfg.set(key, value);
+
+    if (cb) cb(config);
 }
 
