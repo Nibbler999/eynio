@@ -92,6 +92,10 @@ function reloadSchedule(cb)
 
     schedule.forEach(function (s) {
 
+        if (s.dateTime === 'sunset' || s.dateTime === 'sunrise') {
+            return;
+        }
+
         var j = scheduler.scheduleJob(s.dateTime, jobRunner(s));
 
         jobs.push(j);
