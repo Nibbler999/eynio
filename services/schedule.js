@@ -4,7 +4,7 @@ var conn;
 var jobs = [];
 var schedule = [];
 
-var logger;
+var logger, sun;
 
 module.exports = function(c, l) {
 
@@ -17,6 +17,8 @@ module.exports = function(c, l) {
     if (schedule.length > 0) {
         reloadSchedule();
     }
+
+    setupSunEvents();
 
     conn.on('saveSchedule', function (command) {
         saveSchedule.apply(command, command.args);
@@ -90,26 +92,7 @@ function reloadSchedule(cb)
 
     schedule.forEach(function (s) {
 
-        var j = scheduler.scheduleJob(s.dateTime, function() {
-
-            var command = {
-                name: s.emit,
-                args: s.params
-            };
-
-            command.log = function (device, action) {
-
-                var entry = {
-                    user: s.name,
-                    device: device,
-                    action: action
-                };
-
-                conn.send('appendActionLog', entry);
-            };
-
-            conn.emit(command.name, command);
-        });
+        var j = scheduler.scheduleJob(s.dateTime, jobRunner(s));
 
         jobs.push(j);
 
@@ -118,3 +101,63 @@ function reloadSchedule(cb)
 
     if (cb) cb(schedule);
 }
+
+function jobRunner(s)
+{
+    return function () {
+
+        var command = {
+            name: s.emit,
+            args: s.params
+        };
+
+        command.log = function (device, action) {
+
+            var entry = {
+                user: s.name,
+                device: device,
+                action: action
+            };
+
+            conn.send('appendActionLog', entry);
+        };
+
+        conn.emit(command.name, command);
+    };
+}
+
+function setupSunEvents()
+{
+    var cfg = require('../configuration.js');
+
+    var latitude = cfg.get('latitude', null);
+    var longitude = cfg.get('longitude', null);
+
+    if (latitude !== null && longitude !== null) {
+
+        sun = require('iotdb-timers');
+
+        sun.setLocation(latitude, longitude);
+
+        sun.sunrise(function (event) {
+            logger.info('Sunrise', event);
+            sunEvent('sunrise');
+        });
+
+        sun.sunset(function (event) {
+            logger.info('Sunset', event);
+            sunEvent('sunset');
+        });
+    }
+}
+
+function sunEvent(which)
+{
+    schedule.forEach(function (s) {
+
+        if (s.dateTime === which) {
+            jobRunner(s)();
+        }
+    });
+}
+

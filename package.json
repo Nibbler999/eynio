@@ -13,6 +13,7 @@
     "fibaro-api": "0.1.1",
     "firebase": "2.2.3",
     "home-controller": "0.5.2",
+    "iotdb-timers": "0.0.10",
     "ip": "0.3.2",
     "lifx": "0.2.1",
     "mjpeg-consumer": "0.4.0",
