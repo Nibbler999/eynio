@@ -81,6 +81,14 @@ function setScene(sceneid, cb)
         return;
     }
 
+    var entry = {
+        user: this.user,
+        device: scene.name,
+        action: 'scene-set'
+    };
+
+    conn.send('appendActionLog', entry);
+
     scene.actions.forEach(function (action) {
 
         var command = {
