@@ -136,16 +136,17 @@ function setupSunEvents()
     if (latitude !== null && longitude !== null) {
 
         sun = require('iotdb-timers');
+        sun.setLogger(logger);
 
         sun.setLocation(latitude, longitude);
 
         sun.sunrise(function (event) {
-            logger.info('Sunrise', event);
+            logger.debug('Sunrise', event);
             sunEvent('sunrise');
         });
 
         sun.sunset(function (event) {
-            logger.info('Sunset', event);
+            logger.debug('Sunset', event);
             sunEvent('sunset');
         });
     }
