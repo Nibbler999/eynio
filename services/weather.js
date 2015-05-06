@@ -106,6 +106,9 @@ function getWeather(cb)
             logger.error('API error', e);
             if (cb) cb(false);
         });
-    }  
+
+    } else {
+        if (cb) cb(false);
+    }
 }
 
