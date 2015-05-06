@@ -38,6 +38,7 @@ function configured()
     require('./services/streaming.js')(conn, log);
     require('./services/cameras.js')(conn, log);
     require('./services/scenes.js')(conn, log);
+    require('./services/weather.js')(conn, log);
 
     require('./devices/hue.js')(conn, log);
     require('./devices/wemo.js')(conn, log);
