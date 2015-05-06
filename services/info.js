@@ -174,6 +174,6 @@ function configSet(key, value, cb)
 
     cfg.set(key, value);
 
-    if (cb) cb(config);
+    if (cb) cb();
 }
 
