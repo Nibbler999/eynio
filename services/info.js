@@ -36,7 +36,28 @@ module.exports = function (c, l) {
     conn.on('configSet', function (command) {
         configSet.apply(command, command.args);
     });
+
+    getLocation();
 };
+
+function getLocation()
+{
+    var cfg = require('../configuration.js');
+
+    var latitude = cfg.get('latitude', null);
+    var longitude = cfg.get('longitude', null);
+
+    if (latitude === null || longitude === null) {
+
+        conn.send('getLocation', function (loc) {
+            if (loc && loc.longitude && loc.latitude) {
+                configSet('latitude', loc.latitude);
+                configSet('longitude', loc.longitude);
+                logger.info('Set location automatically');
+            }
+        });
+    }
+}
 
 function getServerStatus(cb)
 {
