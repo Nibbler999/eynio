@@ -27,7 +27,7 @@
     "socket.io": "1.3.5",
     "socketio-wildcard": "0.1.1",
     "tcp-ping": "0.1.1",
-    "wemo": "0.2.0",
+    "wemo": "0.2.1",
     "write-limiter": "0.1.3",
     "ws": "0.7.1",
     "xml2js": "0.4.8"
