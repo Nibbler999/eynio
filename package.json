@@ -11,7 +11,7 @@
     "ejs": "2.3.1",
     "express": "4.12.3",
     "fibaro-api": "0.1.1",
-    "firebase": "2.2.3",
+    "firebase": "2.2.4",
     "home-controller": "0.5.2",
     "iotdb-timers": "0.0.10",
     "ip": "0.3.2",
