@@ -42,8 +42,8 @@ function getWeather(cb)
             return;
         }
 
-        var http  = require('http');
-        var zlib  = require('zlib');
+        var http = require('http');
+        var zlib = require('zlib');
 
         apiOptions.path = '/weatherapi/locationforecast/1.9/?lat=' + latitude + ';lon=' + longitude;
 
@@ -88,7 +88,7 @@ function getWeather(cb)
                         temperature: parseFloat(current.temperature[0].$.value),
                         wind: {
                             direction: current.windDirection[0].$.name,
-                            speed: parseFloat(current.windSpeed[0].$.mps),
+                            speed: parseFloat(current.windSpeed[0].$.mps)
                         },
                         humidity: parseFloat(current.humidity[0].$.value),
                         pressure: parseFloat(current.pressure[0].$.value),

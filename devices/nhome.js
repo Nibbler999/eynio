@@ -128,9 +128,11 @@ function getDevices(cb)
 {
     nhome.emit('getDevices', function(devices) {
 
-        if (devices) devices.forEach(function(device) {
-            device.categories = Cats.getCats(device.id);
-        });
+        if (devices) {
+            devices.forEach(function(device) {
+                device.categories = Cats.getCats(device.id);
+            });
+        }
 
         if (cb) cb(devices);
     });
@@ -140,9 +142,11 @@ function getRemotes(cb)
 {
     nhome.emit('getRemotes', function(devices) {
 
-        if (devices) devices.forEach(function(device) {
-            device.categories = Cats.getCats(device.id);
-        });
+        if (devices) {
+            devices.forEach(function(device) {
+                device.categories = Cats.getCats(device.id);
+            });
+        }
 
         conn.broadcast('remotes', devices);
 
@@ -154,9 +158,11 @@ function getCustomRemotes(cb)
 {
     nhome.emit('getCustomRemotes', function(devices) {
 
-        if (devices) devices.forEach(function(device) {
-            device.categories = Cats.getCats(device.id);
-        });
+        if (devices) {
+            devices.forEach(function(device) {
+                device.categories = Cats.getCats(device.id);
+            });
+        }
 
         conn.broadcast('customRemotes', devices);
 

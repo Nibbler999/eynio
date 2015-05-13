@@ -11,6 +11,7 @@
     "key-spacing": 0,
     "no-process-exit": 0,
     "no-unused-vars": 1,
-    "handle-callback-err": 1
+    "handle-callback-err": 1,
+    "new-cap": 0
   }
 }

@@ -88,17 +88,21 @@ function save(cb)
 
         require('fs').writeFileSync(filepath, content, { encoding: 'utf8'});
 
-        if (cb) process.nextTick(function() {
-            cb(true);
-        });
+        if (cb) {
+            process.nextTick(function() {
+                cb(true);
+            });
+        }
 
     } catch (err) {
 
         logger.error(err);
 
-        if (cb) process.nextTick(function() {
-            cb(false);
-        });
+        if (cb) {
+            process.nextTick(function() {
+                cb(false);
+            });
+        }
     }
 }
 

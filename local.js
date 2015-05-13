@@ -10,7 +10,7 @@ module.exports = function (l) {
     var ejs = require('ejs');
 
     var app = express();
-    var server = require('http').Server(app);
+    var server = require('http').createServer(app);
 
     server.listen(8080);
 
@@ -31,7 +31,7 @@ module.exports = function (l) {
         }
     });
 
-    app.use(express['static'](require('path').join(__dirname, 'local', 'public')));
+    app.use(express.static(require('path').join(__dirname, 'local', 'public')));
 
     var locals = {
         page: '',

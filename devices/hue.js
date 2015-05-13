@@ -1,7 +1,8 @@
 "use strict";
 
-var hue = require("node-hue-api"),
-    HueApi = hue.HueApi,
+var hue = require("node-hue-api");
+
+var HueApi = hue.HueApi,
     lightState = hue.lightState;
 
 var Cats = require('../services/cats.js');

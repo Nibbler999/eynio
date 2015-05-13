@@ -22,7 +22,9 @@ function proxyConnect(proxy)
 
     if (numcores > 1) {
 
-        var child = require('child_process').fork(__dirname + '/proxy-child.js');
+        var child_path = require('path').join(__dirname, '/proxy-child.js');
+
+        var child = require('child_process').fork(child_path);
 
         child.on('message', function(message) {
             logger.error(proxy.host + ':' + proxy.port, message);

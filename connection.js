@@ -133,7 +133,7 @@ function setupLocalServer()
             var args = packet.data;
             var name = args.shift();
 
-            var cb = typeof(args[args.length - 1]) === 'function' ? args.pop() : null;
+            var cb = typeof args[args.length - 1] === 'function' ? args.pop() : null;
 
             var command = {
                 name: name,
@@ -181,11 +181,13 @@ function setupLocalServer()
 
 function cameraKey(cameraid, options)
 {
-    if (!options) options = {
-        width: -1,
-        height: 120,
-        framerate: 1
-    };
+    if (!options) {
+        options = {
+            width: -1,
+            height: 120,
+            framerate: 1
+        };
+    }
 
     return [cameraid, options.width, options.height, options.framerate].join('-');
 }
@@ -224,7 +226,6 @@ function command_handler(command, cb)
         if (numListeners === 0) {
             log.debug('Replied to', command.name, command.args, 'with empty response');
             cb(null);
-            return;
         } else if (numListeners === 1) {
 
             mycb_timedout = function() {

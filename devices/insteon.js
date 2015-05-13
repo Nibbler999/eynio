@@ -58,8 +58,8 @@ module.exports = function(c, l) {
                 insteon.links(function(error, info) {
 
                     info.forEach(function(device) {
-                        insteon.info(device.id, function(error, info) {
-                            if (info.isLighting) {
+                        insteon.info(device.id, function(device_error, device_info) {
+                            if (device_info.isLighting) {
                                 lights[device.id] = insteon.light(device.id);
                             }
                         });

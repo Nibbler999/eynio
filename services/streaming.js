@@ -55,6 +55,7 @@ function startStreaming(cameraid, options, cb)
 
         if (!available) {
             logger.error('Camera at', parts.hostname + ':' + port, 'is not available');
+            logger.debug('Probe error', err);
             if (cb) cb(false);
             return;
         }

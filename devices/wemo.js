@@ -129,7 +129,7 @@ function startUPnPServer()
 
                     if (p === 'BinaryState') {
 
-                        var value  = parseInt(property[p][0], 10);
+                        var value = parseInt(property[p][0], 10);
                         var device = devices[id];
 
                         device.value = value >= 1;
@@ -212,7 +212,7 @@ function switchOff(id)
     devices[id].dev.setBinaryState(0, function(err, result) {
 
         if (err) {
-            logger.error('switchOff',  err);
+            logger.error('switchOff', err);
             return;
         }
 

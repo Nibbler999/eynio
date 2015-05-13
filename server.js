@@ -26,7 +26,7 @@ require('./configuration.js').load(log, configured);
 
 function configured()
 {
-    var conn  = require('./connection.js')(log);
+    var conn = require('./connection.js')(log);
 
     log.debug('Loading modules');
 
