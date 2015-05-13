@@ -134,9 +134,10 @@ function getDevices(cb)
 }
 
 // deprecated
-function setLightState(id, values)
+function setLightState(id, values, cb)
 {
     if (!lights.hasOwnProperty(id)) {
+        if (cb) cb([]);
         return;
     }
 
@@ -149,23 +150,29 @@ function setLightState(id, values)
             light.turnOnFast(function(err) {
                 if (err) {
                     log('light.turnOnFast: ' + err);
+                    if (cb) cb(false);
                     return;
                 }
 
                 self.log(Namer.getName(id), 'light-on');
 
                 getLightState(id);
+
+                if (cb) cb(true);
             });
         } else {
             light.turnOffFast(function(err) {
                 if (err) {
                     log('light.turnOffFast: ' + err);
+                    if (cb) cb(false);
                     return;
                 }
 
                 self.log(Namer.getName(id), 'light-off');
 
                 getLightState(id);
+
+                if (cb) cb(true);
             });
         }
     }
@@ -175,16 +182,20 @@ function setLightState(id, values)
         light.level(parseInt(values.bri, 10), function(err) {
             if (err) {
                 log('light.level: ' + err);
+                if (cb) cb(false);
                 return;
             }
+
             getLightState(id);
+
+            if (cb) cb(true);
         });
     }
 }
 
-function setDevicePowerState(id, on)
+function setDevicePowerState(id, on, cb)
 {
-    setLightState(id, {on: on});
+    setLightState.call(this, id, {on: on}, cb);
 }
 
 function getLightState(id, cb)

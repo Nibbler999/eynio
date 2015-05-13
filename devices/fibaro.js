@@ -163,9 +163,10 @@ function getDevices(cb)
     });
 }
 
-function switchOn(id)
+function switchOn(id, cb)
 {
     if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
         return;
     }
 
@@ -176,18 +177,22 @@ function switchOn(id)
 
         if (err) {
             log('switchOn:' + err);
+            if (cb) cb(false);
             return;
         }
 
         self.log(Namer.getName(id), 'switch-on');
 
         conn.broadcast('switchState', { id: id, state: { on: true }});
+
+        if (cb) cb(true);
     });
 }
 
-function switchOff(id)
+function switchOff(id, cb)
 {
     if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
         return;
     }
 
@@ -198,21 +203,24 @@ function switchOff(id)
 
         if (err) {
             log('switchOff:' + err);
+            if (cb) cb(false);
             return;
         }
 
         self.log(Namer.getName(id), 'switch-off');
 
         conn.broadcast('switchState', { id: id, state: { on: false }});
+
+        if (cb) cb(true);
     });
 }
 
-function setDevicePowerState(id, on)
+function setDevicePowerState(id, on, cb)
 {
     if (on) {
-        switchOn(id);
+        switchOn.call(this, id, cb);
     } else {
-        switchOff(id);
+        switchOff.call(this, id, cb);
     }
 }
 

@@ -126,9 +126,10 @@ function getDevices(cb)
 }
 
 // deprecated
-function setLightState(id, values)
+function setLightState(id, values, cb)
 {
     if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
         return;
     }
 
@@ -145,11 +146,13 @@ function setLightState(id, values)
     setTimeout(function() {
         lx.requestStatus(bulb);
     }, 1000);
+
+    if (cb) cb(true);
 }
 
-function setDevicePowerState(id, on)
+function setDevicePowerState(id, on, cb)
 {
-    setLightState(id, {on: on});
+    setLightState.call(this, id, {on: on}, cb);
 }
 
 function setLightColor(id, color_string, color_format)

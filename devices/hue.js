@@ -204,9 +204,10 @@ function getDevices(cb)
 }
 
 // Deprecated
-function setLightState(id, values)
+function setLightState(id, values, cb)
 {
     if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
         return;
     }
 
@@ -226,6 +227,7 @@ function setLightState(id, values)
 
         if (err) {
             log('api.setLightState:' + err);
+            if (cb) cb(false);
             return;
         }
 
@@ -238,13 +240,15 @@ function setLightState(id, values)
             }
 
             getLightState(id);
+
+            if (cb) cb(true);
         }
     });
 }
 
-function setDevicePowerState(id, on)
+function setDevicePowerState(id, on, cb)
 {
-    setLightState(id, {on: on});
+    setLightState.call(this, id, {on: on}, cb);
 }
 
 function setLightColor(id, color_string, color_format)
