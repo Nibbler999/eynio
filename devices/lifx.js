@@ -28,12 +28,12 @@ module.exports = function(c, l) {
 
         var id = 'lifx-' + b.addr.toString('hex');
 
-        var hsv = [(b.hue / 65535) * 360, b.saturation / 65535, b.brightness / 65535];
+        var hsv = [(b.state.hue / 65535) * 360, b.state.saturation / 65535, b.state.brightness / 65535];
         var chroma = require('chroma-js')(hsv, 'hsv');
 
         var state = {
-            on: b.on,
-            level: parseInt(((b.dim + 32768) / 65535) * 100, 10),
+            on: b.state.power > 0,
+            level: parseInt((b.state.power / 65535) * 100, 10),
             hsl: chroma.hsl(),
             hsv: chroma.hsv(),
             rgb: chroma.rgb(),
