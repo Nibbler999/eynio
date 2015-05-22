@@ -129,6 +129,7 @@ function getDevices(cb)
         all.push({
             id: device,
             name: Namer.getName(device),
+            state: devices[device].state,
             categories: Cats.getCats(device),
             type: 'light'
         });
