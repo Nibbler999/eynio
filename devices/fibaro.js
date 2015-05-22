@@ -407,6 +407,9 @@ function getType(name)
         info.type = 'switch';
     } else if (name === 'com.fibaro.FGR221' || name === 'com.fibaro.FGRM222') {
         info.type = 'shutter';
+    } else if (name === 'com.fibaro.FGMS001') {
+        info.type = 'sensor';
+        info.subtype = 'motion';
     } else if (name.match('Sensor')) {
         info.type = 'sensor';
         info.subtype = name.replace('com.fibaro.', '').replace('Sensor', '');
