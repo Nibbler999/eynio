@@ -28,17 +28,9 @@ module.exports = function(c, l) {
 
         var id = 'lifx-' + b.addr.toString('hex');
 
-        var hsv = [(b.state.hue / 65535) * 360, b.state.saturation / 65535, b.state.brightness / 65535];
-        var chroma = require('chroma-js')(hsv, 'hsv');
+        var state = getState(b);
 
-        var state = {
-            on: b.state.power > 0,
-            level: parseInt((b.state.power / 65535) * 100, 10),
-            hsl: chroma.hsl(),
-            hsv: chroma.hsv(),
-            rgb: chroma.rgb(),
-            hex: chroma.hex()
-        };
+        devices[id].state = state;
 
         conn.broadcast('lightState', { id: id, state: state });
     });
@@ -47,9 +39,12 @@ module.exports = function(c, l) {
 
         var addr = b.addr.toString('hex');
 
+        var state = getState(b);
+
         devices['lifx-' + addr] = {
             name: b.name || 'Un-named',
-            addr: addr
+            addr: addr,
+            state: state
         };
 
         Namer.add(devices);
@@ -62,6 +57,23 @@ module.exports = function(c, l) {
         startListening();
     });
 };
+
+function getState(b)
+{
+    var hsv = [(b.state.hue / 65535) * 360, b.state.saturation / 65535, b.state.brightness / 65535];
+    var chroma = require('chroma-js')(hsv, 'hsv');
+
+    var state = {
+        on: b.state.power > 0,
+        level: parseInt((b.state.power / 65535) * 100, 10),
+        hsl: chroma.hsl(),
+        hsv: chroma.hsv(),
+        rgb: chroma.rgb(),
+        hex: chroma.hex()
+    };
+
+    return state;
+}
 
 function startListening()
 {
