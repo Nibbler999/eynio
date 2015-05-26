@@ -22,13 +22,13 @@ process.on('uncaughtException', function (err) {
 
 log.debug('Loading configuration');
 
-require('./configuration.js').load(log, configured);
+var cfg = require('./configuration.js');
 
-function configured()
-{
+cfg.load(log, function () {
+
     var conn = require('./connection.js')(log);
 
-    log.debug('Loading modules');
+    log.debug('Loading services');
 
     require('./services/namer.js').listen(conn, log);
     require('./services/cats.js').listen(conn, log);
@@ -39,20 +39,23 @@ function configured()
     require('./services/cameras.js')(conn, log);
     require('./services/scenes.js')(conn, log);
     require('./services/weather.js')(conn, log);
+    require('./services/blacklist.js')(conn, log);
 
-    require('./devices/hue.js')(conn, log);
-    require('./devices/wemo.js')(conn, log);
-    require('./devices/insteon.js')(conn, log);
-    require('./devices/itach.js')(conn, log);
-    require('./devices/fibaro.js')(conn, log);
-    require('./devices/razberry.js')(conn, log);
-    require('./devices/lifx.js')(conn, log);
-    require('./devices/netatmo.js')(conn, log);
-    require('./devices/nhome.js')(conn, log);
-    require('./devices/nest.js')(conn, log);
+    log.debug('Loading modules');
+
+    var modules = ['hue', 'wemo', 'insteon', 'itach', 'fibaro', 
+        'razberry', 'lifx', 'netatmo', 'nhome', 'nest'];
+
+    var blacklist = cfg.get('blacklist_modules', []);
+
+    modules.filter(function (module) {
+        return blacklist.indexOf(module) === -1;
+    }).forEach(function (module) {
+        require('./devices/' + module + '.js')(conn, log);
+    });
 
     log.info('Connecting...');
 
     conn.connect();
-}
+});
 

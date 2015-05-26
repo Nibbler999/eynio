@@ -3,6 +3,8 @@
 var Namer = require('../services/namer.js');
 var Cats = require('../services/cats.js');
 
+var cfg = require('../configuration.js');
+
 var conn;
 
 var lights = {}, bridges = {};
@@ -55,9 +57,16 @@ module.exports = function(c, l) {
 
                 log('Connected');
 
+                var blacklist_devices = cfg.get('blacklist_devices', []);
+
                 insteon.links(function(error, info) {
 
                     info.forEach(function(device) {
+
+                        if (blacklist_devices.indexOf(device.id) !== -1) {
+                            return;
+                        }
+
                         insteon.info(device.id, function(device_error, device_info) {
                             if (device_info.isLighting) {
                                 lights[device.id] = insteon.light(device.id);

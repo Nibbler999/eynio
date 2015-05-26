@@ -32,6 +32,12 @@ module.exports = function(c, l) {
 
         if (!devices.hasOwnProperty(device.UUID)) {
 
+            var blacklist_devices = cfg.get('blacklist_devices', []);
+
+            if (blacklist_devices.indexOf(device.UUID) !== -1) {
+                return;
+            }
+
             log('Discovered device');
 
             devices[device.UUID] = {

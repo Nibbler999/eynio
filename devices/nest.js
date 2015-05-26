@@ -3,6 +3,8 @@
 var Namer = require('../services/namer.js');
 var Cats = require('../services/cats.js');
 
+var cfg = require('../configuration.js');
+
 var conn, thermostats = {}, sensors = {}, bridges = {};
 
 var logger;
@@ -29,43 +31,74 @@ module.exports = function(c, l) {
 
                     dataRef.on('value', function (snapshot) {
 
+                        var blacklist_devices = cfg.get('blacklist_devices', []);
+
                         var data = snapshot.val();
 
                         function addThermostat(thermostat) {
 
-                            thermostats[thermostat] = {
-                                id: thermostat,
-                                name: data.structures[structure].name + ' ' + data.devices.thermostats[thermostat].name,
-                                value: data.devices.thermostats[thermostat].ambient_temperature_c,
-                                target: data.devices.thermostats[thermostat].target_temperature_c
-                            };
+                            if (blacklist_devices.indexOf(thermostat) === -1) {
 
-                            // Broadcast change
-                            getThermostatValue(thermostat);
+                                thermostats[thermostat] = {
+                                    id: thermostat,
+                                    name: data.structures[structure].name + ' ' + data.devices.thermostats[thermostat].name,
+                                    value: data.devices.thermostats[thermostat].ambient_temperature_c,
+                                    target: data.devices.thermostats[thermostat].target_temperature_c
+                                };
 
-                            sensors[thermostat + '-humidity'] = {
-                                name: data.structures[structure].name + ' ' + data.devices.thermostats[thermostat].name + ' humidity',
-                                type: 'humidity',
-                                value: data.devices.thermostats[thermostat].humidity
-                            };
+                                // Broadcast change
+                                getThermostatValue(thermostat);
+                            }
+
+                            if (blacklist_devices.indexOf(thermostat + '-humidity') === -1) {
+
+                                sensors[thermostat + '-humidity'] = {
+                                    name: data.structures[structure].name + ' ' + data.devices.thermostats[thermostat].name + ' humidity',
+                                    type: 'humidity',
+                                    value: data.devices.thermostats[thermostat].humidity
+                                };
+
+                                // Broadcast change
+                                getSensorValue(thermostat + '-humidity');
+                            }
                         }
 
                         function addSmokeAlarm(alarm) {
 
-                            sensors[alarm + '-smoke'] = {
-                                name: data.structures[structure].name + ' ' + data.devices.smoke_co_alarms[alarm].name + ' Smoke',
-                                type: 'smoke-alarm',
-                                value: data.devices.smoke_co_alarms[alarm].smoke_alarm_state !== 'ok'
-                            };
+                            if (blacklist_devices.indexOf(alarm + '-smoke') === -1) {
 
-                            sensors[alarm + '-co'] = {
-                                name: data.structures[structure].name + ' ' + data.devices.smoke_co_alarms[alarm].name + ' CO',
-                                type: 'co-alarm',
-                                value: data.devices.smoke_co_alarms[alarm].co_alarm_state !== 'ok'
-                            };
+                                sensors[alarm + '-smoke'] = {
+                                    name: data.structures[structure].name + ' ' + data.devices.smoke_co_alarms[alarm].name + ' Smoke',
+                                    type: 'smoke-alarm',
+                                    value: data.devices.smoke_co_alarms[alarm].smoke_alarm_state !== 'ok'
+                                };
+
+                                // Broadcast change
+                                getSensorValue(alarm + '-smoke');
+                            }
+
+                            if (blacklist_devices.indexOf(alarm + '-co') === -1) {
+
+                                sensors[alarm + '-co'] = {
+                                    name: data.structures[structure].name + ' ' + data.devices.smoke_co_alarms[alarm].name + ' CO',
+                                    type: 'co-alarm',
+                                    value: data.devices.smoke_co_alarms[alarm].co_alarm_state !== 'ok'
+                                };
+
+                                // Broadcast change
+                                getSensorValue(alarm + '-co');
+                            }
                         }
 
+                        var blacklist_bridges = cfg.get('blacklist_bridges', []);
+
                         for (var structure in data.structures) {
+
+                            bridges[structure] = 'nest';
+
+                            if (blacklist_bridges.indexOf(structure) !== -1) {
+                                return;
+                            }
 
                             if (data.structures[structure].thermostats && data.devices.thermostats) {
                                 data.structures[structure].thermostats.forEach(addThermostat);
