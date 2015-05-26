@@ -6,11 +6,9 @@ var lx;
 var Namer = require('../services/namer.js');
 var Cats = require('../services/cats.js');
 
-var cfg = require('../configuration.js');
-
 var conn;
 
-var devices = {};
+var devices = {}, bridges = {};
 
 var logger;
 
@@ -30,10 +28,6 @@ module.exports = function(c, l) {
 
         var id = 'lifx-' + b.addr.toString('hex');
 
-        if (!devices[id]) {
-            return;
-        }
-
         var state = getState(b);
 
         devices[id].state = state;
@@ -45,17 +39,9 @@ module.exports = function(c, l) {
 
         var addr = b.addr.toString('hex');
 
-        var id = 'lifx-' + addr;
-
-        var blacklist_devices = cfg.get('blacklist_devices', []);
-
-        if (blacklist_devices.indexOf(id) !== -1) {
-            return;
-        }
-
         var state = getState(b);
 
-        devices[id] = {
+        devices['lifx-' + addr] = {
             name: b.name || 'Un-named',
             addr: addr,
             state: state
@@ -64,8 +50,10 @@ module.exports = function(c, l) {
         Namer.add(devices);
     });
 
-    lx.once('gateway', function() {
+    lx.once('gateway', function(g) {
         log('Gateway found');
+        g.id = g.site.toString('hex');
+        bridges[g.id] = g;
         startListening();
     });
 };
@@ -91,6 +79,10 @@ function startListening()
 {
     log('Ready for commands');
 
+    conn.on('getBridges', function (command) {
+        getBridges.apply(command, command.args);
+    });
+
     conn.on('getDevices', function (command) {
         getDevices.apply(command, command.args);
     });
@@ -114,6 +106,19 @@ function startListening()
     conn.on('setDevicePowerState', function (command) {
         setDevicePowerState.apply(command, command.args);
     });
+}
+
+function getBridges(cb)
+{
+    var bridgeInfo = [];
+
+    for (var bridge in bridges) {
+        bridgeInfo.push({ name: 'LIFX', id: bridge });
+    }
+
+    conn.broadcast('bridgeInfo', bridgeInfo);
+
+    if (cb) cb(bridgeInfo);
 }
 
 function getDevices(cb)

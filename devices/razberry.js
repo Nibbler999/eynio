@@ -5,8 +5,6 @@ var Cats = require('../services/cats.js');
 
 var conn, devices = {}, ip, bridges = {};
 
-var cfg = require('../configuration.js');
-
 var logger;
 
 function log()
@@ -200,15 +198,9 @@ function update(cb)
 
         var status = JSON.parse(body);
 
-        var blacklist_devices = cfg.get('blacklist_devices', []);
-
         for (var d in status.devices) {
 
             if (d === '1') {
-                continue;
-            }
-
-            if (blacklist_devices.indexOf('razberry-' + d) !== -1) {
                 continue;
             }
 

@@ -5,8 +5,6 @@ var api;
 var Namer = require('../services/namer.js');
 var Cats = require('../services/cats.js');
 
-var cfg = require('../configuration.js');
-
 var conn, devices = {}, bridges = {};
 
 var logger;
@@ -68,9 +66,6 @@ function startListening()
 
 function loadDevices(cb)
 {
-    var blacklist_bridges = cfg.get('blacklist_bridges', []);
-    var blacklist_devices = cfg.get('blacklist_devices', []);
-
     api.getDevicelist(function(err, _devices, modules) {
 
         if (err) {
@@ -83,19 +78,9 @@ function loadDevices(cb)
 
             bridges[device._id] = 'netatmo';
 
-            if (blacklist_bridges.indexOf(device._id) !== -1) {
-                return;
-            }
-
             device.data_type.forEach(function(datatype) {
 
-                var id = device._id + '-' + datatype;
-
-                if (blacklist_devices.indexOf(id) !== -1) {
-                    return;
-                }
-
-                devices[id] = {
+                devices[device._id + '-' + datatype] = {
                     id: device._id,
                     type: datatype.toLowerCase(),
                     _type: datatype,
@@ -107,19 +92,9 @@ function loadDevices(cb)
 
         modules.forEach(function(module) {
 
-            if (blacklist_bridges.indexOf(module.main_device) !== -1) {
-                return;
-            }
-
             module.data_type.forEach(function(datatype) {
 
-                var id = module.main_device + '-' + module._id + '-' + datatype;
-
-                if (blacklist_devices.indexOf(id) !== -1) {
-                    return;
-                }
-
-                devices[id] = {
+                devices[module.main_device + '-' + module._id + '-' + datatype] = {
                     id: module._id,
                     main_device: module.main_device,
                     type: datatype.toLowerCase(),

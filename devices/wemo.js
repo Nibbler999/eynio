@@ -7,8 +7,6 @@ var Cats = require('../services/cats.js');
 
 var conn, devices = {}, subscriptions = {};
 
-var cfg = require('../configuration.js');
-
 var logger;
 
 module.exports = function(c, l) {
@@ -19,12 +17,6 @@ module.exports = function(c, l) {
     var client = WeMo.Search();
 
     client.on('found', function(device) {
-
-        var blacklist_devices = cfg.get('blacklist_devices', []);
-
-        if (blacklist_devices.indexOf(device.serialNumber) !== -1) {
-            return;
-        }
 
         devices[device.serialNumber] = {
             name: device.friendlyName,

@@ -2,8 +2,6 @@
 
 var Cats = require('../services/cats.js');
 
-var cfg = require('../configuration.js');
-
 var conn;
 
 var bridges = {}, nhome;
@@ -24,6 +22,7 @@ module.exports = function(c, l) {
         setSubNHome.apply(command, command.args);
     });
 
+    var cfg = require('../configuration.js');
     var apikey = cfg.get('nhome_apikey', false);
 
     if (!apikey) {
@@ -105,6 +104,8 @@ function startListening()
 
 function setSubNHome(server, cb)
 {
+    var cfg = require('../configuration.js');
+
     cfg.set('nhome_apikey', server.apikey);
 
     if (cb) cb();
@@ -128,13 +129,6 @@ function getDevices(cb)
     nhome.emit('getDevices', function(devices) {
 
         if (devices) {
-
-            var blacklist_devices = cfg.get('blacklist_devices', []);
-
-            devices = devices.filter(function(device) {
-                return blacklist_devices.indexOf(device.id) !== -1;
-            });
-
             devices.forEach(function(device) {
                 device.categories = Cats.getCats(device.id);
             });

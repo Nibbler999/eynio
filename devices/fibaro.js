@@ -4,8 +4,6 @@ var Fibaro = require('fibaro-api');
 var Namer = require('../services/namer.js');
 var Cats = require('../services/cats.js');
 
-var cfg = require('../configuration.js');
-
 var conn, devices = {}, bridges = {};
 
 var logger;
@@ -83,14 +81,7 @@ function startListening()
 
 function loadDevices(cb)
 {
-    var blacklist_bridges = cfg.get('blacklist_bridges', []);
-    var blacklist_devices = cfg.get('blacklist_devices', []);
-
     Object.keys(bridges).forEach(function(serial) {
-
-        if (blacklist_bridges.indexOf(serial) !== -1) {
-            return;
-        }
 
         bridges[serial].api.devices.list(function (err, devicelist) {
 
@@ -100,10 +91,6 @@ function loadDevices(cb)
             }
 
             devicelist.forEach(function(device) {
-
-                if (blacklist_devices.indexOf(serial + ':' + device.id) !== -1) {
-                    return;
-                }
 
                 // HC2
                 if (device.hasOwnProperty('baseType')) {
