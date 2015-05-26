@@ -1,6 +1,7 @@
 "use strict";
 
 var Cats = require('../services/cats.js');
+var cfg = require('../configuration.js');
 
 var conn;
 
@@ -22,7 +23,6 @@ module.exports = function(c, l) {
         setSubNHome.apply(command, command.args);
     });
 
-    var cfg = require('../configuration.js');
     var apikey = cfg.get('nhome_apikey', false);
 
     if (!apikey) {
@@ -104,8 +104,6 @@ function startListening()
 
 function setSubNHome(server, cb)
 {
-    var cfg = require('../configuration.js');
-
     cfg.set('nhome_apikey', server.apikey);
 
     if (cb) cb();
@@ -126,11 +124,14 @@ function getBridges(cb)
 
 function getDevices(cb)
 {
+    var blacklist = cfg.get('blacklist_devices', []);
+
     nhome.emit('getDevices', function(devices) {
 
         if (devices) {
             devices.forEach(function(device) {
                 device.categories = Cats.getCats(device.id);
+                device.blacklisted = device.blacklisted || blacklist.indexOf(device.id) !== -1;
             });
         }
 

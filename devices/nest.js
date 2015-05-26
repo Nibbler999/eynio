@@ -2,6 +2,7 @@
 
 var Namer = require('../services/namer.js');
 var Cats = require('../services/cats.js');
+var cfg = require('../configuration.js');
 
 var conn, thermostats = {}, sensors = {}, bridges = {};
 
@@ -127,6 +128,8 @@ function getBridges(cb)
 
 function getDevices(cb)
 {
+    var blacklist = cfg.get('blacklist_devices', []);
+
     var all = [];
 
     for (var device in thermostats) {
@@ -136,7 +139,8 @@ function getDevices(cb)
             value: thermostats[device].value,
             target: thermostats[device].target,
             categories: Cats.getCats(device),
-            type: 'thermostat'
+            type: 'thermostat',
+            blacklisted: blacklist.indexOf(device) !== -1
         });
     }
 
@@ -147,7 +151,8 @@ function getDevices(cb)
             value: sensors[device].value,
             categories: Cats.getCats(device),
             type: 'sensor',
-            subtype: sensors[device].type
+            subtype: sensors[device].type,
+            blacklisted: blacklist.indexOf(device) !== -1
         });
     }
 

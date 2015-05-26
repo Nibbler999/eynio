@@ -7,6 +7,8 @@ var HueApi = hue.HueApi,
 
 var Cats = require('../services/cats.js');
 
+var cfg = require('../configuration.js');
+
 var conn, devices = {}, bridges = {};
 
 var logger;
@@ -21,7 +23,6 @@ module.exports = function(c, l) {
     conn = c;
     logger = l.child({component: 'Hue'});
 
-    var cfg = require('../configuration.js');
     var hue_apikey = cfg.get('hue_apikey', 'none');
 
     hue.nupnpSearch(function(search_err, result) {
@@ -188,6 +189,8 @@ function getBridges(cb)
 
 function getDevices(cb)
 {
+    var blacklist = cfg.get('blacklist_devices', []);
+
     var all = [];
 
     for (var device in devices) {
@@ -196,7 +199,8 @@ function getDevices(cb)
             name: devices[device].name,
             state: devices[device].state,
             categories: Cats.getCats(device),
-            type: 'light'
+            type: 'light',
+            blacklisted: blacklist.indexOf(device) !== -1
         });
     }
 

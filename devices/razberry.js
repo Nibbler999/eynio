@@ -2,6 +2,7 @@
 
 var Namer = require('../services/namer.js');
 var Cats = require('../services/cats.js');
+var cfg = require('../configuration.js');
 
 var conn, devices = {}, ip, bridges = {};
 
@@ -82,6 +83,8 @@ function getBridges(cb)
 
 function getDevices(cb)
 {
+    var blacklist = cfg.get('blacklist_devices', []);
+
     update(function() {
 
         var all = [];
@@ -92,7 +95,8 @@ function getDevices(cb)
                     id: device,
                     name: Namer.getName(device),
                     categories: Cats.getCats(device),
-                    type: 'switch'
+                    type: 'switch',
+                    blacklisted: blacklist.indexOf(device) !== -1
                 });
             }
         }
