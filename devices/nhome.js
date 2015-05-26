@@ -111,10 +111,19 @@ function setSubNHome(server, cb)
 
 function getBridges(cb)
 {
+    var blacklist = cfg.get('blacklist_bridges', []);
+
     var bridgeInfo = [];
 
     for (var bridge in bridges) {
-        bridgeInfo.push({ name: 'NHome Slave', id: bridge });
+        bridgeInfo.push({
+            name: 'NHome Slave',
+            module: 'nhome',
+            id: bridge,
+            ip: null,
+            mac: null,
+            blacklisted: blacklist.indexOf(bridge) !== -1
+        });
     }
 
     conn.broadcast('bridgeInfo', bridgeInfo);

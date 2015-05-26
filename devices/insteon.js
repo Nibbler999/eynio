@@ -48,6 +48,14 @@ module.exports = function(c, l) {
 
             bridges['insteon:' + host] = insteon;
 
+            startListening();
+
+            var blacklist = cfg.get('blacklist_bridges', []);
+
+            if (blacklist.indexOf('insteon:' + host) !== -1) {
+                return;
+            }
+
             insteon.on('error', function(err) {
                 log(err);
             });
@@ -67,11 +75,8 @@ module.exports = function(c, l) {
                     });
 
                     Namer.add(lights);
-
-                    startListening();
                 });
             });
-
         });
 
     }).on('error', function(e) {
@@ -107,10 +112,19 @@ function startListening()
 
 function getBridges(cb)
 {
+    var blacklist = cfg.get('blacklist_bridges', []);
+
     var bridgeInfo = [];
 
     for (var bridge in bridges) {
-        bridgeInfo.push({ name: 'Insteon', id: bridge });
+        bridgeInfo.push({
+            name: 'Insteon',
+            module: 'insteon',
+            id: bridge,
+            ip: null,
+            mac: null,
+            blacklisted: blacklist.indexOf(bridge) !== -1
+         });
     }
 
     conn.broadcast('bridgeInfo', bridgeInfo);

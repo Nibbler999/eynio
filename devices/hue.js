@@ -90,6 +90,12 @@ module.exports = function(c, l) {
 
 function loadLights(id)
 {
+    var blacklist = cfg.get('blacklist_bridges', []);
+
+    if (blacklist.indexOf(id) !== -1) {
+        return;
+    }
+
     bridges[id].api.lights(function(err, reply) {
 
         if (err) {
@@ -176,10 +182,19 @@ function startListening()
 
 function getBridges(cb)
 {
+    var blacklist = cfg.get('blacklist_bridges', []);
+
     var bridgeInfo = [];
 
     for (var bridge in bridges) {
-        bridgeInfo.push({ name: bridges[bridge].name, id: bridge });
+        bridgeInfo.push({
+            name: bridges[bridge].name,
+            module: 'hue',
+            id: bridge,
+            ip: null,
+            mac: null,
+            blacklisted: blacklist.indexOf(bridge) !== -1
+        });
     }
 
     conn.broadcast('bridgeInfo', bridgeInfo);

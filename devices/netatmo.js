@@ -75,9 +75,15 @@ function loadDevices(cb)
             return false;
         }
 
+        var blacklist = cfg.get('blacklist_bridges', []);
+
         _devices.forEach(function(device) {
 
             bridges[device._id] = 'netatmo';
+
+            if (blacklist.indexOf(device._id) !== -1) {
+                return;
+            }
 
             device.data_type.forEach(function(datatype) {
 
@@ -92,6 +98,10 @@ function loadDevices(cb)
         });
 
         modules.forEach(function(module) {
+
+            if (blacklist.indexOf(module.main_device) !== -1) {
+                return;
+            }
 
             module.data_type.forEach(function(datatype) {
 
@@ -114,10 +124,19 @@ function loadDevices(cb)
 
 function getBridges(cb)
 {
+    var blacklist = cfg.get('blacklist_bridges', []);
+
     var bridgeInfo = [];
 
     for (var bridge in bridges) {
-        bridgeInfo.push({ name: 'netatmo', id: bridge });
+        bridgeInfo.push({
+            name: 'netatmo',
+            module: 'netatmo',
+            id: bridge,
+            ip: null,
+            mac: null,
+            blacklisted: blacklist.indexOf(bridge) !== -1
+        });
     }
 
     conn.broadcast('bridgeInfo', bridgeInfo);

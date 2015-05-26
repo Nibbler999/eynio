@@ -82,7 +82,13 @@ function startListening()
 
 function loadDevices(cb)
 {
+    var blacklist = cfg.get('blacklist_bridges', []);
+
     Object.keys(bridges).forEach(function(serial) {
+
+        if (blacklist.indexOf(serial) !== -1) {
+            return;
+        }
 
         bridges[serial].api.devices.list(function (err, devicelist) {
 
@@ -130,10 +136,19 @@ function loadDevices(cb)
 
 function getBridges(cb)
 {
+    var blacklist = cfg.get('blacklist_bridges', []);
+
     var bridgeInfo = [];
 
     for (var bridge in bridges) {
-        bridgeInfo.push({ name: 'Fibaro', id: bridge });
+        bridgeInfo.push({
+            name: 'Fibaro',
+            module: 'fibaro',
+            id: bridge,
+            ip: null,
+            mac: null,
+            blacklisted: blacklist.indexOf(bridge) !== -1
+        });
     }
 
     conn.broadcast('bridgeInfo', bridgeInfo);

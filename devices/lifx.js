@@ -9,7 +9,7 @@ var cfg = require('../configuration.js');
 
 var conn;
 
-var devices = {}, bridges = {};
+var devices = {};
 
 var logger;
 
@@ -51,10 +51,8 @@ module.exports = function(c, l) {
         Namer.add(devices);
     });
 
-    lx.once('gateway', function(g) {
+    lx.once('gateway', function () {
         log('Gateway found');
-        g.id = g.site.toString('hex');
-        bridges[g.id] = g;
         startListening();
     });
 };
@@ -80,10 +78,6 @@ function startListening()
 {
     log('Ready for commands');
 
-    conn.on('getBridges', function (command) {
-        getBridges.apply(command, command.args);
-    });
-
     conn.on('getDevices', function (command) {
         getDevices.apply(command, command.args);
     });
@@ -107,19 +101,6 @@ function startListening()
     conn.on('setDevicePowerState', function (command) {
         setDevicePowerState.apply(command, command.args);
     });
-}
-
-function getBridges(cb)
-{
-    var bridgeInfo = [];
-
-    for (var bridge in bridges) {
-        bridgeInfo.push({ name: 'LIFX', id: bridge });
-    }
-
-    conn.broadcast('bridgeInfo', bridgeInfo);
-
-    if (cb) cb(bridgeInfo);
 }
 
 function getDevices(cb)

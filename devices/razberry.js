@@ -70,10 +70,19 @@ function startListening()
 
 function getBridges(cb)
 {
+    var blacklist = cfg.get('blacklist_bridges', []);
+
     var bridgeInfo = [];
 
     for (var bridge in bridges) {
-        bridgeInfo.push({ name: 'RaZberry', id: bridge });
+        bridgeInfo.push({
+            name: 'RaZberry',
+            module: 'razberry',
+            id: bridge,
+            ip: null,
+            mac: null,
+            blacklisted: blacklist.indexOf(bridge) !== -1
+        });
     }
 
     conn.broadcast('bridgeInfo', bridgeInfo);
@@ -188,6 +197,12 @@ function getSwitchState(id, cb)
 
 function update(cb)
 {
+    var blacklist = cfg.get('blacklist_bridges', []);
+
+    if (blacklist.indexOf('raz:' + ip) !== -1) {
+        return;
+    }
+
     require('request')('http://' + ip + ':8083/ZWaveAPI/Data/0', function(err, response, body) {
 
         if (err) {

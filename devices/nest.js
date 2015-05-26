@@ -66,7 +66,15 @@ module.exports = function(c, l) {
                             };
                         }
 
+                        var blacklist = cfg.get('blacklist_bridges', []);
+
                         for (var structure in data.structures) {
+
+                            bridges[structure] = true;
+
+                            if (blacklist.indexOf(structure) !== -1) {
+                                continue;
+                            }
 
                             if (data.structures[structure].thermostats && data.devices.thermostats) {
                                 data.structures[structure].thermostats.forEach(addThermostat);
@@ -115,10 +123,19 @@ function startListening()
 
 function getBridges(cb)
 {
+    var blacklist = cfg.get('blacklist_bridges', []);
+
     var bridgeInfo = [];
 
     for (var bridge in bridges) {
-        bridgeInfo.push({ name: 'nest', id: bridge });
+        bridgeInfo.push({
+            name: 'nest',
+            module: 'nest',
+            id: bridge,
+            ip: null,
+            mac: null,
+            blacklisted: blacklist.indexOf(bridge) !== -1
+        });
     }
 
     conn.broadcast('bridgeInfo', bridgeInfo);
