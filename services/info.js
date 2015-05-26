@@ -64,8 +64,13 @@ function getServerStatus(cb)
     var status = {
         ip: getIP(),
         version: getVersion(),
-        updateable: getUpdateable()
+        updateable: getUpdateable(),
+        node_version: process.version,
+        node_arch: process.arch,
+        node_platform: process.platform,
     };
+
+    console.log(status);
 
     conn.broadcast('serverStatus', status);
 
