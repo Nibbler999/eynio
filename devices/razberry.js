@@ -200,6 +200,7 @@ function update(cb)
     var blacklist = cfg.get('blacklist_bridges', []);
 
     if (blacklist.indexOf('raz:' + ip) !== -1) {
+        devices = {};
         return;
     }
 
@@ -216,6 +217,8 @@ function update(cb)
         }
 
         var status = JSON.parse(body);
+
+        devices = {};
 
         for (var d in status.devices) {
 

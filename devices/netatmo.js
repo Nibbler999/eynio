@@ -77,6 +77,8 @@ function loadDevices(cb)
 
         var blacklist = cfg.get('blacklist_bridges', []);
 
+        devices = {};
+
         _devices.forEach(function(device) {
 
             bridges[device._id] = 'netatmo';

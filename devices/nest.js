@@ -68,6 +68,9 @@ module.exports = function(c, l) {
 
                         var blacklist = cfg.get('blacklist_bridges', []);
 
+                        thermostats = {};
+                        sensors = {};
+
                         for (var structure in data.structures) {
 
                             bridges[structure] = true;

@@ -87,6 +87,7 @@ function loadDevices(cb)
     Object.keys(bridges).forEach(function(serial) {
 
         if (blacklist.indexOf(serial) !== -1) {
+            devices = {};
             return;
         }
 
@@ -96,6 +97,8 @@ function loadDevices(cb)
                 log(err);
                 return;
             }
+
+            devices = {};
 
             devicelist.forEach(function(device) {
 

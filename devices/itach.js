@@ -52,10 +52,6 @@ function startListening()
 {
     log('Ready for commands');
 
-    conn.on('getBridges', function (command) {
-        getBridges.apply(command, command.args);
-    });
-
     conn.on('getRemotes', function (command) {
         getRemotes.apply(command, command.args);
     });
@@ -87,19 +83,6 @@ function startListening()
     conn.on('getCustomRemotes', function (command) {
         getCustomRemotes.apply(command, command.args);
     });
-}
-
-function getBridges(cb)
-{
-    var bridgeInfo = [];
-
-    for (var device in devices) {
-        bridgeInfo.push({ name: Namer.getName(device), id: device });
-    }
-
-    conn.broadcast('bridgeInfo', bridgeInfo);
-
-    if (cb) cb(bridgeInfo);
 }
 
 function getRemotes(cb)
