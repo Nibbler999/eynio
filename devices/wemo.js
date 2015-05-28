@@ -19,6 +19,10 @@ module.exports = function(c, l) {
 
     client.on('found', function(device) {
 
+        if (device.deviceType === 'urn:Belkin:device:bridge:1') {
+            return;
+        }
+
         devices[device.serialNumber] = {
             name: device.friendlyName,
             type: device.deviceType === 'urn:Belkin:device:sensor:1' ? 'sensor' : 'switch',
