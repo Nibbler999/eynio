@@ -20,20 +20,42 @@ module.exports = function(c, l) {
     client.on('found', function(device) {
 
         if (device.deviceType === 'urn:Belkin:device:bridge:1') {
-            return;
+            
+            var bridge = new WeMo(device);
+
+            bridge.GetEndDevices(function (err, devicelist) {
+
+                devicelist.forEach(function (d) {
+
+                    devices[d.id] = {
+                        name: d.name,
+                        type: 'light',
+                        subtype: '',
+                        state: {
+                            on: d.on,
+                            level: d.level
+                        },
+                        dev: bridge
+                    };
+                });
+
+                Namer.add(devices);
+            });
+
+        } else {
+
+            devices[device.serialNumber] = {
+                name: device.friendlyName,
+                type: device.deviceType === 'urn:Belkin:device:sensor:1' ? 'sensor' : 'switch',
+                subtype: device.type === 'sensor' ? 'motion' : '',
+                value: device.binaryState === '1',
+                dev: new WeMo(device)
+            };
+
+            Namer.add(devices);
+
+            subscribe(device);
         }
-
-        devices[device.serialNumber] = {
-            name: device.friendlyName,
-            type: device.deviceType === 'urn:Belkin:device:sensor:1' ? 'sensor' : 'switch',
-            subtype: device.type === 'sensor' ? 'motion' : '',
-            value: device.binaryState === '1',
-            dev: new WeMo(device.ip, device.port)
-        };
-
-        Namer.add(devices);
-
-        subscribe(device);
     });
 
     client.once('found', function() {
@@ -68,6 +90,10 @@ function startListening()
 
     conn.on('setDevicePowerState', function (command) {
         setDevicePowerState.apply(command, command.args);
+    });
+
+    conn.on('setLightState', function (command) {
+        setLightState.apply(command, command.args);
     });
 }
 
@@ -178,6 +204,7 @@ function getDevices(cb)
             id: device,
             name: Namer.getName(device),
             value: devices[device].value,
+            state: devices[device].state,
             type: devices[device].type,
             subtype: devices[device].subtype,
             categories: Cats.getCats(device),
@@ -240,10 +267,22 @@ function switchOff(id, cb)
 
 function setDevicePowerState(id, on, cb)
 {
-    if (on) {
-        switchOn.call(this, id, cb);
+    if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
+        return;
+    }
+
+    if (devices[id].type === 'light') {
+
+        setLightState.call(this, id, {on: on}, cb);
+
     } else {
-        switchOff.call(this, id, cb);
+
+        if (on) {
+            switchOn.call(this, id, cb);
+        } else {
+            switchOff.call(this, id, cb);
+        }
     }
 }
 
@@ -297,6 +336,58 @@ function getSensorValue(id, cb)
         conn.broadcast('sensorValue', sensorValue);
 
         if (cb) cb(sensorValue);
+    });
+}
+
+function getLightState(id, cb)
+{
+    if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
+        return;
+    }
+
+    devices[id].dev.GetDeviceStatus(id, function(err, result) {
+
+        if (err) {
+            logger.error('getLightState', err);
+            if (cb) cb(false);
+            return;
+        }
+
+        var state = {
+            on: result.on,
+            level: result.level
+        };
+
+        devices[id].state = state;
+
+        conn.broadcast('lightState', { id: id, state: state });
+
+        if (cb) cb(state);
+    });
+}
+
+function setLightState(id, values, cb)
+{
+    if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
+        return;
+    }
+
+    var capability = 10006;
+    var value = values.on ? 1 : 0;
+
+    devices[id].dev.SetDeviceStatus(id, capability, value, function(err, result) {
+
+        if (err) {
+            logger.error('setLightState', err);
+            if (cb) cb(false);
+            return;
+        }
+
+        getLightState(id);
+
+        if (cb) cb(true);
     });
 }
 
