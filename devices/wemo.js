@@ -33,7 +33,7 @@ module.exports = function(c, l) {
                         subtype: '',
                         state: {
                             on: d.on,
-                            level: d.level
+                            hsl: [0, 0, d.level / 510]
                         },
                         dev: bridge
                     };
@@ -94,6 +94,10 @@ function startListening()
 
     conn.on('setLightState', function (command) {
         setLightState.apply(command, command.args);
+    });
+
+    conn.on('setLightWhite', function (command) {
+        setLightWhite.apply(command, command.args);
     });
 }
 
@@ -356,9 +360,9 @@ function getLightState(id, cb)
 
         var state = {
             on: result.on,
-            level: result.level
+            hsl: [0, 0, result.level / 510]
         };
-
+console.log(state);
         devices[id].state = state;
 
         conn.broadcast('lightState', { id: id, state: state });
@@ -388,6 +392,28 @@ function setLightState(id, values, cb)
         getLightState(id);
 
         if (cb) cb(true);
+    });
+}
+
+function setLightWhite(id, brightness)
+{
+    if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
+        return;
+    }
+
+    var capability = 10008;
+    var value = (brightness / 100) * 255;
+
+    devices[id].dev.SetDeviceStatus(id, capability, value, function(err, result) {
+
+        if (err) {
+            logger.error('setLightState', err);
+            if (cb) cb(false);
+            return;
+        }
+
+        getLightState(id);
     });
 }
 
