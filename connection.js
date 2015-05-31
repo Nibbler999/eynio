@@ -80,19 +80,29 @@ function setupConnWrapper(conn)
 
         events.EventEmitter.call(this);
 
+        this.compression = true;
+
+        this.compress = function(compress){
+            this.compression = compress;
+            return this;
+        };
+
         // Emits to both main server and the local server
         this.broadcast = function() {
 
-            conn.emit.apply(conn, arguments);
+            conn.compress(this.compression).emit.apply(conn, arguments);
 
             if (local.server.sockets.length) {
                 local.client.emit.apply(local.client, arguments);
             }
+
+            this.compression = true;
         };
 
         // Emits to main server only
         this.send = function() {
-            conn.emit.apply(conn, arguments);
+            conn.compress(this.compression).emit.apply(conn, arguments);
+            this.compression = true;
         };
 
         this.connect = conn.connect.bind(conn);

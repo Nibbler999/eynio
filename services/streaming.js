@@ -147,7 +147,7 @@ function getSocketIOStream(cameraid, options)
             image: chunk
         };
 
-        conn.broadcast('cameraFrame', frame);
+        conn.compress(false).broadcast('cameraFrame', frame);
 
         next();
     };
