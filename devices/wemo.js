@@ -20,7 +20,7 @@ module.exports = function(c, l) {
     client.on('found', function(device) {
 
         if (device.deviceType === 'urn:Belkin:device:bridge:1') {
-            
+
             var bridge = new WeMo(device);
 
             bridge.GetEndDevices(function (err, devicelist) {
@@ -362,7 +362,7 @@ function getLightState(id, cb)
             on: result.on,
             hsl: [0, 0, result.level / 510]
         };
-console.log(state);
+
         devices[id].state = state;
 
         conn.broadcast('lightState', { id: id, state: state });
@@ -398,7 +398,6 @@ function setLightState(id, values, cb)
 function setLightWhite(id, brightness)
 {
     if (!devices.hasOwnProperty(id)) {
-        if (cb) cb([]);
         return;
     }
 
@@ -409,7 +408,6 @@ function setLightWhite(id, brightness)
 
         if (err) {
             logger.error('setLightState', err);
-            if (cb) cb(false);
             return;
         }
 
