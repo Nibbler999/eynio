@@ -25,22 +25,29 @@ module.exports = function(c, l) {
 
             bridge.GetEndDevices(function (err, devicelist) {
 
-                devicelist.forEach(function (d) {
+                if (err) {
 
-                    devices[d.id] = {
-                        name: d.name,
-                        type: 'light',
-                        subtype: '',
-                        state: {
-                            on: d.on,
-                            hsl: [0, 0, d.level / 510],
-                            hex: '#ffffff'
-                        },
-                        dev: bridge
-                    };
-                });
+                    logger.error('Unable to get device list from bridge', err);
 
-                Namer.add(devices);
+                } else {
+
+                    devicelist.forEach(function (d) {
+
+                        devices[d.id] = {
+                            name: d.name,
+                            type: 'light',
+                            subtype: '',
+                            state: {
+                                on: d.on,
+                                hsl: [0, 0, d.level / 510],
+                                hex: '#ffffff'
+                            },
+                            dev: bridge
+                        };
+                    });
+
+                    Namer.add(devices);
+                }
             });
 
         } else {
