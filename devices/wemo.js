@@ -33,7 +33,8 @@ module.exports = function(c, l) {
                         subtype: '',
                         state: {
                             on: d.on,
-                            hsl: [0, 0, d.level / 510]
+                            hsl: [0, 0, d.level / 510],
+                            hex: '#ffffff'
                         },
                         dev: bridge
                     };
@@ -360,7 +361,8 @@ function getLightState(id, cb)
 
         var state = {
             on: result.on,
-            hsl: [0, 0, result.level / 510]
+            hsl: [0, 0, result.level / 510],
+            hex: '#ffffff'
         };
 
         devices[id].state = state;
