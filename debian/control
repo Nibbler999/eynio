@@ -1,0 +1,12 @@
+Source: nhomeserver
+Section: net
+Priority: extra
+Maintainer: Neosoft builder <builder@neosoft.ba>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.2
+Homepage: http://www.nhome.ba/
+
+Package: nhomeserver
+Architecture: all
+Depends: ${misc:Depends}, nodejs (>= 0.10)
+Description: NHome homeserver

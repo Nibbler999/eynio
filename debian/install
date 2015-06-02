@@ -1,0 +1,2 @@
+*.js local node_modules services devices nhome.ico package.json opt/nhome/
+debian/*.desktop /usr/share/applications/
