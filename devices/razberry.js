@@ -4,6 +4,8 @@ var Namer = require('../services/namer.js');
 var Cats = require('../services/cats.js');
 var cfg = require('../configuration.js');
 
+var tcpp = require('tcp-ping');
+
 var conn, devices = {}, ip, bridges = {};
 
 var logger;
@@ -32,9 +34,22 @@ module.exports = function(c, l) {
 
             ip = matches[1];
 
-            bridges['raz:' + ip] = ip;
+            tcpp.probe(ip, 8083, function (err, available) {
 
-            update(startListening);
+                if (err) {
+                    logger.debug(err);
+                }
+
+                if (available) {
+
+                    bridges['raz:' + ip] = ip;
+
+                    update(startListening);
+
+                } else {
+                    logger.debug('Found ip', ip, 'but it was not reachable');
+                }
+            });
         }
     });
 };
