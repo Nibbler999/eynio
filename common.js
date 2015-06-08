@@ -33,7 +33,7 @@ common.monitor = function(host, port, cb) {
 
         console.log('.');
 
-        setTimeout(monitor, 20 * 1000, host, port, cb);
+        setTimeout(common.monitor, 20 * 1000, host, port, cb);
     });
 };
 
