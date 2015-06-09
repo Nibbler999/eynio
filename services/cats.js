@@ -126,6 +126,10 @@ function catAddDevice(catid, deviceid, cb)
 
 function catDeleteDevice(catid, deviceid, cb)
 {
+    if (!devices.hasOwnProperty(deviceid)) {
+        devices[deviceid] = [];
+    }
+
     removeCatFromDevice(catid, deviceid);
 
     Cats.update();
