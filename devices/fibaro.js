@@ -338,13 +338,7 @@ function setShutterValue(id, value, cb)
 
     var deviceId = devices[id].id;
 
-    var action = 'setValue';
-
-    if (devices[id].type === 'com.fibaro.FGR222') {
-        action = 'setValue2';
-    }
-
-    devices[id].dev.call('callAction', { 'deviceID': deviceId, 'name': action, 'arg1': value }, function(err, result) {
+    devices[id].dev.call('callAction', { 'deviceID': deviceId, 'name': 'setValue', 'arg1': value }, function(err, result) {
 
         if (err) {
             log('setShutterValue:' + err);
