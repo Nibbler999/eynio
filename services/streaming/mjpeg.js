@@ -11,7 +11,11 @@ module.exports = function (logger, camera, options, cb) {
 
     var consumer = new MjpegConsumer();
 
-    var limiter = new Limiter(1000 / options.framerate);
+    var limiter;
+
+    if (options.framerate > 0) {
+        limiter = new Limiter(1000 / options.framerate);
+    }
 
     var parts = url.parse(camera.mjpeg);
 
@@ -25,7 +29,11 @@ module.exports = function (logger, camera, options, cb) {
 
         if (res.statusCode === 200) {
 
-            var source = res.pipe(consumer).pipe(limiter);
+            var source = res.pipe(consumer);
+
+            if (limiter) {
+                source = source.pipe(limiter);
+            }
 
             source.on('end', function () {
                 req.abort();

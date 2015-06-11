@@ -23,7 +23,9 @@ module.exports = function (logger, camera, options, cb) {
 
     args.push('-f', 'mpjpeg');
 
-    args.push('-r', options.framerate);
+    if (options.framerate > 0) {
+        args.push('-r', options.framerate);
+    }
 
     args.push('-');
 

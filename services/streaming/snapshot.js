@@ -21,6 +21,12 @@ module.exports = function (logger, camera, options, cb) {
     var keepAliveAgent = new httpx.Agent({ keepAlive: true });
     options.agent = keepAliveAgent;
 
+    var interval = 0;
+
+    if (options.framerate > 0) {
+        interval = 1000 / options.framerate;
+    }
+
     var refresh = function () {
 
         var start = Date.now();
@@ -31,7 +37,7 @@ module.exports = function (logger, camera, options, cb) {
 
                 var elapsed = Date.now() - start;
 
-                timer = setTimeout(refresh, Math.max(1000 - elapsed, 0));
+                timer = setTimeout(refresh, Math.max(interval - elapsed, 0));
 
                 var body;
 
