@@ -81,7 +81,7 @@ function runStream(cameraid, camera, options)
 
         sio.on('unpipe', function () {
             if (--pipes[cameraid] === 0) {
-                sources[cameraid].end();
+                sources[cameraid][options.framerate].end();
             }
         });
 
@@ -96,12 +96,18 @@ function runStream(cameraid, camera, options)
         }
     };
 
-    if (sources[cameraid] && sources[cameraid].readable) {
-        pipeSource(sources[cameraid]);
+    if (sources[cameraid] && sources[cameraid][options.framerate] && sources[cameraid][options.framerate].readable) {
+        pipeSource(sources[cameraid][options.framerate]);
     } else {
 
         getSourceStream(camera, options, function (source) {
-            sources[cameraid] = source;
+
+            if (!sources[cameraid]) {
+                sources[cameraid] = {};
+            }
+
+            sources[cameraid][options.framerate] = source;
+
             pipeSource(source);
         });
     }
@@ -113,9 +119,9 @@ function stopStreaming(cameraid, options)
 
     if (scalers[key]) {
         scalers[key].unpipe(destinations[key]);
-        sources[cameraid].unpipe(scalers[key]);
-    } else if (sources[cameraid]) {
-        sources[cameraid].unpipe(destinations[key]);
+        sources[cameraid][options.framerate].unpipe(scalers[key]);
+    } else if (sources[cameraid] && sources[cameraid][options.framerate]) {
+        sources[cameraid][options.framerate].unpipe(destinations[key]);
     }
 }
 
