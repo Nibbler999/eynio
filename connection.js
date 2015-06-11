@@ -93,16 +93,14 @@ function setupConnWrapper(conn)
             this.local.apply(this, arguments);
         };
 
-        // Emits to main server only
+        // Emits to main server
         this.send = function() {
-
             conn.compress(this.compression).emit.apply(conn, arguments);
             this.compression = true;
         };
 
-        // Emits to local server only
+        // Emits to local server
         this.local = function() {
-
             if (local.server.sockets.length) {
                 local.client.emit.apply(local.client, arguments);
             }
@@ -132,6 +130,8 @@ function setupLocalServer()
 
         socket.on('requestStreaming', function (cameraid, options, cb) {
 
+            options.local = true;
+
             var room = 'camera-' + cameraKey(cameraid, options);
 
             io.of('/client').to(room).clients(function(error, clients) {
@@ -157,6 +157,8 @@ function setupLocalServer()
         });
 
         socket.on('stopStreaming', function (cameraid, options) {
+
+            options.local = true;
 
             var room = 'camera-' + cameraKey(cameraid, options);
 

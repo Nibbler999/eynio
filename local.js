@@ -103,8 +103,7 @@ function streamMJPEG(request, response)
     var options = {
         width: -1,
         height: -1,
-        framerate: -1,
-        local: true
+        framerate: -1
     };
 
     var cameraid = request.params.cameraid;
