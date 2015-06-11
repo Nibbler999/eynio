@@ -69,15 +69,13 @@ function getWeather(cb)
                         return;
                     }
 
-                    var solar = require('iotdb-timers');
-                    solar.setLogger(logger);
-
-                    var night_start = new solar.Night().getDate();
-                    var night_end = new solar.NightEnd().getDate();
+                    var SunCalc = require('iotdb-timers/node_modules/suncalc');
 
                     var now = Date.now();
 
-                    var is_night = (now > night_start && now < night_end);
+                    var times = SunCalc.getTimes(now, latitude, longitude);
+
+                    var is_night = now < times.sunrise || now > times.sunset;
 
                     var current = result.weatherdata.product[0].time[0].location[0];
                     var symbol = result.weatherdata.product[0].time[1].location[0].symbol[0].$.number;
