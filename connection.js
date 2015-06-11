@@ -89,19 +89,24 @@ function setupConnWrapper(conn)
 
         // Emits to both main server and the local server
         this.broadcast = function() {
+            this.send.apply(this, arguments);
+            this.local.apply(this, arguments);
+        };
+
+        // Emits to main server only
+        this.send = function() {
 
             conn.compress(this.compression).emit.apply(conn, arguments);
+            this.compression = true;
+        };
+
+        // Emits to local server only
+        this.local = function() {
 
             if (local.server.sockets.length) {
                 local.client.emit.apply(local.client, arguments);
             }
 
-            this.compression = true;
-        };
-
-        // Emits to main server only
-        this.send = function() {
-            conn.compress(this.compression).emit.apply(conn, arguments);
             this.compression = true;
         };
 
@@ -125,16 +130,43 @@ function setupLocalServer()
 
     io.of('/client').on('connection', function (socket) {
 
-        socket.on('requestStreaming', function (cameraid, options) {
+        socket.on('requestStreaming', function (cameraid, options, cb) {
 
-            // TODO: .clients() support ?
             var room = 'camera-' + cameraKey(cameraid, options);
-            socket.join(room);
 
-            command_handler({name: 'startStreaming', args: [cameraid, options]});
+            io.of('/client').to(room).clients(function(error, clients) {
+
+                socket.join(room);
+
+                if (clients.length === 0) {
+                    command_handler({name: 'startStreaming', args: [cameraid, options]}, cb);
+                } else {
+                    if (cb) cb(true);
+                }
+            });
+
+            socket.setMaxListeners(0);
 
             socket.on('disconnect', function () {
-                command_handler({name: 'stopStreaming', args: [cameraid, options]});
+                io.of('/client').to(room).clients(function(error, clients) {
+                    if (clients.length === 0) {
+                        command_handler({name: 'stopStreaming', args: [cameraid, options]});
+                    }
+                });
+            });
+        });
+
+        socket.on('stopStreaming', function (cameraid, options) {
+
+            var room = 'camera-' + cameraKey(cameraid, options);
+
+            socket.leave(room, function() {
+
+                io.of('/client').to(room).clients(function(error, clients) {
+                    if (clients.length === 0) {
+                       command_handler({name: 'stopStreaming', args: [cameraid, options]});
+                    }
+                });
             });
         });
 
@@ -159,7 +191,7 @@ function setupLocalServer()
     io.of('/server').on('connection', function (socket) {
 
         socket.on('cameraFrame', function (frame) {
-            io.of('/client').to('camera-' + cameraKey(frame.camera, frame.options)).emit('cameraFrame', frame);
+            io.of('/client').to('camera-' + cameraKey(frame.camera, frame.options)).volatile.emit('cameraFrame', frame);
         });
 
         socket.on('*', function (packet) {

@@ -147,7 +147,11 @@ function getSocketIOStream(cameraid, options)
             image: chunk
         };
 
-        conn.compress(false).broadcast('cameraFrame', frame);
+        if (options.local) {
+            conn.compress(false).local('cameraFrame', frame);
+        } else {
+            conn.compress(false).broadcast('cameraFrame', frame);
+        }
 
         next();
     };
@@ -159,6 +163,6 @@ function getSocketIOStream(cameraid, options)
 
 function cameraKey(cameraid, options)
 {
-    return [cameraid, options.width, options.height, options.framerate].join('-');
+    return [cameraid, options.width, options.height, options.framerate, options.local ? 'local' : 'remote'].join('-');
 }
 
