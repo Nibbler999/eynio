@@ -11,7 +11,7 @@ var sources = {}, destinations = {}, scalers = {}, pipes = {};
 var ports_by_protocol = {
     'http:' : 80,
     'https:': 443,
-    'rtsp:' : 514
+    'rtsp:' : 554
 };
 
 module.exports = function(c, l) {
