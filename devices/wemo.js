@@ -404,9 +404,10 @@ function setLightState(id, values, cb)
     });
 }
 
-function setLightWhite(id, brightness)
+function setLightWhite(id, brightness, temperature, cb)
 {
     if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
         return;
     }
 
@@ -417,10 +418,13 @@ function setLightWhite(id, brightness)
 
         if (err) {
             logger.error('setLightState', err);
+            if (cb) cb(false);
             return;
         }
 
         getLightState(id);
+
+        if (cb) cb(true);
     });
 }
 

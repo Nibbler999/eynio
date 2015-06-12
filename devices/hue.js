@@ -244,9 +244,10 @@ function setDevicePowerState(id, on, cb)
     setLightState.call(this, id, {on: on}, cb);
 }
 
-function setLightColor(id, color_string, color_format)
+function setLightColor(id, color_string, color_format, cb)
 {
     if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
         return;
     }
 
@@ -258,6 +259,7 @@ function setLightColor(id, color_string, color_format)
         hsl = require('chroma-js')(color_string, color_format).hsl();
     } catch (e) {
         log(e);
+        if (cb) cb(false);
         return;
     }
 
@@ -267,18 +269,21 @@ function setLightColor(id, color_string, color_format)
 
         if (err) {
             log('api.setLightColor:' + err);
+            if (cb) cb(false);
             return;
         }
 
         if (result) {
             getLightState(id);
+            if (cb) cb(true);
         }
     });
 }
 
-function setLightWhite(id, brightness, temperature)
+function setLightWhite(id, brightness, temperature, cb)
 {
     if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
         return;
     }
 
@@ -292,11 +297,13 @@ function setLightWhite(id, brightness, temperature)
 
         if (err) {
             log('api.setLightWhite:' + err);
+            if (cb) cb(false);
             return;
         }
 
         if (result) {
             getLightState(id);
+            if (cb) cb(true);
         }
     });
 }

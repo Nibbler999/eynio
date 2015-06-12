@@ -153,9 +153,10 @@ function setDevicePowerState(id, on, cb)
     setLightState.call(this, id, {on: on}, cb);
 }
 
-function setLightColor(id, color_string, color_format)
+function setLightColor(id, color_string, color_format, cb)
 {
     if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
         return;
     }
 
@@ -171,8 +172,10 @@ function setLightColor(id, color_string, color_format)
 
     try {
         lx.lightsColour(parseInt(hsv[0] / 360 * 65535, 10), parseInt(hsv[1] * 65535, 10), parseInt(hsv[2] * 65535, 10), temp, 0, bulb);
+        if (cb) cb(true);
     } catch (e) {
         logger.error(e);
+        if (cb) cb(false);
     }
 
     setTimeout(function() {
@@ -180,9 +183,10 @@ function setLightColor(id, color_string, color_format)
     }, 1000);
 }
 
-function setLightWhite(id, brightness, temperature)
+function setLightWhite(id, brightness, temperature, cb)
 {
     if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
         return;
     }
 
@@ -192,8 +196,10 @@ function setLightWhite(id, brightness, temperature)
 
     try {
         lx.lightsColour(0, 0, parseInt(brightness / 100 * 65535, 10), temperature, 0, bulb);
+        if (cb) cb(true);
     } catch (e) {
         logger.error(e);
+        if (cb) cb(false);
     }
 
     setTimeout(function() {
