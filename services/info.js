@@ -54,8 +54,12 @@ function getLocation()
                 configSet('latitude', loc.latitude);
                 configSet('longitude', loc.longitude);
                 logger.info('Set location automatically');
+                sendServerLocation(loc.latitude, loc.longitude);
             }
         });
+
+    } else {
+        sendServerLocation(latitude, longitude);
     }
 }
 
@@ -73,6 +77,11 @@ function getServerStatus(cb)
     conn.broadcast('serverStatus', status);
 
     if (cb) cb(status);
+}
+
+function sendServerLocation(latitude, longitude)
+{
+    conn.send('serverLocation', latitude, longitude);
 }
 
 function getVersion()
