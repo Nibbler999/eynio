@@ -23,7 +23,7 @@ module.exports = function(c, l) {
     conn = c;
     logger = l.child({component: 'Hue'});
 
-    var timeout = 2000; // 2 seconds
+    var timeout = 5000; // 5 seconds
 
     hue.upnpSearch(timeout).then(setupBridges).done();
 };
