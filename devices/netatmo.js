@@ -6,7 +6,7 @@ var Namer = require('../services/namer.js');
 var Cats = require('../services/cats.js');
 var cfg = require('../configuration.js');
 
-var conn, devices = {}, bridges = {};
+var conn, devices = {}, bridges = {}, thermostats = {};
 
 var logger;
 
@@ -60,6 +60,14 @@ function startListening()
         getDevices.apply(command, command.args);
     });
 
+    conn.on('getThermostatValue', function (command) {
+        getThermostatValue.apply(command, command.args);
+    });
+
+    conn.on('setThermostatValue', function (command) {
+        setThermostatValue.apply(command, command.args);
+    });
+
     conn.on('getSensorValue', function (command) {
         getSensorValue.apply(command, command.args);
     });
@@ -67,7 +75,14 @@ function startListening()
 
 function loadDevices(cb)
 {
-    api.getDevicelist(function(err, _devices, modules) {
+    getStations(function() {
+        getThermostats(cb);
+    });
+}
+
+function getStations(cb)
+{
+    api.getDevicelist({ app_type: 'app_station' }, function(err, _devices, modules) {
 
         if (err) {
             logger.error('getDevicelist', err);
@@ -124,6 +139,105 @@ function loadDevices(cb)
     });
 }
 
+function getThermostats(cb)
+{
+    api.getDevicelist({ app_type: 'app_thermostat' }, function(err, _devices, modules) {
+
+        if (err) {
+            logger.error('getDevicelist', err);
+            if (cb) cb();
+            return false;
+        }
+
+        var blacklist = cfg.get('blacklist_bridges', []);
+
+        thermostats = {};
+
+        modules.forEach(function(module) {
+
+            if (blacklist.indexOf(module.main_device) !== -1) {
+                return;
+            }
+
+            thermostats[module.main_device + '-' + module._id] = {
+                id: module._id,
+                device_id: module.main_device,
+                name: _devices[0].station_name,
+                value: module.dashboard_data.Temperature,
+                target: module.dashboard_data.device_id
+            };
+        });
+
+        Namer.add(thermostats);
+
+        if (cb) cb();
+    });
+}
+
+function setThermostatValue(id, value, cb)
+{
+    if (!thermostats.hasOwnProperty(id)) {
+        if (cb) cb([]);
+        return;
+    }
+
+    var options = {
+        device_id: thermostats[id].device_id,
+        module_id: thermostats[id].id,
+        setpoint_mode: 'manual',
+        setpoint_temp: value,
+        setpoint_endtime: Math.floor(Date.now() / 1000) + 3600
+    };
+
+    var self = this;
+
+    api.setThermpoint(options, function(err) {
+
+        if (err) {
+            logger.error(err);
+            if (cb) cb(false);
+            return;
+        }
+
+        if (cb) cb(true);
+
+        self.log(Namer.getName(id), 'thermostat-set');
+    });
+}
+
+function getThermostatValue(id, value, cb)
+{
+    if (!thermostats.hasOwnProperty(id)) {
+        if (cb) cb([]);
+        return;
+    }
+
+    var options = {
+        device_id: thermostats[id].device_id,
+        module_id: thermostats[id].id
+    };
+
+    api.getThermstate(options, function(err, status) {
+
+        if (err) {
+            logger.error(err);
+            if (cb) cb(false);
+            return;
+        }
+
+        var thermostatValue = {
+            id: id,
+            name: Namer.getName(id),
+            value: status.measured.temperature,
+            target: status.measured.setpoint_temp
+        };
+
+        conn.broadcast('thermostatValue', thermostatValue);
+
+        if (cb) cb(thermostatValue);
+    });
+}
+
 function getBridges(cb)
 {
     var blacklist = cfg.get('blacklist_bridges', []);
@@ -151,6 +265,7 @@ function getDevices(cb)
     var blacklist = cfg.get('blacklist_devices', []);
 
     loadDevices(function() {
+
         var all = [];
 
         for (var device in devices) {
@@ -161,6 +276,18 @@ function getDevices(cb)
                 subtype: devices[device].type,
                 value: devices[device].value,
                 categories: Cats.getCats(device),
+                blacklisted: blacklist.indexOf(device) !== -1
+            });
+        }
+
+        for (device in thermostats) {
+            all.push({
+                id: device,
+                name: Namer.getName(device),
+                value: thermostats[device].value,
+                target: thermostats[device].target,
+                categories: Cats.getCats(device),
+                type: 'thermostat',
                 blacklisted: blacklist.indexOf(device) !== -1
             });
         }
