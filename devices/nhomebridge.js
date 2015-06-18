@@ -25,7 +25,7 @@ module.exports = function(c, l) {
     server.bind(2390, function () {
         server.addMembership('224.0.0.1');
     });
-    
+
     server.on('message', function (packet, rinfo) {
 
         var info = JSON.parse(packet.toString());
@@ -60,7 +60,7 @@ module.exports = function(c, l) {
         }
     });
 
-    server.once('message', function (packet, rinfo) {
+    server.once('message', function () {
         startListening();
     });
 };
