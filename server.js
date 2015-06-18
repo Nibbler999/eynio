@@ -44,7 +44,8 @@ cfg.load(log, function () {
     log.debug('Loading modules');
 
     var modules = ['hue', 'wemo', 'insteon', 'itach', 'fibaro',
-        'razberry', 'lifx', 'netatmo', 'nhome', 'nest'];
+        'razberry', 'lifx', 'netatmo', 'nhome', 'nest', 'nhomebridge'
+    ];
 
     var blacklist = cfg.get('blacklist_modules', []);
 
