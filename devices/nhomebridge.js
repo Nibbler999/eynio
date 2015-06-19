@@ -6,7 +6,7 @@ var cfg = require('../configuration.js');
 
 var conn;
 
-var sensors = {};
+var sensors = {}, devices;
 
 var logger;
 
@@ -30,7 +30,7 @@ module.exports = function(c, l) {
 
         var info = JSON.parse(packet.toString());
 
-        if (!sensors.hasOwnProperty(info.ID + '-' + 'temperature')) {
+        if (!devices.hasOwnProperty('NHomeBridge:' . info.ID)) {
 
             log('Discovered device');
 
@@ -38,7 +38,15 @@ module.exports = function(c, l) {
 
             var ws = new WebSocket('ws://' + rinfo.address + ':' + info.Port);
 
-            ws.on('open', function open() {
+            ws.once('open', function open() {
+
+                devices['NHomeBridge:' . info.ID] = {
+                    name: info.device,
+                    ip: rinfo.address,
+                    dev: ws
+                };
+
+                Namer.add(devices);
 
                 ws.send('sensor');
 
@@ -47,7 +55,7 @@ module.exports = function(c, l) {
                     var sensorinfo = JSON.parse(data);
 
                     for (var s in sensorinfo) {
-                        sensors[info.ID + '-' + s] = {
+                        sensors['NHomeBridge:' . info.ID + ':' + s] = {
                             name: 'NHomeBridge ' + s,
                             value: sensorinfo[s],
                             subtype: s
@@ -72,6 +80,18 @@ function startListening()
     conn.on('getDevices', function (command) {
         getDevices.apply(command, command.args);
     });
+
+    conn.on('getRemotes', function (command) {
+        getRemotes.apply(command, command.args);
+    });
+
+    conn.on('sendRemoteKey', function (command) {
+        sendRemoteKey.apply(command, command.args);
+    });
+
+    conn.on('learnRemoteKey', function (command) {
+        learnRemoteKey.apply(command, command.args);
+    });
 }
 
 function getDevices(cb)
@@ -93,5 +113,45 @@ function getDevices(cb)
     }
 
     if (cb) cb(all);
+}
+
+function getRemotes(cb)
+{
+    var r = [];
+
+    for (var device in devices) {
+        r.push({
+            id: device,
+            name: Namer.getName(device)
+        });
+    }
+
+    conn.broadcast('remotes', r);
+
+    if (cb) cb(r);
+}
+
+function sendRemoteKey(remote, code, cb)
+{
+    if (!devices.hasOwnProperty(remote.deviceid)) {
+        if (cb) cb([]);
+        return;
+    }
+
+    devices[remote.deviceid].dev.send(code);
+
+    if (cb) cb(true);
+}
+
+function learnRemoteKey(deviceid, cb)
+{
+    if (!devices.hasOwnProperty(deviceid)) {
+        if (cb) cb([]);
+        return;
+    }
+
+    devices[deviceid].dev.once('message', function (data) {
+        if (cb) cb(data);
+    });
 }
 

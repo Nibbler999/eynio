@@ -40,6 +40,7 @@ cfg.load(log, function () {
     require('./services/scenes.js')(conn, log);
     require('./services/weather.js')(conn, log);
     require('./services/blacklist.js')(conn, log);
+    require('./services/remotes.js')(conn, log);
 
     log.debug('Loading modules');
 
