@@ -180,8 +180,9 @@ function setupLocalServer()
             var cb = typeof args[args.length - 1] === 'function' ? args.pop() : null;
 
             var command = {
+                user: 'Local user',
                 name: name,
-                args: args
+                args: args,
             };
 
             command_handler(command, cb);
