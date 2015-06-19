@@ -65,6 +65,10 @@ module.exports = function(c, l) {
                     Namer.add(sensors);
                 });
             });
+
+            ws.on('error', function (err) {
+                logger.error(err);
+            });
         }
     });
 
