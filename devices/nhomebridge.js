@@ -30,7 +30,7 @@ module.exports = function(c, l) {
 
         var info = JSON.parse(packet.toString());
 
-        if (!devices.hasOwnProperty('NHomeBridge:' . info.ID)) {
+        if (!devices.hasOwnProperty('NHomeBridge:' + info.ID)) {
 
             log('Discovered device');
 
@@ -40,7 +40,7 @@ module.exports = function(c, l) {
 
             ws.once('open', function open() {
 
-                devices['NHomeBridge:' . info.ID] = {
+                devices['NHomeBridge:' + info.ID] = {
                     name: info.device,
                     ip: rinfo.address,
                     dev: ws
@@ -55,7 +55,7 @@ module.exports = function(c, l) {
                     var sensorinfo = JSON.parse(data);
 
                     for (var s in sensorinfo) {
-                        sensors['NHomeBridge:' . info.ID + ':' + s] = {
+                        sensors['NHomeBridge:' + info.ID + ':' + s] = {
                             name: 'NHomeBridge ' + s,
                             value: sensorinfo[s],
                             subtype: s
