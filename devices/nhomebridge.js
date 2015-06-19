@@ -6,7 +6,7 @@ var cfg = require('../configuration.js');
 
 var conn;
 
-var sensors = {}, devices;
+var sensors = {}, devices = {};
 
 var logger;
 
