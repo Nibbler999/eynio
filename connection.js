@@ -182,7 +182,7 @@ function setupLocalServer()
             var command = {
                 user: 'Local user',
                 name: name,
-                args: args,
+                args: args
             };
 
             command_handler(command, cb);
