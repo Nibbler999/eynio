@@ -36,6 +36,10 @@ var remoteController = function (c, l) {
     conn.on('sendKey', function (command) {
         sendKey.apply(command, command.args);
     });
+
+    conn.on('learnKey', function (command) {
+        learnKey.apply(command, command.args);
+    });
 };
 
 function getCustomRemotes(cb)
