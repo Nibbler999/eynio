@@ -89,12 +89,12 @@ function startListening()
         getRemotes.apply(command, command.args);
     });
 
-    conn.on('sendRemoteKey', function (command) {
-        sendRemoteKey.apply(command, command.args);
+    conn.on('sendRemoteKey', function (arguments) {
+        sendRemoteKey.apply(null, arguments);
     });
 
-    conn.on('learnRemoteKey', function (command) {
-        learnRemoteKey.apply(command, command.args);
+    conn.on('learnRemoteKey', function (arguments) {
+        learnRemoteKey.apply(null, arguments);
     });
 }
 
