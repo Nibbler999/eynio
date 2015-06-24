@@ -150,7 +150,7 @@ function learnKey(remoteid, key, cb)
         return;
     }
 
-    conn.emit('learnRemoteKey', remote, key, function (code) {
+    conn.emit('learnRemoteKey', remote.deviceid, function (code) {
         saveCode(remoteid, key, code);
         if (cb) cb(true);
     });
