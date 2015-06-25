@@ -138,7 +138,7 @@ function getSourceStream(camera, options, cb)
     } else if (camera.snapshot) {
         require('./streaming/snapshot.js')(logger, camera, options, cb);
     } else {
-        logger.error('No valid source found for camera', camera.id);
+        logger.error('No valid source found for camera', camera.name);
         cb(false);
     }
 }
