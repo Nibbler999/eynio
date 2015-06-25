@@ -176,8 +176,25 @@ function setupLocalServer()
 
             var args = packet.data;
             var name = args.shift();
+            var mycb, type;
+
+            if (name === 'getDevices' && args.length === 2) {
+                type = args.shift();
+            }
 
             var cb = typeof args[args.length - 1] === 'function' ? args.pop() : null;
+
+            if (type) {
+
+                mycb = function (reply) {
+
+                    if (type) {
+                        reply = reply.filter(function (device) { return device.type === type; });
+                    }
+
+                    if (cb) cb(reply);
+                };
+            }
 
             var command = {
                 user: 'Local user',
@@ -185,7 +202,7 @@ function setupLocalServer()
                 args: args
             };
 
-            command_handler(command, cb);
+            command_handler(command, mycb || cb);
         });
     });
 
