@@ -8,6 +8,8 @@ var conn, logger, ffmpeg;
 
 var sources = {}, destinations = {}, scalers = {}, pipes = {};
 
+var snapshotCache = {};
+
 var ports_by_protocol = {
     'http:' : 80,
     'https:': 443,
@@ -27,6 +29,14 @@ module.exports = function(c, l) {
 
     conn.on('stopStreaming', function (command) {
         stopStreaming.apply(command, command.args);
+    });
+
+    conn.on('getLiveThumbnail', function (command) {
+        getLiveThumbnail.apply(command, command.args);
+    });
+
+    conn.on('getCachedThumbnail', function (command) {
+        getCachedThumbnail.apply(command, command.args);
     });
 
     ffmpeg.check();
@@ -131,15 +141,124 @@ function stopStreaming(cameraid, options)
 
 function getSourceStream(camera, options, cb)
 {
+    var method;
+
     if (camera.mjpeg) {
-        require('./streaming/mjpeg.js')(logger, camera, options, cb);
+        method = require('./streaming/mjpeg.js');
     } else if (camera.rtsp && ffmpeg.available) {
-        require('./streaming/rtsp.js')(logger, camera, options, cb);
+        method = require('./streaming/rtsp.js');
     } else if (camera.snapshot) {
-        require('./streaming/snapshot.js')(logger, camera, options, cb);
+        method = require('./streaming/snapshot.js');
     } else {
         logger.error('No valid source found for camera', camera.name);
         cb(false);
+    }
+
+    method.stream(logger, camera, options, cb);
+}
+
+function getLiveThumbnail(cameraid, cb)
+{
+    logger.debug('Creating snapshot from ' + cameraid);
+
+    var cfg = require('../configuration.js');
+    var cameras = cfg.get('cameras', {});
+
+    var camera = cameras[cameraid];
+
+    if (!camera) {
+        logger.error('Unknown camera', cameraid);
+        logger.debug('Known cameras', cameras);
+        return;
+    }
+
+    var parts = require('url').parse(camera.snapshot || camera.mjpeg || camera.rtsp);
+
+    var port = parts.port || ports_by_protocol[parts.protocol];
+
+    tcpp.probe(parts.hostname, port, function (err, available) {
+
+        if (!available) {
+            logger.error('Camera at', parts.hostname + ':' + port, 'is not available');
+            logger.debug('Probe error', err);
+            if (cb) cb(false);
+            return;
+        }
+
+        getThumbnail(camera, cb);
+    });
+}
+
+function getThumbnail(camera, cb)
+{
+    getThumbnailImage(camera, function (image) {
+
+        if (!image) {
+            return false;
+        }
+
+        var options = {
+            width: -1,
+            height: 120
+        };
+
+        if (0 && ffmpeg.available && (options.width > 0 || options.height > 0)) {
+
+            var scaler = ffmpeg.getScaler(options);
+
+            scaler.once('data', function (thumbnail) {
+                cb(thumbnail);
+            });
+
+            scaler.write(image);
+            scaler.end();
+
+        } else {
+            cb(image);
+        }
+    });
+}
+
+function getThumbnailImage(camera, cb)
+{
+    var method;
+
+    if (camera.snapshot) {
+        method = require('./streaming/snapshot.js');
+    } else if (camera.mjpeg) {
+        method = require('./streaming/mjpeg.js');
+    } else if (camera.rtsp && ffmpeg.available) {
+        method = require('./streaming/rtsp.js');
+    } else {
+        logger.error('No valid source found for camera', camera.name);
+        cb(false);
+    }
+
+    method.snapshot(logger, camera, cb);
+}
+
+function getCachedThumbnail(cameraid, cb)
+{
+    logger.debug('Retrieving cached snapshot from ' + cameraid);
+
+    var cfg = require('../configuration.js');
+    var cameras = cfg.get('cameras', {});
+
+    var camera = cameras[cameraid];
+
+    if (!camera) {
+        logger.error('Unknown camera', cameraid);
+        logger.debug('Known cameras', cameras);
+        return;
+    }
+
+    if (snapshotCache[cameraid]) {
+        cb(snapshotCache[cameraid]);
+    } else {
+        getThumbnail(camera, function (image) {
+            snapshotCache[cameraid] = image;
+            cb(image);
+        });
     }
 }
 

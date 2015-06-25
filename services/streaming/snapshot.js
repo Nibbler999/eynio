@@ -6,7 +6,48 @@ var https = require('https');
 var util = require('util');
 var url = require('url');
 
-module.exports = function (logger, camera, options, cb) {
+var streamingMethod = {};
+
+streamingMethod.snapshot = function (logger, camera, cb) {
+
+    var auth;
+
+    if (camera.auth_name) {
+        auth = camera.auth_name + ':' + camera.auth_pass;
+    }
+
+    var parts = url.parse(camera.snapshot);
+
+    var httpx = parts.protocol === 'https:' ? https : http;
+
+    var req = httpx.get(parts, function(res) {
+
+        if (res.statusCode === 200) {
+
+            var body;
+
+            res.on('data', function (chunk) {
+                if (body) {
+                    body = Buffer.concat([body, chunk]);
+                } else {
+                    body = new Buffer(chunk);
+                }
+            });
+
+            res.on('end', function() {
+                cb(body);
+            });
+
+        } else {
+            logger.error(camera.snapshot, res.statusCode, res.statusMessage);
+        }
+
+    }).on('error', function(e) {
+        logger.debug(camera.snapshot, e);
+    });
+};
+
+streamingMethod.stream = function (logger, camera, options, cb) {
 
     var auth, timer, req;
 
@@ -14,12 +55,12 @@ module.exports = function (logger, camera, options, cb) {
         auth = camera.auth_name + ':' + camera.auth_pass;
     }
 
-    var options = url.parse(camera.snapshot);
+    var parts = url.parse(camera.snapshot);
 
-    var httpx = options.protocol === 'https:' ? https : http;
+    var httpx = parts.protocol === 'https:' ? https : http;
 
     var keepAliveAgent = new httpx.Agent({ keepAlive: true });
-    options.agent = keepAliveAgent;
+    parts.agent = keepAliveAgent;
 
     var interval = 0;
 
@@ -31,7 +72,7 @@ module.exports = function (logger, camera, options, cb) {
 
         var start = Date.now();
 
-        req = httpx.get(options, function(res) {
+        req = httpx.get(parts, function(res) {
 
             if (res.statusCode === 200) {
 
@@ -83,4 +124,6 @@ module.exports = function (logger, camera, options, cb) {
 
     cb(readable);
 };
+
+module.exports = streamingMethod;
 
