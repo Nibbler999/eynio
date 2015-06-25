@@ -102,6 +102,10 @@ function runStream(cameraid, camera, options)
 
         getSourceStream(camera, options, function (source) {
 
+            if (!source) {
+                return false;
+            }
+
             if (!sources[cameraid]) {
                 sources[cameraid] = {};
             }
@@ -127,12 +131,15 @@ function stopStreaming(cameraid, options)
 
 function getSourceStream(camera, options, cb)
 {
-    if (camera.snapshot) {
-        require('./streaming/snapshot.js')(logger, camera, options, cb);
-    } else if (camera.mjpeg) {
+    if (camera.mjpeg) {
         require('./streaming/mjpeg.js')(logger, camera, options, cb);
-    } else if (camera.rtsp) {
+    } else if (camera.rtsp && ffmpeg.available) {
         require('./streaming/rtsp.js')(logger, camera, options, cb);
+    } else if (camera.snapshot) {
+        require('./streaming/snapshot.js')(logger, camera, options, cb);
+    } else {
+        logger.error('No valid source found for camera', camera.id);
+        cb(false);
     }
 }
 
