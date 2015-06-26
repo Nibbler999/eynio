@@ -123,7 +123,9 @@ function sendKey(remoteid, key, cb)
         return;
     }
 
-    conn.emit('sendRemoteKey', remote, key, cb);
+    var code = remote.keys[key];
+
+    conn.emit('sendRemoteKey', remote, code, cb);
 }
 
 function saveCode(remoteid, key, code)
