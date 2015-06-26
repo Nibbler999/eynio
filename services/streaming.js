@@ -202,7 +202,7 @@ function getThumbnail(camera, cb)
             height: 120
         };
 
-        if (0 && ffmpeg.available && (options.width > 0 || options.height > 0)) {
+        if (ffmpeg.available && (options.width > 0 || options.height > 0)) {
 
             var scaler = ffmpeg.getScaler(options);
 

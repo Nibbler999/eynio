@@ -69,6 +69,7 @@ ffmpeg.getScaler = function (options) {
     }
 
     var consumer = new MjpegConsumer();
+
     child.stdout.pipe(consumer);
 
     var Duplex = stream.Duplex;
@@ -88,6 +89,10 @@ ffmpeg.getScaler = function (options) {
     var duplex = new Streamer();
 
     duplex.on('unpipe', function () {
+        child.stdin.end();
+    });
+
+    duplex.on('finish', function () {
         child.stdin.end();
     });
 
