@@ -48,11 +48,18 @@ module.exports = function(c, l) {
 
                 Namer.add(devices);
 
-                ws.send('sensor');
+                ws.on('message', function (data) {
 
-                ws.once('message', function (data) {
+                    try {
+                        var sensorinfo = JSON.parse(data);
+                    } catch (e) {
+                        logger.error(e);
+                        return false;
+                    }
 
-                    var sensorinfo = JSON.parse(data);
+                    if (!sensorinfo.temperature) {
+                        return false;
+                    }
 
                     for (var s in sensorinfo) {
                         sensors['NHomeBridge:' + info.ID + ':' + s] = {
