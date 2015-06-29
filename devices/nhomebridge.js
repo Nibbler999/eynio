@@ -161,8 +161,24 @@ function learnRemoteKey(deviceid, cb)
         return;
     }
 
-    devices[deviceid].dev.once('message', function (data) {
-        if (cb) cb(data);
-    });
+    var handler = function (data) {
+
+        try {
+            var jsondata = JSON.parse(data);
+        } catch (e) {
+            logger.error(e);
+            return false;
+        }
+
+        if (!jsondata.codeValue_json) {
+            return false;
+        }
+
+        devices[deviceid].dev.removeListener('message', handler);
+
+        if (cb) cb(data.trim());
+    };
+
+    devices[deviceid].dev.on('message', handler);
 }
 
