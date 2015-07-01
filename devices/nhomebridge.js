@@ -34,6 +34,9 @@ module.exports = function(c, l) {
 
             log('Discovered device');
 
+            logger.debug('device', info);
+            logger.debug('device', rinfo);
+
             var WebSocket = require('ws');
 
             var ws = new WebSocket('ws://' + rinfo.address + ':' + info.Port);
