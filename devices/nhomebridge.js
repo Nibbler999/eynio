@@ -62,11 +62,23 @@ module.exports = function(c, l) {
                     }
 
                     for (var s in sensorinfo) {
-                        sensors['NHomeBridge:' + info.ID + ':' + s] = {
+
+                        var id = 'NHomeBridge:' + info.ID + ':' + s;
+
+                        sensors[id] = {
                             name: 'NHomeBridge ' + s,
                             value: sensorinfo[s],
                             subtype: s
                         };
+
+                        var sensorValue = {
+                            id: id,
+                            name: 'NHomeBridge ' + s, // TODO: namer
+                            type: s,
+                            value: sensorinfo[s]
+                        };
+
+                        conn.broadcast('sensorValue', sensorValue);
                     }
 
                     Namer.add(sensors);
