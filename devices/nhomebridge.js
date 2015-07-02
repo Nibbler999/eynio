@@ -43,6 +43,10 @@ module.exports = function(c, l) {
 
             ws.once('open', function open() {
 
+                var sendHeartbeats = require('ws-heartbeats');
+
+                sendHeartbeats(ws, {heartbeatTimeout: 2000, heartbeatInterval: 5000});
+
                 devices['NHomeBridge:' + info.ID] = {
                     name: info.device,
                     ip: rinfo.address,
@@ -90,6 +94,19 @@ module.exports = function(c, l) {
 
             ws.on('error', function (err) {
                 logger.error(err);
+            });
+
+            ws.on('close', function close() {
+
+                logger.debug('WebSocket connection closed');
+
+                delete devices['NHomeBridge:' + info.ID];
+
+                for (var sensor in sensors) {
+                    if (sensor.indexOf('NHomeBridge:' + info.ID) === 0) {
+                        delete sensors[sensor];
+                    }
+                }
             });
         }
     });
