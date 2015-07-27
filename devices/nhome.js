@@ -34,7 +34,7 @@ module.exports = function(c, l) {
     var serverUrl;
 
     if (/^[a-f0-9]{32}$/.test(apikey)) {
-        serverUrl  = 'https://nhome.ba/client?apikey=' + apikey;
+        serverUrl = 'https://nhome.ba/client?apikey=' + apikey;
     } else {
         serverUrl = 'http://' + apikey + ':8080/client';
     }
