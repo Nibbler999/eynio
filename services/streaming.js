@@ -140,6 +140,8 @@ function runStream(cameraid, camera, options)
                 return false;
             }
 
+            source.setMaxListeners(100);
+
             if (!sources[cameraid]) {
                 sources[cameraid] = {};
             }
