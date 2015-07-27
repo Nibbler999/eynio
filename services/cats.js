@@ -18,6 +18,15 @@ Cats.listen = function (c, l) {
     categories = cfg.get('cats_categories', {});
     devices = cfg.get('cats_devices', {});
 
+    if (!categories.dashboard) {
+
+        categories.dashboard = {
+            name: 'Dashboard'
+        };
+
+        Cats.save();
+    }
+
     conn.on('catAdd', function (command) {
         catAdd.apply(command, command.args);
     });
@@ -85,6 +94,11 @@ function catAdd(cat, cb)
 
 function catDelete(catid, cb)
 {
+    if (catid === 'dashboard') {
+        if (cb) cb(false);
+        return false;
+    }
+
     delete categories[catid];
 
     for (var deviceid in devices) {
@@ -93,7 +107,7 @@ function catDelete(catid, cb)
 
     Cats.update();
 
-    if (cb) cb();
+    if (cb) cb(true);
 }
 
 function catUpdate(catid, cat, cb)
