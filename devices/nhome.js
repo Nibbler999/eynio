@@ -31,7 +31,15 @@ module.exports = function(c, l) {
 
     var io = require('socket.io/node_modules/socket.io-client');
 
-    var serverUrl = 'https://nhome.ba/client?apikey=' + apikey;
+    var serverUrl;
+
+    if (/^[a-f0-9]{32}$/.test(apikey)) {
+        serverUrl  = 'https://nhome.ba/client?apikey=' + apikey;
+    } else {
+        serverUrl = 'http://' + apikey + ':8080/client';
+    }
+
+    console.log(serverUrl);
 
     nhome = io(serverUrl, {'force new connection': true});
 
