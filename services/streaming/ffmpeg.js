@@ -24,7 +24,7 @@ function ffmpeg(l) {
 
 ffmpeg.available = null;
 
-ffmpeg.check = function () {
+ffmpeg.check = function (cb) {
 
     try {
 
@@ -32,17 +32,19 @@ ffmpeg.check = function () {
 
         child.on('error', function () {
             ffmpeg.available = false;
+            if (cb) cb();
         });
 
         child.stdout.once('data', function (data) {
             logger.debug(data.toString());
             ffmpeg.available = true;
+            if (cb) cb();
         });
 
     } catch (e) {
         logger.warn(e);
         ffmpeg.available = false;
-        return;
+        if (cb) cb();
     }
 };
 

@@ -10,6 +10,8 @@ var sources = {}, destinations = {}, scalers = {}, pipes = {};
 
 var snapshotCache = {};
 
+var cfg = require('../configuration.js');
+
 var ports_by_protocol = {
     'http:' : 80,
     'https:': 443,
@@ -39,14 +41,36 @@ module.exports = function(c, l) {
         getCachedThumbnail.apply(command, command.args);
     });
 
-    ffmpeg.check();
+    ffmpeg.check(updateCache);
+
+    setInterval(updateCache, 5 * 60 * 1000);
 };
+
+function updateCache()
+{
+    logger.debug('Updating camera thumbnails');
+
+    var cameras = cfg.get('cameras', {});
+
+    for (var cameraid in cameras) {
+        updateCachedImage(cameraid);
+    }
+}
+
+function updateCachedImage(id)
+{
+    var cameras = cfg.get('cameras', {});
+
+    getThumbnail(cameras[id], function (image) {
+        logger.debug('Updated thumbnail for', id);
+        snapshotCache[id] = image;
+    });
+}
 
 function startStreaming(cameraid, options, cb)
 {
     logger.debug('Creating stream from ' + cameraid);
 
-    var cfg = require('../configuration.js');
     var cameras = cfg.get('cameras', {});
 
     var camera = cameras[cameraid];
@@ -161,7 +185,6 @@ function getLiveThumbnail(cameraid, cb)
 {
     logger.debug('Creating snapshot from ' + cameraid);
 
-    var cfg = require('../configuration.js');
     var cameras = cfg.get('cameras', {});
 
     var camera = cameras[cameraid];
@@ -241,7 +264,6 @@ function getCachedThumbnail(cameraid, cb)
 {
     logger.debug('Retrieving cached snapshot from ' + cameraid);
 
-    var cfg = require('../configuration.js');
     var cameras = cfg.get('cameras', {});
 
     var camera = cameras[cameraid];
