@@ -39,8 +39,6 @@ module.exports = function(c, l) {
         serverUrl = 'http://' + apikey + ':8080/client';
     }
 
-    console.log(serverUrl);
-
     nhome = io(serverUrl, {'force new connection': true});
 
     log('Connecting...');
