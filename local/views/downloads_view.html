@@ -53,13 +53,21 @@
 <div class="block" id="block_repos">
     <div class="block_header">Repositories</div>
     <div class="block_body">
+
         <div class="subblock">
-            <div class="subblock_header">Synology</div>
+            <div class="subblock_header">Debian/Ubuntu</div>
             <div class="subblock_body">
-                <p>Package Center - Settings - Package Sources</p>
-                <pre>https://updates.neosoft.ba/syno.php</pre>
+<pre>
+/etc/apt/sources.list:
+    deb https://debian.neosoft.ba/ unstable main
+
+wget https://debian.neosoft.ba/neosoft.gpg.key -qO - | sudo apt-key add -
+</pre>
+<p>apt-get install nhomeserver<p>
+
             </div>
         </div>
+
         <div class="subblock">
             <div class="subblock_header">Yum</div>
             <div class="subblock_body">
@@ -70,10 +78,19 @@ baseurl=https://neosoft-yum.s3.amazonaws.com
 enabled=1
 gpgkey=https://neosoft-yum.s3.amazonaws.com/RPM-GPG-KEY-neosoft
 </pre>
-<p>#> yum install NHomeServer<p>
+<p>yum install NHomeServer<p>
 
             </div>
         </div>
+
+        <div class="subblock">
+            <div class="subblock_header">Synology</div>
+            <div class="subblock_body">
+                <p>Package Center - Settings - Package Sources</p>
+                <pre>https://updates.neosoft.ba/syno.php</pre>
+            </div>
+        </div>
+
     </div>
 </div>
 
