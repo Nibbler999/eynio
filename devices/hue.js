@@ -23,8 +23,6 @@ module.exports = function(c, l) {
     conn = c;
     logger = l.child({component: 'Hue'});
 
-    var hue_apikey = cfg.get('hue_apikey', 'none');
-
     hue.nupnpSearch(function(search_err, result) {
 
         if (search_err) {
@@ -38,80 +36,146 @@ module.exports = function(c, l) {
 
         log('Found a bridge');
 
-        var api = new HueApi(result[0].ipaddress, hue_apikey);
+        result.forEach(loadBridge);
 
-        bridges[result[0].id] = { api: api };
-
-        api.config(function(config_err, config) {
-
-            if (config_err) {
-                log(config_err);
-                return;
-            }
-
-            bridges[result[0].id].name = config.name;
-
-            // If auth failed this property is missing
-            if (!config.hasOwnProperty('ipaddress')) {
-
-                log('Need to create user');
-                conn.broadcast('pushthebutton', config.name);
-
-                var registerInterval = setInterval(function () {
-                    //log('Creating user');
-                    api.createUser(result[0].ipaddress, null, 'NHome', function(createUser_err, user) {
-                        if (createUser_err) {
-                            //log('createUser: ' + createUser_err);
-                            return;
-                        }
-                        clearInterval(registerInterval);
-                        log('User ' + user + ' created');
-
-                        // Connect with newly created user
-                        api = new HueApi(result[0].ipaddress, user);
-
-                        // Send username to web server
-                        cfg.set('hue_apikey', user);
-
-                        startListening();
-
-                        loadLights(result[0].id);
-                    });
-                }, 5000);
-
-            } else {
-                log('Authentication ok');
-                startListening();
-                loadLights(result[0].id);
-            }
-        });
+        loadLights();
     });
 };
 
-function loadLights(id)
+function loadBridge(bridge)
 {
-    var blacklist = cfg.get('blacklist_bridges', []);
+    var hue_apikey = cfg.get('hue_apikey_' + bridge.id, 'none');
 
-    if (blacklist.indexOf(id) !== -1) {
-        return;
+    // temporary migration
+    if (hue_apikey === 'none') {
+
+        hue_apikey = cfg.get('hue_apikey', 'none');
+
+        if (hue_apikey !== 'none') {
+            cfg.set('hue_apikey_' + bridge.id, hue_apikey);
+        }
     }
 
-    bridges[id].api.lights(function(err, reply) {
+    var api = new HueApi(bridge.ipaddress, hue_apikey);
 
-        if (err) {
-            log('api.lights: ' + err);
+    bridges[bridge.id] = { api: api };
+
+    api.config(function(config_err, config) {
+
+        if (config_err) {
+            log(config_err);
             return;
         }
 
-        reply.lights.forEach(function(light) {
+        bridges[bridge.id].name = config.name;
 
-            devices[id + ':' + light.id] = {
-                id: light.id,
-                name: light.name,
-                dev: bridges[id].api
-            };
-        });
+        // If auth failed this property is missing
+        if (!config.hasOwnProperty('ipaddress')) {
+
+            log('Need to create user');
+            conn.broadcast('pushthebutton', config.name);
+
+            var registerInterval = setInterval(function () {
+                //log('Creating user');
+                api.createUser(bridge.ipaddress, null, 'NHome', function(createUser_err, user) {
+                    if (createUser_err) {
+                        //log('createUser: ' + createUser_err);
+                        return;
+                    }
+                    clearInterval(registerInterval);
+                    log('User ' + user + ' created');
+
+                    // Connect with newly created user
+                    bridges[bridge.id].api = new HueApi(bridge.ipaddress, user);
+
+                    // Send username to web server
+                    cfg.set('hue_apikey_' + bridge.id, user);
+
+                    startListening();
+                });
+            }, 5000);
+
+        } else {
+            log('Authentication ok');
+            startListening();
+        }
     });
+}
+
+function loadLights(cb)
+{
+    var blacklist = cfg.get('blacklist_bridges', []);
+
+    var numresults = 0;
+
+    var done = function () {
+
+        if (++numresults === Object.keys(bridges).length) {
+            if (cb) cb();
+        }
+    };
+
+    for (var bridge in bridges) {
+
+        if (blacklist.indexOf(bridge) !== -1) {
+            done();
+            continue;
+        }
+
+        loadBridgeLights(bridge, done);
+    }
+}
+
+function loadBridgeLights(bridge, done)
+{
+    bridges[bridge].api.lights(function(err, reply) {
+
+        if (err) {
+            log('api.lights: ' + err);
+            done();
+            return;
+        }
+
+        reply.lights.forEach(function (light) {
+            addLight(bridge, light);
+        });
+
+        done();
+    });
+}
+
+function addLight(bridge, light)
+{
+    var state = null;
+
+    if (light.hasOwnProperty('state')) {
+
+        if (!light.state.reachable) {
+            return;
+        }
+
+        var hsl = [(light.state.hue / 65534) * 359, light.state.sat / 254, light.state.bri / 254];
+        var chroma = require('chroma-js')(hsl, 'hsl');
+
+        state = {
+            on: light.state.on,
+            level: parseInt((light.state.bri / 254) * 100, 10),
+            hsl: chroma.hsl(),
+            hsv: chroma.hsv(),
+            rgb: chroma.rgb(),
+            hex: chroma.hex()
+        };
+    }
+
+    devices[bridge + ':' + light.id] = {
+        id: light.id,
+        name: light.name,
+        dev: bridges[bridge].api
+    };
+
+    if (state) {
+        devices[bridge + ':' + light.id].state = state;
+    }
 }
 
 function startListening()
@@ -179,22 +243,25 @@ function getBridges(cb)
 
 function getDevices(cb)
 {
-    var blacklist = cfg.get('blacklist_devices', []);
+    loadLights(function() {
 
-    var all = [];
+        var blacklist = cfg.get('blacklist_devices', []);
 
-    for (var device in devices) {
-        all.push({
-            id: device,
-            name: devices[device].name,
-            state: devices[device].state,
-            categories: Cats.getCats(device),
-            type: 'light',
-            blacklisted: blacklist.indexOf(device) !== -1
-        });
-    }
+        var all = [];
 
-    if (cb) cb(all);
+        for (var device in devices) {
+            all.push({
+                id: device,
+                name: devices[device].name,
+                state: devices[device].state,
+                categories: Cats.getCats(device),
+                type: 'light',
+                blacklisted: blacklist.indexOf(device) !== -1
+            });
+        }
+
+        if (cb) cb(all);
+    });
 }
 
 // Deprecated
