@@ -96,8 +96,16 @@ function startListening()
         getSensorValue.apply(command, command.args);
     });
 
+    conn.on('getDevicePowerState', function (command) {
+        getDevicePowerState.apply(command, command.args);
+    });
+
     conn.on('setDevicePowerState', function (command) {
         setDevicePowerState.apply(command, command.args);
+    });
+
+    conn.on('toggleDevicePowerState', function (command) {
+        toggleDevicePowerState.apply(command, command.args);
     });
 
     conn.on('setLightState', function (command) {
@@ -296,6 +304,38 @@ function setDevicePowerState(id, on, cb)
             switchOff.call(this, id, cb);
         }
     }
+}
+
+function getDevicePowerState(id, cb)
+{
+    if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
+        return;
+    }
+
+    var mycb = function (state) {
+        if (cb) cb(state.on);
+    };
+
+    if (devices[id].type === 'light') {
+        getLightState(id, mycb);
+    } else {
+        getSwitchState(id, mycb);
+    }
+}
+
+function toggleDevicePowerState(id, cb)
+{
+    if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
+        return;
+    }
+
+    var self = this;
+
+    getDevicePowerState(id, function (state) {
+        setDevicePowerState.call(self, id, !state, cb);
+    });
 }
 
 function getSwitchState(id, cb)

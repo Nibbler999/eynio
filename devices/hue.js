@@ -214,8 +214,16 @@ function startListening()
         addNewDevices.apply(command, command.args);
     });
 
+    conn.on('getDevicePowerState', function (command) {
+        getDevicePowerState.apply(command, command.args);
+    });
+
     conn.on('setDevicePowerState', function (command) {
         setDevicePowerState.apply(command, command.args);
+    });
+
+    conn.on('toggleDevicePowerState', function (command) {
+        toggleDevicePowerState.apply(command, command.args);
     });
 }
 
@@ -309,7 +317,38 @@ function setLightState(id, values, cb)
 
 function setDevicePowerState(id, on, cb)
 {
+    if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
+        return;
+    }
+
     setLightState.call(this, id, {on: on}, cb);
+}
+
+function getDevicePowerState(id, cb)
+{
+    if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
+        return;
+    }
+
+    getLightState(id, function (state) {
+        if (cb) cb(state.on);
+    });
+}
+
+function toggleDevicePowerState(id, cb)
+{
+    if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
+        return;
+    }
+
+    var self = this;
+
+    getDevicePowerState(id, function (state) {
+        setDevicePowerState.call(self, id, !state, cb);
+    });
 }
 
 function setLightColor(id, color_string, color_format, cb)

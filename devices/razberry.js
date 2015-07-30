@@ -146,8 +146,16 @@ function startListening()
         getSwitchState.apply(command, command.args);
     });
 
+    conn.on('getDevicePowerState', function (command) {
+        getDevicePowerState.apply(command, command.args);
+    });
+
     conn.on('setDevicePowerState', function (command) {
         setDevicePowerState.apply(command, command.args);
+    });
+
+    conn.on('toggleDevicePowerState', function (command) {
+        toggleDevicePowerState.apply(command, command.args);
     });
 }
 
@@ -257,11 +265,42 @@ function switchOff(id, cb)
 
 function setDevicePowerState(id, on, cb)
 {
+    if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
+        return;
+    }
+
     if (on) {
         switchOn.call(this, id, cb);
     } else {
         switchOff.call(this, id, cb);
     }
+}
+
+function getDevicePowerState(id, cb)
+{
+    if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
+        return;
+    }
+
+    getSwitchState(id, function (state) {
+        if (cb) cb(state.on);
+    });
+}
+
+function toggleDevicePowerState(id, cb)
+{
+    if (!devices.hasOwnProperty(id)) {
+        if (cb) cb([]);
+        return;
+    }
+
+    var self = this;
+
+    getDevicePowerState(id, function (state) {
+        setDevicePowerState.call(self, id, !state, cb);
+    });
 }
 
 function getSwitchState(id, cb)
