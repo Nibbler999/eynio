@@ -84,14 +84,18 @@ module.exports = function (l) {
         streamMJPEG(req, res);
     });
 
+    app.get('/webapi/*', function (req, res) {
+        webAPI(req, res);
+    });
+
     return server;
 };
 
-function streamMJPEG(request, response)
+function localConnect()
 {
     var io = require('./node_modules/socket.io/node_modules/socket.io-client');
 
-    var serverUrl = 'http://localhost:8080/client';
+    var serverUrl = 'http://127.0.0.1:8080/client';
 
     var serverOpts = {
         transports: ['websocket'],
@@ -100,6 +104,11 @@ function streamMJPEG(request, response)
 
     var conn = io.connect(serverUrl, serverOpts);
 
+    return conn;
+}
+
+function streamMJPEG(request, response)
+{
     var options = {
         width: -1,
         height: -1,
@@ -107,6 +116,8 @@ function streamMJPEG(request, response)
     };
 
     var cameraid = request.params.cameraid;
+
+    var conn = localConnect();
 
     conn.emit('requestStreaming', cameraid, options);
 
@@ -130,5 +141,54 @@ function streamMJPEG(request, response)
     request.on('end', function () {
         conn.disconnect();
     });
+}
+
+// Convert strings to types
+function fixType(value)
+{
+    if (value === 'false') {
+        value = false;
+    } else if (value === 'true') {
+        value = true;
+    } else if (/^[\d.]+$/.test(value)) {
+        value = parseFloat(value);
+    }
+
+    return value;
+}
+
+function fixTypes(object)
+{
+    for (var k in object) {
+        object[k] = fixType(object[k]);
+    }
+
+    return object;
+}
+
+function webAPI(req, res)
+{
+    var r = require('url').parse(req.url, true);
+
+    var args = r.pathname.split('/').slice(2);
+    var name = args.shift();
+
+    args = args.map(fixType);
+
+    if (Object.keys(r.query).length) {
+        args.push(fixTypes(r.query));
+    }
+
+    var cb = function (returned) {
+        res.json(returned);
+        conn.disconnect();
+    };
+
+    args.unshift(name);
+    args.push(cb);
+
+    var conn = localConnect();
+
+    conn.emit.apply(conn, args);
 }
 
