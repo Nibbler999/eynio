@@ -122,6 +122,17 @@ function setupLocalServer()
 
     var io = require('socket.io')(server);
 
+    io.of('/client').use(function(socket, next) {
+
+        var ip = socket.conn.remoteAddress.replace(/^::ffff:/, '');
+
+        if (!require('ip').isPrivate(ip)) {
+            next(new Error('Access via local network IP only'));
+        } else {
+            next();
+        }
+    });
+
     var wildcard = require('socketio-wildcard')();
 
     io.of('/client').use(wildcard);

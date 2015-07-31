@@ -104,6 +104,10 @@ function localConnect()
 
     var conn = io.connect(serverUrl, serverOpts);
 
+    conn.on('error', function(err) {
+        logger.debug(err);
+    });
+
     return conn;
 }
 
