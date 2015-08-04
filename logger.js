@@ -1,11 +1,11 @@
 "use strict";
 
-module.exports = function(loglevel) {
+module.exports = function(opts) {
 
     var bunyan = require('bunyan');
     var PrettyStream = require('bunyan-prettystream');
 
-    var prettyStdOut = new PrettyStream({mode: 'short'});
+    var prettyStdOut = new PrettyStream({mode: 'short', useColor: !opts.nocolor});
     prettyStdOut.pipe(process.stdout);
 
     var ringbuffer = new bunyan.RingBuffer({ limit: 100 });
@@ -13,10 +13,10 @@ module.exports = function(loglevel) {
     var log = bunyan.createLogger({
         name: 'NHome',
         streams: [{
-            level: loglevel,
+            level: opts.loglevel,
             stream: prettyStdOut
         }, {
-            level: loglevel,
+            level: opts.loglevel,
             type: 'raw',
             stream: ringbuffer
         }]

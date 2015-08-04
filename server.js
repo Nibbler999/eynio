@@ -11,9 +11,10 @@ var program = require('commander');
 program
   .version(getVersion())
   .option('-l, --loglevel [level]', 'Log level (fatal, error, warn, info, debug, trace) [info]', 'info')
+  .option('--nocolor', 'Disable colors in terminal output', false)
   .parse(process.argv);
 
-var log = require('./logger.js')(program.loglevel);
+var log = require('./logger.js')(program);
 
 process.on('uncaughtException', function (err) {
     log.error('uncaughtException:' + err);
