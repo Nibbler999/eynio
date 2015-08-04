@@ -1,6 +1,12 @@
 {
   "name": "NHomeServer",
   "version": "1.0.0",
+  "main": "nw.html",
+  "window": {
+    "width": 1024,
+    "height": 768,
+    "toolbar": false
+  },
   "dependencies": {
     "adm-zip": "0.4.4",
     "buffer-indexof": "0.0.2",

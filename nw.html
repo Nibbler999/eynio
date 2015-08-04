@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>NHome</title>
+  </head>
+  <body style="margin: 0;">
+    <iframe src="" style="border: 0; width:100%; height: 614px"></iframe>
+    <pre id="console" style="color: white; background-color: black; font-family: monospace; height: 150px; margin: 0px; "></pre>
+    <script>
+
+        var stream = require('stream');
+
+        var entries = [];
+
+        var weblog = new stream.Writable({
+            write: function(chunk, encoding, next) {
+                entries.push(chunk.toString());
+                if (entries.length > 10) {
+                    entries.shift();
+                }
+                document.getElementById('console').textContent = entries.join('');
+                next();
+            }
+        });
+
+        var bunyan = require('bunyan');
+        var PrettyStream = require('bunyan-prettystream');
+
+        var prettyStdOut = new PrettyStream({mode: 'short', useColor: false});
+        prettyStdOut.pipe(weblog);
+
+        var ringbuffer = new bunyan.RingBuffer({ limit: 100 });
+
+        var log = bunyan.createLogger({
+            name: 'NHome',
+            streams: [{
+                level: 'info',
+                stream: prettyStdOut
+            }, {
+                level: 'info',
+                type: 'raw',
+                stream: ringbuffer
+            }]
+        });
+
+        require('./update.js')(log, function() {
+            setTimeout(function() {
+                document.getElementsByTagName('iframe')[0].src = 'http://127.0.0.1:8080';
+            }, 0);
+        });
+
+    </script>
+  </body>
+</html>
