@@ -358,7 +358,7 @@ function command_handler(command, cb)
 
 function getUUID()
 {
-    var home = process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;
+    var home = process.env.HOME || process.env.USERPROFILE || process.env.HOMEPATH;
 
     var uuidFile = require('path').join(home, 'nhome-uuid');
 

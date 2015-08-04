@@ -40,7 +40,7 @@ Configuration.setAll = function (newconfig) {
 
 function getConfFile()
 {
-    var home = process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;
+    var home = process.env.HOME || process.env.USERPROFILE || process.env.HOMEPATH;
 
     var filename = 'nhome-conf.json';
 
