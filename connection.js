@@ -292,7 +292,7 @@ function command_handler(command, cb)
 
     if (cb) {
 
-        var data = [], i = 0, mycb, mycb_timedout, mycb_timer;
+        var combined = [], i = 0, mycb, mycb_timedout, mycb_timer;
 
         var numListeners = events.EventEmitter.listenerCount(wrapper, command.name);
 
@@ -323,7 +323,7 @@ function command_handler(command, cb)
 
             mycb_timedout = function() {
                 log.warn('Timeout waiting for', command.name, command.args);
-                cb(data);
+                cb(combined);
             };
 
             mycb = function(result) {
@@ -332,12 +332,16 @@ function command_handler(command, cb)
                     result = permissions.filter_response(command, result);
                 }
 
-                data = data.concat(result);
+                if (require('util').isArray(result)) {
+                    combined = combined.concat(result);
+                } else if (result !== undefined) {
+                    combined = result;
+                }
 
                 if (++i === numListeners) {
                     clearTimeout(mycb_timer);
-                    log.debug('Replied to', command.name, command.args, 'with result array', data);
-                    cb(data);
+                    log.debug('Replied to', command.name, command.args, 'with combined result', combined);
+                    cb(combined);
                 }
             };
         }

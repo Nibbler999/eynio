@@ -175,7 +175,7 @@ function getRemotes(cb)
 function sendRemoteKey(remote, code, cb)
 {
     if (!devices.hasOwnProperty(remote.deviceid)) {
-        if (cb) cb([]);
+        if (cb) cb();
         return;
     }
 
@@ -187,7 +187,7 @@ function sendRemoteKey(remote, code, cb)
 function learnRemoteKey(deviceid, cb)
 {
     if (!devices.hasOwnProperty(deviceid)) {
-        if (cb) cb([]);
+        if (cb) cb();
         return;
     }
 

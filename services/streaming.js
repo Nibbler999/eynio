@@ -76,8 +76,8 @@ function startStreaming(cameraid, options, cb)
     var camera = cameras[cameraid];
 
     if (!camera) {
-        logger.error('Unknown camera', cameraid);
-        logger.debug('Known cameras', cameras);
+        logger.debug('Unknown camera', cameraid);
+        if (cb) cb();
         return;
     }
 
@@ -192,8 +192,8 @@ function getLiveThumbnail(cameraid, cb)
     var camera = cameras[cameraid];
 
     if (!camera) {
-        logger.error('Unknown camera', cameraid);
-        logger.debug('Known cameras', cameras);
+        logger.debug('Unknown camera', cameraid);
+        if (cb) cb();
         return;
     }
 
@@ -271,8 +271,8 @@ function getCachedThumbnail(cameraid, cb)
     var camera = cameras[cameraid];
 
     if (!camera) {
-        logger.error('Unknown camera', cameraid);
-        logger.debug('Known cameras', cameras);
+        logger.debug('Unknown camera', cameraid);
+        if (cb) cb();
         return;
     }
 

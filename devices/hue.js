@@ -276,7 +276,7 @@ function getDevices(cb)
 function setLightState(id, values, cb)
 {
     if (!devices.hasOwnProperty(id)) {
-        if (cb) cb([]);
+        if (cb) cb();
         return;
     }
 
@@ -318,7 +318,7 @@ function setLightState(id, values, cb)
 function setDevicePowerState(id, on, cb)
 {
     if (!devices.hasOwnProperty(id)) {
-        if (cb) cb([]);
+        if (cb) cb();
         return;
     }
 
@@ -328,7 +328,7 @@ function setDevicePowerState(id, on, cb)
 function getDevicePowerState(id, cb)
 {
     if (!devices.hasOwnProperty(id)) {
-        if (cb) cb([]);
+        if (cb) cb();
         return;
     }
 
@@ -340,7 +340,7 @@ function getDevicePowerState(id, cb)
 function toggleDevicePowerState(id, cb)
 {
     if (!devices.hasOwnProperty(id)) {
-        if (cb) cb([]);
+        if (cb) cb();
         return;
     }
 
@@ -354,7 +354,7 @@ function toggleDevicePowerState(id, cb)
 function setLightColor(id, color_string, color_format, cb)
 {
     if (!devices.hasOwnProperty(id)) {
-        if (cb) cb([]);
+        if (cb) cb();
         return;
     }
 
@@ -390,7 +390,7 @@ function setLightColor(id, color_string, color_format, cb)
 function setLightWhite(id, brightness, temperature, cb)
 {
     if (!devices.hasOwnProperty(id)) {
-        if (cb) cb([]);
+        if (cb) cb();
         return;
     }
 
@@ -418,7 +418,7 @@ function setLightWhite(id, brightness, temperature, cb)
 function getLightState(id, cb)
 {
     if (!devices.hasOwnProperty(id)) {
-        if (cb) cb([]);
+        if (cb) cb();
         return;
     }
 

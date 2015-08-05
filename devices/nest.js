@@ -182,7 +182,7 @@ function getDevices(cb)
 function getThermostatValue(id, cb)
 {
     if (!thermostats.hasOwnProperty(id)) {
-        if (cb) cb([]);
+        if (cb) cb();
         return;
     }
 
@@ -201,7 +201,7 @@ function getThermostatValue(id, cb)
 function setThermostatValue(id, value, cb)
 {
     if (!thermostats.hasOwnProperty(id)) {
-        if (cb) cb([]);
+        if (cb) cb();
         return;
     }
 
@@ -223,7 +223,7 @@ function setThermostatValue(id, value, cb)
 function getSensorValue(id, cb)
 {
     if (!sensors.hasOwnProperty(id)) {
-        if (cb) cb([]);
+        if (cb) cb();
         return;
     }
 

@@ -83,7 +83,8 @@ function startListening()
         'getSensorValue',
         'sendRemoteCommand', 'sendKey', 'learnKey', 'saveCustomRemote', 'updateCustomRemote', 'deleteCustomRemote',
         'getShutterValue', 'setShutterValue', 'openShutter', 'closeShutter',
-        'getDevicePowerState', 'setDevicePowerState', 'toggleDevicePowerState'
+        'getDevicePowerState', 'setDevicePowerState', 'toggleDevicePowerState',
+        'getCameras', 'getCamera', 'getCachedThumbnail', 'startStreaming'
     ];
 
     events.forEach(function(eventName) {
@@ -96,7 +97,8 @@ function startListening()
 
     var broadcasts = [
         'lightState', 'switchState', 'sensorValue', 'shutterValue',
-        'IRKeyLearned', 'customRemoteAdded', 'customRemoteUpdated', 'customRemoteDeleted'
+        'IRKeyLearned', 'customRemoteAdded', 'customRemoteUpdated', 'customRemoteDeleted',
+        'cameraFrame'
     ];
 
     broadcasts.forEach(function(eventName) {

@@ -238,7 +238,7 @@ function getDevices(cb)
 function switchOn(id, cb)
 {
     if (!devices.hasOwnProperty(id)) {
-        if (cb) cb([]);
+        if (cb) cb();
         return;
     }
 
@@ -263,7 +263,7 @@ function switchOn(id, cb)
 function switchOff(id, cb)
 {
     if (!devices.hasOwnProperty(id)) {
-        if (cb) cb([]);
+        if (cb) cb();
         return;
     }
 
@@ -288,7 +288,7 @@ function switchOff(id, cb)
 function setDevicePowerState(id, on, cb)
 {
     if (!devices.hasOwnProperty(id)) {
-        if (cb) cb([]);
+        if (cb) cb();
         return;
     }
 
@@ -309,7 +309,7 @@ function setDevicePowerState(id, on, cb)
 function getDevicePowerState(id, cb)
 {
     if (!devices.hasOwnProperty(id)) {
-        if (cb) cb([]);
+        if (cb) cb();
         return;
     }
 
@@ -327,7 +327,7 @@ function getDevicePowerState(id, cb)
 function toggleDevicePowerState(id, cb)
 {
     if (!devices.hasOwnProperty(id)) {
-        if (cb) cb([]);
+        if (cb) cb();
         return;
     }
 
@@ -341,7 +341,7 @@ function toggleDevicePowerState(id, cb)
 function getSwitchState(id, cb)
 {
     if (!devices.hasOwnProperty(id)) {
-        if (cb) cb([]);
+        if (cb) cb();
         return;
     }
 
@@ -366,7 +366,7 @@ function getSwitchState(id, cb)
 function getSensorValue(id, cb)
 {
     if (!devices.hasOwnProperty(id)) {
-        if (cb) cb([]);
+        if (cb) cb();
         return;
     }
 
@@ -394,7 +394,7 @@ function getSensorValue(id, cb)
 function getLightState(id, cb)
 {
     if (!devices.hasOwnProperty(id)) {
-        if (cb) cb([]);
+        if (cb) cb();
         return;
     }
 
@@ -423,7 +423,7 @@ function getLightState(id, cb)
 function setLightState(id, values, cb)
 {
     if (!devices.hasOwnProperty(id)) {
-        if (cb) cb([]);
+        if (cb) cb();
         return;
     }
 
@@ -447,7 +447,7 @@ function setLightState(id, values, cb)
 function setLightWhite(id, brightness, temperature, cb)
 {
     if (!devices.hasOwnProperty(id)) {
-        if (cb) cb([]);
+        if (cb) cb();
         return;
     }
 
