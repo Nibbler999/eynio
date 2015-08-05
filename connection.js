@@ -314,7 +314,7 @@ function command_handler(command, cb)
                     result = permissions.filter_response(command, result);
                 }
 
-                log.debug('Replied to', command.name, command.args, 'with result', result);
+                log.debug('Replied to', command.name, command.args, 'with single handler', result);
 
                 cb(result);
             };
@@ -332,16 +332,20 @@ function command_handler(command, cb)
                     result = permissions.filter_response(command, result);
                 }
 
-                if (Array.isArray(result) && Array.isArray(combined)) {
-                    combined = combined.concat(result);
-                } else if (result !== undefined) {
-                    combined = result;
-                }
+                if (Array.isArray(result)) {
 
-                if (++i === numListeners) {
+                    combined = combined.concat(result);
+
+                    if (++i === numListeners) {
+                        clearTimeout(mycb_timer);
+                        log.debug('Replied to', command.name, command.args, 'with combined result', combined);
+                        cb(combined);
+                    }
+
+                } else if (result !== undefined) {
                     clearTimeout(mycb_timer);
-                    log.debug('Replied to', command.name, command.args, 'with combined result', combined);
-                    cb(combined);
+                    log.debug('Replied to', command.name, command.args, 'with one result', result);
+                    cb(result);
                 }
             };
         }
