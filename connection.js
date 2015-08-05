@@ -332,7 +332,7 @@ function command_handler(command, cb)
                     result = permissions.filter_response(command, result);
                 }
 
-                if (require('util').isArray(result)) {
+                if (Array.isArray(result)) {
                     combined = combined.concat(result);
                 } else if (result !== undefined) {
                     combined = result;
