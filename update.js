@@ -111,7 +111,7 @@ module.exports = function (log, cb) {
 };
 
 if (!module.parent) {
-    var log = require('./logger.js')({loglevel: 'info', nocolor: false});
-    module.exports(log);
+    var dummylog = require('./logger.js')({loglevel: 'info', nocolor: false});
+    module.exports(dummylog);
 }
 
