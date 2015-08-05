@@ -255,17 +255,17 @@ function setDevicePowerState(id, on, cb)
     if (devices[id].type === 'shutter') {
 
         if (on) {
-            switchOn.call(this, id, cb);
+            openShutter.call(this, id, cb);
         } else {
-            switchOff.call(this, id, cb);
+            closeShutter.call(this, id, cb);
         }
 
     } else {
 
         if (on) {
-            openShutter.call(this, id, cb);
+            switchOn.call(this, id, cb);
         } else {
-            closeShutter.call(this, id, cb);
+            switchOff.call(this, id, cb);
         }
     }
 }
@@ -280,7 +280,7 @@ function getDevicePowerState(id, cb)
     if (devices[id].type === 'shutter') {
 
         getShutterValue(id, function (state) {
-            if (cb) cb(state.value !== '0');
+            if (cb) cb(state.value === '0');
         });
 
     } else {
