@@ -280,7 +280,7 @@ function getDevicePowerState(id, cb)
     if (devices[id].type === 'shutter') {
 
         getShutterValue(id, function (state) {
-            if (cb) cb(state.value === '0');
+            if (cb) cb(state.value !== '0');
         });
 
     } else {
