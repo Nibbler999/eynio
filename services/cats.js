@@ -61,7 +61,7 @@ Cats.listen = function (c, l) {
 };
 
 Cats.getCats = function(deviceid) {
-    return devices[deviceid] || [];
+    return devices[deviceid] || ['dashboard'];
 };
 
 Cats.save = function() {
