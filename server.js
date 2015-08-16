@@ -6,15 +6,16 @@ function getVersion()
     return require('./package.json').version;
 }
 
-var program = require('commander');
+var options = require('commander');
 
-program
+options
   .version(getVersion())
-  .option('-l, --loglevel [level]', 'Log level (fatal, error, warn, info, debug, trace) [info]', 'info')
-  .option('--nocolor', 'Disable colors in terminal output', false)
+  .option('-l, --loglevel [level]', 'log level (fatal, error, warn, info, debug, trace) [info]', 'info')
+  .option('-s, --server [hostname]', 'connect to alternative server')
+  .option('--nocolor', 'disable colors in terminal output', false)
   .parse(process.argv);
 
-var log = require('./logger.js')(program);
+var log = require('./logger.js')(options);
 
-require('./main.js')(log);
+require('./main.js')(log, options);
 

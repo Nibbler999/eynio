@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports = function (log) {
+module.exports = function (log, options) {
 
     log.debug('Loading configuration');
 
@@ -8,7 +8,7 @@ module.exports = function (log) {
 
     cfg.load(log, function () {
 
-        var conn = require('./connection.js')(log);
+        var conn = require('./connection.js')(log, options);
 
         log.debug('Loading services');
 

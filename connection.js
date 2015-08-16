@@ -5,13 +5,19 @@ var util = require('util');
 
 var wrapper, log;
 
-module.exports = function (l) {
+module.exports = function (l, options) {
 
     log = l;
 
     var io = require('socket.io/node_modules/socket.io-client');
 
-    var serverUrl = 'https://nhome.ba/server?uuid=' + getUUID() + '&version=' + getVersion();
+    var hostname = 'nhome.ba';
+
+    if (options.server) {
+        hostname = options.server;
+    }
+
+    var serverUrl = 'https://' + hostname + '/server?uuid=' + getUUID() + '&version=' + getVersion();
 
     log.debug('URL', serverUrl);
 
