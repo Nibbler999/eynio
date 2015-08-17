@@ -58,12 +58,16 @@
             <div class="subblock_header">Debian/Ubuntu</div>
             <div class="subblock_body">
 <pre>
-/etc/apt/sources.list:
-    deb https://debian.neosoft.ba/ unstable main
+Add the following line to your /etc/apt/sources.list
+or add a new file in /etc/apt/sources.list.d/
+
+    deb http://debian.neosoft.ba/ unstable main
+
+Then run the following commands:
 
 wget https://debian.neosoft.ba/neosoft.gpg.key -qO - | sudo apt-key add -
-</pre>
-<p>apt-get install nhomeserver<p>
+sudo apt-get update
+sudo apt-get install nhomeserver</pre>
 
             </div>
         </div>
