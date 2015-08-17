@@ -1,6 +1,5 @@
 "use strict";
 
-var stream = require('stream');
 var MjpegConsumer = require('mjpeg-consumer');
 var Limiter = require('write-limiter');
 var http = require('http');
@@ -20,12 +19,12 @@ streamingMethod.snapshot = function (logger, camera, cb) {
     if (camera.auth_name) {
         parts.auth = camera.auth_name + ':' + camera.auth_pass;
     }
-    
+
     var req = httpx.get(parts, function(res) {
 
         if (res.statusCode === 200) {
 
-            var source = res.pipe(consumer);
+            res.pipe(consumer);
 
             consumer.once('data', function (image) {
                 req.abort();
@@ -58,7 +57,7 @@ streamingMethod.stream = function (logger, camera, options, cb) {
     if (camera.auth_name) {
         parts.auth = camera.auth_name + ':' + camera.auth_pass;
     }
-    
+
     var req = httpx.get(parts, function(res) {
 
         if (res.statusCode === 200) {

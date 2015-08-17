@@ -10,17 +10,15 @@ var streamingMethod = {};
 
 streamingMethod.snapshot = function (logger, camera, cb) {
 
-    var auth;
+    var parts = url.parse(camera.snapshot);
 
     if (camera.auth_name) {
-        auth = camera.auth_name + ':' + camera.auth_pass;
+        parts.auth = camera.auth_name + ':' + camera.auth_pass;
     }
-
-    var parts = url.parse(camera.snapshot);
 
     var httpx = parts.protocol === 'https:' ? https : http;
 
-    var req = httpx.get(parts, function(res) {
+    httpx.get(parts, function(res) {
 
         if (res.statusCode === 200) {
 
@@ -49,13 +47,13 @@ streamingMethod.snapshot = function (logger, camera, cb) {
 
 streamingMethod.stream = function (logger, camera, options, cb) {
 
-    var auth, timer, req;
-
-    if (camera.auth_name) {
-        auth = camera.auth_name + ':' + camera.auth_pass;
-    }
+    var timer, req;
 
     var parts = url.parse(camera.snapshot);
+
+    if (camera.auth_name) {
+        parts.auth = camera.auth_name + ':' + camera.auth_pass;
+    }
 
     var httpx = parts.protocol === 'https:' ? https : http;
 
