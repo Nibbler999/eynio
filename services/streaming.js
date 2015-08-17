@@ -59,9 +59,7 @@ function updateCache()
 
 function updateCachedImage(id)
 {
-    var cameras = cfg.get('cameras', {});
-
-    getThumbnail(cameras[id], function (image) {
+    getThumbnail(id, function (image) {
         logger.debug('Updated thumbnail for', id);
         snapshotCache[id] = image;
     });
@@ -214,13 +212,27 @@ function getLiveThumbnail(cameraid, cb)
     });
 }
 
-function getThumbnail(camera, cb)
+function saveImageDimensions(id, image)
 {
-    getThumbnailImage(camera, function (image) {
+    var size = require('jpeg-size');
+
+    var s = size(image);
+
+    if (s) {
+        s.id = id;
+        conn.emit('updateCamera', {args: [s]});
+    }
+}
+
+function getThumbnail(id, cb)
+{
+    getThumbnailImage(id, function (image) {
 
         if (!image) {
             return false;
         }
+
+        saveImageDimensions(id, image);
 
         var options = {
             width: -1,
@@ -244,9 +256,13 @@ function getThumbnail(camera, cb)
     });
 }
 
-function getThumbnailImage(camera, cb)
+function getThumbnailImage(id, cb)
 {
     var method;
+
+    var cameras = cfg.get('cameras', {});
+
+    var camera = cameras[id];
 
     if (camera.snapshot) {
         method = require('./streaming/snapshot.js');

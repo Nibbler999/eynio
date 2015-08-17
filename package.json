@@ -21,6 +21,7 @@
     "home-controller": "0.5.2",
     "iotdb-timers": "0.0.10",
     "ip": "0.3.3",
+    "jpeg-size": "0.0.1",
     "lifx": "0.3.1",
     "mjpeg-consumer": "0.6.2",
     "netatmo": "1.2.0",
