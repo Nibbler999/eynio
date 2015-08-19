@@ -43,6 +43,10 @@ Cats.listen = function (c, l) {
         catList.apply(command, command.args);
     });
 
+    conn.on('getCategories', function (command) {
+        getCategories.apply(command, command.args);
+    });
+
     conn.on('catAddDevice', function (command) {
         catAddDevice.apply(command, command.args);
     });
@@ -125,6 +129,17 @@ function catList(cb)
     if (cb) cb(categories);
 }
 
+function getCategories(cb)
+{
+    var cat_array = hash_to_array(categories);
+
+    cat_array = cat_array.sort(function(a, b) {
+        return a.id === 'dashboard' ? -1 : 1;
+    });
+
+    if (cb) cb(cat_array);
+}
+
 function catAddDevice(catid, deviceid, cb)
 {
     if (!devices.hasOwnProperty(deviceid)) {
@@ -179,6 +194,26 @@ function removeCatFromDevice(catid, deviceid)
     devices[deviceid] = devices[deviceid].filter(function (c) {
         return c !== catid;
     });
+}
+
+function hash_to_array(hash)
+{
+    var array = [], object;
+
+    for (var key in hash) {
+
+        object = {
+            id: key
+        };
+
+        for (var key2 in hash[key]) {
+            object[key2] = hash[key][key2];
+        }
+
+        array.push(object);
+    }
+
+    return array;
 }
 
 module.exports = Cats;
