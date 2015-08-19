@@ -39,10 +39,6 @@ Cats.listen = function (c, l) {
         catUpdate.apply(command, command.args);
     });
 
-    conn.on('catList', function (command) {
-        catList.apply(command, command.args);
-    });
-
     conn.on('getCategories', function (command) {
         getCategories.apply(command, command.args);
     });
@@ -122,18 +118,11 @@ function catUpdate(catid, cat, cb)
     if (cb) cb();
 }
 
-function catList(cb)
-{
-    conn.broadcast('catList', categories);
-
-    if (cb) cb(categories);
-}
-
 function getCategories(cb)
 {
     var cat_array = hash_to_array(categories);
 
-    cat_array = cat_array.sort(function(a, b) {
+    cat_array = cat_array.sort(function(a) {
         return a.id === 'dashboard' ? -1 : 1;
     });
 
