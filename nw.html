@@ -4,8 +4,17 @@
     <title>NHome</title>
   </head>
   <body style="margin: 0;">
-    <iframe src="" style="border: 0; width:100%; height: 614px"></iframe>
-    <pre id="console" style="color: white; background-color: black; font-family: monospace; height: 150px; margin: 0px; "></pre>
+    <div style="height: 20px; width: 100%">
+        <div style="width: 50%; float: left; border-bottom: 1px solid silver; text-align: center;cursor: pointer" onclick="settings()">
+            Settings
+        </div>
+        <div style="width: 50%; float: left;  border-bottom: 1px solid silver; text-align: center; cursor:pointer" onclick="console()">
+            Log
+        </div>
+    </div>
+    <iframe src="" id="tab" style="display: none; border: 0; width:100%; height: 748px"></iframe>
+    <pre id="console" style="display: block; color: white; background-color: black; font-family: monospace; height: 748px; margin: 0px;"></pre>
+
     <script>
 
         var stream = require('stream');
@@ -15,7 +24,7 @@
         var weblog = new stream.Writable({
             write: function(chunk, encoding, next) {
                 entries.push(chunk.toString());
-                if (entries.length > 10) {
+                if (entries.length > 50) {
                     entries.shift();
                 }
                 document.getElementById('console').textContent = entries.join('');
@@ -45,9 +54,20 @@
 
         require('./update.js')(log, function() {
             setTimeout(function() {
-                document.getElementsByTagName('iframe')[0].src = 'http://127.0.0.1:8008';
+                document.getElementById('tab').src = 'http://127.0.0.1:8008/settings.html';
             }, 0);
         });
+
+        function settings() {
+            document.getElementById('console').style.display = 'none';
+            document.getElementById('tab').style.display = 'block';
+            document.getElementById('tab').src = 'http://127.0.0.1:8008/settings.html';
+        }
+
+        function console() {
+            document.getElementById('console').style.display = 'block';
+            document.getElementById('tab').style.display = 'none';
+        }
 
     </script>
   </body>

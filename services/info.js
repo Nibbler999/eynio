@@ -4,10 +4,16 @@ var conn;
 
 var logger;
 
+var externalIP = '';
+
 module.exports = function (c, l) {
 
     conn = c;
     logger = l.child({component: 'Info'});
+
+    conn.on('setExternalIP', function (command) {
+        setExternalIP.apply(command, command.args);
+    });
 
     conn.on('getServerStatus', function (command) {
         getServerStatus.apply(command, command.args);
@@ -63,15 +69,22 @@ function getLocation()
     }
 }
 
+function setExternalIP(ip)
+{
+console.log(ip);
+    externalIP = ip;
+}
+
 function getServerStatus(cb)
 {
     var status = {
         ip: getIP(),
+        external_ip: externalIP,
         version: getVersion(),
         updateable: getUpdateable(),
         node_version: process.version,
         node_arch: process.arch,
-        node_platform: process.platform
+        node_platform: process.platform,
     };
 
     conn.broadcast('serverStatus', status);
