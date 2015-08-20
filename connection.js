@@ -238,7 +238,7 @@ function setupLocalServer()
 
     var client = require('./node_modules/socket.io/node_modules/socket.io-client');
 
-    var serverUrl = 'http://127.0.0.1:8080/server';
+    var serverUrl = 'http://127.0.0.1:8008/server';
 
     var serverOpts = {
         transports: ['websocket']

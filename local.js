@@ -12,7 +12,7 @@ module.exports = function (l) {
     var app = express();
     var server = require('http').createServer(app);
 
-    server.listen(8080);
+    server.listen(8008);
 
     app.engine('.html', ejs.__express);
 
@@ -95,7 +95,7 @@ function localConnect()
 {
     var io = require('./node_modules/socket.io/node_modules/socket.io-client');
 
-    var serverUrl = 'http://127.0.0.1:8080/client';
+    var serverUrl = 'http://127.0.0.1:8008/client';
 
     var serverOpts = {
         transports: ['websocket'],

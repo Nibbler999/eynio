@@ -36,7 +36,7 @@ module.exports = function(c, l) {
     if (/^[a-f0-9]{32}$/.test(apikey)) {
         serverUrl = 'https://nhome.ba/client?apikey=' + apikey;
     } else {
-        serverUrl = 'http://' + apikey + ':8080/client';
+        serverUrl = 'http://' + apikey + ':8008/client';
     }
 
     nhome = io(serverUrl, {'force new connection': true});
