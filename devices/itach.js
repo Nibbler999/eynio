@@ -84,7 +84,7 @@ function sendRemoteKey(remote, code, cb)
 
     var cmd = code.replace('1:1', remote.connector) + '\r';
 
-    devices[remote.deviceid].dev.send(cmd, function (err, res) {
+    devices[remote.deviceid].dev.send(cmd, function (err) {
         if (err) {
             log(err);
             if (cb) cb(false);
