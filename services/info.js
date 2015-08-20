@@ -71,7 +71,6 @@ function getLocation()
 
 function setExternalIP(ip)
 {
-console.log(ip);
     externalIP = ip;
 }
 
