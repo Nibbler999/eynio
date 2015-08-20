@@ -6,6 +6,8 @@ var logger;
 
 var externalIP = '';
 
+var cfg = require('../configuration.js');
+
 module.exports = function (c, l) {
 
     conn = c;
@@ -13,6 +15,11 @@ module.exports = function (c, l) {
 
     conn.on('setExternalIP', function (command) {
         setExternalIP.apply(command, command.args);
+    });
+
+    // Temp
+    conn.on('setName', function (command) {
+        setName.apply(command, command.args);
     });
 
     conn.on('getServerStatus', function (command) {
@@ -48,8 +55,6 @@ module.exports = function (c, l) {
 
 function getLocation()
 {
-    var cfg = require('../configuration.js');
-
     var latitude = cfg.get('latitude', null);
     var longitude = cfg.get('longitude', null);
 
@@ -69,6 +74,11 @@ function getLocation()
     }
 }
 
+function setName(name)
+{
+    cfg.set('name', name);
+}
+
 function setExternalIP(ip)
 {
     externalIP = ip;
@@ -76,7 +86,10 @@ function setExternalIP(ip)
 
 function getServerStatus(cb)
 {
+    var name = cfg.get('name', '');
+
     var status = {
+        name: name,
         ip: getIP(),
         external_ip: externalIP,
         version: getVersion(),
@@ -198,7 +211,6 @@ function ping(cb)
 
 function configBackup(cb)
 {
-    var cfg = require('../configuration.js');
     var config = cfg.getAll();
 
     if (cb) cb(config);
@@ -206,8 +218,6 @@ function configBackup(cb)
 
 function configRestore(newconfig, cb)
 {
-    var cfg = require('../configuration.js');
-
     cfg.setAll(newconfig);
 
     if (cb) cb();
@@ -215,8 +225,6 @@ function configRestore(newconfig, cb)
 
 function configSet(key, value, cb)
 {
-    var cfg = require('../configuration.js');
-
     cfg.set(key, value);
 
     if (cb) cb();
