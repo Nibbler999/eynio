@@ -244,7 +244,7 @@ function switchOn(id, cb)
 
     var self = this;
 
-    devices[id].dev.setBinaryState(1, function(err, result) {
+    devices[id].dev.setBinaryState(1, function(err) {
 
         if (err) {
             logger.error('switchOn', err);
@@ -269,7 +269,7 @@ function switchOff(id, cb)
 
     var self = this;
 
-    devices[id].dev.setBinaryState(0, function(err, result) {
+    devices[id].dev.setBinaryState(0, function(err) {
 
         if (err) {
             logger.error('switchOff', err);
