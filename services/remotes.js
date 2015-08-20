@@ -90,7 +90,9 @@ function updateCustomRemote(remote)
     }
 
     for (var prop in remote) {
-        remotes[remote.id][prop] = remote[prop];
+        if (prop !== 'keys') {
+            remotes[remote.id][prop] = remote[prop];
+        }
     }
 
     saveRemotes();
