@@ -265,6 +265,13 @@ function getLightState(id, cb)
     var light = lights[id];
 
     light.level(function(err, level) {
+
+        if (err) {
+            logger.error(err);
+            if (cb) cb(false);
+            return;
+        }
+
         var on = level > 0;
         var lightState = { on: on, level: level };
         conn.broadcast('lightState', { id: id, state: lightState});
