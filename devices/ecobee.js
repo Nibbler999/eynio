@@ -90,10 +90,12 @@ function to_c(t)
     return parseFloat(((t / 10 - 32) * (5 / 9)).toFixed(1));
 }
 
+/*
 function from_c(t)
 {
     return Math.round(((t * (9 / 5)) + 32) * 10);
 }
+*/
 
 function startListening()
 {
