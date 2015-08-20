@@ -42,6 +42,8 @@ function addScene(scene, cb)
 
     save();
 
+    logger.debug('Scene', scene.id, 'added');
+
     if (cb) cb(scenes);
 }
 
@@ -53,6 +55,8 @@ function updateScene(scene, cb)
 
     save();
 
+    logger.debug('Scene', scene.id, 'updated');
+
     if (cb) cb(scenes[scene.id]);
 }
 
@@ -61,6 +65,8 @@ function deleteScene(sceneid, cb)
     delete scenes[sceneid];
 
     save();
+
+    logger.debug('Scene', sceneid, 'deleted');
 
     if (cb) cb();
 }
@@ -109,6 +115,8 @@ function setScene(sceneid, cb)
 
         conn.emit(command.name, command);
     });
+
+    logger.debug('Scene', sceneid, 'set');
 
     if (cb) cb(true);
 }

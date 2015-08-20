@@ -81,6 +81,8 @@ function deleteCamera(cameraid, cb)
 
     Cams.save();
 
+    logger.debug('Camera', cameraid, 'deleted');
+
     if (cb) cb();
 }
 
@@ -93,6 +95,8 @@ function updateCamera(camera, cb)
     conn.broadcast('cameraUpdated', cameras[camera.id]);
 
     Cams.save();
+
+    logger.debug('Camera', camera.id, 'updated');
 
     if (cb) cb();
 }
@@ -111,6 +115,8 @@ function addCamera(camera, cb)
     cameras[cameraid] = camera;
 
     Cams.save();
+
+    logger.debug('Camera', cameraid, 'added');
 
     if (cb) cb();
 }

@@ -89,6 +89,8 @@ function catAdd(cat, cb)
     categories[catid] = cat;
     Cats.update();
 
+    logger.debug('Category', catid, 'added');
+
     if (cb) cb(catid);
 }
 
@@ -107,6 +109,8 @@ function catDelete(catid, cb)
 
     Cats.update();
 
+    logger.debug('Category', catid, 'deleted');
+
     if (cb) cb(true);
 }
 
@@ -114,6 +118,8 @@ function catUpdate(catid, cat, cb)
 {
     categories[catid] = cat;
     Cats.update();
+
+    logger.debug('Category', catid, 'updated');
 
     if (cb) cb();
 }

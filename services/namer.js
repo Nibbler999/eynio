@@ -41,6 +41,8 @@ function setDeviceName(id, name, cb)
 {
     customnames[id] = name;
     Namer.deviceRenamed(id, cb);
+
+    logger.debug('Device', id, 'renamed to', name);
 }
 
 function resetDeviceName(id, cb)
@@ -53,6 +55,8 @@ function setBridgeName(id, name, cb)
 {
     customnames[id] = name;
     Namer.bridgeRenamed(id, cb);
+
+    logger.debug('Bridge', id, 'renamed to', name);
 }
 
 function resetBridgeName(id, cb)
