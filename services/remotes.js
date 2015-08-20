@@ -83,19 +83,19 @@ function saveCustomRemote(r)
     conn.broadcast('customRemoteAdded', r);
 }
 
-function updateCustomRemote(r)
+function updateCustomRemote(remote)
 {
-    if (!remotes.hasOwnProperty(r.id)) {
+    if (!remotes.hasOwnProperty(remote.id)) {
         return;
     }
 
-    r.keys = remotes[r.id].keys;
-
-    remotes[r.id] = r;
+    for (var prop in remote) {
+        remotes[remote.id][prop] = remote[prop];
+    }
 
     saveRemotes();
 
-    conn.broadcast('customRemoteUpdated', r);
+    conn.broadcast('customRemoteUpdated', remotes[remote.id]);
 }
 
 function deleteCustomRemote(id)
