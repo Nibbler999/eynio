@@ -203,7 +203,7 @@ function switchOn(id, cb)
     var deviceId = devices[id].id;
     var self = this;
 
-    devices[id].dev.api.devices.turnOn(deviceId, function(err, result) {
+    devices[id].dev.api.devices.turnOn(deviceId, function(err) {
 
         if (err) {
             log('switchOn:' + err);
@@ -229,7 +229,7 @@ function switchOff(id, cb)
     var deviceId = devices[id].id;
     var self = this;
 
-    devices[id].dev.api.devices.turnOff(deviceId, function(err, result) {
+    devices[id].dev.api.devices.turnOff(deviceId, function(err) {
 
         if (err) {
             log('switchOff:' + err);
@@ -397,7 +397,7 @@ function setShutterValue(id, value, cb)
 
     var deviceId = devices[id].id;
 
-    devices[id].dev.call('callAction', { 'deviceID': deviceId, 'name': 'setValue', 'arg1': value }, function(err, result) {
+    devices[id].dev.call('callAction', { 'deviceID': deviceId, 'name': 'setValue', 'arg1': value }, function(err) {
 
         if (err) {
             log('setShutterValue:' + err);
@@ -419,7 +419,7 @@ function openShutter(id, cb)
     var deviceId = devices[id].id;
     var self = this;
 
-    devices[id].dev.call('callAction', { 'deviceID': deviceId, 'name': 'open' }, function(err, result) {
+    devices[id].dev.call('callAction', { 'deviceID': deviceId, 'name': 'open' }, function(err) {
 
         if (err) {
             log('openShutter:' + err);
@@ -443,7 +443,7 @@ function closeShutter(id, cb)
     var deviceId = devices[id].id;
     var self = this;
 
-    devices[id].dev.call('callAction', { 'deviceID': deviceId, 'name': 'close' }, function(err, result) {
+    devices[id].dev.call('callAction', { 'deviceID': deviceId, 'name': 'close' }, function(err) {
 
         if (err) {
             log('closeShutter:' + err);
@@ -466,7 +466,7 @@ function stopShutter(id, cb)
 
     var deviceId = devices[id].id;
 
-    devices[id].dev.call('callAction', { 'deviceID': deviceId, 'name': 'stop' }, function(err, result) {
+    devices[id].dev.call('callAction', { 'deviceID': deviceId, 'name': 'stop' }, function(err) {
 
         if (err) {
             log('stopShutter:' + err);
