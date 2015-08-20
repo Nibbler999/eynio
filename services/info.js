@@ -83,7 +83,7 @@ function getServerStatus(cb)
         updateable: getUpdateable(),
         node_version: process.version,
         node_arch: process.arch,
-        node_platform: process.platform,
+        node_platform: process.platform
     };
 
     conn.broadcast('serverStatus', status);
