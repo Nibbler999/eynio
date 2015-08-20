@@ -27,7 +27,7 @@ common.monitor = function(host, port, cb) {
 
     tcpp.probe(host, port, function (err, available) {
 
-        if (!available) {
+        if (err || !available) {
             return cb();
         }
 
