@@ -430,7 +430,7 @@ function setLightState(id, values, cb)
     var capability = 10006;
     var value = values.on ? 1 : 0;
 
-    devices[id].dev.SetDeviceStatus(id, capability, value, function(err, result) {
+    devices[id].dev.SetDeviceStatus(id, capability, value, function(err) {
 
         if (err) {
             logger.error('setLightState', err);
@@ -454,7 +454,7 @@ function setLightWhite(id, brightness, temperature, cb)
     var capability = 10008;
     var value = (brightness / 100) * 255;
 
-    devices[id].dev.SetDeviceStatus(id, capability, value, function(err, result) {
+    devices[id].dev.SetDeviceStatus(id, capability, value, function(err) {
 
         if (err) {
             logger.error('setLightState', err);
