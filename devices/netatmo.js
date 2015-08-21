@@ -198,10 +198,16 @@ function setThermostatValue(id, value, cb)
 
     var self = this;
 
-    api.setThermpoint(options, function(err) {
+    api.setThermpoint(options, function(err, result) {
 
         if (err) {
             logger.error(err);
+            if (cb) cb(false);
+            return;
+        }
+
+        if (result !== 'ok') {
+            logger.error(result);
             if (cb) cb(false);
             return;
         }
