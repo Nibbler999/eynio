@@ -75,9 +75,16 @@ function startListening()
 
 function loadDevices(cb)
 {
-    getStations(function() {
-        getThermostats(cb);
-    });
+    var count = 2;
+
+    var both = function() {
+        if (--count === 0) {
+            cb();
+        }
+    };
+
+    getStations(both);
+    getThermostats(both);
 }
 
 function getStations(cb)
