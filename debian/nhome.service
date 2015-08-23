@@ -1,0 +1,11 @@
+[Unit]
+Description=NHome
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/node /opt/nhome/server.js
+User=nhome
+Restart=always
+
+[Install]
+WantedBy=basic.target
