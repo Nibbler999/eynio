@@ -2,8 +2,8 @@
 
 adduser --system nhome
 
-update-rc.d nhome defaults
-invoke-rc.d nhome start
+#update-rc.d nhome defaults
+#invoke-rc.d nhome start
 
 exit 0
 
