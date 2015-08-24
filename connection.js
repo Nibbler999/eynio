@@ -17,7 +17,8 @@ module.exports = function (l) {
 
     var serverOpts = {
         transports: ['websocket'],
-        autoConnect: false
+        autoConnect: false,
+        perMessageDeflate: false
     };
 
     var conn = io(serverUrl, serverOpts);
