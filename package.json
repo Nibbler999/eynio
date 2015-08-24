@@ -37,7 +37,7 @@
     "underscore": "1.6.0",
     "wemo": "0.2.1",
     "write-limiter": "0.1.3",
-    "ws": "0.7.2",
+    "ws": "0.8.0",
     "ws-heartbeats": "^1.0.0",
     "xml2js": "0.4.10"
   },
