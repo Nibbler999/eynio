@@ -17,8 +17,7 @@ module.exports = function (l) {
 
     var serverOpts = {
         transports: ['websocket'],
-        autoConnect: false,
-        perMessageDeflate: false
+        autoConnect: false
     };
 
     var conn = io(serverUrl, serverOpts);
@@ -121,7 +120,11 @@ function setupLocalServer()
 {
     var server = require('./local.js')(log);
 
-    var io = require('socket.io')(server);
+    var options = {
+        perMessageDeflate: false
+    };
+
+    var io = require('socket.io')(server, options);
 
     io.of('/client').use(function(socket, next) {
 
