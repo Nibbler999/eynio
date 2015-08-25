@@ -41,6 +41,10 @@ module.exports = function(c, l) {
         getCachedThumbnail.apply(command, command.args);
     });
 
+    conn.on('disconnect', function () {
+        stopStreamingAll();
+    });
+
     ffmpeg.check(updateCache);
 
     setInterval(updateCache, 5 * 60 * 1000);
@@ -160,6 +164,15 @@ function stopStreaming(cameraid, options)
         sources[cameraid][options.framerate].unpipe(scalers[key]);
     } else if (sources[cameraid] && sources[cameraid][options.framerate]) {
         sources[cameraid][options.framerate].unpipe(destinations[key]);
+    }
+}
+
+function stopStreamingAll()
+{
+    for (var d in destinations) {
+        if (d.indexOf('remote') !== -1) {
+            destinations[d].end();
+        }
     }
 }
 

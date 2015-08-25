@@ -57,6 +57,7 @@ module.exports = function (l) {
 
     conn.on('disconnect', function () {
         log.error('Disconnected');
+        wrapper.emit('disconnect');
     });
 
     conn.on('command', command_handler);
