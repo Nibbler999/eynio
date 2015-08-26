@@ -277,6 +277,12 @@ function getThumbnailImage(id, cb)
 
     var camera = cameras[id];
 
+    if (!camera) {
+        logger.debug('Unknown camera', id);
+        if (cb) cb();
+        return;
+    }
+
     if (camera.snapshot) {
         method = require('./streaming/snapshot.js');
     } else if (camera.mjpeg) {
