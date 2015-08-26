@@ -161,10 +161,17 @@ function getLog(cb)
 
 function getUpdateable()
 {
+    // systemd
     if (process.env.NHOME_CAN_UPDATE === '1') {
         return true;
     }
 
+    // nw.js on windows
+    if (process.platform === 'win32' && process.argv[1] === 'node') {
+        return true;
+    }
+
+    // node update.js
     if (require('path').basename(process.argv[1], '.js') === 'update') {
         return true;
     }
@@ -179,6 +186,12 @@ function updateApp(cb)
     // Our NHome pi image - systemd will update app and respawn us
     if (process.env.NHOME_CAN_UPDATE === '1') {
         process.exit();
+        return;
+    }
+
+    // nw.js on windows
+    if (process.platform === 'win32' && process.argv[1] === 'node') {
+        reSpawnApp();
         return;
     }
 
