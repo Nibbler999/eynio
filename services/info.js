@@ -167,7 +167,7 @@ function getUpdateable()
     }
 
     // nw.js on windows
-    if (process.platform === 'win32' && process.argv[1] === 'node') {
+    if (process.platform === 'win32' && process.argv[0] === 'node') {
         return true;
     }
 
@@ -190,7 +190,7 @@ function updateApp(cb)
     }
 
     // nw.js on windows
-    if (process.platform === 'win32' && process.argv[1] === 'node') {
+    if (process.platform === 'win32' && process.argv[0] === 'node') {
         reSpawnApp();
         return;
     }
