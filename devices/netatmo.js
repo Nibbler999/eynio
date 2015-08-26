@@ -3,7 +3,6 @@
 var api;
 
 var Namer = require('../services/namer.js');
-var Cats = require('../services/cats.js');
 var cfg = require('../configuration.js');
 
 var conn, devices = {}, bridges = {}, thermostats = {};
@@ -275,8 +274,6 @@ function getBridges(cb)
 
 function getDevices(cb)
 {
-    var blacklist = cfg.get('blacklist_devices', []);
-
     loadDevices(function() {
 
         var all = [];
@@ -288,8 +285,6 @@ function getDevices(cb)
                 type: 'sensor',
                 subtype: devices[device].type,
                 value: devices[device].value,
-                categories: Cats.getCats(device),
-                blacklisted: blacklist.indexOf(device) !== -1,
                 module: 'netatmo'
             });
         }
@@ -300,12 +295,12 @@ function getDevices(cb)
                 name: Namer.getName(device),
                 value: thermostats[device].value,
                 target: thermostats[device].target,
-                categories: Cats.getCats(device),
                 type: 'thermostat',
-                blacklisted: blacklist.indexOf(device) !== -1,
                 module: 'netatmo'
             });
         }
+
+        require('../common.js').addDeviceProperties(all);
 
         if (cb) cb(all);
     });

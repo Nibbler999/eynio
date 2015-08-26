@@ -4,8 +4,6 @@ var lifx = require('lifx');
 var lx;
 
 var Namer = require('../services/namer.js');
-var Cats = require('../services/cats.js');
-var cfg = require('../configuration.js');
 
 var conn;
 
@@ -120,8 +118,6 @@ function startListening()
 
 function getDevices(cb)
 {
-    var blacklist = cfg.get('blacklist_devices', []);
-
     var all = [];
 
     for (var device in devices) {
@@ -129,12 +125,12 @@ function getDevices(cb)
             id: device,
             name: Namer.getName(device),
             state: devices[device].state,
-            categories: Cats.getCats(device),
             type: 'light',
-            blacklisted: blacklist.indexOf(device) !== -1,
             module: 'lifx'
         });
     }
+
+    require('../common.js').addDeviceProperties(all);
 
     if (cb) cb(all);
 }

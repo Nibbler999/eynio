@@ -3,8 +3,6 @@
 var WeMo = require('wemo');
 
 var Namer = require('../services/namer.js');
-var Cats = require('../services/cats.js');
-var cfg = require('../configuration.js');
 
 var conn, devices = {}, subscriptions = {};
 
@@ -215,8 +213,6 @@ function startUPnPServer()
 
 function getDevices(cb)
 {
-    var blacklist = cfg.get('blacklist_devices', []);
-
     var all = [];
 
     for (var device in devices) {
@@ -227,11 +223,11 @@ function getDevices(cb)
             state: devices[device].state,
             type: devices[device].type,
             subtype: devices[device].subtype,
-            categories: Cats.getCats(device),
-            blacklisted: blacklist.indexOf(device) !== -1,
             module: 'wemo'
         });
     }
+
+    require('../common.js').addDeviceProperties(all);
 
     if (cb) cb(all);
 }

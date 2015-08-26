@@ -2,6 +2,9 @@
 
 var tcpp = require('tcp-ping');
 
+var Cats = require('./services/cats.js');
+var cfg = require('./configuration.js');
+
 var common = {};
 
 /*
@@ -35,6 +38,20 @@ common.monitor = function(host, port, cb) {
 
         setTimeout(common.monitor, 20 * 1000, host, port, cb);
     });
+};
+
+common.addDeviceProperties = function (devicelist) {
+
+    var blacklist = cfg.get('blacklist_devices', []);
+
+    var id = '';
+
+    for (var d = 0; d < devicelist.length; d++) {
+        id = devicelist[d].id;
+        devicelist[d].categories = Cats.getCats(id);
+        devicelist[d].blacklisted = blacklist.indexOf(id) !== -1;
+        //devicelist[d].last_used = { time: +new Date(), user: 'foo' };
+    }
 };
 
 module.exports = common;

@@ -1,7 +1,6 @@
 "use strict";
 
 var Namer = require('../services/namer.js');
-var Cats = require('../services/cats.js');
 var cfg = require('../configuration.js');
 
 var tcpp = require('tcp-ping');
@@ -183,8 +182,6 @@ function getBridges(cb)
 
 function getDevices(cb)
 {
-    var blacklist = cfg.get('blacklist_devices', []);
-
     update(function() {
 
         var all = [];
@@ -194,13 +191,13 @@ function getDevices(cb)
                 all.push({
                     id: device,
                     name: Namer.getName(device),
-                    categories: Cats.getCats(device),
                     type: 'switch',
-                    blacklisted: blacklist.indexOf(device) !== -1,
                     module: 'razberry'
                 });
             }
         }
+
+        require('../common.js').addDeviceProperties(all);
 
         if (cb) cb(all);
     });

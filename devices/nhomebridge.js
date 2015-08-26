@@ -1,8 +1,6 @@
 "use strict";
 
 var Namer = require('../services/namer.js');
-var Cats = require('../services/cats.js');
-var cfg = require('../configuration.js');
 
 var conn;
 
@@ -137,8 +135,6 @@ function startListening()
 
 function getDevices(cb)
 {
-    var blacklist = cfg.get('blacklist_devices', []);
-
     var all = [];
 
     for (var sensor in sensors) {
@@ -148,11 +144,11 @@ function getDevices(cb)
             value: sensors[sensor].value,
             type: 'sensor',
             subtype: sensors[sensor].subtype,
-            categories: Cats.getCats(sensor),
-            blacklisted: blacklist.indexOf(sensor) !== -1,
             module: 'nhomebridge'
         });
     }
+
+    require('../common.js').addDeviceProperties(all);
 
     if (cb) cb(all);
 }

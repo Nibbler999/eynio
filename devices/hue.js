@@ -5,8 +5,6 @@ var hue = require("node-hue-api");
 var HueApi = hue.HueApi,
     lightState = hue.lightState;
 
-var Cats = require('../services/cats.js');
-
 var cfg = require('../configuration.js');
 
 var conn, devices = {}, bridges = {};
@@ -253,8 +251,6 @@ function getDevices(cb)
 {
     loadLights(function() {
 
-        var blacklist = cfg.get('blacklist_devices', []);
-
         var all = [];
 
         for (var device in devices) {
@@ -262,12 +258,12 @@ function getDevices(cb)
                 id: device,
                 name: devices[device].name,
                 state: devices[device].state,
-                categories: Cats.getCats(device),
                 type: 'light',
-                blacklisted: blacklist.indexOf(device) !== -1,
                 module: 'hue'
             });
         }
+
+        require('../common.js').addDeviceProperties(all);
 
         if (cb) cb(all);
     });

@@ -2,7 +2,6 @@
 
 var Fibaro = require('fibaro-api');
 var Namer = require('../services/namer.js');
-var Cats = require('../services/cats.js');
 var cfg = require('../configuration.js');
 
 var conn, devices = {}, bridges = {};
@@ -169,9 +168,8 @@ function getBridges(cb)
 
 function getDevices(cb)
 {
-    var blacklist = cfg.get('blacklist_devices', []);
-
     loadDevices(function() {
+
         var all = [], type;
 
         for (var device in devices) {
@@ -181,14 +179,14 @@ function getDevices(cb)
             all.push({
                 id: device,
                 name: Namer.getName(device),
-                categories: Cats.getCats(device),
                 type: type.type,
                 subtype: type.subtype,
                 value: devices[device].value,
-                blacklisted: blacklist.indexOf(device) !== -1,
                 module: 'fibaro'
             });
         }
+
+        require('../common.js').addDeviceProperties(all);
 
         if (cb) cb(all);
     });
