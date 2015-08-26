@@ -5,13 +5,13 @@ var util = require('util');
 
 var wrapper, log;
 
-module.exports = function (l) {
+module.exports = function (l, serverid, uuid) {
 
     log = l;
 
     var io = require('socket.io/node_modules/socket.io-client');
 
-    var serverUrl = 'https://nhome.ba/server?uuid=' + getUUID() + '&version=' + getVersion();
+    var serverUrl = 'https://nhome.ba/server?uuid=' + uuid + '&version=' + getVersion() + '&server=' + serverid;
 
     log.debug('URL', serverUrl);
 
@@ -367,24 +367,6 @@ function command_handler(command, cb)
         log.error('Error handling command', command.name, command.args);
         log.error(e);
     }
-}
-
-function getUUID()
-{
-    var home = process.env.HOME || process.env.USERPROFILE || process.env.HOMEPATH;
-
-    var uuidFile = require('path').join(home, 'nhome-uuid');
-
-    var fs = require('fs');
-
-    if (!fs.existsSync(uuidFile)) {
-        //log.info('Generating new uuid');
-        var uuid = require('node-uuid').v4();
-        //log.debug(uuid);
-        fs.writeFileSync(uuidFile, uuid);
-    }
-
-    return fs.readFileSync(uuidFile, { encoding: 'utf8'});
 }
 
 function getVersion()

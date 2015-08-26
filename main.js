@@ -6,9 +6,9 @@ module.exports = function (log) {
 
     var cfg = require('./configuration.js');
 
-    cfg.load(log, function () {
+    cfg.load(log, function (serverid, uuid) {
 
-        var conn = require('./connection.js')(log);
+        var conn = require('./connection.js')(log, serverid, uuid);
 
         log.debug('Loading services');
 

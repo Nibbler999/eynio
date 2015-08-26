@@ -10,8 +10,41 @@ Configuration.load = function (l, cb) {
 
     load(function(success) {
         if (success) {
+
+            var uuid = getUUID();
+
             logger.debug('Configuration data', conf);
-            cb();
+
+            if (!conf.serverid) {
+
+                logger.debug('Requesting server id');
+
+                var url = 'https://nhome.ba/user/api_register_server';
+
+                require('request').post({url: url, form: { uuid: uuid }}, function (err, httpResponse, body) {
+
+                    if (err) {
+                        logger.error(err);
+                        process.exit();
+                    }
+
+                    if (httpResponse.statusCode !== 200) {
+                        logger.error('Server registration error:', httpResponse.statusCode);
+                        logger.debug(body);
+                        process.exit();
+                    }
+
+                    var response = JSON.parse(body);
+
+                    Configuration.set('serverid', response.serverid);
+
+                    cb(response.serverid, uuid);
+                });
+
+            } else {
+                cb(conf.serverid, uuid);
+            }
+
         } else {
             logger.error('Failed to load config');
         }
@@ -51,6 +84,24 @@ function getConfFile()
     var filepath = require('path').join(home, filename);
 
     return filepath;
+}
+
+function getUUID()
+{
+    var home = process.env.HOME || process.env.USERPROFILE || process.env.HOMEPATH;
+
+    var uuidFile = require('path').join(home, 'nhome-uuid');
+
+    var fs = require('fs');
+
+    if (!fs.existsSync(uuidFile)) {
+        logger.info('Generating new uuid');
+        var uuid = require('node-uuid').v4();
+        logger.debug(uuid);
+        fs.writeFileSync(uuidFile, uuid);
+    }
+
+    return fs.readFileSync(uuidFile, { encoding: 'utf8'});
 }
 
 function load(cb)
