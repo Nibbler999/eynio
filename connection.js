@@ -121,11 +121,11 @@ function setupLocalServer()
 {
     var server = require('./local.js')(log);
 
-    var options = {
+    var server_options = {
         perMessageDeflate: false
     };
 
-    var io = require('socket.io')(server, options);
+    var io = require('socket.io')(server, server_options);
 
     io.of('/client').use(function(socket, next) {
 
