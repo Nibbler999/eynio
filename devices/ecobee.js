@@ -61,7 +61,8 @@ function loadDevices(cb)
                             id: id,
                             name: thermostat.name,
                             value: to_c(thermostat.runtime.actualTemperature),
-                            target: 0
+                            target_min: to_c(thermostat.runtime.desiredHeat),
+                            target_max: to_c(thermostat.runtime.desiredCool)
                         };
 
                         sensors[id + '-humidity'] = {
