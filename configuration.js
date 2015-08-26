@@ -170,7 +170,8 @@ function registerServer(uuid, cb)
 
         var response = JSON.parse(body);
 
-        Configuration.set('serverid', response.serverid);
+        Configuration.set('serverid', parseInt(response.serverid));
+        Configuration.set('uuid', uuid);
 
         cb(response.serverid, uuid);
     });
