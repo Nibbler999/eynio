@@ -131,7 +131,8 @@ function getDevices(cb)
             state: devices[device].state,
             categories: Cats.getCats(device),
             type: 'light',
-            blacklisted: blacklist.indexOf(device) !== -1
+            blacklisted: blacklist.indexOf(device) !== -1,
+            module: 'lifx'
         });
     }
 

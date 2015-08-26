@@ -228,7 +228,8 @@ function getDevices(cb)
             type: devices[device].type,
             subtype: devices[device].subtype,
             categories: Cats.getCats(device),
-            blacklisted: blacklist.indexOf(device) !== -1
+            blacklisted: blacklist.indexOf(device) !== -1,
+            module: 'wemo'
         });
     }
 

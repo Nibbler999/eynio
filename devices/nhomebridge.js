@@ -149,7 +149,8 @@ function getDevices(cb)
             type: 'sensor',
             subtype: sensors[sensor].subtype,
             categories: Cats.getCats(sensor),
-            blacklisted: blacklist.indexOf(sensor) !== -1
+            blacklisted: blacklist.indexOf(sensor) !== -1,
+            module: 'nhomebridge'
         });
     }
 
@@ -163,7 +164,8 @@ function getRemotes(cb)
     for (var device in devices) {
         r.push({
             id: device,
-            name: Namer.getName(device)
+            name: Namer.getName(device),
+            module: 'nhomebridge'
         });
     }
 

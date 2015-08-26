@@ -66,7 +66,8 @@ function getRemotes(cb)
     for (var device in devices) {
         r.push({
             id: device,
-            name: Namer.getName(device)
+            name: Namer.getName(device),
+            module: 'itach'
         });
     }
 

@@ -152,7 +152,8 @@ function getDevices(cb)
             name: Namer.getName(device),
             categories: Cats.getCats(device),
             type: 'light',
-            blacklisted: blacklist.indexOf(device) !== -1
+            blacklisted: blacklist.indexOf(device) !== -1,
+            module: 'insteon'
         });
     }
 

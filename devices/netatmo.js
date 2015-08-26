@@ -289,7 +289,8 @@ function getDevices(cb)
                 subtype: devices[device].type,
                 value: devices[device].value,
                 categories: Cats.getCats(device),
-                blacklisted: blacklist.indexOf(device) !== -1
+                blacklisted: blacklist.indexOf(device) !== -1,
+                module: 'netatmo'
             });
         }
 
@@ -301,7 +302,8 @@ function getDevices(cb)
                 target: thermostats[device].target,
                 categories: Cats.getCats(device),
                 type: 'thermostat',
-                blacklisted: blacklist.indexOf(device) !== -1
+                blacklisted: blacklist.indexOf(device) !== -1,
+                module: 'netatmo'
             });
         }
 

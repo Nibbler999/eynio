@@ -148,7 +148,8 @@ function getDevices(cb)
                 target: thermostats[device].target,
                 categories: Cats.getCats(device),
                 type: 'thermostat',
-                blacklisted: blacklist.indexOf(device) !== -1
+                blacklisted: blacklist.indexOf(device) !== -1,
+                module: 'ecobee'
             });
         }
 
@@ -160,7 +161,8 @@ function getDevices(cb)
                 categories: Cats.getCats(device),
                 type: 'sensor',
                 subtype: sensors[device].type,
-                blacklisted: blacklist.indexOf(device) !== -1
+                blacklisted: blacklist.indexOf(device) !== -1,
+                module: 'ecobee'
             });
         }
 

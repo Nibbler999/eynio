@@ -185,7 +185,8 @@ function getDevices(cb)
                 type: type.type,
                 subtype: type.subtype,
                 value: devices[device].value,
-                blacklisted: blacklist.indexOf(device) !== -1
+                blacklisted: blacklist.indexOf(device) !== -1,
+                module: 'fibaro'
             });
         }
 
