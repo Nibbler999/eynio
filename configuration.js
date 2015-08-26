@@ -19,27 +19,7 @@ Configuration.load = function (l, cb) {
 
                 logger.debug('Requesting server id');
 
-                var url = 'https://nhome.ba/user/api_register_server';
-
-                require('request').post({url: url, form: { uuid: uuid }}, function (err, httpResponse, body) {
-
-                    if (err) {
-                        logger.error(err);
-                        process.exit();
-                    }
-
-                    if (httpResponse.statusCode !== 200) {
-                        logger.error('Server registration error:', httpResponse.statusCode);
-                        logger.debug(body);
-                        process.exit();
-                    }
-
-                    var response = JSON.parse(body);
-
-                    Configuration.set('serverid', response.serverid);
-
-                    cb(response.serverid, uuid);
-                });
+                registerServer(uuid, cb);
 
             } else {
                 cb(conf.serverid, uuid);
@@ -166,6 +146,33 @@ function init(cb)
         } else {
             cb(false);
         }
+    });
+}
+
+function registerServer(uuid, cb)
+{
+    var url = 'https://nhome.ba/user/api_register_server';
+
+    require('request').post({url: url, form: { uuid: uuid }}, function (err, httpResponse, body) {
+
+        if (err) {
+            logger.error('Unable to connect to server. Will retry in 20s');
+            setTimeout(registerServer, 20 * 1000, uuid, cb);
+            return;
+        }
+
+        if (httpResponse.statusCode !== 200) {
+            logger.error('Server registration error', httpResponse.statusCode, '. Will retry in 20s');
+            logger.debug(body);
+            setTimeout(registerServer, 20 * 1000, uuid, cb);
+            return;
+        }
+
+        var response = JSON.parse(body);
+
+        Configuration.set('serverid', response.serverid);
+
+        cb(response.serverid, uuid);
     });
 }
 
