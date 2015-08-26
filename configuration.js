@@ -11,7 +11,7 @@ Configuration.load = function (l, cb) {
     load(function(success) {
         if (success) {
 
-            var uuid = getUUID();
+            var uuid = Configuration.get('uuid', getUUID());
 
             logger.debug('Configuration data', conf);
 
