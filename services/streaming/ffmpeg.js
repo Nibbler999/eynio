@@ -48,10 +48,22 @@ ffmpeg.check = function (cb) {
     }
 };
 
-ffmpeg.getScaler = function (options) {
+ffmpeg.getScaler = function (options, rotation) {
+
+    var vf = '';
+
+    if (rotation === 90) {
+        vf = 'transpose=1,';
+    } else if (rotation === 180) {
+        vf = 'transpose=1,transpose=1,';
+    } else if (rotation === 270) {
+        vf = 'transpose=2,';
+    }
+
+    vf += 'scale=' + options.width + ':' + options.height;
 
     var args = ['-f', 'mjpeg', '-i', '-'];
-    args.push('-vf', 'scale=' + options.width + ':' + options.height);
+    args.push('-vf', vf);
     args.push('-qscale:v', 9);
     args.push('-f', 'mpjpeg', '-');
 

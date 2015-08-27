@@ -121,9 +121,9 @@ function runStream(cameraid, camera, options)
             }
         });
 
-        if (ffmpeg.available && (options.width > 0 || options.height > 0)) {
+        if (ffmpeg.available && (options.width > 0 || options.height > 0 || camera.rotate)) {
 
-            var scaler = scalers[key] = ffmpeg.getScaler(options);
+            var scaler = scalers[key] = ffmpeg.getScaler(options, camera.rotate);
 
             source.pipe(scaler).pipe(sio);
 
@@ -221,7 +221,7 @@ function getLiveThumbnail(cameraid, cb)
             return;
         }
 
-        getThumbnail(camera, cb);
+        getThumbnail(cameraid, cb);
     });
 }
 
@@ -239,6 +239,14 @@ function saveImageDimensions(id, image)
 
 function getThumbnail(id, cb)
 {
+    var cameras = cfg.get('cameras', {});
+
+    var camera = cameras[id];
+
+    if (!camera) {
+        return false;
+    }
+
     getThumbnailImage(id, function (image) {
 
         if (!image) {
@@ -252,9 +260,9 @@ function getThumbnail(id, cb)
             height: 120
         };
 
-        if (ffmpeg.available && (options.width > 0 || options.height > 0)) {
+        if (ffmpeg.available && (options.width > 0 || options.height > 0 || camera.rotate)) {
 
-            var scaler = ffmpeg.getScaler(options);
+            var scaler = ffmpeg.getScaler(options, camera.rotate);
 
             scaler.once('data', function (thumbnail) {
                 cb(thumbnail);
