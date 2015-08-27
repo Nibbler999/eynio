@@ -3,6 +3,8 @@
 var tcpp = require('tcp-ping');
 
 var Cats = require('./services/cats.js');
+var Props = require('./services/device-properties.js');
+
 var cfg = require('./configuration.js');
 
 var common = {};
@@ -44,13 +46,18 @@ common.addDeviceProperties = function (devicelist) {
 
     var blacklist = cfg.get('blacklist_devices', []);
 
-    var id = '';
+    var id = '', properties = {};
 
     for (var d = 0; d < devicelist.length; d++) {
         id = devicelist[d].id;
         devicelist[d].categories = Cats.getCats(id);
         devicelist[d].blacklisted = blacklist.indexOf(id) !== -1;
-        //devicelist[d].last_used = { time: +new Date(), user: 'foo' };
+
+        properties = Props.get(id);
+
+        for (var p in properties) {
+            devicelist[d][p] = properties[p];
+        }
     }
 };
 
