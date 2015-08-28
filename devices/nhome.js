@@ -84,7 +84,7 @@ function startListening()
         'sendRemoteCommand', 'sendKey', 'learnKey', 'saveCustomRemote', 'updateCustomRemote', 'deleteCustomRemote',
         'getShutterValue', 'setShutterValue', 'openShutter', 'closeShutter',
         'getDevicePowerState', 'setDevicePowerState', 'toggleDevicePowerState',
-        'getCameras', 'getCamera', 'getCachedThumbnail', 'startStreaming'
+        'getCameras', 'getCamera', 'getCachedThumbnail', 'startStreaming', 'stopStreaming'
     ];
 
     events.forEach(function(eventName) {
