@@ -1,17 +1,14 @@
 {
+  "extends": "eslint:recommended",
   "env": {
     "node": true
   },
   "rules": {
-    "quotes": 0,
-    "no-underscore-dangle": 0,
     "no-use-before-define": 0,
     "curly": [2, "multi-line"],
-    "camelcase": 0,
-    "key-spacing": 0,
-    "no-process-exit": 0,
     "no-unused-vars": 1,
     "handle-callback-err": 1,
-    "new-cap": 0
+    "no-console": 0,
+    "no-trailing-spaces": 2
   }
 }
