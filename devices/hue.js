@@ -300,9 +300,9 @@ function setLightState(id, values, cb)
         if (result) {
 
             if (values.on) {
-                self.log(devices[id].name, 'light-on');
+                self.log(id, devices[id].name, 'light-on');
             } else {
-                self.log(devices[id].name, 'light-off');
+                self.log(id, devices[id].name, 'light-off');
             }
 
             getLightState(id);

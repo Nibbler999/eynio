@@ -45,6 +45,7 @@ common.monitor = function(host, port, cb) {
 common.addDeviceProperties = function (devicelist) {
 
     var blacklist = cfg.get('blacklist_devices', []);
+    var activations = cfg.get('device_activations', {});
 
     var id = '', properties = {};
 
@@ -57,6 +58,12 @@ common.addDeviceProperties = function (devicelist) {
 
         for (var p in properties) {
             devicelist[d][p] = properties[p];
+        }
+
+        if (activations[id]) {
+            devicelist[d].last_activated = activations[id];
+        } else {
+            devicelist[d].last_activated = null;
         }
     }
 };

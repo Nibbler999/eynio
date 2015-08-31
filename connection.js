@@ -284,15 +284,16 @@ function command_handler(command, cb)
         }
     }
 
-    command.log = function (device, action) {
+    command.log = function (deviceid, devicename, action) {
 
         var entry = {
             user: command.user,
-            device: device,
+            id: deviceid,
+            device: devicename,
             action: action
         };
 
-        wrapper.send('appendActionLog', entry);
+        wrapper.emit('appendActionLog', entry);
     };
 
     if (cb) {

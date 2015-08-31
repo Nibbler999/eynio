@@ -249,7 +249,7 @@ function switchOn(id, cb)
             return;
         }
 
-        self.log(Namer.getName(id), 'switch-on');
+        self.log(id, Namer.getName(id), 'switch-on');
 
         conn.broadcast('switchState', { id: id, state: { on: true }});
 
@@ -274,7 +274,7 @@ function switchOff(id, cb)
             return;
         }
 
-        self.log(Namer.getName(id), 'switch-off');
+        self.log(id, Namer.getName(id), 'switch-off');
 
         conn.broadcast('switchState', { id: id, state: { on: false }});
 

@@ -210,7 +210,7 @@ function switchOn(id, cb)
             return;
         }
 
-        self.log(Namer.getName(id), 'switch-on');
+        self.log(id, Namer.getName(id), 'switch-on');
 
         conn.broadcast('switchState', { id: id, state: { on: true }});
 
@@ -236,7 +236,7 @@ function switchOff(id, cb)
             return;
         }
 
-        self.log(Namer.getName(id), 'switch-off');
+        self.log(id, Namer.getName(id), 'switch-off');
 
         conn.broadcast('switchState', { id: id, state: { on: false }});
 
@@ -425,7 +425,7 @@ function openShutter(id, cb)
             return;
         }
 
-        self.log(Namer.getName(id), 'shutter-open');
+        self.log(id, Namer.getName(id), 'shutter-open');
 
         conn.broadcast('shutterValue', { id: id, value: 0});
 
@@ -449,7 +449,7 @@ function closeShutter(id, cb)
             return;
         }
 
-        self.log(Namer.getName(id), 'shutter-close');
+        self.log(id, Namer.getName(id), 'shutter-close');
 
         conn.broadcast('shutterValue', { id: id, value: 100});
 

@@ -208,7 +208,7 @@ function setThermostatValue(id, value, cb)
 
     dataRef.child(path).set(value, function (result) {
         if (result === null) {
-            self.log(Namer.getName(id), 'thermostat-set');
+            self.log(id, Namer.getName(id), 'thermostat-set');
             if (cb) cb(true);
         } else {
             if (cb) cb(result.message);

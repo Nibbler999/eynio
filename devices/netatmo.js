@@ -213,7 +213,7 @@ function setThermostatValue(id, value, cb)
 
         if (cb) cb(true);
 
-        self.log(Namer.getName(id), 'thermostat-set');
+        self.log(id, Namer.getName(id), 'thermostat-set');
     });
 }
 

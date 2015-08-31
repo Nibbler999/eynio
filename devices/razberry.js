@@ -222,7 +222,7 @@ function switchOn(id, cb)
         }
 
         if (response.statusCode === 200) {
-            self.log(Namer.getName(id), 'switch-on');
+            self.log(id, Namer.getName(id), 'switch-on');
             conn.broadcast('switchState', { id: id, state: { on: true }});
             if (cb) cb(true);
         } else {
@@ -251,7 +251,7 @@ function switchOff(id, cb)
         }
 
         if (response.statusCode === 200) {
-            self.log(Namer.getName(id), 'switch-off');
+            self.log(id, Namer.getName(id), 'switch-off');
             conn.broadcast('switchState', { id: id, state: { on: false }});
             if (cb) cb(true);
         } else {

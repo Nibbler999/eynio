@@ -2,7 +2,7 @@
 
 var cfg = require('../configuration.js');
 
-var conn, logger, properties = {};
+var conn, logger, properties = {}, activations = {};
 
 var Props = function (c, l) {
 
@@ -10,6 +10,7 @@ var Props = function (c, l) {
     logger = l.child({component: 'Props'});
 
     properties = cfg.get('device_properties', {});
+    activations = cfg.get('device_activations', {});
 
     conn.on('setDeviceProperty', function (command) {
         setDeviceProperty.apply(command, command.args);
@@ -17,6 +18,18 @@ var Props = function (c, l) {
 
     conn.on('removeDeviceProperty', function (command) {
         removeDeviceProperty.apply(command, command.args);
+    });
+
+    conn.on('appendActionLog', function (entry) {
+
+        conn.send('appendActionLog', entry);
+
+        activations[entry.id] = {
+            'at': new Date(),
+            'by': entry.user
+        };
+
+        cfg.set('device_activations', activations);
     });
 };
 

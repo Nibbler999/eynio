@@ -178,7 +178,7 @@ function setLightState(id, values, cb)
                     return;
                 }
 
-                self.log(Namer.getName(id), 'light-on');
+                self.log(id, Namer.getName(id), 'light-on');
 
                 getLightState(id);
 
@@ -192,7 +192,7 @@ function setLightState(id, values, cb)
                     return;
                 }
 
-                self.log(Namer.getName(id), 'light-off');
+                self.log(id, Namer.getName(id), 'light-off');
 
                 getLightState(id);
 
