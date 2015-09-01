@@ -191,6 +191,7 @@ function updateApp(cb)
 
     // nw.js on windows
     if (process.platform === 'win32' && process.argv[0] === 'node') {
+        process.argv[0] = 'nhome.exe';
         reSpawnApp();
         return;
     }
