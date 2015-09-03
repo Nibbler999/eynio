@@ -60,8 +60,14 @@ Cats.listen = function (c, l) {
     });
 };
 
-Cats.getCats = function(deviceid) {
-    return devices[deviceid] || ['dashboard'];
+Cats.getCats = function (deviceid) {
+
+    if (!devices[deviceid] || devices[deviceid].length === 0) {
+        devices[deviceid] = ['dashboard'];
+        Cats.save();
+    }
+
+    return devices[deviceid];
 };
 
 Cats.save = function() {
@@ -72,22 +78,11 @@ Cats.save = function() {
     cfg.set('cats_devices', devices);
 };
 
-Cats.update = function() {
-
-    for (var deviceid in devices) {
-        if (devices[deviceid].length === 0) {
-            delete devices[deviceid];
-        }
-    }
-
-    Cats.save();
-};
-
 function catAdd(cat, cb)
 {
     var catid = require('node-uuid').v4();
     categories[catid] = cat;
-    Cats.update();
+    Cats.save();
 
     logger.debug('Category', catid, 'added');
 
@@ -107,7 +102,7 @@ function catDelete(catid, cb)
         removeCatFromDevice(catid, deviceid);
     }
 
-    Cats.update();
+    Cats.save();
 
     logger.debug('Category', catid, 'deleted');
 
@@ -117,7 +112,7 @@ function catDelete(catid, cb)
 function catUpdate(catid, cat, cb)
 {
     categories[catid] = cat;
-    Cats.update();
+    Cats.save();
 
     logger.debug('Category', catid, 'updated');
 
@@ -143,7 +138,7 @@ function catAddDevice(catid, deviceid, cb)
 
     devices[deviceid].push(catid);
 
-    Cats.update();
+    Cats.save();
 
     if (cb) cb();
 }
@@ -156,7 +151,7 @@ function catDeleteDevice(catid, deviceid, cb)
 
     removeCatFromDevice(catid, deviceid);
 
-    Cats.update();
+    Cats.save();
 
     if (cb) cb();
 }
@@ -167,7 +162,7 @@ function catListDevices(catid, cb)
 
     for (var deviceid in devices) {
 
-        if (devices[deviceid].indexOf(catid) !== -1) {
+        if (Cats.getCats(deviceid).indexOf(catid) !== -1) {
             devs.push(deviceid);
         }
     }
@@ -179,9 +174,11 @@ function catListDevices(catid, cb)
 
 function catOfDevice(deviceid, cb)
 {
-    conn.broadcast('catOfDevice', devices[deviceid] || []);
+    var cats = Cats.getCats(deviceid);
 
-    if (cb) cb(devices[deviceid] || []);
+    conn.broadcast('catOfDevice', cats);
+
+    if (cb) cb(cats);
 }
 
 function removeCatFromDevice(catid, deviceid)
