@@ -2,7 +2,7 @@
 
 var conn;
 var jobs = [];
-var schedule = [];
+var schedule = {};
 
 var logger, sun;
 
@@ -12,65 +12,92 @@ module.exports = function(c, l) {
     logger = l.child({component: 'Schedule'});
 
     var cfg = require('../configuration.js');
-    schedule = cfg.get('schedule', []);
+    schedule = cfg.get('schedule_jobs', {});
 
-    if (schedule.length > 0) {
+    if (Object.keys(schedule).length > 0) {
         reloadSchedule();
     }
 
     setupSunEvents();
 
-    conn.on('saveSchedule', function (command) {
-        saveSchedule.apply(command, command.args);
+    conn.on('addNewJob', function (command) {
+        addNewJob.apply(command, command.args);
     });
 
-    conn.on('addScheduleItem', function (command) {
-        addScheduleItem.apply(command, command.args);
+    conn.on('updateJob', function (command) {
+        updateJob.apply(command, command.args);
     });
 
-    conn.on('deleteScheduleItem', function (command) {
-        deleteScheduleItem.apply(command, command.args);
+    conn.on('updateJobItems', function (command) {
+        updateJobItems.apply(command, command.args);
     });
 
-    conn.on('getSchedule', function (command) {
-        getSchedule.apply(command, command.args);
+    conn.on('removeJob', function (command) {
+        removeJob.apply(command, command.args);
+    });
+
+    conn.on('getJobs', function (command) {
+        getJobs.apply(command, command.args);
     });
 };
 
-function saveSchedule(newSchedule, cb)
-{
-    schedule = newSchedule;
-    save(cb);
-    logger.debug('Set new schedule');
-}
 
-function addScheduleItem(item, cb)
+function addNewJob(name, dateTime, actions, cb)
 {
-    schedule.push(item);
+    var id = require('node-uuid').v4();
+
+    var item = {
+        name: name,
+        dateTime: dateTime,
+        actions: actions
+    };
+
+    schedule[id] = item;
+
     save(cb);
+
     logger.debug('Added new schedule item');
 }
 
-function deleteScheduleItem(index, cb)
+function updateJob(id, name, dateTime, cb)
 {
-    if (index < schedule.length) {
-        schedule.splice(index, 1);
-        save(cb);
-        logger.debug('Deleted schedule item');
-    }
+    schedule[id].name = name;
+    schedule[id].dateTime = dateTime;
+
+    logger.debug('Updated schedule');
+
+    save(cb);
 }
 
-function getSchedule(cb)
+function updateJobItems(id, actions, cb)
 {
-    conn.broadcast('schedule', schedule);
+    schedule[id].actions = actions;
 
-    if (cb) cb(schedule);
+    logger.debug('Updated schedule actions');
+
+    save(cb);
+}
+
+function getJobs(cb)
+{
+    var s = hash_to_array(schedule);
+
+    if (cb) cb(s);
+}
+
+function removeJob(id, cb)
+{
+    delete schedule[id];
+
+    logger.debug('Deleted schedule item');
+
+    save(cb);
 }
 
 function save(cb)
 {
     var cfg = require('../configuration.js');
-    cfg.set('schedule', schedule);
+    cfg.set('schedule_jobs', schedule);
 
     reloadSchedule(cb);
 }
@@ -83,7 +110,7 @@ function reloadSchedule(cb)
 
     logger.debug('Cleared schedule');
 
-    if (!schedule) {
+    if (Object.keys(schedule).length === 0) {
         if (cb) cb([]);
         return;
     }
@@ -110,23 +137,26 @@ function jobRunner(s)
 {
     return function () {
 
-        var command = {
-            name: s.emit,
-            args: s.params
-        };
+        s.actions.forEach(function (jobAction) {
 
-        command.log = function (device, action) {
-
-            var entry = {
-                user: s.name,
-                device: device,
-                action: action
+            var command = {
+                name: jobAction.emit_name,
+                args: jobAction.params
             };
 
-            conn.send('appendActionLog', entry);
-        };
+            command.log = function (device, action) {
 
-        conn.emit(command.name, command);
+                var entry = {
+                    user: s.name,
+                    device: device,
+                    action: action
+                };
+
+                conn.send('appendActionLog', entry);
+            };
+
+            conn.emit(command.name, command);
+        });
     };
 }
 
@@ -164,5 +194,25 @@ function sunEvent(which)
             jobRunner(s)();
         }
     });
+}
+
+function hash_to_array(hash)
+{
+    var array = [], object;
+
+    for (var key in hash) {
+
+        object = {
+            id: key
+        };
+
+        for (var key2 in hash[key]) {
+            object[key2] = hash[key][key2];
+        }
+
+        array.push(object);
+    }
+
+    return array;
 }
 
