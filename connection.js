@@ -62,11 +62,6 @@ module.exports = function (l, serverid, uuid) {
 
     conn.on('command', command_handler);
 
-    // Temporary
-    conn.on('proxyConnect', function (proxy) {
-        wrapper.emit('proxyConnect', proxy);
-    });
-
     wrapper = setupConnWrapper(conn);
 
     return wrapper;

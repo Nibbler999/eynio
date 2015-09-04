@@ -15,7 +15,6 @@ module.exports = function (log) {
         require('./services/namer.js').listen(conn, log);
         require('./services/cats.js').listen(conn, log);
         require('./services/schedule.js')(conn, log);
-        require('./services/proxy.js')(conn, log);
         require('./services/info.js')(conn, log);
         require('./services/streaming.js')(conn, log);
         require('./services/cameras.js')(conn, log);
