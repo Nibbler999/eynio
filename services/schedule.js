@@ -54,7 +54,9 @@ function addNewJob(name, dateTime, actions, cb)
 
     schedule[id] = item;
 
-    save(cb);
+    save(function () {
+        cb(id);
+    });
 
     logger.debug('Added new schedule item');
 }
