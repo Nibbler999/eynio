@@ -119,10 +119,14 @@ function reloadSchedule(cb)
 
     var scheduler = require('node-schedule');
 
-    schedule.forEach(function (s) {
+    var s;
+
+    for (var i in schedule) {
+
+        s = schedule[i];
 
         if (s.dateTime === 'sunset' || s.dateTime === 'sunrise') {
-            return;
+            continue;
         }
 
         var j = scheduler.scheduleJob(s.dateTime, jobRunner(s));
@@ -130,7 +134,7 @@ function reloadSchedule(cb)
         jobs.push(j);
 
         logger.debug('Scheduled job');
-    });
+    }
 
     if (cb) cb(schedule);
 }
@@ -190,12 +194,12 @@ function setupSunEvents()
 
 function sunEvent(which)
 {
-    schedule.forEach(function (s) {
+    for (var i in schedule) {
 
-        if (s.dateTime === which) {
-            jobRunner(s)();
+        if (schedule[i].dateTime === which) {
+            jobRunner(schedule[i])();
         }
-    });
+    }
 }
 
 function hash_to_array(hash)
