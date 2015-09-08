@@ -114,10 +114,16 @@ function save(cb)
 {
     try {
 
+        var fs = require('fs');
+
         var filepath = getConfFile();
         var content = JSON.stringify(conf);
 
-        require('fs').writeFileSync(filepath, content, { encoding: 'utf8'});
+        fs.writeFileSync(filepath, content, { encoding: 'utf8'});
+
+        var fd = fs.openSync(filepath, 'a');
+        fs.fsyncSync(fd);
+        fs.closeSync(fd);
 
         if (cb) {
             process.nextTick(function() {
