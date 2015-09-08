@@ -134,6 +134,10 @@ function reloadSchedule(cb)
 
             if (Array.isArray(s.dateTime.dayOfWeek)) {
 
+                if (s.dateTime.dayOfWeek.length === 0) {
+                    valid = false;
+                }
+
                 for (var d = 0; d < s.dateTime.dayOfWeek.length; d++) {
                     if (typeof s.dateTime.dayOfWeek[d] !== 'number') {
                         valid = false;
