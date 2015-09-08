@@ -119,13 +119,35 @@ function reloadSchedule(cb)
 
     var scheduler = require('node-schedule');
 
-    var s;
+    var s, valid;
 
     for (var i in schedule) {
 
         s = schedule[i];
+        valid = true;
 
         if (s.dateTime === 'sunset' || s.dateTime === 'sunrise') {
+            continue;
+        }
+
+        if (s.dateTime.dayOfWeek) {
+
+            if (Array.isArray(s.dateTime.dayOfWeek)) {
+
+                for (var d = 0; d < s.dateTime.dayOfWeek.length; d++) {
+                    if (typeof s.dateTime.dayOfWeek[d] !== 'number') {
+                        valid = false;
+                        break;
+                    }
+                }
+
+            } else {
+                valid = false;
+            }
+        }
+
+        if (!valid) {
+            logger.error('Invalid schedule', s.name);
             continue;
         }
 
