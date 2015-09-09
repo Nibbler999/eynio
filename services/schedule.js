@@ -130,6 +130,15 @@ function reloadSchedule(cb)
             continue;
         }
 
+        var intervals = ['year', 'month', 'day', 'hour', 'minute', 'second'];
+
+        intervals.forEach(function (interval) {
+
+            if (s.dateTime.hasOwnProperty(interval)) {
+                s.dateTime[interval] = parseInt(s.dateTime[interval]);
+            }
+        });
+
         if (s.dateTime.dayOfWeek) {
 
             if (Array.isArray(s.dateTime.dayOfWeek)) {
