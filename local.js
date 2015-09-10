@@ -80,10 +80,6 @@ module.exports = function (l) {
         res.render('cam_view', locals);
     });
 
-    app.get('/stream-mjpeg/:cameraid', function (req, res) {
-        streamMJPEG(req, res);
-    });
-
     app.get('/webapi/*', function (req, res) {
         webAPI(req, res);
     });
@@ -109,42 +105,6 @@ function localConnect()
     });
 
     return conn;
-}
-
-function streamMJPEG(request, response)
-{
-    var options = {
-        width: -1,
-        height: -1,
-        framerate: -1
-    };
-
-    var cameraid = request.params.cameraid;
-
-    var conn = localConnect();
-
-    conn.emit('requestStreaming', cameraid, options);
-
-    conn.once('cameraFrame', function() {
-        response.set({
-            'Content-Type': 'multipart/x-mixed-replace;boundary=nhome'
-        });
-    });
-
-    conn.on('cameraFrame', function (frame) {
-        response.write("Content-Type: image/jpeg\r\n");
-        response.write("Content-Length: " + frame.image.length + "\r\n\r\n");
-        response.write(frame.image);
-        response.write("\r\n--nhome\r\n");
-    });
-
-    request.on('close', function () {
-        conn.disconnect();
-    });
-
-    request.on('end', function () {
-        conn.disconnect();
-    });
 }
 
 // Convert strings to types
