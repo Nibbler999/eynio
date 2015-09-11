@@ -185,11 +185,12 @@ function jobRunner(s)
                 args: jobAction.params
             };
 
-            command.log = function (device, action) {
+            command.log = function (deviceid, devicename, action) {
 
                 var entry = {
                     user: s.name,
-                    device: device,
+                    id: deviceid,
+                    device: devicename,
                     action: action
                 };
 

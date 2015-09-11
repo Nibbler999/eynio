@@ -102,12 +102,13 @@ function setScene(sceneid, cb)
             args: action.params
         };
 
-        command.log = function (device, logaction) {
+        command.log = function (deviceid, devicename, action) {
 
             var entry = {
                 user: scene.name,
-                device: device,
-                action: logaction
+                id: deviceid,
+                device: devicename,
+                action: action
             };
 
             conn.send('appendActionLog', entry);
