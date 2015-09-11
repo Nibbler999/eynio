@@ -63,9 +63,11 @@ function updateCache()
 
 function updateCachedImage(id)
 {
-    getThumbnail(id, function (image) {
-        logger.debug('Updated thumbnail for', id);
-        snapshotCache[id] = image;
+    getLiveThumbnail(id, function (image) {
+        if (image) {
+            logger.debug('Updated thumbnail for', id);
+            snapshotCache[id] = image;
+        }
     });
 }
 
@@ -322,8 +324,10 @@ function getCachedThumbnail(cameraid, cb)
     if (snapshotCache[cameraid]) {
         cb(snapshotCache[cameraid]);
     } else {
-        getThumbnail(camera, function (image) {
-            snapshotCache[cameraid] = image;
+        getLiveThumbnail(camera, function (image) {
+            if (image) {
+                snapshotCache[cameraid] = image;
+            }
             cb(image);
         });
     }
