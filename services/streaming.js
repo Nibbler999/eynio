@@ -214,9 +214,9 @@ function getLiveThumbnail(cameraid, cb)
 
     var port = parts.port || ports_by_protocol[parts.protocol];
 
-    tcpp.probe(parts.hostname, port, function (err, available) {
+    tcpp.ping({address: parts.hostname, port: port, attempts: 1, timeout: 2000 }, function (err, data) {
 
-        if (!available) {
+        if (data.min === undefined) {
             logger.error('Camera at', parts.hostname + ':' + port, 'is not available');
             logger.debug('Probe error', err);
             if (cb) cb(false);
