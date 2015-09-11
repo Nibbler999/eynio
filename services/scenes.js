@@ -89,6 +89,7 @@ function setScene(sceneid, cb)
 
     var scene_entry = {
         user: this.user,
+        id: sceneid,
         device: scene.name,
         action: 'scene-set'
     };
