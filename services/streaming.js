@@ -311,20 +311,10 @@ function getCachedThumbnail(cameraid, cb)
 {
     logger.debug('Retrieving cached snapshot from ' + cameraid);
 
-    var cameras = cfg.get('cameras', {});
-
-    var camera = cameras[cameraid];
-
-    if (!camera) {
-        logger.debug('Unknown camera', cameraid);
-        if (cb) cb();
-        return;
-    }
-
     if (snapshotCache[cameraid]) {
         cb(snapshotCache[cameraid]);
     } else {
-        getLiveThumbnail(camera, function (image) {
+        getLiveThumbnail(cameraid, function (image) {
             if (image) {
                 snapshotCache[cameraid] = image;
             }
