@@ -92,7 +92,7 @@ function startStreaming(cameraid, options, cb)
     tcpp.probe(parts.hostname, port, function (err, available) {
 
         if (!available) {
-            logger.error('Camera at', parts.hostname + ':' + port, 'is not available');
+            logger.error('Camera', camera.name, 'at', parts.hostname + ':' + port, 'is not available');
             logger.debug('Probe error', err);
             if (cb) cb(false);
             return;
@@ -217,7 +217,7 @@ function getLiveThumbnail(cameraid, cb)
     tcpp.ping({address: parts.hostname, port: port, attempts: 1, timeout: 2000 }, function (err, data) {
 
         if (data.min === undefined) {
-            logger.error('Camera at', parts.hostname + ':' + port, 'is not available');
+            logger.debug('Camera', camera.name, 'at', parts.hostname + ':' + port, 'not responding to tcp connection');
             logger.debug('Probe error', err);
             if (cb) cb(false);
             return;
