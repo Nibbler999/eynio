@@ -20,7 +20,9 @@ module.exports = function(c, l) {
 
     var server = require('dgram').createSocket("udp4");
 
-    server.bind(2390);
+    server.bind(2390, function () {
+        server.addMembership('239.255.201.202');
+    });
 
     server.on('message', function (packet, rinfo) {
 
