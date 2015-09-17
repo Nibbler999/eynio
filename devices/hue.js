@@ -47,7 +47,7 @@ module.exports = function(c, l) {
                 } else {
                     logger.debug('Found ip', res.ipaddress, 'but it was not reachable');
                 }
-            });  
+            });
         });
 
         loadLights();
