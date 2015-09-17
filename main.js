@@ -23,6 +23,7 @@ module.exports = function (log) {
         require('./services/blacklist.js')(conn, log);
         require('./services/remotes.js')(conn, log);
         require('./services/device-properties.js')(conn, log);
+        require('./services/alarm.js')(conn, log);
 
         log.debug('Loading modules');
 

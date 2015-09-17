@@ -84,6 +84,7 @@ module.exports = function(c, l) {
                         };
 
                         conn.broadcast('sensorValue', sensorValue);
+                        conn.emit('alarmCheck', id, sensorValue.value);
                     }
 
                     Namer.add(sensors);
