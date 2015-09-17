@@ -2,7 +2,7 @@
 
 var cfg = require('../configuration.js');
 
-var conn, logger, alarm_simple;
+var conn, logger, alarm_simple, triggered = {};
 
 var Alarm = function (c, l) {
 
@@ -26,7 +26,15 @@ var Alarm = function (c, l) {
     conn.on('alarmCheck', function (id, value) {
 
         if (value > 0 && alarm_simple.enabled && alarm_simple.devices && alarm_simple.devices.indexOf(id) !== -1) {
+
+            if (triggered.hasOwnProperty(id) && new Date() - triggered[id] < 10 * 60 * 1000) {
+                logger.debug('Alarm triggered by device', id, 'in last 10 minutes, ignoring it');
+                return;
+            }
+
             logger.info('Alarm triggered');
+
+            triggered[id] = new Date();
         }
     });
 };
