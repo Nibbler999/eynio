@@ -55,7 +55,8 @@ function addNewJob(name, dateTime, actions, cb)
     schedule[id] = item;
 
     save(function () {
-        cb(id);
+        conn.broadcast('jobAdded', item);
+        if (cb) cb(id);
     });
 
     logger.debug('Added new schedule item');

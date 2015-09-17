@@ -44,6 +44,8 @@ function addScene(scene, cb)
 
     logger.debug('Scene', scene.id, 'added');
 
+    conn.broadcast('sceneAdded', scene);
+
     var scene_array = hash_to_array(scenes);
 
     if (cb) cb(scene_array);
