@@ -31,10 +31,24 @@ module.exports = function(c, l) {
         if (result.length === 0) {
             return;
         }
+        var tcpp = require('tcp-ping');
 
-        log('Found a bridge');
+        result.forEach(function (res) {
 
-        result.forEach(loadBridge);
+            tcpp.probe(res.ipaddress, 80, function (err, available) {
+
+                if (err) {
+                    logger.debug(err);
+                }
+
+                if (available) {
+                    log('Found a bridge');
+                    loadBridge(res);
+                } else {
+                    logger.debug('Found ip', res.ipaddress, 'but it was not reachable');
+                }
+            });  
+        });
 
         loadLights();
     });
