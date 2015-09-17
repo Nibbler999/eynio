@@ -1,19 +1,41 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>NHome</title>
-  </head>
-  <body style="margin: 0;">
-    <div style="height: 20px; width: 100%">
-        <div style="width: 50%; float: left; border-bottom: 1px solid silver; text-align: center;cursor: pointer" onclick="settings()">
-            Settings
-        </div>
-        <div style="width: 50%; float: left;  border-bottom: 1px solid silver; text-align: center; cursor:pointer" onclick="console()">
-            Log
-        </div>
-    </div>
-    <iframe src="" id="tab" style="display: none; border: 0; width:100%; height: 748px"></iframe>
-    <pre id="console" style="display: block; color: white; background-color: black; font-family: monospace; height: 748px; margin: 0px;"></pre>
+
+<head>
+    <meta name="description" content="NHome Server application">
+    <meta name="author" content="NHome d.o.o.">
+    <meta charset="utf-8">
+
+    <title>NHome Server</title>
+
+    <!-- roboto !-->
+    <link href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900' rel='stylesheet' type='text/css'>
+    <!-- favicon -->
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" type="text/css" href="local/public/style.css">
+</head>
+
+<body>
+    <div class="wrap">
+        <header>
+            <div class="server-nav">
+                <div class="server-nav-tab" id="status-tab" onclick="status()">
+                    <p>Status</p>
+                </div>
+                <div class="server-nav-tab" id="gen-set-tab" onclick="settings()">
+                    <p>General Settings</p>
+                </div>
+                <div class="server-nav-tab" id="terminal-tab" onclick="console()">
+                    <p>Terminal</p>
+                </div>
+            </div>
+        </header>
+
+    <iframe src="" id="tab" style="display: none; border: 0; width:100%; height: 684px"></iframe>
+
+    <pre id="console" style="display: block; color: white; background-color: black; font-family: monospace; height: 684px; margin: 0px;"></pre>
 
     <script>
 
@@ -58,6 +80,12 @@
             }, 0);
         });
 
+        function status() {
+            document.getElementById('console').style.display = 'none';
+            document.getElementById('tab').style.display = 'block';
+            document.getElementById('tab').src = 'http://127.0.0.1:8008/status.html';
+        }
+
         function settings() {
             document.getElementById('console').style.display = 'none';
             document.getElementById('tab').style.display = 'block';
@@ -70,5 +98,6 @@
         }
 
     </script>
+    </div>
   </body>
 </html>

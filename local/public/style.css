@@ -1,0 +1,248 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    color: #767676;
+}
+
+.wrap {
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    background-color: #fff;
+}
+
+.server-nav {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    height: 4em;
+    box-sizing: content-box;
+    border-bottom: 0.3em solid #cfeaff;
+}
+
+.server-nav-tab {
+    height: 100%;
+    margin: auto 5%;
+    text-align: center;
+    font-size: large;
+    cursor: pointer;
+}
+
+.active-tab {
+    color: #0d96ff;
+    border-bottom: 0.3em solid #0d96ff;
+}
+
+.content {
+    display: none;
+    padding: 0 5%;
+    margin: 5% 0;
+    overflow: scroll;
+}
+
+.content-active {
+    display: block;
+}
+
+.status-data {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    border-bottom: 0.2em solid #dadada;
+}
+
+.checkbox-wrap {
+    position: relative;
+    margin-left: 1em;
+    height: 2em;
+    width: 5em;
+}
+
+.toggle-checkbox {
+    display: none;
+}
+
+.toggle-checkbox-label {
+    display: block;
+    position: relative;
+    margin: auto 0;
+    width: 1em;
+    height: 1em;
+    border-radius: 1em;
+    cursor: pointer;
+    border: 0.1em solid #e3e3e3;
+    background-color: #fff;
+    z-index: 2;
+    -webkit-transition: all 0.4s ease;
+    -moz-transition: all 0.4s ease;
+    -o-transition: all 0.4s ease;
+    transition: all 0.4s ease;
+}
+
+.toggle-checkbox:checked ~ .toggle-checkbox-label {
+    margin-left: 60%;
+}
+
+.toggle-checkbox:checked ~ .toggle-line {
+    background-color: #0d96ff;
+}
+
+.toggle-line {
+    position: absolute;
+    top: 0.1em;
+    left: 0.1em;
+    background-color: #9ed5ff;
+    border-radius: 1em;
+    width: 70%;
+    height: 0.9em;
+    -webkit-transition: all 0.4s ease;
+    -moz-transition: all 0.4s ease;
+    -o-transition: all 0.4s ease;
+    transition: all 0.4s ease;
+}
+
+.status-dropdown {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+}
+
+.arrow-down {
+    display: block;
+    width: 1em;
+    height: 2em;
+    margin: auto 0;
+    background-image: url(img/chevron-thin-down.svg);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    cursor: pointer;
+}
+
+
+/* general settings */
+
+#general-setings-view {
+    margin-top: 1em;
+}
+
+.gs-data {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+}
+
+.gs-data-input-wrap {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+}
+
+.gs-data-input-wrap label {
+    display: block;
+}
+
+.gs-input {
+    border: 0;
+    outline: none;
+    background-color: #ededed;
+    width: 85%;
+    height: 3em;
+}
+
+.gs-input:focus {
+    box-shadow: 0.1em 0.1em 0.3em #9ed5ff, -0.1em -0.1em 0.3em #9ed5ff;
+}
+
+.gs-checkbox {
+    margin-top: 1em;
+    margin-left: 0;
+    margin-right: -1em;
+}
+
+.ger-btn {
+    border: 0;
+    outline: none;
+    background-color: transparent;
+}
+
+.gear-icon {
+    cursor: pointer;
+    height: 2em;
+    vertical-align: middle;
+    -webkit-transition: all 0.4s ease;
+    -moz-transition: all 0.4s ease;
+    -o-transition: all 0.4s ease;
+    transition: all 0.4s ease;
+}
+
+
+/* footer */
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 99%;
+    height: 4em;
+    background-color: #f0f0f0;
+    border-bottom: 0.3em solid #0d96ff;
+    text-align: center;
+}
+
+footer p {
+    margin: 0;
+    padding: 1.5em 0;
+}
+
+footer a {
+    text-decoration: none;
+    color:
+}
+
+.gear-icon:hover {
+    transform: rotateZ(90deg);
+}
+
+.H_gray {
+    color: #b5b5b5;
+}
+
+.H_blue {
+    color: #48a6ff;
+}
+
+.H_flex {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.H_wrap {
+    flex-flow: row wrap;
+}
