@@ -21,83 +21,104 @@
     <div class="wrap">
         <header>
             <div class="server-nav">
-                <div class="server-nav-tab" id="status-tab" onclick="status()">
+                <div class="server-nav-tab active-tab" id="status-tab">
                     <p>Status</p>
                 </div>
-                <div class="server-nav-tab" id="gen-set-tab" onclick="settings()">
+                <div class="server-nav-tab" id="gen-set-tab">
                     <p>General Settings</p>
                 </div>
-                <div class="server-nav-tab" id="terminal-tab" onclick="console()">
+                <div class="server-nav-tab" id="terminal-tab">
                     <p>Terminal</p>
                 </div>
             </div>
         </header>
 
-    <iframe src="" id="tab" style="display: none; border: 0; width:100%; height: 684px"></iframe>
 
-    <pre id="console" style="display: block; color: white; background-color: black; font-family: monospace; height: 684px; margin: 0px;"></pre>
+        <!-- status view !-->
+        <div class="content content-active" id="status-view">
+            <div class="status-data">
+                <p>Status</p>
 
-    <script>
+                <p class="H_gray">Local: <span class="H_blue"> ON </span></p>
+                <p class="H_gray">Internet: <span class="H_blue"> - </span></p>
+            </div>
 
-        var stream = require('stream');
+            <div class="status-data">
+                <div>
+                    <p>Version</p>
+                    <p class="H_blue" id="app_version"></p>
+                </div>
 
-        var entries = [];
+                <div>
+                    <p>Last Update</p>
+                    <p>-</p>
+                </div>
 
-        var weblog = new stream.Writable({
-            write: function(chunk, encoding, next) {
-                entries.push(chunk.toString());
-                if (entries.length > 50) {
-                    entries.shift();
-                }
-                document.getElementById('console').textContent = entries.join('');
-                next();
-            }
-        });
+                <div>
+                    <p></p>
+                    <div>
+                    </div>
+                </div>
+            </div>
 
-        var bunyan = require('bunyan');
-        var PrettyStream = require('bunyan-prettystream');
+            <div class="status-data H_wrap">
+                <p>Ping: <span class="H_gray" id="ping"></span></p>
+                <p>IP: <span class="H_gray" id="local_ip"></span></p>
+                <p>External IP: <span class="H_gray" id="external_ip"></span></p>
+                <p>OS: <span class="H_gray" id="node_platform"></span></p>
+                <p>Node Version: <span class="H_gray" id="node_version"></span></p>
+            </div>
 
-        var prettyStdOut = new PrettyStream({mode: 'short', useColor: false});
-        prettyStdOut.pipe(weblog);
+            <div class="status-data">
+                <p>Devices</p>
 
-        var ringbuffer = new bunyan.RingBuffer({ limit: 100 });
+                <div>
+                    <p>Bridges: <span class="H_gray" id="bridge_count"></span></p>
+                    <p>Devices: <span class="H_gray" id="device_count"></span></p>
+                </div>
+            </div>
 
-        var log = bunyan.createLogger({
-            name: 'NHome',
-            streams: [{
-                level: 'info',
-                stream: prettyStdOut
-            }, {
-                level: 'info',
-                type: 'raw',
-                stream: ringbuffer
-            }]
-        });
+        </div>
 
-        require('./update.js')(log, function() {
-            setTimeout(function() {
-                document.getElementById('tab').src = 'http://127.0.0.1:8008/settings.html';
-            }, 0);
-        });
+        <!-- general settings view !-->
+        <div class="content" id="general-setings-view">
 
-        function status() {
-            document.getElementById('console').style.display = 'none';
-            document.getElementById('tab').style.display = 'block';
-            document.getElementById('tab').src = 'http://127.0.0.1:8008/status.html';
-        }
+            <div class="">
+                <label for="server-name">Server Name</label>
+                <div class="gs-data-input-wrap">
+                    <input type="txt" placeholder="Server Name" class="gs-input" id="server-name">
 
-        function settings() {
-            document.getElementById('console').style.display = 'none';
-            document.getElementById('tab').style.display = 'block';
-            document.getElementById('tab').src = 'http://127.0.0.1:8008/settings.html';
-        }
+                    <button type="submit" class="ger-btn">
+                        <img src="local/public/img/cog.svg" class="gear-icon">
+                    </button>
+                </div>
+            </div>
 
-        function console() {
-            document.getElementById('console').style.display = 'block';
-            document.getElementById('tab').style.display = 'none';
-        }
+            <div class="">
+                <label for="server-location">Server Location</label>
+                <div class="gs-data-input-wrap">
+                    <input type="txt" placeholder="Server Location" class="gs-input" id="server-location">
+                    <button type="submit" class="ger-btn">
+                        <img src="local/public/img/cog.svg" class="gear-icon">
+                    </button>
+                </div>
+            </div>
 
-    </script>
+        </div>
+
+        <div class="content" id="terminal-view">
+		    <pre id="console" style="display: block; color: white; background-color: black; font-family: monospace; height: 550px; margin: 0px;"></pre>
+	    </div>
+
+        <footer>
+            <p>To invite users use <a href="https://my.nhome.ba/#/login" target="_blank" class="H_blue">NHome</a></p>
+        </footer>
     </div>
-  </body>
+
+    <!-- load JS !-->
+    <script src="local/public/js/socket.io-1.3.2.min.js"></script>
+    <script src="local/public/js/jquery-1.11.1.min.js"></script>
+    <script src="nw.js"></script>
+</body>
+
 </html>
