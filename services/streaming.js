@@ -41,6 +41,10 @@ module.exports = function(c, l) {
         getCachedThumbnail.apply(command, command.args);
     });
 
+    conn.on('testStreamURL', function (command) {
+        testStreamURL.apply(command, command.args);
+    });
+
     conn.on('disconnect', function () {
         stopStreamingAll();
     });
@@ -352,6 +356,17 @@ function getSocketIOStream(cameraid, options)
     var writable = new Streamer();
 
     return writable;
+}
+
+function testStreamURL(url, cb)
+{
+    var parts = require('url').parse(url);
+
+    var port = parts.port || ports_by_protocol[parts.protocol];
+
+    tcpp.ping({address: parts.hostname, port: port, attempts: 1, timeout: 2000 }, function (err, data) {
+        if (cb) cb(data.min !== undefined);
+    });
 }
 
 function cameraKey(cameraid, options)
