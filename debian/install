@@ -1,4 +1,4 @@
 *.js local node_modules services devices nhome.ico package.json opt/nhome/
 debian/*.desktop /usr/share/applications/
 debian/*.service /lib/systemd/system/
-debian/*.init /etc/init.d/
+debian/nhome /etc/init.d/
