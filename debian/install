@@ -1,4 +1,4 @@
-*.js local node_modules services devices nhome.ico package.json opt/nhome/
+*.js local node_modules services devices nhome.ico package.json LICENSE GPLv3.txt opt/nhome/
 debian/*.desktop /usr/share/applications/
 debian/*.service /lib/systemd/system/
 debian/nhome /etc/init.d/
