@@ -105,13 +105,13 @@ module.exports = function (log, cb) {
 
     function loaded()
     {
-        require('./main.js')(log);
+        require('./lib/main.js')(log);
         if (cb) cb();
     }
 };
 
 if (!module.parent) {
-    var dummylog = require('./logger.js')({loglevel: 'info', nocolor: false});
+    var dummylog = require('./lib/logger.js')({loglevel: 'info', nocolor: false});
     module.exports(dummylog);
 }
 

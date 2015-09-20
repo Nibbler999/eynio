@@ -2,7 +2,7 @@
   "name": "nhome-server",
   "version": "1.0.0",
   "license": "(GPL-3.0+ AND MIT AND Apache-2.0 AND BSD-2-Clause)",
-  "main": "nw.html",
+  "main": "nwjs/index.html",
   "window": {
     "width": 1024,
     "height": 768,
@@ -50,20 +50,11 @@
     "mjpeg-consumer"
   ],
   "files": [
-    "common.js",
-    "configuration.js",
-    "connection.js",
-    "devices",
-    "GPLv3.txt",
+    "lib",
     "local",
-    "local.js",
-    "logger.js",
-    "main.js",
-    "nw.html",
-    "nw.js",
-    "permissions.js",
+    "nwjs",
     "server.js",
-    "services"
+    "GPLv3.txt"
   ],
   "bin": "./server.js",
   "private": false

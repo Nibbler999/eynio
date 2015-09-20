@@ -89,7 +89,7 @@ $(function() {
         }]
     });
 
-    require('./update.js')(log, function() {
+    require('../update.js')(log, function() {
 
         var conn = io.connect('http://127.0.0.1:8008/client');
 
