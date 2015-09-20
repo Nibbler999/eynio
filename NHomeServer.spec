@@ -3,7 +3,7 @@ Version:        1.00
 Release:        auto
 Summary:        NHomeServer
 Group:          NHomeServer
-License:        GPLv3+ and MIT
+License:        GPLv3+ and MIT and ASL 2.0 and BSD and ISC
 Requires:       nodejs(engine)
 
 Source0:        %{name}.tar.gz

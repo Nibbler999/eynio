@@ -1,7 +1,7 @@
 {
   "name": "nhome-server",
   "version": "1.0.0",
-  "license": "(GPL-3.0+ AND MIT)",
+  "license": "(GPL-3.0+ AND MIT AND Apache-2.0 AND BSD-2-Clause)",
   "main": "nw.html",
   "window": {
     "width": 1024,
