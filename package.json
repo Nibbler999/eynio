@@ -32,7 +32,7 @@
     "node-schedule": "0.2.9",
     "node-uuid": "1.4.3",
     "q": "1.0.1",
-    "request": "2.53.0",
+    "request": "2.63.0",
     "simple-itach": "0.2.1",
     "socket.io": "1.3.5",
     "socketio-wildcard": "0.1.1",
