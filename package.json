@@ -27,7 +27,7 @@
     "lodash": "3.10.1",
     "mjpeg-consumer": "0.6.2",
     "netatmo": "1.2.0",
-    "node-hue-api": "1.0.5",
+    "node-hue-api": "1.1.5",
     "node-lifx": "0.2.0",
     "node-schedule": "0.2.9",
     "node-uuid": "1.4.3",
