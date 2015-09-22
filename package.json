@@ -22,7 +22,7 @@
     "firebase": "2.2.9",
     "home-controller": "0.5.2",
     "iotdb-timers": "0.0.10",
-    "ip": "1.0.0",
+    "ip": "1.0.1",
     "jpeg-size": "0.0.1",
     "lodash": "3.10.1",
     "mjpeg-consumer": "0.6.2",
