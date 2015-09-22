@@ -6,7 +6,8 @@
   "window": {
     "width": 1024,
     "height": 768,
-    "toolbar": false
+    "toolbar": false,
+    "show": false
   },
   "dependencies": {
     "adm-zip": "0.4.4",

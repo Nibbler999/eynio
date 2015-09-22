@@ -1,6 +1,14 @@
 
 $(function() {
 
+    // Load native UI library
+    var gui = require('nw.gui');
+
+    // Get the current window
+    var win = gui.Window.get();
+
+    win.show();
+
     var status = document.getElementById('status-tab');
     var genSettings = document.getElementById('gen-set-tab');
     var terminal = document.getElementById('terminal-tab');
