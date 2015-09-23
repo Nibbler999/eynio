@@ -2,12 +2,11 @@
 
 module.exports = function (log, cb) {
 
-    var version = require('./package.json').version,
-        name = require('./package.json').name;
+    var version = require('./package.json').version;
 
     var https = require('https');
 
-    https.get('https://neosoft-updates.s3.amazonaws.com/zupdate/' + name + '/' + version + '.xml', function(res) {
+    https.get('https://neosoft-updates.s3.amazonaws.com/zupdate/NHomeServer/' + version + '.xml', function(res) {
 
         log.info('Checking for updates');
 
