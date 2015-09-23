@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "adm-zip": "0.4.4",
+    "async": "1.4.2",
     "buffer-indexof": "1.0.0",
     "bunyan": "1.5.1",
     "bunyan-prettystream": "0.1.3",
