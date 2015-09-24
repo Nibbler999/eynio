@@ -246,3 +246,11 @@ footer a {
 .H_wrap {
     flex-flow: row wrap;
 }
+
+#console {
+    display: block;
+    font-family: monospace;
+    height: 550px;
+    margin: 0px;
+}
+
