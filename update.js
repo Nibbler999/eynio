@@ -105,7 +105,10 @@ module.exports = function (log, cb) {
     function loaded()
     {
         require('./lib/main.js')(log);
-        if (cb) cb();
+
+        if (typeof cb === 'function') {
+            cb();
+        }
     }
 };
 
