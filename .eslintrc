@@ -4,6 +4,7 @@
     "node": true
   },
   "rules": {
+    "indent": 1,
     "no-use-before-define": 0,
     "curly": [2, "multi-line"],
     "no-unused-vars": 1,
