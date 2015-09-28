@@ -2,7 +2,7 @@
 
 start_package()
 {
-    HOME=${APKG_PKG_DIR} /usr/local/bin/node ${APKG_PKG_DIR}/server.js --nocolor &> ${APKG_PKG_DIR}/server.log &
+    HOME=/usr/local/etc /usr/local/bin/node ${APKG_PKG_DIR}/server.js --nocolor &> ${APKG_PKG_DIR}/server.log &
 }
 
 stop_package()
