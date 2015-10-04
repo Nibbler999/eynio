@@ -97,26 +97,31 @@ $(function() {
         }]
     });
 
-    require('../update.js')(log, function() {
+    require('../update.js')(log, function (conn) {
 
-        var conn = io.connect('http://127.0.0.1:8008/client');
+        conn.on('setExternalIP', function (command) {
+            $('#external_ip').text(command.args[0]);
+        });
 
-        conn.emit('getServerStatus', function (status) {
+        conn.on('setPing', function (ping) {
+            $('#ping').text(ping + 'ms');
+        });
+
+        conn.command('getServerStatus', function (status) {
             $('#server-name').val(status.name);
             $('#local_ip').text(status.ip);
-            $('#external_ip').text(status.external_ip.replace(/^::ffff:/, ''));
             $('#app_version').text(status.version);
             $('#node_version').text(status.node_version);
             $('#node_platform').text(status.node_platform);
         });
 
-        conn.emit('getBridges', function (bridges) {
+        conn.command('getBridges', function (bridges) {
             if (bridges) {
                 $('#bridge_count').text(bridges.length);
             }
         });
 
-        conn.emit('getDevices', function (devices) {
+        conn.command('getDevices', function (devices) {
 
             if (devices) {
 
@@ -131,15 +136,6 @@ $(function() {
                     $('#status-view').append(d);
                 });
             }
-        });
-
-        conn.once('connect', function() {
-
-            var start = Date.now();
-
-            conn.emit('ping', function () {
-                $('#ping').text(Date.now() - start + 'ms');
-            });
         });
     });
 });
