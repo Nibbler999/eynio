@@ -18,29 +18,28 @@
 </head>
 
 <body>
-    <div class="wrap">
-        <header>
-            <div class="server-nav">
-                <div class="server-nav-tab active-tab" id="status-tab">
-                    <p>Status</p>
-                </div>
-                <div class="server-nav-tab" id="gen-set-tab">
-                    <p>General Settings</p>
-                </div>
-                <div class="server-nav-tab" id="terminal-tab">
-                    <p>Terminal</p>
-                </div>
+    <header>
+        <div class="server-nav">
+            <div class="server-nav-tab active-tab" id="status">
+                <p>Status</p>
             </div>
-        </header>
+            <div class="server-nav-tab" id="general-settings">
+                <p>General Settings</p>
+            </div>
+            <div class="server-nav-tab" id="terminal">
+                <p>Terminal</p>
+            </div>
+        </div>
+    </header>
 
-
+    <div class="wrap">
         <!-- status view !-->
         <div class="content content-active" id="status-view">
             <div class="status-data">
                 <p>Status</p>
 
                 <p class="H_gray">Local: <span class="H_blue"> ON </span></p>
-                <p class="H_gray">Internet: <span class="H_blue"> - </span></p>
+                <p class="H_gray">Internet: <span class="H_blue"> Connected</span></p>
             </div>
 
             <div class="status-data">
@@ -62,58 +61,51 @@
             </div>
 
             <div class="status-data H_wrap">
-                <p>Ping: <span class="H_gray" id="ping"></span></p>
-                <p>IP: <span class="H_gray" id="local_ip"></span></p>
-                <p>External IP: <span class="H_gray" id="external_ip"></span></p>
-                <p>OS: <span class="H_gray" id="node_platform"></span></p>
-                <p>Node Version: <span class="H_gray" id="node_version"></span></p>
+                <p>Ping: <span class="H_blue" id="ping"></span></p>
+                <p>IP: <span class="H_blue" id="local_ip"></span></p>
+                <p>External IP: <span class="H_blue" id="external_ip"></span></p>
+                <p>OS: <span class="H_blue" id="node_platform"></span></p>
+                <p>Node Version: <span class="H_blue" id="node_version"></span></p>
             </div>
 
             <div class="status-data">
                 <p>Devices</p>
 
                 <div>
-                    <p>Bridges: <span class="H_gray" id="bridge_count"></span></p>
-                    <p>Devices: <span class="H_gray" id="device_count"></span></p>
+                    <p>Bridges: <span class="H_blue" id="bridge_count"></span></p>
+                    <p>Devices: <span class="H_blue" id="device_count"></span></p>
                 </div>
             </div>
 
         </div>
 
         <!-- general settings view !-->
-        <div class="content" id="general-setings-view">
+        <div class="content" id="general-settings-view">
 
             <div class="">
                 <label for="server-name">Server Name</label>
                 <div class="gs-data-input-wrap">
                     <input type="txt" placeholder="Server Name" class="gs-input" id="server-name">
 
-                    <button type="submit" class="ger-btn">
-                        <img src="img/cog.svg" class="gear-icon">
-                    </button>
-                </div>
-            </div>
-
-            <div class="">
-                <label for="server-location">Server Location</label>
-                <div class="gs-data-input-wrap">
-                    <input type="txt" placeholder="Server Location" class="gs-input" id="server-location">
-                    <button type="submit" class="ger-btn">
-                        <img src="img/cog.svg" class="gear-icon">
+                    <button type="submit" class="save-btn">
+                        Save
                     </button>
                 </div>
             </div>
 
         </div>
-
+        
+        
+        <!-- terminal view !-->
         <div class="content" id="terminal-view">
-		    <pre id="console"></pre>
-	    </div>
-
-        <footer>
-            <p>To invite users use <a href="https://my.nhome.ba/#/login" target="_blank" class="H_blue">NHome</a></p>
-        </footer>
+            <pre id="console"></pre>
+        </div>
     </div>
+
+
+    <footer>
+        <p>To invite users use <a href="https://my.nhome.ba/#/login" target="_blank" class="H_blue">NHome</a></p>
+    </footer>
 
     <!-- load JS !-->
     <script src="../local/public/js/jquery-2.1.4.min.js"></script>

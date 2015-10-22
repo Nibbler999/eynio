@@ -12,15 +12,17 @@ body {
 
 .server-nav {
     display: -webkit-box;
-    display: -moz-box;
     display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
+    -webkit-flex-flow: row nowrap;
+    -ms-flex-flow: row nowrap;
     flex-flow: row nowrap;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
     justify-content: center;
     -webkit-transition: all 0.3s ease-in-out;
-    -moz-transition: all 0.3s ease-in-out;
-    -o-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
     height: 4em;
     box-sizing: content-box;
@@ -43,8 +45,6 @@ body {
 .content {
     display: none;
     padding: 0 5%;
-    margin: 5% 0;
-    overflow: scroll;
 }
 
 .content-active {
@@ -53,11 +53,15 @@ body {
 
 .status-data {
     display: -webkit-box;
-    display: -moz-box;
     display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
+    -webkit-flex-flow: row nowrap;
+    -ms-flex-flow: row nowrap;
     flex-flow: row nowrap;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
     justify-content: space-between;
     border-bottom: 0.2em solid #dadada;
 }
@@ -85,8 +89,6 @@ body {
     background-color: #fff;
     z-index: 2;
     -webkit-transition: all 0.4s ease;
-    -moz-transition: all 0.4s ease;
-    -o-transition: all 0.4s ease;
     transition: all 0.4s ease;
 }
 
@@ -107,18 +109,20 @@ body {
     width: 70%;
     height: 0.9em;
     -webkit-transition: all 0.4s ease;
-    -moz-transition: all 0.4s ease;
-    -o-transition: all 0.4s ease;
     transition: all 0.4s ease;
 }
 
 .status-dropdown {
     display: -webkit-box;
-    display: -moz-box;
     display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
+    -webkit-flex-flow: row nowrap;
+    -ms-flex-flow: row nowrap;
     flex-flow: row nowrap;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
     justify-content: space-between;
 }
 
@@ -143,21 +147,29 @@ body {
 
 .gs-data {
     display: -webkit-box;
-    display: -moz-box;
     display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
+    -webkit-flex-flow: row nowrap;
+    -ms-flex-flow: row nowrap;
     flex-flow: row nowrap;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
     justify-content: space-between;
 }
 
 .gs-data-input-wrap {
     display: -webkit-box;
-    display: -moz-box;
     display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
+    -webkit-flex-flow: row nowrap;
+    -ms-flex-flow: row nowrap;
     flex-flow: row nowrap;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
     justify-content: space-between;
 }
 
@@ -183,20 +195,19 @@ body {
     margin-right: -1em;
 }
 
-.ger-btn {
+.save-btn {
+    cursor: pointer;
+    padding: 0 2em;
     border: 0;
     outline: none;
-    background-color: transparent;
+    background-color: rgba(13, 150, 255, 0.6);
+    -webkit-transition: all 0.3s linear;
+            transition: all 0.3s linear;
 }
 
-.gear-icon {
-    cursor: pointer;
-    height: 2em;
-    vertical-align: middle;
-    -webkit-transition: all 0.4s ease;
-    -moz-transition: all 0.4s ease;
-    -o-transition: all 0.4s ease;
-    transition: all 0.4s ease;
+.save-btn:hover {
+    background-color: rgb(13, 150, 255);
+    color: #fff;
 }
 
 
@@ -206,6 +217,7 @@ footer {
     position: absolute;
     bottom: 0;
     width: 99%;
+    margin: 0 auto;
     height: 4em;
     background-color: #f0f0f0;
     border-bottom: 0.3em solid #0d96ff;
@@ -222,10 +234,6 @@ footer a {
     color:
 }
 
-.gear-icon:hover {
-    transform: rotateZ(90deg);
-}
-
 .H_gray {
     color: #b5b5b5;
 }
@@ -236,14 +244,17 @@ footer a {
 
 .H_flex {
     display: -webkit-box;
-    display: -moz-box;
     display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
+    -webkit-flex-flow: row nowrap;
+    -ms-flex-flow: row nowrap;
     flex-flow: row nowrap;
 }
 
 .H_wrap {
+    -webkit-flex-flow: row wrap;
+    -ms-flex-flow: row wrap;
     flex-flow: row wrap;
 }
 
@@ -253,4 +264,3 @@ footer a {
     height: 550px;
     margin: 0px;
 }
-

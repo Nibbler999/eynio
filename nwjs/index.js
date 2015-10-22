@@ -9,58 +9,21 @@ $(function() {
 
     win.show();
 
-    var status = document.getElementById('status-tab');
-    var genSettings = document.getElementById('gen-set-tab');
-    var terminal = document.getElementById('terminal-tab');
+    var clickedTab = document.getElementsByClassName('server-nav-tab');
 
-    var statusView = document.getElementById('status-view');
-    var genSettingsView = document.getElementById('general-setings-view');
-    var terminalView = document.getElementById('terminal-view');    
+    for (var i = 0; i < clickedTab.length; i++) {
+        clickedTab[i].addEventListener('click', function (e) {
+            e.preventDefault();
 
-    status.addEventListener('click', function (e) {
-        e.preventDefault();
+            for (var j = 0; j < clickedTab.length; j++) {
+                document.getElementById(clickedTab[j].id).classList.remove('active-tab');
+                document.getElementById(clickedTab[j].id + '-view').classList.remove('content-active');
+            }
 
-        /* hide */
-        genSettingsView.classList.remove('content-active');
-        genSettings.classList.remove('active-tab');
-
-        terminalView.classList.remove('content-active');
-        terminal.classList.remove('active-tab');
-
-        /* show */
-        statusView.classList.add('content-active');
-        status.classList.add('active-tab');
-    });
-
-    genSettings.addEventListener('click', function (e) {
-        e.preventDefault();
-
-        /* hide */
-        statusView.classList.remove('content-active');
-        status.classList.remove('active-tab');
-
-        terminalView.classList.remove('content-active');
-        terminal.classList.remove('active-tab');
-
-        /* show */
-        genSettingsView.classList.add('content-active');
-        genSettings.classList.add('active-tab');
-    });
-
-    terminal.addEventListener('click', function (e) {
-        e.preventDefault();
-
-        /* hide */
-        genSettingsView.classList.remove('content-active');
-        genSettings.classList.remove('active-tab');
-
-        statusView.classList.remove('content-active');
-        status.classList.remove('active-tab');
-
-        /* show */
-        terminalView.classList.add('content-active');
-        terminal.classList.add('active-tab');
-    });
+            document.getElementById(this.id + '-view').classList.add('content-active');
+            this.classList.add('active-tab');
+        });
+    };
 
     var stream = require('stream');
 
@@ -118,6 +81,8 @@ $(function() {
         conn.command('getBridges', function (bridges) {
             if (bridges) {
                 $('#bridge_count').text(bridges.length);
+            } else {
+                $('#bridge_count').text(0);
             }
         });
 
@@ -135,6 +100,8 @@ $(function() {
 
                     $('#status-view').append(d);
                 });
+            } else {
+                $('#device_count').text(0);
             }
         });
     });
