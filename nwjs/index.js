@@ -70,6 +70,15 @@ $(function() {
             $('#ping').text(ping + 'ms');
         });
 
+        conn.on('connect', function () {
+            $('#connected').text('Connected');
+        });
+
+        conn.on('disconnect', function () {
+            $('#connected').text('Disconnected');
+            $('#ping').text('-');
+        });
+
         conn.command('getServerStatus', function (status) {
             $('#server-name').val(status.name);
             $('#local_ip').text(status.ip);
