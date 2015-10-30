@@ -14,7 +14,7 @@ program
   .option('--nocolor', 'Disable colors in terminal output', false)
   .parse(process.argv);
 
-var log = require('./lib/logger.js')(program);
+var log = require('./lib/logger.js')(program, process.stdout);
 
 require('./lib/main.js')(log);
 

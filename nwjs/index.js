@@ -40,25 +40,7 @@ $(function() {
         }
     });
 
-    var bunyan = require('bunyan');
-    var PrettyStream = require('bunyan-prettystream');
-
-    var prettyStdOut = new PrettyStream({mode: 'short', useColor: false});
-    prettyStdOut.pipe(weblog);
-
-    var ringbuffer = new bunyan.RingBuffer({ limit: 100 });
-
-    var log = bunyan.createLogger({
-        name: 'NHome',
-        streams: [{
-            level: 'info',
-            stream: prettyStdOut
-        }, {
-            level: 'info',
-            type: 'raw',
-            stream: ringbuffer
-        }]
-    });
+    var log = require('../lib/logger.js')({ loglevel: 'info', nocolor: true }, weblog);
 
     require('../update.js')(log, function (conn) {
 
