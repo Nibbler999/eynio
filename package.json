@@ -30,7 +30,7 @@
     "netatmo": "1.2.0",
     "node-hue-api": "1.1.2",
     "node-lifx": "0.3.0",
-    "node-schedule": "0.2.9",
+    "node-schedule": "0.3.0",
     "node-uuid": "1.4.3",
     "request": "2.65.0",
     "simple-itach": "0.2.1",
