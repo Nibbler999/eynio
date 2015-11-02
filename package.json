@@ -41,7 +41,7 @@
     "write-limiter": "0.1.5",
     "ws": "0.8.0",
     "ws-heartbeats": "^1.0.0",
-    "xml2js": "0.4.13"
+    "xml2js": "0.4.15"
   },
   "bundledDependencies": [
     "iotdb-timers",
