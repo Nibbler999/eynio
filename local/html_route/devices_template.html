@@ -1,0 +1,250 @@
+<div class="template-nav">
+  <h3>Devices</h3>
+
+  <div class="dropdown">
+    <button class="button add-new-btn" id="add-new-device" role="button" data-toggle="dropdown">
+      Add new device
+    </button>
+    <ul class="dropdown-menu add-new-device-dorpdown-menu" role="menu" aria-labelledby="add-new-device">
+      <li role="presentation">
+        <a role="menuitem" tabindex="-1" href="" ng-click="device.addRemote()">
+            New Remote
+          </a>
+      </li>
+      <li role="presentation">
+        <a role="menuitem" tabindex="-1" href="" ng-click="device.addCamera()">
+            New Camera
+          </a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- show all lights !-->
+<section class="display-devices" ng-if="device.allLights.length">
+  <h4>Lights</h4>
+  <hr>
+  <div class="row display-devices-row" id="lights">
+
+    <light ng-repeat="light in device.allLights" linfo="light" ng-click="device.editDevice(light)"></light>
+  </div>
+</section>
+<!-- show all switches !-->
+<section class="display-devices" ng-if="device.allSwitches.length">
+  <h4>Switches</h4>
+  <hr>
+  <div class="row display-devices-row" id="switches">
+
+    <switch ng-repeat="switch in device.allSwitches" sinfo="switch" ng-click=" device.editDevice(switch)"></switch>
+  </div>
+</section>
+<!-- show all shutters !-->
+<section class="display-devices" ng-if="device.allShutters.length">
+  <h4>Shutters</h4>
+  <hr>
+  <div class="row display-devices-row" id="switches">
+
+    <shutter ng-repeat="shutter in device.allShutters" shinfo="shutter" ng-click=" device.editDevice(shutter)"></shutter>
+  </div>
+</section>
+<!-- show all thermostats !-->
+<section class="display-devices" ng-if="device.allThermos.length">
+  <h4>Thermostat</h4>
+  <hr>
+  <div class="row display-devices-row" id="thermostat">
+
+    <thermostat ng-repeat="thermo in device.allThermos" tinfo="thermo" ng-click="device.editDevice(thermo)"></thermostat>
+  </div>
+</section>
+<!-- show all remotes !-->
+<section class="display-devices" ng-if="device.allCustomRemotes.length">
+  <h4>Remotes</h4>
+  <hr>
+  <div class="row display-devices-row" id="remotes">
+
+    <remote ng-repeat="cRemote in device.allCustomRemotes track by cRemote.id" crinfo="cRemote" ng-click="device.editDevice(cRemote)"></remote>
+  </div>
+</section>
+<!-- show all cameras !-->
+<section class="display-devices" ng-if="device.allCameras.length">
+  <h4>Cameras</h4>
+  <hr>
+  <div class="row display-devices-row" id="cameras">
+
+    <camera ng-repeat="camera in device.allCameras" cinfo="camera" ng-click="device.editDevice(camera)"></camera>
+  </div>
+</section>
+<!-- show all sensors !-->
+<section class="display-devices" ng-if="device.allSensors.length">
+  <h4>Sensors</h4>
+  <hr>
+  <div class="row display-devices-row" id="cameras">
+
+    <sensor ng-repeat="sensor in device.allSensors" sensorinfo="sensor" ng-click="device.editDevice(sensor)"></sensor>
+  </div>
+</section>
+
+<section class="custom-modal-window edit-device-modal">
+  <section class="custom-modal-wrap">
+    <div class="edit-device-rename">
+      <h3>Device Settings</h3>
+      <div class="form-input-wrap">
+        <label for="rename-device" class="form-label">
+          Rename device
+        </label>
+        <input type="text" id="rename-device" class="form-input" ng-model="device.activeDevice.name">
+      </div>
+      <img class="edit-devices-close-btn" src="img/button/cross.png" ng-click="device.closeCustomModal()">
+    </div>
+    <div class="edit-device-room">
+      <h4>Asigned rooms</h4>
+      <div class="asing-room">
+        <button type="button" class="button asigned-room-btn" ng-repeat="room in device.asignedRooms" ng-click="device.removeRoom($index, room)">
+          <p>{{room.name}}</p>
+        </button>
+      </div>
+      <hr>
+      <h4>Unasigned rooms</h4>
+      <div class="asing-room">
+        <button type="button" class="button unasigned-room-btn" ng-repeat="room in device.unAsignedRooms" ng-click="device.addRoom($index, room)">
+          <p>{{room.name}}</p>
+        </button>
+      </div>
+
+      <div class="edit-devices-btn-wrap">
+        <button type="" class="button settings-cancel-btn" ng-click="device.deleteDevice(); device.closeCustomModal()">
+          Delete
+        </button>
+        <button type="submit" class="button settings-save-btn" ng-click="device.saveDeviceOptions(); device.closeCustomModal()">
+          Save
+        </button>
+      </div>
+    </div>
+  </section>
+</section>
+
+<section class="custom-modal-window add-camera-modal">
+  <section class="custom-modal-wrap">
+    <div class="add-camera-header">
+      <h3>Add new camera</h3>
+    </div>
+    <div class="add-camera-step-1">
+      <form type="form" ng-submit="device.addNewCamera()" autocomplete="off" id="add-camera-form">
+        <div class="col-md-6 form-input-wrap">
+
+          <label for="add-camera-name" class="form-label">Name</label>
+          <input type="text" id="add-camera-name" class="form-input" required>
+
+          <label for="add-camera-desc" class="form-label">Description</label>
+          <input type="text" id="add-camera-desc" class="form-input">
+
+          <label for="add-camera-user" class="form-label">Username</label>
+          <input type="email" id="add-camera-user" class="form-input">
+
+          <label for="add-camera-password" class="form-label">Password</label>
+          <input type="password" id="add-camera-password" class="form-input">
+        </div>
+        <div class="col-md-6 form-input-wrap">
+          <label for="add-camera-rtsp" class="form-label">RTSP</label>
+          <input type="text" id="add-camera-rtsp" class="form-input">
+
+          <label for="add-camera-mjpeg" class="form-label">MJPEG</label>
+          <input type="text" id="add-camera-mjpeg" class="form-input">
+
+          <label for="add-camera-snapshot" class="form-label">JPEG Snapshot</label>
+          <input type="text" id="add-camera-snapshot" class="form-input">
+        </div>
+      </form>
+    </div>
+
+    <div class="add-camera-step-2">
+      <div ng-if="device.addCamSuccess">
+        <h4>Connecting success!</h4>
+        <h5>You can start using your camera just by clicking on it</h5>
+      </div>
+
+      <div ng-if="!device.addCamSuccess">
+        <h4>Connecting failed!</h4>
+        <h5>Something went wrong, check your input data</h5>
+      </div>
+    </div>
+    <div class="add-new-footer">
+      <button ng-hide="device.addCamSuccess || device.addCamSuccess === false" type="reset" class="button settings-cancel-btn" ng-click="device.closeCustomModal()" form="add-camera-form">
+        Cancel
+      </button>
+      <button ng-show="device.addCamSuccess === false" type="button" class="button settings-cancel-btn" ng-click="device.restoreAddCamModal()">
+        Go back
+      </button>
+
+      <button ng-hide="device.addCamSuccess || device.addCamSuccess === false" type="submit" class="button settings-save-btn" form="add-camera-form">
+        Save and Continue
+      </button>
+      <button ng-show="device.addCamSuccess || device.addCamSuccess === false" type="button" class="button settings-save-btn" ng-click="device.restoreAddCamModal(); device.closeCustomModal()">
+        Exit
+      </button>
+    </div>
+  </section>
+</section>
+
+<section class="custom-modal-window add-remote-modal">
+  <section class="custom-modal-wrap add-remote-wrap">
+    <div class="add-remote-header">
+      <h3>Add new remote</h3>
+    </div>
+    <form type="form" autocomplete="off" ng-submit="device.addNewRemote()" id="add-remote-form">
+      <div class="add-remote-input-wrap">
+        <div class="form-input-wrap">
+          <label for="add-remote-name" class="form-label">Name</label>
+          <input type="text" class="form-input" id="add-remote-name" title="4 to 15 characters" pattern=".{4,15}" required>
+        </div>
+        <div class="add-remote-select-wrap">
+          <label class="form-label" for="add-remote-ir-output">IR Output</label>
+          <select id="add-remote-ir-output" class="form-select">
+            <option value="1:1">1:1</option>
+            <option value="1:2">1:2</option>
+            <option value="1:3">1:3</option>
+          </select>
+        </div>
+      </div>
+      <hr>
+      <div class="add-remote-radio-select">
+        <h4>Remote type</h4>
+        <span>
+          <input type="radio" id="add-remote-tv" value="tv" name="add-remote-type" class="form-radio" checked>
+          <label for="add-remote-tv" class="radio-label"></label>
+          <i>TV</i>
+        </span>
+        <!--
+        <span>
+          <input type="radio" id="add-remote-ac" value="ac" name="add-remote-type" class="form-radio">
+          <label for="add-remote-ac" class="radio-label"></label>
+          <i>AC</i>
+        </span>
+        <span>
+          <input type="radio" id="add-remote-multi" value="multi" name="add-remote-type" class="form-radio">
+          <label for="add-remote-multi" class="radio-label"></label>
+          <i>Multi</i>
+        </span>
+        !-->
+      </div>
+
+      <hr>
+      <div class="add-remote-radio-select">
+        <h4>Remote bridge</h4>
+        <span ng-repeat="remote in device.remotes">
+          <input type="radio" id="add-remote-bridge" value="{{remote.id}}" name="add-remote-bridge" class="form-radio" checked>
+          <label for="add-remote-bridge" class="radio-label"></label>
+          <i>{{remote.name}}</i>
+        </span>
+      </div>
+    </form>
+    <div class="add-new-footer">
+      <button type="reset" class="button settings-cancel-btn" form="add-remote-form" ng-click="device.closeCustomModal()">
+        Cancel
+      </button>
+      <button type="submit" class="button settings-save-btn" form="add-remote-form">
+        Save
+      </button>
+    </div>
+  </section>
+</section>

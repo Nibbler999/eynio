@@ -1,0 +1,42 @@
+<div class="device-wrap" ng-class="{'show-thermo-slider': shutterSlider, 'show-more-options': editDevice}" id="shutter-{{shinfo.count}}">
+    <div class="device-header">
+        <img src="img/buttons/devIcons/shutters.png" class="img-responsive device-icon" ng-click="shutterSlider = !shutterSlider">
+        <div class="device-content-data">
+            <p>{{shinfo.name}}</p>
+            <p>{{shinfo.type}}</p>
+        </div>
+    </div>
+
+    <!-- shutter slider !-->
+    <div class="device-options device-options-shutter" ng-show="shutterSlider">
+        <img src="img/buttons/devButtons/shutter-header.png" class="img-responsive">
+        <div id="shWrap" class="shutter-wrap">
+            <div id="shFilter" class="shutter-filter">
+                <img id="handle" src="img/buttons/devButtons/shutter-handle.png" class="img-responsive">
+            </div>
+        </div>
+        <button class="btn device-set-btn" ng-click="setShutterValue(shinfo.id)">SET</button>
+    </div>
+
+
+    <!-- edit device options !-->
+    <div class="device-edit" ng-show="editDevice">
+        <label for="dev-name" class="sr-only">Name of Device</label>
+        <input type="text" name="dev-name" ng-model="shinfo.name" class="form-text" placeholder="Device Name" maxlength="15">
+
+        <div class="device-btns-wrap">
+            <button type="submit" class="btn device-edit-btn" ng-click="changeName()">Rename</button>
+        </div>
+    </div>
+
+    <!-- display open/close/stop !-->
+    <div class="device-footer">
+        <span class="device-btn" ng-click="fullOpen(shinfo.id)">Open</span>
+        <span class="device-btn" ng-click="shutterStop(shinfo.id)">STOP</span>
+        <span class="device-btn" ng-click="fullClose(shinfo.id)">Close</span>
+    </div>
+    <!-- display in devices !-->
+    <div class="device-footer" ng-show="devicesState === 'frame.devices'">
+        <span class="device-btn device-options-gear" ng-click="editDevice = !editDevice"></span>
+    </div>
+</div>

@@ -1,0 +1,51 @@
+<div class="device-wrap" ng-class="{'show-thermostat': thermostat, 'show-more-options': editDevice}" id="thermostat-{{tinfo.count}}">
+    <div class="device-header">
+        <img src="img/buttons/devIcons/thermostat.png" class="img-responsive device-icon" ng-click="thermostat = !thermostat">
+        <div class="device-content-data">
+            <p>{{tinfo.name}}</p>
+            <p>Current: <span class="HELPERblue">{{tinfo.value}}</span></p>
+            <p ng-hide="thermostat">Target: <span class="HELPERred">{{tinfo.target}}</span></p>
+        </div>
+    </div>
+
+    <!-- thermostat animation !-->
+    <div class="device-options device-options-thermo" ng-show="thermostat">
+        <div id="slider" class="thermoSlide"></div>
+        <div id="rotor" class="rotatingThermo"></div>
+        <div class="tempTxt HELPERblue">Temp</div>
+        <div class="actionBtns">
+            <span ng-click="tempDowno()" class="round">
+                <p class="HELPERblue">-</p>
+            </span>
+            <span>
+                <p class="HELPERgray">{{tinfo.target}}°</p>
+            </span>
+            <span ng-click="tempUp()" class="round">
+                <p class="HELPERblue">+</p>
+            </span>
+        </div>
+    </div>
+
+    <!-- edit device options !-->
+    <div class="device-edit" ng-show="editDevice">
+        <label for="dev-name" class="sr-only">Name of Device</label>
+        <input type="text" name="dev-name" ng-model="tinfo.name" class="form-text" placeholder="Device Name" maxlength="15">
+
+        <div class="device-btns-wrap">
+            <button type="submit" class="btn device-edit-btn" ng-click="changeName()">Rename</button>
+        </div>
+    </div>
+
+    <!-- display +/-/set switch !-->
+    <div class="device-footer">
+        <span class="device-btn" ng-click="tempDowno()" ng-hide="thermostat">-
+        </span>
+        <span class="device-btn" ng-click="setTemp(tinfo.id)">SET</span>
+        <span class="device-btn" ng-click="tempUp()" ng-hide="thermostat">+
+        </span>
+    </div>
+    <!-- display in devices !-->
+    <div class="device-footer" ng-show="devicesState === 'frame.devices'">
+        <span class="device-btn device-options-gear" ng-click="editDevice = !editDevice"></span>
+    </div>
+</div>

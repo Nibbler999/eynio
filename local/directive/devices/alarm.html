@@ -1,0 +1,15 @@
+<div class="alarm-device-wrap">
+  <div class="alarm-header">
+    <img ng-src="{{alarmIcon}}" class="img-responsive device-icon">
+    <div class="alarm-header-info">
+      <p>{{ainfo.name}}</p>
+      <p>{{ainfo.module}}</p>
+      <p>{{ainfo.state}}</p>
+    </div>
+  </div>
+
+  <div class="alarm-footer" ng-class="{'alarm-footer-active': added, 'alarm-footer-inactive': !added}" ng-click="toggleAddSensor(ainfo.id)">
+    <span class="alarm-btn" ng-show="added">Sensor added</span>
+    <span class="alarm-btn" ng-show="!added">Add sensor</span>
+  </div>
+</div>

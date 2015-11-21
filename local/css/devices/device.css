@@ -1,0 +1,331 @@
+.sensor-device-wrap {
+  position: relative;
+  width: 18em;
+  height: 7.5em;
+  margin: 0.5em;
+  border-radius: 0.35em;
+  background-color: #14334B;
+  color: #fff;
+  box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.5);
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.device-wrap {
+  position: relative;
+  width: 18em;
+  height: 10em;
+  margin: 0.5em;
+  border-radius: 0.35em;
+  background-color: #14334B;
+  color: #fff;
+  box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.5);
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.device-header {
+  height: 7.5em;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: row nowrap;
+  -ms-flex-flow: row nowrap;
+  flex-flow: row nowrap;
+  padding: 1em;
+}
+.device-icon {
+  height: 5em;
+  width: 5em;
+  margin-right: 0.5em;
+  cursor: pointer;
+}
+.device-content-data {
+  padding: 0.5em;
+  font-weight: 100;
+}
+.sensor-content-data {
+  padding: 0 0.5em;
+  font-weight: 100;
+}
+.device-content-data p, .sensor-content-data p, .sensor-content-data h2 {
+  margin: 0;
+}
+.device-footer {
+  height: 2.5em;
+  line-height: 2.5;
+  text-align: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+.device-footer-btn-wrap, .device-footer-option-wrap {
+  display: inherit;
+}
+.device-footer-btn-wrap button:first-child {
+  border-right: 0.1em solid rgba(13, 150, 255, 0.25);
+}
+.device-btn {
+  width: 4.5em;
+  height: 2.5em;
+  cursor: pointer;
+  border: none;
+  background-color: #14334B;
+}
+.device-btn-active {
+  color: #8295A6;
+  background-color: #133E5F;
+  box-sizing: border-box;
+  box-shadow: 0 0.1em 0.5em rgba(0, 0, 0, 0.5);
+  -webkit-transform: scale(1.05);
+  -ms-transform: scale(1.05);
+  transform: scale(1.05);
+  -webkit-transition: background-color 0.4s ease, -webkit-transform 0.3s ease 0.1s, box-shadow 0.3s ease 0.25s;
+  transition: background-color 0.4s ease, transform 0.3s ease 0.1s, box-shadow 0.3s ease 0.25s;
+}
+.device-options-btn {
+  width: 8em;
+  height: 2.5em;
+  background-color: #0D96FF;
+  border: none;
+  cursor: pointer;
+  -webkit-transition: all 0.25s ease;
+  transition: all 0.25s ease;
+}
+.device-options-btn:active {
+  -webkit-transform: scale(0.9);
+  -ms-transform: scale(0.9);
+  transform: scale(0.9);
+  background-color: #133E5F;
+}
+.set-color-btn {
+  position: absolute;
+  bottom: -2.5em;
+  right: 0;
+}
+.device-options {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 2.5em;
+  z-index: 1;
+  border-radius: 0.25em;
+  background-color: inherit;
+  -webkit-animation: popUp 0.5s ease;
+  animation: popUp 0.5s ease;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+.option-wrap {
+  position: absolute;
+  background-color: inherit;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 2.5em;
+  z-index: 1;
+  -webkit-animation: popUp 0.5s ease;
+  animation: popUp 0.5s ease;
+}
+.close-device-options {
+  position: absolute;
+  z-index: 1;
+  top: -0.5em;
+  right: -0.5em;
+  cursor: pointer;
+  background-color: #618EAE;
+  border-radius: 1em;
+  padding: 0.35em;
+  -webkit-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+}
+.close-device-options:hover {
+  -webkit-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+}
+.device-option-btn {
+  height: 4em;
+  width: 4em;
+  margin: auto 0.5em;
+  padding: 0.5em;
+  cursor: pointer;
+  border-radius: 0.5em;
+  border: 0.1em solid rgba(13, 150, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.1);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 3em;
+  -webkit-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+}
+.device-option-btn:hover {
+  -webkit-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+  border: 0.1em solid rgba(13, 150, 255, 0.9);
+  background-color: rgba(255, 255, 255, 0);
+}
+.device-option-color {
+  background-image: url('../../img/device-options/light-color-off.png');
+}
+.device-option-color:hover {
+  background-image: url('../../img/device-options/light-color.png');
+}
+.device-option-set-white {
+  background-image: url('../../img/device-options/light-brightness-off.png');
+}
+.device-option-set-white:hover {
+  background-image: url('../../img/device-options/light-brightness.png');
+}
+
+/* DEVICE END */
+
+
+/* Shutters CSS */
+
+.device-options-shutter {
+  margin-bottom: 2em;
+}
+.shutter-wrap {
+  position: relative;
+  width: 80%;
+  height: 9.5em;
+  margin: 0 auto;
+  background-image: url(../../img/buttons/devButtons/shutter-background.png);
+  background-repeat: no-repeat;
+  background-position: bottom;
+  background-size: contain;
+}
+.shutter-filter {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 0;
+  max-height: 9em;
+  min-height: 0;
+  -webkit-transition: all 0.35s linear;
+  transition: all 0.35s linear;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+.slider {
+  margin-top: -0.5em;
+}
+.shutter-filter img {
+  z-index: 1;
+  position: relative;
+  top: -0.5em;
+  margin: 0 auto;
+  height: 1em;
+  width: 7em;
+  cursor: -webkit-grab;
+}
+
+/* themostat CSS */
+
+.buttonHolder {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: space-around;
+  -ms-flex-pack: distribute;
+  justify-content: space-around;
+}
+.fullThermoActive {
+  height: 22em !important;
+}
+.actionBtns {
+  position: absolute;
+  width: 100%;
+  z-index: 5;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: row nowrap;
+  -ms-flex-flow: row nowrap;
+  flex-flow: row nowrap;
+  -webkit-justify-content: space-around;
+  -ms-flex-pack: distribute;
+  justify-content: space-around;
+}
+.actionBtns span:nth-child(2) {
+  font-size: 2.5em;
+  line-height: 1em;
+}
+.actionBtns span:nth-child(1) p, .actionBtns span:nth-child(3) p {
+  -webkit-transform: scale(2, 2);
+  -ms-transform: scale(2, 2);
+  transform: scale(2, 2);
+  line-height: 2;
+}
+.round {
+  border-radius: 50%;
+  border: 2px solid #e3e3e3;
+  width: 2.5em;
+  height: 2.5em;
+  text-align: center;
+  cursor: pointer;
+  margin: 0 0.5em;
+}
+.thermoSlide {
+  margin: 0 auto;
+  margin-top: 1em;
+}
+.tempTxt {
+  position: absolute;
+  z-index: 5;
+  width: 100%;
+  text-align: center;
+  margin-top: -1.7em;
+  font-size: 1.5em;
+}
+.rotatingThermo {
+  position: absolute;
+  top: 3em;
+  left: 5.5em;
+  width: 4em;
+  height: 4em;
+  z-index: 5;
+  background-image: url(../../img/buttons/devButtons/thermoWhele.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  -webkit-transition: all 0.35s linear;
+  transition: all 0.35s linear;
+}
+.rs-border {
+  border: 0 !important;
+}
+.rs-control .rs-range-color {
+  background-color: #6bdff7;
+}
+.rs-control .rs-path-color {
+  background-color: #d2e7f0;
+}
+.rs-control .rs-handle {
+  background-color: #45c9f5;
+}
+.rs-control .rs-bg-color {
+  background-color: white;
+}

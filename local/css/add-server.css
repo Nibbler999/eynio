@@ -1,0 +1,146 @@
+.add-server-prompt {
+  background-color: #14314A;
+  height: 10em;
+  width: 100%;
+  border-radius: 0.45em;
+  color: #fff;
+  box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.5);
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+.add-server-img {
+  height: 5em;
+  width: 5em;
+  margin: auto 3em;
+}
+.add-server-prompt div {
+  padding: 2.5em 0;
+}
+.add-new-plus-btn {
+  background: #0D96FF url(../img/button/plus.png) 95% 50% no-repeat;
+  text-align: left;
+}
+.add-new-plus-btn span {
+  margin-right: 1em;
+}
+.add-server-window-wrap {
+  position: absolute;
+  top: 1em;
+  width: 35em;
+  background-color: #123048;
+  color: #fff;
+  padding-bottom: 2em;
+  border-radius: 0.35em;
+  box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.5);
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column nowrap;
+  -ms-flex-flow: column nowrap;
+  flex-flow: column nowrap;
+  -webkit-align-content: flex-start;
+  -ms-flex-line-pack: start;
+  align-content: flex-start;
+  -webkit-animation: popUp 0.5s ease;
+  animation: popUp 0.5s ease;
+}
+.add-server-window-head {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  height: 5em;
+  margin: 2.5em 0;
+}
+.add-server-window-img {
+  height: 5em;
+  width: auto;
+  margin: auto 2em;
+  margin-right: 3em;
+}
+.add-server-download-platform-btn {
+  width: 100%;
+  height: 5em;
+  text-align: left;
+  border-radius: 0;
+  background-color: #16354E;
+}
+.add-server-download-platform-btn > img {
+  height: 3.5em;
+  width: 3.5em;
+  margin: 0.75em 1.5em;
+}
+.add-server-window-dark-wrap {
+  position: absolute;
+  top: 1em;
+  width: 30em;
+  left: 38em;
+  padding: 5em;
+  text-align: center;
+  background-color: #0F2639;
+  color: #C1DBF0;
+  border-radius: 0.35em;
+  box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.5);
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column nowrap;
+  -ms-flex-flow: column nowrap;
+  flex-flow: column nowrap;
+  -webkit-align-content: flex-start;
+  -ms-flex-line-pack: start;
+  align-content: flex-start;
+  -webkit-animation: popUp 0.5s ease;
+  animation: popUp 0.5s ease;
+}
+.add-server-window-blue-head {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  background-color: #1362AC;
+  height: 10em;
+  padding: 2em;
+}
+.add-server-window-help {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  height: 3em;
+  line-height: 3;
+  padding: 0 2em;
+  background-color: #204664;
+}
+.add-server-window-help:nth-child(odd) {
+  background-color: #1A3A54
+}
+.add-server-form-wrap {
+  padding: 1em 2em;
+}
+.settings-tab-default > .slide-toggle-wrap {
+  width: 40%;
+}
+.add-server-succes{
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  text-align: center;
+  padding: 5em;
+  background-color: rgba(29,131,228, 0.85);
+  animation: popUp 0.5s ease;
+}

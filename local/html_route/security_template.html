@@ -1,0 +1,26 @@
+<div class="template-nav">
+  <div class="template-nav-toggle">
+    <h3 class="template-nav-toggle-btn" id="surveilance" ng-click="alarmToggle = false">Surveilance</h3>
+    <h3 class="template-nav-toggle-btn" id="alarms" ng-click="alarmToggle = true">Alarms</h3>
+    <div class="active-line-indicator"></div>
+  </div>
+</div>
+
+
+<div class="display-devices-row" ng-hide="alarmToggle === true">
+
+  <camera ng-repeat="camera in security.allCameras" cinfo="camera"></camera>
+</div>
+
+<div class="display-devices-row" ng-show="alarmToggle">
+
+  <alarm ng-repeat="sensorAlarm in security.allSensors" ainfo="sensorAlarm" ng-click="security.toggleAddSensor(sensorAlarm.id)"></alarm>
+</div>
+
+<section class="custom-modal-window cam-live-stream-modal">
+  <section class="custom-modal-wrap">
+    <img src="img/button/cross.png" class="close-live-stream-modal" ng-click="security.stopLiveStream()">
+    <img ng-src={{security.liveImage}} class="camera-live-stream">
+    <button ng-click="security.fullScreen()" class="button full-screen-btn"></button>
+  </section>
+</section>

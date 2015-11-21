@@ -1,0 +1,94 @@
+<div class="schedule-wrap">
+  <div>
+    <div class="schedule-name">
+      <p ng-hide="editMode">{{schinfo.name}}</p>
+      <div class="schedule-edit-mode" ng-show="editMode">
+        <input type="text" ng-model="schinfo.name" class="form-input edit-schedule-input">
+      </div>
+    </div>
+    <div class="schedule-devices">
+      <p ng-repeat="action in schinfo.actions">{{action.description.name}} {{action.description.action}}</p>
+    </div>
+  </div>
+
+  <div>
+    <!-- if days of week !-->
+    <div ng-if="schinfo.dateTime.dayOfWeek" class="schedule-days" ng-hide="editMode">
+      <p ng-if="schinfo.dateTime.dayOfWeek.length === 7" class="color-blue"> Daily, </p>
+      <span ng-if="schinfo.dateTime.dayOfWeek.length < 7" ng-repeat="day in schinfo.dateTime.dayOfWeek">
+        <p ng-if="day === 0"> Sun, </p>
+        <p ng-if="day === 1"> Mon, </p>
+        <p ng-if="day === 2"> Tue, </p>
+        <p ng-if="day === 3"> Wed, </p>
+        <p ng-if="day === 4"> Thu, </p>
+        <p ng-if="day === 5"> Fri, </p>
+        <p ng-if="day === 6"> Sat, </p>
+      </span>
+      <p class="color-white"> {{schinfo.dateTime.hour}}:{{schinfo.dateTime.minute}}</p>
+    </div>
+
+    <div ng-show="editMode" class="schedule-edit-mode">
+      <span>
+        <input type="checkbox" id="new-scene-mon-{{schinfo.id}}" class="new-scene-day" value="1">
+        <label for="new-scene-mon-{{schinfo.id}}" class="new-scene-day-label">Mon</label>
+      </span>
+      <span>
+        <input type="checkbox" id="new-scene-tue-{{schinfo.id}}" class="new-scene-day" value="2">
+        <label for="new-scene-tue-{{schinfo.id}}" class="new-scene-day-label">Tue</label>
+      </span>
+      <span>
+        <input type="checkbox" id="new-scene-wed-{{schinfo.id}}" class="new-scene-day" value="3">
+        <label for="new-scene-wed-{{schinfo.id}}" class="new-scene-day-label">Wed</label>
+      </span>
+      <span>
+        <input type="checkbox" id="new-scene-thu-{{schinfo.id}}" class="new-scene-day" value="4">
+        <label for="new-scene-thu-{{schinfo.id}}" class="new-scene-day-label">Thu</label>
+      </span>
+      <span>
+        <input type="checkbox" id="new-scene-fri-{{schinfo.id}}" class="new-scene-day" value="5">
+        <label for="new-scene-fri-{{schinfo.id}}" class="new-scene-day-label">Fri</label>
+      </span>
+      <span>
+        <input type="checkbox" id="new-scene-sat-{{schinfo.id}}" class="new-scene-day" value="6">
+        <label for="new-scene-sat-{{schinfo.id}}" class="new-scene-day-label">Sat</label>
+      </span>
+      <span>
+        <input type="checkbox" id="new-scene-sun-{{schinfo.id}}" class="new-scene-day" value="0">
+        <label for="new-scene-sun-{{schinfo.id}}" class="new-scene-day-label">Sun</label>
+      </span>
+    </div>
+
+    <div ng-show="editMode" class="schedule-edit-mode">
+      <input type="number" class="form-number" id="new-scene-hours" name="hour" placeholder="Hours" ng-model="schinfo.dateTime.hour">
+      <input type="number" class="form-number" id="new-scene-minutes" name="minute" placeholder="Minutes" ng-model="schinfo.dateTime.minute">
+    </div>
+
+    <!-- if sunset or sunrise !-->
+    <div ng-if="!schinfo.dateTime.dayOfWeek" class="schedule-obj-repeat" ng-hide="editMode">
+      <p>{{schinfo.dateTime}}</p>
+    </div>
+
+
+    <div class="dropdown" ng-hide="editMode">
+      <button type="button" class="button edit-schedule-btn" id="edit-schedule-btn" role="button" data-toggle="dropdown"></button>
+      <ul class="dropdown-menu edit-schedule-dropdown" role="menu" aria-labelledby="edit-schedule-btn">
+        <li role="presentation" class="edit-schedule-dropdown-btn">
+          <a role="menuitem" tabindex="-1" href="" ng-click="editSchedule(schinfo)">
+            Edit
+          </a>
+        </li>
+        <li role="presentation" class="delete-schedule-dropdown-btn">
+          <a role="menuitem" tabindex="-1" href="" ng-click="deleteJob(schinfo.id)">
+            Delete
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="schedule-edit-mode" ng-show="editMode">
+      <button type="submit" class="button save-edit-schedule-btn" ng-click="saveEditSchedule(schinfo)">Done</button>
+      <button type="reset" class="button cancel-edit-category-btn" ng-click="
+        scope.editMode = !false;"></button>
+    </div>
+  </div>
+</div>

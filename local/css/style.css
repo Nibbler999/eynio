@@ -1,0 +1,278 @@
+@font-face {
+  font-family: ProximaNova;
+  src: url(../fonts/ProximaNova-Regular.otf);
+}
+@font-face {
+  font-family: ProximaNova;
+  src: url(../fonts/ProximaNova-Light.otf);
+  font-weight: 100;
+}
+@font-face {
+  font-family: ProximaNova;
+  src: url(../fonts/ProximaNova-Semibold.otf);
+  font-weight: bold;
+}
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: 'ProximaNova', sans-serif;
+  scrollbar-face-color: #26455F;
+  scrollbar-track-color: #b7bfc7;
+}
+@media only screen and (min-width: 992px) {
+  html, body {
+    overflow: hidden;
+  }
+}
+a, a:hover, a:active, a:focus {
+  text-decoration: none;
+}
+hr {
+  opacity: 0.1;
+  margin: 0 0 1em;
+}
+button:focus {
+  outline: 0;
+}
+::-webkit-scrollbar {
+  width: 0.4em;
+  height: 0.3em;
+}
+::-webkit-scrollbar-thumb {
+  background: #26455F;
+  height: 25%;
+  width: 10%;
+  border-radius: 1em;
+}
+::-webkit-scrollbar-track {
+  background: #18334A;
+}
+::-webkit-resizer, ::-webkit-scrollbar-button, ::-webkit-scrollbar-corner {
+  display: none;
+}
+
+/* Let's get this party started */
+
+.button, butotn:focus {
+  border-radius: 0.35em;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  -webkit-transition: all 0.25s ease;
+  transition: all 0.25s ease;
+  height: 2.5em;
+  margin: auto 0;
+  outline: 0;
+  border: 0.1em solid transparent;
+  text-align: center;
+  line-height: 2.5;
+  padding: 0 1em;
+}
+.button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+.button:active {
+  background-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0em 0.1em 0.4em #142A3E;
+  color: #000;
+  -webkit-transform: scale(0.95);
+  -ms-transform: scale(0.95);
+  transform: scale(0.95);
+}
+.form-label {
+  display: block;
+  margin: 0.5em 0 0 0;
+}
+.form-input {
+  border-radius: 0.35em;
+  background-color: #0D1E2E;
+  outline: none;
+  color: #fff;
+  text-indent: 1em;
+  border: none;
+  height: 2.5em;
+  width: 100%;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.form-input:focus {
+  box-sizing: border-box;
+  box-shadow: 0.1em 0.1em 0.3em #1C4D81, -0.1em -0.1em 0.3em #1C4D81;
+}
+.form-input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #0D1E2E inset;
+  -webkit-text-fill-color: #fff !important;
+}
+.form-input-true {
+  background-image: url(../img/button/checked.png);
+  background-repeat: no-repeat;
+  background-position: 95% 50%;
+  background-size: 1em 1em;
+}
+.form-input-false {
+  background-image: url(../img/button/cross.png);
+  background-repeat: no-repeat;
+  background-position: 95% 50%;
+  background-size: 1em 1em;
+}
+.form-select {
+  border-radius: 0.35em;
+  height: 2.5em;
+  background: #21425E url(../img/button/chevron-down.png) 95% 50% no-repeat;
+  border: 0.1em solid #446B8D;
+  color: #fff;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+.form-number{
+  max-width: 6em;
+  height: 2.5em;
+  border-radius: 0.25em;
+  background: #21425E;
+  border: 0.1em solid #446B8D;
+  color: #fff;
+  text-indent: 0.5em;
+}
+.slide-toggle-wrap input {
+  display: none;
+}
+.slide-toggle-wrap {
+  position: relative;
+  margin: 1em 0.65em;
+}
+.slide-toggle-label {
+  position: absolute;
+  z-index: 1;
+  height: 1em;
+  width: 1em;
+  border-radius: 1em;
+  left: 0;
+  background: #3991EB !important;
+  cursor: pointer;
+  -webkit-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
+}
+.slide-toggle-line {
+  position: absolute;
+  height: 1em;
+  width: 2.5em;
+  border-radius: 1em;
+  border: 0.1em solid rgba(255, 255, 255, 0.1);
+  background-color: #2A4155;
+  -webkit-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
+}
+.slide-toggle-input:checked + .slide-toggle-label {
+  left: 1.5em;
+  background: #fff !important;
+}
+.slide-toggle-input:checked ~ .slide-toggle-line {
+  background-color: #3881C6;
+}
+.custom-input-wrap {
+  position: relative;
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: baseline;
+  -webkit-align-items: baseline;
+  -ms-flex-align: baseline;
+  align-items: baseline;
+}
+input[type="checkbox"], input[type="file"], input[type="radio"] {
+  display: none;
+}
+input[type="checkbox"]:checked ~ label {
+  background: transparent url(../img/button/checked.png) center no-repeat;
+  background-size: contain;
+  box-shadow: 0.1em 0.1em 0.4em #1362AC, -0.1em -0.1em 0.4em #1362AC;
+}
+input[type="radio"]:checked ~ label{
+  background: transparent url(../img/button/category-active.png) center no-repeat;
+  background-size: contain;
+  box-shadow: 0.1em 0.1em 0.4em #1362AC, -0.1em -0.1em 0.4em #1362AC;
+}
+.checkbox-label, .radio-label {
+  -webkit-transition: all 0.25s ease-out;
+  transition: all 0.25s ease-out;
+  height: 1.5em;
+  width: 1.5em;
+  border-radius: 0.25em;
+  border: 0.2em solid #1362AC;
+  margin: 0 1em;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.small-input-desc {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  color: #3E6484;
+}
+.template-nav {
+  width: 100%;
+  height: 4em;
+  color: #fff;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: row nowrap;
+  -ms-flex-flow: row nowrap;
+  flex-flow: row nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+.display-devices {
+  color: #7BA0BF;
+  padding: 1em 2em;
+}
+.display-devices-row {
+width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+  padding: 1em;
+}
+.add-new-btn{
+  background: #1D83E4 url() 95% 50% no-repeat;
+  margin: 1em;
+}
+.google-map {
+  width: 100%;
+  min-height: 12em;
+}
+.hidden-input {
+  display: none;
+}
+.color-green {
+  color: #00E676;
+}
+.color-orange {
+  color: #EE8615;
+}
+.color-transparent {
+  color: rgba(255, 255, 255, 0.4);
+}
+.color-blue {
+  color: #2292CD;
+}
+.color-white{
+  color:#fff !important;
+}

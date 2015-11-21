@@ -1,0 +1,9 @@
+<div class="camera-wrap">
+  <img ng-if="thumbnailImg" ng-src={{thumbnailImg}} class="camera-cached-tumb" ng-click="requestLiveStream(cinfo.id)">
+  <h5 ng-if="!thumbnailImg">Camera not available</h5>
+  <button ng-if="!thumbnailImg" type="button" class="button camera-refresh-btn" ng-click="refreshFeed(cinfo)">
+    Refresh feed
+  </button>
+  <h4>{{cinfo.name}}</h4>
+  <img ng-if="thumbnailImg && currentState !== 'frame.devices'" ng-src="img/button/snapshot.png" class="camera-live-tumb-btn" ng-click="getLiveThumbnail(cinfo.id)" title="get live thumbnail">
+</div>

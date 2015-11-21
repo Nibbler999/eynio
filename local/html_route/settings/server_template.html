@@ -1,0 +1,181 @@
+<section class="settings-title">
+  <h3>Server Settings</h3>
+  <a ui-sref="{{God.lastState}}" class="settings-close">
+    <img src="img/button/cross.png" class="settings-close-btn">
+  </a>
+</section>
+
+<section class="settings-server">
+  <ul id="myTab" class="nav nav-tabs">
+    <li class="active">
+      <a data-target="#settings-general" data-toggle="tab">
+      General
+    </a>
+    </li>
+  </ul>
+
+  <div id="myTabContent" class="tab-content">
+
+    <!-- user settings !-->
+    <section class="tab-pane fade" id="settings-users">
+      <h3>Invite</h3>
+      <p class="color-transparent">Invite Users to Your Server</p>
+
+      <div class="settings-tab">
+        <form type="form" autocomplete="off" ng-submit="server.inviteUser()">
+          <div class="form-input-wrap">
+            <label for="invite-email" class="form-label">Email</label>
+            <input type="email" class="form-input" id="invite-email" name="Email" required>
+
+            <label for="invite-msg" class="form-label">Short Message</label>
+            <input type="text" class="form-input" id="invite-msg" name="Invite Message" required>
+
+            <label for="invite-status" class="form-label">Choose Status</label>
+            <select class="form-select" id="invite-status">
+              <option value="OWNER">Owner</option>
+              <option value="ADMIN">Admin</option>
+              <option value="USER">User</option>
+            </select>
+          </div>
+          <div class="settings-btn-wrap">
+            <button type="submit" class="settings-btn settings-save-btn">
+              Save
+            </button>
+            <button type="reset" class="settings-btn settings-cancel-btn">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <h3>User list</h3>
+      <div class="settings-tab">
+        <div class="settings-user-list-nav">
+          <p>Email</p>
+          <p>Name</p>
+          <p>Status</p>
+        </div>
+
+        <ul class="settings-user-list">
+          <li ng-repeat="user in server.userList">
+            <p>{{user.email}}</p>
+            <p>{{user.username}}</p>
+            <select class="form-select" ng-model="user.level" ng-change="server.changeUserLevel(user.email, user.level)">
+              <option value="OWNER">Owner</option>
+              <option value="ADMIN">Admin</option>
+              <option value="USER">User</option>
+              <option value="DELETE" class="settings-delet-user">Delete</option>
+            </select>
+          </li>
+        </ul>
+      </div>
+
+    </section>
+
+    <!-- general settings !-->
+    <section class="tab-pane fade in active" id="settings-general">
+      <div class="settings-tab">
+        <div class="settings-tab-hlp">
+          <h3>Server Status</h3>
+          <div class="settings-tab-hlp">
+            <button ng-if="!server.upToDate" type="button" class="button update-btn" ng-click="server.updateApp()">
+              Update
+            </button>
+            <button ng-if="server.upToDate" type="button" class="button reboot-btn" ng-click="server.updateApp()">
+              Reboot
+            </button>
+          </div>
+        </div>
+        <hr>
+        <div class="settings-tab-hlp">
+          <h4>Up to date:
+            <span ng-class="{'color-green':server.upToDate,'color-orange': !server.upToDate}">
+              <span ng-if="server.upToDate">Yes</span>
+              <span ng-if="!server.upToDate">No</span>
+              <span ng-if="server.upToDate === 'undefined'">Check failed</span>
+            </span>
+          </h4>
+          <h4>Version:
+            <span class="color-transparent">{{server.serverInfoData.version}}</span>
+          </h4>
+        </div>
+      </div>
+
+      <div class="settings-tab-default">
+        <form type="form" id="change-server-name-form" autocomplete="off" ng-submit="server.changeServerName(server.serverInfoData.name)">
+          <input type="text" id="settings-server-name" placeholder="Server name" class="form-input" ng-model="server.serverInfoData.name">
+        </form>
+        <button type="submit" form="change-server-name-form" class="button restore-btn">Rename</button>
+      </div>
+
+      <div class="settings-tab">
+        <button type="button" class="server-log-btn" data-toggle="collapse" data-target="#server-log">
+          Server log
+        </button>
+
+        <div id="server-log" class="collapse">
+          <pre class="server-log-pre color-transparent">{{server.serverLog}}</pre>
+        </div>
+      </div>
+
+      <div class="settings-tab">
+        <div class="server-info-wrap">
+          <p>Ping:
+            <span class="color-transparent">{{server.serverInfoData.ping}}</span>
+          </p>
+          <p>IP:
+            <span class="color-transparent">{{server.serverInfoData.ip}}</span>
+          </p>
+          <p>External IP:
+            <span class="color-transparent">{{server.serverInfoData.external_ip}}</span>
+          </p>
+        </div>
+
+        <div class="server-info-wrap">
+          <p>OS:
+            <span class="color-transparent">{{server.serverInfoData.node_platform}}</span>
+          </p>
+          <p>Node version:
+            <span class="color-transparent">{{server.serverInfoData.node_version}}</span>
+          </p>
+          <p>Node arch:
+            <span class="color-transparent">{{server.serverInfoData.node_arch}}</span>
+          </p>
+        </div>
+        <div>
+          <h3>Bridges:</h3>
+          <p>
+            <span class="color-blue" ng-repeat="bridge in server.bridges">{{bridge.name}}, </span>
+          </p>
+        </div>
+      </div>
+
+      <div class="settings-tab-default">
+        <h3>Server Backup</h3>
+        <div class="settings-tab-hlp">
+          <input type="file" id="restore-server" accept="application/json" onchange="angular.element(this).scope().restore(this)">
+          <label for="restore-server" class="button restore-btn">
+            Restore
+          </label>
+          <button type="button" class="button reboot-btn" data-toggle="collapse" data-target="#backup">
+            Backup
+          </button>
+        </div>
+      </div>
+      <div id="backup" class="collapse settings-backup">
+        <h4>Download your backup form <a id="download-backup" download="nhome-config.json">HERE</a>
+      </div>
+      <div class="settings-tab">
+        <h3>Server Location</h3>
+        <google-maps></google-maps>
+
+        <div class="custom-input-wrap">
+          <h3>Use IP address</h3>
+          <input type="checkbox" id="google-maps-IP" ng-click="server.useIpAddress()">
+          <label for="google-maps-IP" class="checkbox-label"></label>
+        </div>
+      </div>
+
+    </section>
+  </div>
+</section>

@@ -1,0 +1,67 @@
+.ss-dev-wrap {
+    width: 15em;
+    height: 8em;
+    margin: 0.5em;
+}
+
+.ss-dev-header {
+    display: flex;
+    justify-content: flex-start;
+    background-color: #fff;
+    border: 0.2em solid #e3e3e3;
+    padding: 0.3em;
+    color: #b1becd;
+    overflow: hidden;
+}
+
+.ss-dev-header img {
+    height: 5em;
+    width: 5em;
+}
+
+.ss-dev-header-content {
+    margin: 0.5em;
+    line-height: 1em;
+}
+
+.ss-dev-footer {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+    overflow: hidden;
+    height: 2em;
+    width: 90%;
+    margin: 0 auto;
+    background-color: #1976dc;
+    line-height: 2em;
+    font-weight: 600;
+    color: #BDBDBD;
+    box-shadow: 0 -0.1em 0.2em #1976dc;
+}
+
+.ss-dev-footer div {
+    cursor: pointer;
+}
+
+.ss-dev-footer div:hover {
+    color: #fff;
+    transform: scale(1.1);
+}
+
+.schedule-selected {
+    box-shadow: 0.1em 0 0.5em #1976dc, -0.1em -0.1em 0.5em #1976dc;
+}
+
+.scene-selected {
+    border: 0.2em solid #ff6147 !important;
+}
+
+.scene-selected-footer {
+    background-color: #ff6147;
+    box-shadow: 0 0 0;
+}
+
+.ss-active-state {
+    color: #fff;
+    transform: scale((1.1);
+}

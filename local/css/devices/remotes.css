@@ -1,0 +1,213 @@
+.full-remote{
+  height: 20em;
+}
+.learning-mode{
+  height: 20em;
+  background-color: #0D96FF;
+  animation: popUp 0.5s ease;
+}
+.remote-btn-inactive{
+  opacity: 0.2;
+  cursor: not-allowed;
+  cursor: no-drop;
+}
+.remote-learn-wrap > label{
+  cursor: pointer;
+  background: rgba(13, 150, 255, 1);
+  border-radius: 0;
+}
+.remote-learn-wrap > input:checked ~ label{
+  box-shadow: none;
+  border: none;
+  background: rgba(13, 150, 255, 1);
+}
+.remote-device-btn {
+  border: none;
+  height: 2.5em;
+  width: 2.5em;
+}
+.remote-device-btn-up {
+  background: #14314A url(../../img/remote-icons/chevron-up.png) 50% no-repeat;
+}
+.remote-device-btn-down {
+  background: #14314A url(../../img/remote-icons/chevron-down.png) 50% no-repeat;
+}
+.remote-radio-wrap {
+  height: 2.5em;
+  width: 2.5em;
+  margin: 0 0.5em;
+}
+.remote-radio-wrap input ~ label {
+  opacity: 0.1;
+  cursor: pointer;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.remote-radio-wrap input:hover ~ label {
+  opacity: 0.4;
+}
+.remote-radio-wrap input:checked ~ label {
+  opacity: 1;
+  border: none;
+  box-shadow: none;
+  background: none;
+  color: rgba(13, 150, 255, 1)
+}
+.remote-full-wrap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: inherit;
+  text-align: center;
+  animation: popUp 0.5s ease;
+}
+.remote-full-row {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: row nowrap;
+  -ms-flex-flow: row nowrap;
+  flex-flow: row nowrap;
+  -webkit-justify-content: space-around;
+  -ms-flex-pack: distribute;
+  justify-content: space-around;
+  text-align: center;
+}
+.remote-full-row:nth-of-type(2) {
+  margin: 1em 0.25em;
+}
+.remote-full-row:nth-of-type(3){
+  border-top: 0.1em solid  rgba(13, 150, 255, 0.1);
+}
+.remote-full-row > div > div{
+  display: flex;
+  margin-bottom: 0.25em;
+}
+.remote-full-col{
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+}
+.remote-full-col > div {
+  margin: 0.1em;
+}
+.remote-top-btn {
+  height: 2.5em;
+  width: 100%;
+  border: none;
+  text-align: right;
+  background-color: inherit;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  background-position: 15% 50%;
+  background-repeat: no-repeat;
+}
+.remote-top-btn:nth-child(2){
+  border-left: 0.1em solid rgba(13, 150, 255, 0.5);
+  border-right: 0.1em solid rgba(13, 150, 255, 0.5);
+}
+.remote-top-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.remote-power-btn {
+  background-image: url(../../img/remote-icons/power.png);
+}
+.remote-menu-btn {
+  background-image: url(../../img/remote-icons/menu.png);
+}
+.remote-source-btn {
+  background-image: url(../../img/remote-icons/source.png);
+}
+.remote-cirucal-btn {
+  border: 0.1em solid rgba(13, 150, 255, 0.45);
+  background-color: rgba(255, 255, 255, 0.1);
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 100%;
+  width: 3.5em;
+  height: 3.5em;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.remote-plus-btn {
+  background-image: url(../../img/remote-icons/plus.png);
+}
+.remote-minus-btn {
+  background-image: url(../../img/remote-icons/minus.png);
+}
+.remote-rect-btn {
+  height: 3em;
+  width: 3em;
+  border-radius: 0.35em;
+  border: 0.1em solid rgba(13, 150, 255, 0.45);
+  background-color: rgba(255, 255, 255, 0.1);
+  background-position: center;
+  background-repeat: no-repeat;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.remote-rect-btn:hover,
+.remote-numb-btn:hover,
+.remote-cirucal-btn:hover {
+  border: 0.1em solid rgba(13, 150, 255, 0.9);
+  background-color: rgba(255, 255, 255, 0);
+}
+.remote-up-btn {
+  background-image: url(../../img/remote-icons/chevron-up.png);
+}
+.remote-left-btn {
+  background-image: url(../../img/remote-icons/chevron-left.png);
+}
+.remote-right-btn {
+  background-image: url(../../img/remote-icons/chevron-right.png);
+}
+.remote-down-btn {
+  background-image: url(../../img/remote-icons/chevron-down.png);
+}
+.remote-none-btn {
+  border: none;
+  background-color: inherit;
+  width: 3em;
+  height: 3em;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.remote-none-btn:hover {
+  -webkit-transform: scale(1.05);
+  -ms-transform: scale(1.05);
+  transform: scale(1.05);
+}
+.remote-numpad-btn{
+  background-image: url(../../img/remote-icons/numpad.png);
+  background-position: 5% 50%;
+  background-repeat: no-repeat;
+  text-align: right;
+  width: 40%;
+}
+.remote-numb-btn{
+  height: 2.5em;
+  width: 4em;
+  border-radius: 0.35em;
+  border: 0.1em solid rgba(13, 150, 255, 0.45);
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+.remote-learn-mode-instructions{
+  position: absolute;
+    top: 0;
+    height: 20em;
+    left: 0;
+    right: 0;
+    padding: 1em;
+    background-color: rgba(20,49,74,0.9);
+    animation: popUp 0.35s ease;
+}
+.remote-learn-mode-key-wrap{
+  width: 90%;
+  margin: auto;
+  margin-bottom: 1em;
+  background-color: #0E8CED;
+  padding: 1em;
+}

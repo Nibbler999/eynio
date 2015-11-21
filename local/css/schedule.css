@@ -1,0 +1,73 @@
+.schedule-wrap {
+  position: relative;
+  height: 4em;
+  width: 100%;
+  background-color: #102B42;
+  color: #fff;
+  padding: 0 1em;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+.schedule-wrap:nth-child(odd) {
+  background-color: #133048;
+}
+.schedule-wrap div {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: space-around;
+  -ms-flex-pack: distribute;
+  justify-content: space-around;
+}
+.schedule-wrap div p {
+  line-height: 4;
+}
+.schedule-devices p, .schedule-days p {
+  color: #0D96FF;
+  line-height: 4;
+  margin-right: 0.5em;
+}
+.edit-schedule-btn {
+  background: transparent url(../img/button/three-dots.png) 50% no-repeat;
+  border: none;
+}
+.edit-schedule-dropdown {
+  background-color: #224764;
+  top: 1em;
+  left: -7em;
+  width: 7em;
+  min-width: 5em;
+  text-align: left;
+}
+.edit-schedule-dropdown-btn {
+  background-image: url(../img/button/edit.png);
+  background-position: 95% 50%;
+  background-repeat: no-repeat;
+  border-bottom: 0.1em solid #0C253A;
+}
+.delete-schedule-dropdown-btn {
+  background-image: url(../img/button/trash.png);
+  background-position: 95% 50%;
+  background-repeat: no-repeat;
+}
+.schedule-edit-mode {
+  margin: auto;
+  animation: expandAddCategory 0.3s ease;
+}
+.save-edit-schedule-btn {
+  height: 2.5em;
+  text-align: left;
+  margin: 0 0.5em;
+  background: #11599D;
+}
+.cancel-edit-category-btn {
+  background: #295376 url(../img/button/cross-dark.png) 50% no-repeat;
+  height: 2.5em;
+}

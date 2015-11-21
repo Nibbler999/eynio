@@ -1,0 +1,133 @@
+<div class="ss-dev-wrap" ng-class="{'show-remote': remote, 'show-remote-numpad': numpad, 'schedule-selected': tvremote.schedule_select, 'scene-selected': tvremote.scene_select}" id="tv-{{tvremote.count}}">
+    <div class="ss-dev-header" ng-click="toggleSelect()">
+        <img ng-show="currentState != 'frame.devices'" src="img/buttons/devIcons/remote.png" class="img-responsive device-icon" ng-click="remote = !remote; numpad = false">
+
+        <div class="device-content-data">
+            <p>{{tvremote.name}}</p>
+            <p>{{tvremote.type}}</p>
+        </div>
+    </div>
+
+    <!-- remote !-->
+    <div class="device-options  ss-remote-options" ng-show="remote">
+        <div class="remote-row HELPER_jc-betweem">
+            <div class="remote-btn remote-btn-wide rem-power" id="rem-power" ng-click="tvActiveKey(tvremote.count, 'POWER')">
+            </div>
+            <div class="remote-btn remote-btn-wide rem-source" id="rem-source" ng-click="tvActiveKey(tvremote.count, 'SOURCE')">
+                Source
+            </div>
+        </div>
+
+        <div class="remote-row HELPER_jc-betweem">
+            <div class="remote-btn remote-btn-wide rem-tools" id="rem-tools" ng-click="tvActiveKey(tvremote.count, 'TOOLS')">
+                Tools
+            </div>
+            <div class="remote-btn remote-btn-wide rem-info" id="rem-info" ng-click="tvActiveKey(tvremote.count, 'INFO')">
+                INFO
+            </div>
+        </div>
+
+        <div class="remote-btn remote-btn-gray rem-up" id="rem-up" ng-click="tvActiveKey(tvremote.count, 'UP')"></div>
+
+        <div class="remote-row HELPER_jc-center">
+            <div class="remote-btn remote-btn-gray rem-left" id="rem-left" ng-click="tvActiveKey(tvremote.count, 'LEFT')"></div>
+            <div class="remote-btn rem-ok" id="rem-ok" ng-click="tvActiveKey(tvremote.count, 'OK')">OK</div>
+            <div class="remote-btn remote-btn-gray rem-right" id="rem-right" ng-click="tvActiveKey(tvremote.count, 'RIGHT')"></div>
+        </div>
+
+        <div class="remote-btn remote-btn-gray rem-down" id="rem-down" ng-click="tvActiveKey(tvremote.count, 'DOWN')"></div>
+
+        <div class="remote-row HELPER_jc-betweem">
+            <div class="remote-btn remote-btn-wide rem-return" id="rem-return" ng-click="tvActiveKey(tvremote.count, 'RETURN')">
+                Return
+            </div>
+            <div class="remote-btn remote-btn-wide rem-exit" id="rem-exit" ng-click="tvActiveKey(tvremote.count, 'EXIT')">
+                Exit
+            </div>
+        </div>
+
+        <div class="remote-row HELPER_jc-betweem">
+            <div class="remote-btn remote-btn-gray rem-volup" id="rem-volup" ng-click="tvActiveKey(tvremote.count, 'VOLUP')">
+                Vol
+            </div>
+            <div class="remote-btn rem-mute" id="rem-mute" ng-click="tvActiveKey(tvremote.count, 'MUTE')">
+                Mute
+            </div>
+            <div class="remote-btn rem-settings" id="rem-settings" ng-click="tvActiveKey(tvremote.count, 'SETTINGS')">
+                Settings
+            </div>
+            <div class="remote-btn remote-btn-gray rem-chup" id="rem-chup" ng-click="tvActiveKey(tvremote.count, 'CHUP')">
+                CH
+            </div>
+        </div>
+
+        <div class="remote-row HELPER_jc-betweem">
+            <div class="remote-btn remote-btn-gray rem-voldown" id="rem-voldown" ng-click="tvActiveKey(tvremote.count, 'VOLDOWN')">
+                Vol
+            </div>
+            <div class="remote-btn rem-txt" id="rem-txt" ng-click="tvActiveKey(tvremote.count, 'TXT')">
+                Txt
+            </div>
+            <div class="remote-btn rem-menu" id="rem-menu" ng-click="tvActiveKey(tvremote.count, 'MENU')">
+                Menu
+            </div>
+            <div class="remote-btn remote-btn-gray rem-chdown" id="rem-chdown" ng-click="tvActiveKey(tvremote.count, 'CHDOWN')">
+                CH
+            </div>
+        </div>
+
+    </div>
+
+    <!-- numpad btns !-->
+    <div class="device-options ss-remote-options" ng-show="numpad">
+        <div class="remote-row HELPER_jc-center">
+            <div class="remote-btn remote-btn-gray numpad-btn rem-num_1" id="rem-num_1" ng-click="tvActiveKey(tvremote.count, 'NUM_1')">
+                1
+            </div>
+            <div class="remote-btn remote-btn-gray numpad-btn rem-num_2" id="rem-num_2" ng-click="tvActiveKey(tvremote.count, 'NUM_2')">
+                2
+            </div>
+            <div class="remote-btn remote-btn-gray numpad-btn rem-num_3" id="rem-num_3" ng-click="tvActiveKey(tvremote.count, 'NUM_3')">
+                3
+            </div>
+        </div>
+
+        <div class="remote-row HELPER_jc-center">
+            <div class="remote-btn remote-btn-gray numpad-btn rem-num_4" id="rem-num_4" ng-click="tvActiveKey(tvremote.count, 'NUM_4')">
+                4
+            </div>
+            <div class="remote-btn remote-btn-gray numpad-btn rem-num_5" id="rem-num_5" ng-click="tvActiveKey(tvremote.count, 'NUM_5')">
+                5
+            </div>
+            <div class="remote-btn remote-btn-gray numpad-btn rem-num_6" id="rem-num_6" ng-click="tvActiveKey(tvremote.count, 'NUM_6')">
+                6
+            </div>
+        </div>
+
+        <div class="remote-row HELPER_jc-center">
+            <div class="remote-btn remote-btn-gray numpad-btn rem-num_7" id="rem-num_7" ng-click="tvActiveKey(tvremote.count, 'NUM_7')">
+                7
+            </div>
+            <div class="remote-btn remote-btn-gray numpad-btn rem-num_8" id="rem-num_8" ng-click="tvActiveKey(tvremote.count, 'NUM_8')">
+                8
+            </div>
+            <div class="remote-btn remote-btn-gray numpad-btn rem-num_9" id="rem-num_9" ng-click="tvActiveKey(tvremote.count, 'NUM_9')">
+                9
+            </div>
+        </div>
+
+
+        <div class="remote-row HELPER_jc-center">
+            <div class="remote-btn remote-btn-gray numpad-btn rem-num_0" id="rem-num_0" ng-click="tvActiveKey(tvremote.count, 'NUM_0')">
+                0
+            </div>
+        </div>
+    </div>
+
+    <!-- display numpad icon !-->
+    <div class="ss-dev-footer" ng-class="{'scene-selected-footer': tvremote.scene_select}">
+        <span class="remote-numpad-btn" ng-click="numpad = !numpad; remote = false">
+            NUMPAD
+        </span>
+    </div>
+</div>

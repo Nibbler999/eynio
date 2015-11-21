@@ -1,0 +1,20 @@
+<div class="device-wrap">
+  <div class="device-header">
+    <img ng-src="{{switchIcon}}" class="device-icon" ng-click="toggleDevicePowerState(sinfo.id)" title="toggle state">
+    <div class="device-content-data">
+      <p>{{sinfo.name}}</p>
+      <p>{{sinfo.type}}</p>
+      <p>{{sinfo.module}}</p>
+    </div>
+  </div>
+
+  <!-- display ON/OFF switch !-->
+  <div class="device-footer">
+    <div class="device-footer-btn-wrap">
+      <button class="device-btn" ng-class="{'device-btn-active': sinfo.value}" ng-click="switchOn(sinfo.id, sinfo.value)">On</button>
+      <button class="device-btn" ng-class="{'device-btn-active': !sinfo.value}" ng-click="switchOff(sinfo.id, sinfo.value)">Off</button>
+    </div>
+    <div class="device-footer-option-wrap">
+    </div>
+  </div>
+</div>

@@ -1,0 +1,93 @@
+/* camera directive CSS */
+
+.camera-wrap {
+  position: relative;
+  background-color: #20517F;
+  width: 18em;
+  height: 10em;
+  margin: 0.5em;
+  color: #fff;
+  box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.3);
+}
+.camera-cached-tumb {
+  height: 100%;
+  width: 100%;
+}
+.camera-wrap h4 {
+  position: absolute;
+  left: 1em;
+  bottom: 0;
+  opacity: 0.4;
+}
+.camera-wrap:hover h4 {
+  opacity: 0.9;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.camera-wrap h5 {
+  margin: 1em;
+  margin-bottom: 0;
+}
+.camera-refresh-btn {
+  background: #3881C6 url(../img/button/reload.png) 95% 50% no-repeat;
+  text-align: left;
+  text-indent: 0.5em;
+  margin: 10% 5%;
+  width: 90%;
+}
+.camera-live-tumb-btn {
+  position: absolute;
+  right: 1em;
+  bottom: 0.5em;
+  opacity: 0.4;
+  cursor: pointer;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.camera-live-tumb-btn:hover {
+  opacity: 0.8;
+}
+
+/* END */
+
+.template-nav-toggle {
+  display: inherit;
+  position: relative;
+}
+.template-nav-toggle-btn {
+  cursor: pointer;
+  padding: 0 1em;
+}
+.active-line-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 5%;
+  width: 50%;
+  border: 0.1em solid #1272CD;
+  box-shadow: 0.1em 0.1em 0.5em #1272CD;
+  -webkit-transition: all 0.35s ease;
+  transition: all 0.35s ease;
+}
+.close-live-stream-modal {
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  cursor: pointer;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+.close-live-stream-modal:hover {
+  -webkit-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+}
+.camera-live-stream {
+  width: 100%;
+  height: 100%;
+}
+.full-screen-btn {
+  background: url(../img/button/full-screen.png) 50% no-repeat;
+  position: absolute;
+  bottom: 0.5em;
+  right: 0.5em;
+}

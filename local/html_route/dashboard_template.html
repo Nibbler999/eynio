@@ -1,0 +1,23 @@
+<div class="template-nav">
+  <h3>{{God.activeRoom.name}}</h3>
+</div>
+
+<div class="display-devices-row">
+  <switch ng-repeat="switch in dashboard.allSwitches" sinfo="switch"></switch>
+  <light ng-repeat="light in dashboard.allLights" linfo="light"></light>
+  <thermostat ng-repeat="thermo in dashboard.allThermos" tinfo="thermo"></thermostat>
+  <shutter ng-repeat="shutter in dashboard.allShutters" shinfo="shutter"></shutter>
+  <remote ng-repeat="cRemote in dashboard.allTVcustomRemotes" crinfo="cRemote"></remote>
+</div>
+
+<div class="display-devices-row">
+  <camera ng-repeat="camera in dashboard.allCameras" cinfo="camera"></camera>
+</div>
+
+<section class="custom-modal-window cam-live-stream-modal">
+  <section class="custom-modal-wrap">
+    <img src="img/button/cross.png" class="close-live-stream-modal" ng-click="dashboard.stopLiveStream()">
+    <img ng-src={{dashboard.liveImage}} class="camera-live-stream">
+    <button type="button" class="button full-screen-btn"></button>
+  </section>
+</section>

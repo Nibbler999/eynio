@@ -1,0 +1,128 @@
+<div class="frame-wrap">
+  <!-- navigation !-->
+  <h3 class="server-offline-msg" ng-show="God.serverOffline">Ooops!! Something went wrong, server is offline</h3>
+  <section class="frame-nav">
+    <a ui-sref="frame.dashboard">
+      <img src="img/logo/nhome_logo_white.png" class="frame-menu-icon">
+    </a>
+  </section>
+  <!-- content wrap !-->
+  <section class="frame-content-wrap">
+    <!-- side bar !-->
+    <section class="frame-sidebar">
+      <a ui-sref="frame.server-settings" class="sidebar-nav-btn server-settings-btn">
+          Server Settings
+      </a>
+      <section ui-view="settings" class="settings-view"></section>
+    </section>
+
+    <!-- page content !-->
+    <section class="frame-page-content-wrap">
+      <section class="frame-info">
+        <div class="category-wrap">
+          <div class="category-holder">
+            <ul class="category-nav">
+              <li class="category" ng-repeat="category in God.categories track by category.id" id="{{category.name}}" ng-class="{'category-active': category.id === God.activeRoom.id}">
+                <a ng-if="category.id === 'dashboard'" ui-sref="frame.{{category.id}}" ng-click="God.filterDevByCategory(category)">
+                    {{category.name}}
+                </a>
+                <a ng-if="category.id !== 'dashboard'" ng-click="God.filterDevByCategory(category)">
+                    {{category.name}}
+                </a>
+
+                <img src="img/button/cross-dark.png" title="double clik to delete" ng-click="God.deleteCategorie(category)" ng-hide="category.id === 'dashboard' || category.id !== God.activeRoom.id">
+              </li>
+            </ul>
+
+            <div class="add-category-wrap" ng-show="addCategory">
+              <form autocomplete="off" ng-submit="God.addCategory()" id="add-new-category">
+                <input type="text" class="form-input" name="New Category" id="add-category-name" placeholder="Enter category name" pattern=".{4,15}" title="4 to 15 characters">
+                <button type="submit" class="button add-category-submit-btn">
+                  <p>Done</p>
+                </button>
+                <button type="reset" class="button add-category-reset-btn" ng-click="addCategory = false"></button>
+              </form>
+            </div>
+
+            <div class="add-category-wrap" ng-show="editCategory">
+              <form autocomplete="off" ng-submit="God.editCategory()" id="add-new-category">
+                <input type="text" class="form-input" name="New Category" id="add-category-name" placeholder="Enter category name" pattern=".{4,15}" title="4 to 15 characters" ng-model="God.activeRoom.name">
+                <button type="submit" class="button add-category-submit-btn">
+                  <p>Rename</p>
+                </button>
+                <button type="reset" class="button add-category-reset-btn" ng-click="editCategory = false; hideBtn = !hideBtn"></button>
+              </form>
+            </div>
+
+            <button type="button" class="add-category-btn" ng-click="addCategory = true" ng-hide="addCategory || hideBtn"></button>
+          </div>
+          <button class="edit-category-btn" ng-click="editCategory = !editCategory; hideBtn = !hideBtn; addCategory = false"></button>
+        </div>
+
+        <div class="info-wrap">
+          <div class="user-info">
+            <div class="user-details">
+              <h4>{{God.userInfoData.user_name}}</h4>
+              <h4>{{God.userInfoData.location}}</h4>
+            </div>
+          </div>
+
+          <div class="info-wrap">
+            <div class="sensor-wrap">
+              <div class="info-sensor" ng-repeat="sensor in God.activeRoomSensors">
+                <img ng-if="sensor.subtype === 'temperature'" src="img/sensors/temp.png">
+                <img ng-if="sensor.subtype === 'humidity'" src="img/sensors/humidity.png">
+                <img ng-if="sensor.subtype === 'co2'" src="img/sensors/co.png">
+                <img ng-if="sensor.subtype === 'noise'" src="img/sensors/noise.png">
+                <img ng-if="sensor.subtype === 'rain'" src="img/sensors/rain.png">
+                <img ng-if="sensor.subtype === 'co-alarm'" src="img/sensors/co.png">
+                <img ng-if="sensor.subtype === 'light'" src="img/sensors/lux.png">
+                <img ng-if="sensor.subtype === 'motion'" src="img/sensors/motion.png">
+                <img ng-if="sensor.subtype === 'door' && sensor.value === false" src="img/sensors/door-close.png">
+                <img ng-if="sensor.subtype === 'door' && sensor.value === true" src="img/sensors/door-open.png">
+                <div class="sensor-details">
+                  <h1>{{sensor.value}}</h1>
+                  <p>{{sensor.name}}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="alarm-wrap">
+              <img ng-show="God.alarmState" src="img/frame/alarm.png">
+              <img ng-show="!God.alarmState" src="img/frame/alarm-off.png">
+              <div class="slide-toggle-wrap">
+                <input type="checkbox" id="alarm-toggle" ng-model="God.alarmState" ng-change="God.alarmStateToggle()" class="slide-toggle-input">
+                <label for="alarm-toggle" class="slide-toggle-label"></label>
+                <div class="slide-toggle-line"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="frame-view" ui-view></section>
+
+      <section class="frame-nav-bottom">
+        <div class="nav-bottom-btn devices-filter-btn" ui-sref-active="devices-filter-btn-active">
+          <a ui-sref="frame.devices">
+            <div class="inflater"></div>
+          </a>
+        </div>
+        <div class="nav-bottom-btn scenes-filter-btn" ui-sref-active="scenes-filter-btn-active">
+          <a ui-sref="frame.scenes">
+            <div class="inflater"></div>
+          </a>
+        </div>
+        <div class="nav-bottom-btn schedule-filter-btn" ui-sref-active="schedule-filter-btn-active">
+          <a ui-sref="frame.schedule">
+            <div class="inflater"></div>
+          </a>
+        </div>
+        <div class="nav-bottom-btn security-filter-btn" ui-sref-active="security-filter-btn-active">
+          <a ui-sref="frame.security">
+            <div class="inflater"></div>
+          </a>
+        </div>
+      </section>
+    </section>
+</div>

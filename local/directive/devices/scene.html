@@ -1,0 +1,13 @@
+<div class="scene-box">
+    <div class="sce-box-content">
+        <img src="img/device/scene-icon.png" class="device-icon" ng-click="setScene(scinfo.id)">
+        <div>
+            <p>{{scinfo.name}}</p>
+            <p>{{scinfo.schedule | date: "dd/MM/yy"}}</p>
+        </div>
+    </div>
+    <div class="sce-box-footer">
+        <p ng-click="editScene(scinfo)">Edit scene</p>
+        <img src="img/button/cross.png" class="scene-delete-btn" ng-click="deleteScene(scinfo.id)">
+    </div>
+</div>

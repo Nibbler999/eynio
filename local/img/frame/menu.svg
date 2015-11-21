@@ -1,0 +1,106 @@
+<svg  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 30 30" preserveAspectRatio="xMinYMin meet"  version="2.0">
+    <line x1="1" y1="5" x2="25" y2="5" stroke="#fff" stroke-width="5">
+         <animate 
+                attributeName="y2" 
+                to="25" 
+                dur="0.3s"
+                fill="freeze"
+                begin="start.begin"
+        />
+        <animate 
+                attributeName="y2"
+                from="25"
+                to="5" 
+                dur="0.3s"
+                fill="freeze"
+                begin="reverse.begin"
+        />
+    </line>
+    
+    <line x1="1" y1="15" x2="25" y2="15" stroke="#fff" stroke-width="5">
+         <animate 
+                attributeName="stroke" 
+                to="transparent" 
+                dur="0.2s"
+                fill="freeze"
+                begin="start.begin"
+        />
+        <animate 
+                attributeName="x2" 
+                to="1" 
+                dur="0.2s"
+                fill="freeze"
+                begin="start.begin"
+        />
+        <animate 
+                attributeName="stroke" 
+                from="transparent"
+                to="#fff" 
+                dur="0.2s"
+                fill="freeze"
+                begin="reverse.begin"
+        />
+        <animate 
+                attributeName="x2" 
+                to="25" 
+                dur="0.2s"
+                fill="freeze"
+                begin="reverse.begin"
+        />
+    </line>
+    
+    <line x1="1" y1="25" x2="25" y2="25" stroke="#fff" stroke-width="5">
+         <animate 
+                attributeName="y2" 
+                to="5" 
+                dur="0.3s"
+                fill="freeze"
+                begin="start.begin"
+        />
+        <animate 
+                attributeName="y2" 
+                from="5"
+                to="25" 
+                dur="0.3s"
+                fill="freeze"
+                begin="reverse.begin"
+        />
+    </line>
+    
+    <circle cx="12.5" cy="12.5" r="12.5" fill-opacity="0">
+        <animate
+                 attributeName="r"
+                 values="12.5; 0"
+                 fill="freeze"
+                 dur="0.01s"
+                 id="start"
+                 begin="click"
+        />
+        <animate
+                 attributeName="r"
+                 values="0; 12.5"
+                 fill="freeze"
+                 dur="0.01s"
+                 begin="reverse.end"
+        />
+    </circle>    
+    
+    <circle cx="12.5" cy="12.5" r="0" fill-opacity="0">
+        <animate
+                 attributeName="r"
+                 values="0; 12.5"
+                 fill="freeze"
+                 dur="0.01s"
+                 begin="start.end"
+        />
+        <animate
+                 attributeName="r"
+                 values="12.5; 0"
+                 fill="freeze"
+                 dur="0.01s"
+                 id="reverse"
+                 begin="click"
+        />
+    </circle>
+</svg>
+
