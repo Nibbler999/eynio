@@ -65,11 +65,27 @@
             socket.emit('catDeleteDevice', removeRoom.id, device.activeDevice.id);
           });
           socket.emit('setDeviceName', device.activeDevice.id, device.activeDevice.name);
+
+          if (device.activeDevice.type === 'camera') {
+            socket.emit('updateCamera', device.activeDevice.id, function(response) {
+              console.log(response);
+            });
+          } else if (device.activeDevice.type === 'tv') {
+            socket.emit('updateCustomRemote', {
+              id: device.activeDevice.id,
+              name: device.activeDevice.name,
+              keys: device.activeDevice.keys,
+              type: device.activeDevice.type,
+              deviceid: device.activeDevice.deviceid
+            }, function(response) {
+              console.log(response);
+            });
+          }
         };
-        device.deleteDevice = function(){
-          if(device.activeDevice.type === 'tv'){
+        device.deleteDevice = function() {
+          if (device.activeDevice.type === 'tv') {
             socket.emit('deleteCustomRemote', device.activeDevice.id);
-          }else if(device.activeDevice.type === 'camera'){
+          } else if (device.activeDevice.type === 'camera') {
             socket.emit('deleteCamera', device.activeDevice.id);
           }
         };

@@ -123,7 +123,6 @@
         scene.cancelSchedule = function() {
 
           newScene.style.marginTop = '100%';
-          sceneScheduleTime = null;
           /* clear data */
           angular.forEach(allDev, function(dev) {
             dev.schedule_select = false;
@@ -135,7 +134,19 @@
           newSceneSunset.disabled = false;
           newSceneHours.disabled = false;
           newSceneMinutes.disabled = false;
+
+
+          /* clear input data */
+          newSceneName.value = '';
+          angular.forEach(scene.actionsArr, function(dev) {
+            if (dev.device.type === 'switch') {
+              scene.allSwitches.push(dev.device);
+            } else if (dev.device.type === 'light') {
+              scene.allLights.push(dev.device);
+            }
+          });
           scene.actionsArr = [];
+          sceneScheduleTime = null;
         };
 
         scene.selectedForScene = function(device, index) {
@@ -182,9 +193,23 @@
               name: newSceneName.value,
               actions: scene.actionsArr
             };
-            socket.emit('addScene', sceneObj, function(addedScene) {
-              console.log(addedScene);
-            });
+            if (scene.sceneForEdit) {
+              sceneObj.id = scene.sceneForEdit.id;
+              socket.emit('updateScene', sceneObj, function(sceneEdited) {
+                if (sceneEdited) {
+                  angular.forEach(scene.allScenes, function(sce){
+                    if(sce.id === sceneEdited.id){
+                      scene.allScenes.splice(scene.allScenes.indexOf(sce), 1);
+                      scene.allScenes.push(sceneEdited);
+                    }
+                  });
+                }
+              });
+            } else {
+              socket.emit('addScene', sceneObj, function(addedScene) {
+                console.log(addedScene);
+              });
+            }
             if (sceneScheduleTime) {
               socket.emit4('addNewJob', newSceneName.value, sceneScheduleTime, scene.actionsArr, function(data) {
                 console.log(data);
@@ -204,14 +229,14 @@
           }
         };
 
-        $scope.$on('editScene', function(event, scene) {
+        $scope.$on('editScene', function(event, sceneForEdit) {
           /* set new data */
-          console.log(scene);
-          console.log(scene.allLights);
+          scene.sceneForEdit = sceneForEdit;
+          console.log(sceneForEdit);
           newScene.style.marginTop = '0%';
-          newSceneName.value = scene.name;
+          newSceneName.value = sceneForEdit.name;
           scene.actionsArr = [];
-          angular.forEach(scene.actions, function(action) {
+          angular.forEach(sceneForEdit.actions, function(action) {
             scene.actionsArr.push(action);
             console.log(action);
             if (action.device.type === 'light') {

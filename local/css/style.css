@@ -121,6 +121,7 @@ button:focus {
 .form-select {
   border-radius: 0.35em;
   height: 2.5em;
+  width: 100%;
   background: #21425E url(../img/button/chevron-down.png) 95% 50% no-repeat;
   border: 0.1em solid #446B8D;
   color: #fff;

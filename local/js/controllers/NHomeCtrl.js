@@ -179,7 +179,6 @@
       });
       /* remove active room class */
       $rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
-        God.lastState = from.name;
         if (to.name !== 'frame.dashboard') {
           notActiveCat = document.getElementsByClassName('category');
           angular.forEach(notActiveCat, function(cat) {

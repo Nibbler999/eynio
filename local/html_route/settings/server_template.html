@@ -1,6 +1,6 @@
 <section class="settings-title">
   <h3>Server Settings</h3>
-  <a ui-sref="{{God.lastState}}" class="settings-close">
+  <a ui-sref="frame" class="settings-close">
     <img src="img/button/cross.png" class="settings-close-btn">
   </a>
 </section>
@@ -145,7 +145,7 @@
         <div>
           <h3>Bridges:</h3>
           <p>
-            <span class="color-blue" ng-repeat="bridge in server.bridges">{{bridge.name}}, </span>
+            <span class="color-blue" ng-repeat="bridge in server.bridges">{{bridge.name}}<span ng-hide="$index == server.bridges.length-1">,</span> </span>
           </p>
         </div>
       </div>

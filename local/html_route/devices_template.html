@@ -93,6 +93,34 @@
           Rename device
         </label>
         <input type="text" id="rename-device" class="form-input" ng-model="device.activeDevice.name">
+
+        <!-- if editing camera show more options !-->
+        <span ng-if="device.activeDevice.type === 'camera'">
+          <label for="snapshot-camera" class="form-label">
+            Snapshot
+          </label>
+          <input type="text" id="snapshot-camera" class="form-input" ng-model="device.activeDevice.snapshot">
+
+          <label for="mjpeg-camera" class="form-label">
+            MJPEG
+          </label>
+          <input type="text" id="mjpeg-camera" class="form-input" ng-model="device.activeDevice.mjpeg">
+
+          <label for="rtsp-camera" class="form-label">
+            RTSP
+          </label>
+          <input type="text" id="rtsp-camera" class="form-input" ng-model="device.activeDevice.rtsp">
+        </span>
+
+        <span ng-if="device.activeDevice.type === 'tv'">
+
+          <label class="form-label" for="ir-output-remote">IR Output</label>
+          <select id="ir-output-remote" class="form-select" ng-model="device.activeDevice.deviceid">
+            <option ng-repeat="remote in device.remotes" value="{{remote.id}}">
+              {{remote.name}}
+            </option>
+          </select>
+        </span>
       </div>
       <img class="edit-devices-close-btn" src="img/button/cross.png" ng-click="device.closeCustomModal()">
     </div>
