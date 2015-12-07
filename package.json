@@ -19,7 +19,7 @@
     "commander": "2.9.0",
     "express": "4.13.3",
     "fibaro-api": "0.1.1",
-    "firebase": "2.3.1",
+    "firebase": "2.3.2",
     "home-controller": "0.5.2",
     "iotdb-timers": "0.0.11",
     "ip": "1.1.0",
