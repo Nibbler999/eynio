@@ -6,7 +6,7 @@
     .service('dataService', ['$q', '$rootScope', 'socket', function($q, $rootScope, socket) {
 
       // data
-      var allDev, allRemotes, allScenes, allCategories, allCustomRemotes;
+      var allDev, allRemotes, allScenes, allCategories, allCustomRemotes, actionLog;
 
       var allSwitches = [];
       var allLights = [];
@@ -23,6 +23,13 @@
       this.socketConnect = function(token, serverId) {
         var deferred = $q.defer();
         socket.connect(token, serverId);
+        deferred.resolve();
+        return deferred.promise;
+      };
+
+      this.localSocketConnect = function(ip){
+        var deferred = $q.defer();
+        socket.connectLocal(ip);
         deferred.resolve();
         return deferred.promise;
       };
@@ -67,11 +74,23 @@
         socket.emit('getScenes', null, function(scenes) {
           allScenes = scenes;
         });
+        socket.emit('getCategories', null, function(categories) {
+          allCategories = categories;
+        });
         socketListeners();
         return deferred.promise;
       };
 
       var socketListeners = function() {
+
+        /* sensor value change */
+        /*socket.on('sensorValue', function(sensorChange) {
+          angular.forEach(God.allSensors, function(sensor) {
+            if (sensor.id === sensorChange.id) {
+              sensor.value = sensorChange.value;
+            }
+          });
+        });*/
 
         socket.on('cameraAdded', function(newCam) {
           console.log(newCam);
@@ -103,8 +122,12 @@
             };
           });
         });
-        socket.on('deviceRenamed', function(devRenamed) {
-          console.log(devRenamed);
+        socket.on('deviceRenamed', function(devId, devName) {
+          angular.forEach(allDev, function(dev){
+            if(dev.id === devId){
+              dev.name = devName;
+            }
+          });
         });
         /*  scene deleted */
         socket.on('sceneDeleted', function(deletedScene) {
@@ -115,19 +138,37 @@
           });
         });
 
+        socket.on('deviceBlacklisted', function(devType, devId){
+          console.log(devType, devId);
+          angular.forEach(allDev, function(dev){
+            if(dev.id === devId){
+              allDev.splice(allDev.indexOf(dev), 1);
+            }
+          });
+        });
+
+        socket.on('deviceUnblacklisted', function(devType, devId){
+          console.log(devType, devId);
+        });
+
         serverSettingsData();
       };
-      var activeUser, bridges, userList, serverLog;
+      var activeUser, bridges, userList;
 
       var serverSettingsData = function() {
 
+        /* get uset profile, LEVEL */
+        socket.emit('getUserProfile', null, function(user) {
+          console.log(user);
+          activeUser = user;
+        });
         /* get bridges */
         socket.emit('getBridges', null, function(bridge) {
           bridges = bridge;
         });
-        /* get server log */
-        socket.emit('log', null, function(log) {
-          serverLog = log;
+        /* get full list of users */
+        socket.emit('permServerGet', null, function(allUsers) {
+          userList = allUsers;
         });
       };
 
@@ -201,13 +242,14 @@
       this.userList = function() {
         return userList;
       };
-      this.serverLog = function() {
-        return serverLog;
-      };
       /* categories stuff */
       this.categories = function() {
         return allCategories;
       };
+
+      this.getActionLog = function(){
+        return actionLog;
+      }
       /* return scenes */
       this.scenes = function() {
         return allScenes;

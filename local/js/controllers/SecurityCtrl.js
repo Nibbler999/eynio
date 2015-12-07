@@ -18,7 +18,8 @@
 
       contentWrapParent.appendChild(liveStreamModal);
 
-      document.querySelector('.full-screen-btn').onclick = function(){
+      security.fullScreen = function(){
+        console.log('bbb');
         dataService.fullScreen(liveStreamImg);
       };
 
@@ -32,7 +33,7 @@
             activeLineIndicator.style.width = '50%';
           }
         }
-      })
+      });
 
       socket.emit('isAlarmEnabled', null, function(data) {
         console.log(data);

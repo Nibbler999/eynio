@@ -20,7 +20,8 @@
   </div>
 
   <div class="device-options" ng-show="deviceOptions">
-    <div title="set color" class="device-option-btn device-option-color" ng-click="colorPicker = true"></div>
+    <div title="set color" class="device-option-btn device-option-color" ng-click="colorPicker = true" ng-show="linfo.state.hsv"></div>
+    <div title="set brightness" class="device-option-btn device-option-set-brightness" ng-click="brightness = true" ng-show="!linfo.state.hsv"></div>
     <div title="set white" class="device-option-btn device-option-set-white" ng-click="setLightWhite(linfo.id)"></div>
   </div>
 
@@ -29,7 +30,19 @@
     <img src="img/button/cross-dark.png" class="close-device-options" ng-click="colorPicker = false">
     <div id="light-color" class="light-set-color"></div>
     <div>
-      <button class="device-options-btn set-color-btn" ng-click="setColor(linfo.id, linfo.state.hex)">Set color</button>
+      <button class="device-options-btn set-color-btn" ng-click="setColor(linfo.id, linfo.state.hsl)">Set color</button>
+    </div>
+  </div>
+
+  <!-- set brightness !-->
+  <div class="option-wrap" ng-show="brightness">
+    <img src="img/button/cross-dark.png" class="close-device-options" ng-click="brightness = false">
+    <div class="device-options-brightness">
+      <label class="form-label" for="light-brightness">Brightness</label>
+      <input type="range" id="light-brightness" ng-model="linfo.state.level">
+    </div>
+    <div>
+      <button class="device-options-btn set-color-btn" ng-click="setBrightness(linfo.id, linfo.state.level)">Set brightness</button>
     </div>
   </div>
 </div>

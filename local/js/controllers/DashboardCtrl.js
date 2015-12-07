@@ -13,10 +13,6 @@
       var liveStreamOptions, liveStreamId;
 
       contentWrapParent.appendChild(liveStreamModal);
-      /* full screen for cameras */
-      document.querySelector('.full-screen-btn').onclick = function() {
-        dataService.fullScreen(liveStreamImg);
-      };
 
       dashboard.allSwitches = [];
       dashboard.allLights = [];
@@ -91,7 +87,11 @@
           dashboard.liveImage = src;
         }
       });
-
+      
+      /* full screen for cameras */
+      dashboard.fullScreen = function() {
+        dataService.fullScreen(liveStreamImg);
+      };
       dashboard.stopLiveStream = function() {
         socket.emit('stopStreaming', liveStreamId, liveStreamOptions);
         liveStreamModal.style.display = 'none';

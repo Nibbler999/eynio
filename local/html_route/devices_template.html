@@ -95,7 +95,7 @@
         <input type="text" id="rename-device" class="form-input" ng-model="device.activeDevice.name">
 
         <!-- if editing camera show more options !-->
-        <span ng-if="device.activeDevice.type === 'camera'">
+        <span ng-show="device.activeDevice.type === 'camera'">
           <label for="snapshot-camera" class="form-label">
             Snapshot
           </label>
@@ -112,11 +112,11 @@
           <input type="text" id="rtsp-camera" class="form-input" ng-model="device.activeDevice.rtsp">
         </span>
 
-        <span ng-if="device.activeDevice.type === 'tv'">
+        <span ng-show="device.activeDevice.type === 'tv'">
 
           <label class="form-label" for="ir-output-remote">IR Output</label>
           <select id="ir-output-remote" class="form-select" ng-model="device.activeDevice.deviceid">
-            <option ng-repeat="remote in device.remotes" value="{{remote.id}}">
+            <option ng-repeat="remote in device.remotes" value={{remote.id}}>
               {{remote.name}}
             </option>
           </select>
@@ -260,8 +260,8 @@
       <div class="add-remote-radio-select">
         <h4>Remote bridge</h4>
         <span ng-repeat="remote in device.remotes">
-          <input type="radio" id="add-remote-bridge" value="{{remote.id}}" name="add-remote-bridge" class="form-radio" checked>
-          <label for="add-remote-bridge" class="radio-label"></label>
+          <input type="radio" id="add-remote-bridge-{{remote.id}}" value="{{remote.id}}" name="add-remote-bridge" class="form-radio" checked>
+          <label for="add-remote-bridge-{{remote.id}}" class="radio-label"></label>
           <i>{{remote.name}}</i>
         </span>
       </div>

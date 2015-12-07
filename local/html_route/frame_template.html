@@ -1,101 +1,264 @@
 <div class="frame-wrap">
   <!-- navigation !-->
-  <h3 class="server-offline-msg" ng-show="God.serverOffline">Ooops!! Something went wrong, server is offline</h3>
+  <h3 class="server-offline-msg" ng-show="God.serverOffline">
+    Ooops!! Something went wrong, server is offline
+  </h3>
   <section class="frame-nav">
     <a ui-sref="frame.dashboard">
       <img src="img/logo/nhome_logo_white.png" class="frame-menu-icon">
     </a>
+    <div>
+      <div class="frame-new-server-notification" ng-show="God.foundNewServer.length">
+        A new server has been discovered
+        <a ui-sref="frame.addserver">
+          <button type="button" class="button frame-new-server-btn">
+            Set up
+          </button>
+        </a>
+      </div>
+
+      <div class="frame-notifications" ng-show="God.foundNewServer.length">
+        {{God.foundNewServer.length}}
+        <div class="frame-notifications-dropdown">
+          <ul>
+            <li ng-repeat="server in God.foundNewServer">
+              {{server.name}}
+            </li>
+          </ul>
+          <button class="frame-notifications-more-btn">
+            More
+          </button>
+        </div>
+      </div>
+    </div>
   </section>
   <!-- content wrap !-->
   <section class="frame-content-wrap">
     <!-- side bar !-->
     <section class="frame-sidebar">
-      <a ui-sref="frame.server-settings" class="sidebar-nav-btn server-settings-btn">
-          Server Settings
+      <div class="dropdown server-dropdown">
+        <div class="active-server-btn" id="dLabel" role="button" data-toggle="dropdown" data-target="#">
+          <a>
+          {{God.activeServer.name}}
+        </a>
+          <i>
+          <img src="img/button/chevron-down.png">
+        </i>
+        </div>
+
+        <ul class="dropdown-menu server-dropdown-ul" role="menu" aria-labelledby="dLabel">
+          <li ng-repeat="server in God.allServers" ng-class="{'server-status-online': server.online, 'server-status-offline': !server.online}">
+            <a href="" ng-click="God.switchServer(server)">
+              {{server.name}}
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <a ui-sref="frame.devices" class="sidebar-nav-btn devices-btn" ui-sref-active="devices-btn-active">
+        <span>Devices</span>
       </a>
-      <section ui-view="settings" class="settings-view"></section>
+
+      <a ui-sref="frame.scenes" class="sidebar-nav-btn scenes-btn" ui-sref-active="scenes-btn-active">
+        <span>Scenes</span>
+      </a>
+
+      <a ui-sref="frame.schedule" class="sidebar-nav-btn schedule-btn" ui-sref-active="schedule-btn-active">
+        <span>Schedule</span>
+      </a>
+
+      <a ui-sref="frame.security" class="sidebar-nav-btn security-btn" ui-sref-active="security-btn-active">
+        <span>Security</span>
+      </a>
+
+      <!-- downloads menu toggle by download btn !-->
+      <section class="downloads-menu" ng-show="showDownloads">
+        <section class="downloads-title">
+          <h3>Downloads</h3>
+          <img src="img/button/cross.png" class="downloads-close-btn" ng-click="showDownloads = false">
+        </section>
+
+        <div class="panel-group" id="accordion">
+          <div class="panel panel-default downloads-panel">
+            <div class="panel-heading downloads-panel-heading download-raspi" data-toggle="collapse" data-parent="#accordion" data-target="#collapse-pi">
+              <h4 class="panel-title">
+                Raspberry Pi
+              </h4>
+            </div>
+
+            <div id="collapse-pi" class="panel-collapse collapse in">
+              <div class="panel-body">
+                <a href="https://nhome.s3.amazonaws.com/NHomePi-NOOBS.zip" class="download-link">
+                  Pi - NOOB Installer
+                </a>
+                <a href="https://nhome.s3.amazonaws.com/NHomePi.img.xz" class="download-link">
+                    Pi - Raw Image
+                </a>
+                <a href="https://nhome.s3.amazonaws.com/NHomePi2-NOOBS.zip" class="download-link">
+                      Pi 2 - NOOB Installer
+                </a>
+                <a href="https://nhome.s3.amazonaws.com/NHomePi2.img.xz" class="download-link">
+                        Pi 2 - NOOB Installer
+                </a>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="panel panel-default downloads-panel">
+            <div class="panel-heading downloads-panel-heading download-nas collapsed" data-toggle="collapse" data-parent="#accordion" data-target="#collapse-nas">
+              <h4 class="panel-title">
+                NAS
+              </h4>
+            </div>
+
+            <div id="collapse-nas" class="panel-collapse collapse">
+              <div class="panel-body">
+                <a href="https://nhome.s3.amazonaws.com/NHome.spk" class="download-link">
+                  Synology NAS
+                </a>
+                <a href="https://nhome.s3.amazonaws.com/NHome.apk" class="download-link">
+                  Asustor NAS
+                </a>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="panel panel-default downloads-panel">
+            <div class="panel-heading downloads-panel-heading download-win collapsed" data-toggle="collapse" data-parent="#accordion" data-target="#collapse-win">
+              <h4 class="panel-title">
+                Windows
+              </h4>
+            </div>
+
+            <div id="collapse-win" class="panel-collapse collapse">
+              <div class="panel-body">
+                <a href="https://nhome.s3.amazonaws.com/NHomeServer.exe" class="download-link">
+                  Windows
+                </a>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="panel panel-default downloads-panel">
+            <div class="panel-heading downloads-panel-heading download-generic collapsed" data-toggle="collapse" data-parent="#accordion" data-target="#collapse-generic">
+              <h4 class="panel-title">
+                Generic
+              </h4>
+            </div>
+
+            <div id="collapse-generic" class="panel-collapse collapse">
+              <div class="panel-body">
+                <a href="https://nhome.s3.amazonaws.com/NHomeServer.zip" class="download-link">
+                    Generic
+                  </a>
+              </div>
+            </div>
+
+          </div>
+
+
+          <div class="panel panel-default downloads-panel">
+            <div class="panel-heading downloads-panel-heading download-fedora collapsed" data-toggle="collapse" data-parent="#accordion" data-target="#collapse-fedora">
+              <h4 class="panel-title">
+                Fedora
+              </h4>
+            </div>
+
+            <div id="collapse-fedora" class="panel-collapse collapse">
+              <div class="panel-body">
+                <a href="https://nhome.s3.amazonaws.com/NHomeServer.rpm" class="download-link">
+                  Fedora
+                </a>
+              </div>
+            </div>
+
+          </div>
+
+
+          <div class="panel panel-default downloads-panel">
+            <div class="panel-heading downloads-panel-heading download-android collapsed" data-toggle="collapse" data-parent="#accordion" data-target="#collapse-android">
+              <h4 class="panel-title">
+                Android
+              </h4>
+            </div>
+
+            <div id="collapse-android" class="panel-collapse collapse">
+              <div class="panel-body">
+                <a href="https://play.google.com/store/apps/details?id=n.home.smartapp" target="_blank" class="download-link">
+                        Android
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <button class="sidebar-nav-btn activity-log-btn">
+        Session activity log
+      </button>
+      <div class="sidebar-activity-log">
+        <ul>
+          <li ng-repeat="log in God.sessionActionLog track by log.time">
+            <div class="activity-log-bullet">
+              <div class="activity-log-bullet-shadow"></div>
+            </div>
+            <span class="activity-log-info">
+              <p class="activity-log-date">{{log.time | date: 'd/MMM/yyyy HH:mm:ss'}}</p>
+              <p>{{log.user}} turned
+                <b ng-if="log.action.slice(log.action.length-3, log.action.length) === 'off'">OFF</b>
+                <b ng-if="log.action.slice(log.action.length-2, log.action.length) === 'on'">ON</b>
+                <b ng-if="log.action ==='scene-set'">triggered scene</b> {{log.device}}
+              </p>
+            </span>
+          </li>
+        </ul>
+        <img src="img/frame/activity-log.png" ng-hide="God.sessionActionLog.length > 0">
+      </div>
     </section>
+
 
     <!-- page content !-->
     <section class="frame-page-content-wrap">
       <section class="frame-info">
-        <div class="category-wrap">
-          <div class="category-holder">
-            <ul class="category-nav">
-              <li class="category" ng-repeat="category in God.categories track by category.id" id="{{category.name}}" ng-class="{'category-active': category.id === God.activeRoom.id}">
-                <a ng-if="category.id === 'dashboard'" ui-sref="frame.{{category.id}}" ng-click="God.filterDevByCategory(category)">
-                    {{category.name}}
-                </a>
-                <a ng-if="category.id !== 'dashboard'" ng-click="God.filterDevByCategory(category)">
-                    {{category.name}}
-                </a>
-
-                <img src="img/button/cross-dark.png" title="double clik to delete" ng-click="God.deleteCategorie(category)" ng-hide="category.id === 'dashboard' || category.id !== God.activeRoom.id">
-              </li>
-            </ul>
-
-            <div class="add-category-wrap" ng-show="addCategory">
-              <form autocomplete="off" ng-submit="God.addCategory()" id="add-new-category">
-                <input type="text" class="form-input" name="New Category" id="add-category-name" placeholder="Enter category name" pattern=".{4,15}" title="4 to 15 characters">
-                <button type="submit" class="button add-category-submit-btn">
-                  <p>Done</p>
-                </button>
-                <button type="reset" class="button add-category-reset-btn" ng-click="addCategory = false"></button>
-              </form>
+        <!-- sensors !-->
+        <div class="sensor-wrap">
+          <div class="info-sensor" ng-repeat="sensor in God.activeRoomSensors">
+            <img ng-if="sensor.subtype === 'temperature'" src="img/sensors/temp.png">
+            <img ng-if="sensor.subtype === 'humidity'" src="img/sensors/humidity.png">
+            <img ng-if="sensor.subtype === 'co2'" src="img/sensors/co.png">
+            <img ng-if="sensor.subtype === 'noise'" src="img/sensors/noise.png">
+            <img ng-if="sensor.subtype === 'rain'" src="img/sensors/rain.png">
+            <img ng-if="sensor.subtype === 'co-alarm'" src="img/sensors/co.png">
+            <img ng-if="sensor.subtype === 'light'" src="img/sensors/lux.png">
+            <img ng-if="sensor.subtype === 'motion'" src="img/sensors/motion.png">
+            <img ng-if="sensor.subtype === 'door' && sensor.value === false" src="img/sensors/door-close.png">
+            <img ng-if="sensor.subtype === 'door' && sensor.value === true" src="img/sensors/door-open.png">
+            <div class="sensor-details">
+              <h1>{{sensor.value}}</h1>
+              <p>{{sensor.name}}</p>
             </div>
-
-            <div class="add-category-wrap" ng-show="editCategory">
-              <form autocomplete="off" ng-submit="God.editCategory()" id="add-new-category">
-                <input type="text" class="form-input" name="New Category" id="add-category-name" placeholder="Enter category name" pattern=".{4,15}" title="4 to 15 characters" ng-model="God.activeRoom.name">
-                <button type="submit" class="button add-category-submit-btn">
-                  <p>Rename</p>
-                </button>
-                <button type="reset" class="button add-category-reset-btn" ng-click="editCategory = false; hideBtn = !hideBtn"></button>
-              </form>
-            </div>
-
-            <button type="button" class="add-category-btn" ng-click="addCategory = true" ng-hide="addCategory || hideBtn"></button>
           </div>
-          <button class="edit-category-btn" ng-click="editCategory = !editCategory; hideBtn = !hideBtn; addCategory = false"></button>
+          <small class="color-transparent" ng-show="God.activeRoomSensors.length === 0">
+            You don't have sensors in this room. Go <a ui-sref="frame.devices">assigne</a>
+          </small>
         </div>
 
-        <div class="info-wrap">
-          <div class="user-info">
-            <div class="user-details">
-              <h4>{{God.userInfoData.user_name}}</h4>
-              <h4>{{God.userInfoData.location}}</h4>
-            </div>
-          </div>
+        <!-- categories !-->
+        <div class="category-wrap">
+          <small class="color-transparent">Jump to</small>
+          <div class="dropdown">
+            <button type="button" class="button dropdown-toggle category-dropdown" id="categories-dropdown" data-toggle="dropdown">
+              {{God.activeRoom.name}}
+            </button>
 
-          <div class="info-wrap">
-            <div class="sensor-wrap">
-              <div class="info-sensor" ng-repeat="sensor in God.activeRoomSensors">
-                <img ng-if="sensor.subtype === 'temperature'" src="img/sensors/temp.png">
-                <img ng-if="sensor.subtype === 'humidity'" src="img/sensors/humidity.png">
-                <img ng-if="sensor.subtype === 'co2'" src="img/sensors/co.png">
-                <img ng-if="sensor.subtype === 'noise'" src="img/sensors/noise.png">
-                <img ng-if="sensor.subtype === 'rain'" src="img/sensors/rain.png">
-                <img ng-if="sensor.subtype === 'co-alarm'" src="img/sensors/co.png">
-                <img ng-if="sensor.subtype === 'light'" src="img/sensors/lux.png">
-                <img ng-if="sensor.subtype === 'motion'" src="img/sensors/motion.png">
-                <img ng-if="sensor.subtype === 'door' && sensor.value === false" src="img/sensors/door-close.png">
-                <img ng-if="sensor.subtype === 'door' && sensor.value === true" src="img/sensors/door-open.png">
-                <div class="sensor-details">
-                  <h1>{{sensor.value}}</h1>
-                  <p>{{sensor.name}}</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="alarm-wrap">
-              <img ng-show="God.alarmState" src="img/frame/alarm.png">
-              <img ng-show="!God.alarmState" src="img/frame/alarm-off.png">
-              <div class="slide-toggle-wrap">
-                <input type="checkbox" id="alarm-toggle" ng-model="God.alarmState" ng-change="God.alarmStateToggle()" class="slide-toggle-input">
-                <label for="alarm-toggle" class="slide-toggle-label"></label>
-                <div class="slide-toggle-line"></div>
-              </div>
-            </div>
+            <ul class="dropdown-menu category-dropdown-list" role="menu" aria-labelledby="categories-dropdown">
+              <li role="presentation" ng-repeat="category in God.categories track by category.id">
+                <a role="menuitem" tabindex="-1" href="#" ng-click="God.filterDevByCategory(category)">{{category.name}}</a>
+              </li>
+            </ul>
           </div>
         </div>
       </section>
@@ -103,26 +266,24 @@
       <section class="frame-view" ui-view></section>
 
       <section class="frame-nav-bottom">
-        <div class="nav-bottom-btn devices-filter-btn" ui-sref-active="devices-filter-btn-active">
-          <a ui-sref="frame.devices">
-            <div class="inflater"></div>
-          </a>
+        <div>
+          <button type="button" class="button filter-btn all-rooms-filter-btn">
+            All rooms
+          </button>
+          <button type="button" name="Most used" class="button filter-btn most-used-filter-btn">
+            Most used
+          </button>
+          <button type="button" name="Favorite" class="button filter-btn favorite-filter-btn">
+            Favorite
+          </button>
+          <button type="button" name="Recently uesd" class="button filter-btn recently-used-filter-btn">
+            Recently uesd
+          </button>
         </div>
-        <div class="nav-bottom-btn scenes-filter-btn" ui-sref-active="scenes-filter-btn-active">
-          <a ui-sref="frame.scenes">
-            <div class="inflater"></div>
-          </a>
-        </div>
-        <div class="nav-bottom-btn schedule-filter-btn" ui-sref-active="schedule-filter-btn-active">
-          <a ui-sref="frame.schedule">
-            <div class="inflater"></div>
-          </a>
-        </div>
-        <div class="nav-bottom-btn security-filter-btn" ui-sref-active="security-filter-btn-active">
-          <a ui-sref="frame.security">
-            <div class="inflater"></div>
-          </a>
-        </div>
+        <a ui-sref="frame.server-settings" class="button filter-btn settings-btn">
+          Setting
+        </a>
       </section>
     </section>
+  </section>
 </div>

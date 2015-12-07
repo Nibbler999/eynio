@@ -1,5 +1,19 @@
 <div class="template-nav">
-  <h3>{{God.activeRoom.name}}</h3>
+  <div class="display-devices-row">
+    <h3>{{God.activeRoom.name}}</h3>
+
+    <div class="add-category-wrap" ng-show="editCategory">
+      <form autocomplete="off" ng-submit="God.editCategory()" id="add-new-category">
+        <input type="text" class="form-input" name="New Category" id="add-category-name" placeholder="Enter category name" pattern=".{4,15}" title="4 to 15 characters" ng-model="God.activeRoom.name">
+        <button type="submit" class="button add-category-submit-btn">
+          <p>Rename</p>
+        </button>
+        <button type="reset" class="button add-category-reset-btn" ng-click="editCategory = false; hideBtn = !hideBtn"></button>
+      </form>
+    </div>
+  </div>
+
+  <button class="edit-category-btn" ng-click="editCategory = !editCategory" title="edit room"></button>
 </div>
 
 <div class="display-devices-row">
@@ -13,11 +27,10 @@
 <div class="display-devices-row">
   <camera ng-repeat="camera in dashboard.allCameras" cinfo="camera"></camera>
 </div>
-
 <section class="custom-modal-window cam-live-stream-modal">
   <section class="custom-modal-wrap">
     <img src="img/button/cross.png" class="close-live-stream-modal" ng-click="dashboard.stopLiveStream()">
     <img ng-src={{dashboard.liveImage}} class="camera-live-stream">
-    <button type="button" class="button full-screen-btn"></button>
+    <button type="button" ng-click="dashboard.fullScreen()" class="button full-screen-btn"></button>
   </section>
 </section>

@@ -53,7 +53,7 @@
               socket.emit('toggleDevicePowerState', devId);
             };
           }
-          
+
           /* on switchState change state */
           socket.on('switchState', function(data) {
             if (scope.sinfo.id === data.id) {

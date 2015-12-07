@@ -11,10 +11,16 @@
       server.activeUser = dataService.user();
       server.bridges = dataService.bridge();
       server.userList = dataService.userList();
-      server.serverLog = dataService.serverLog();
+      var leaveServerModal = document.querySelector('.leave-server-modal');
 
+      document.querySelector('.frame-wrap').appendChild(leaveServerModal);
+      /* get server log */
+      socket.emit('getLog', null, function(log) {
+        server.serverLog = log;
+      });
       /* get server data, updates */
       socket.emit('getServerStatus', null, function(serverStatus) {
+        console.log(serverStatus);
         server.serverInfoData = serverStatus;
         var url = 'https://neosoft-updates.s3.amazonaws.com/zupdate/NHomeServer/' + serverStatus.version + '.xml';
         $http.get(url)
@@ -29,11 +35,12 @@
           .error(function(data, status) {
             $rootScope.$broadcast('checkFailed');
           });
-          setTimeout(function(){        getGoogleMap({
-                    lat: parseFloat(server.serverInfoData.latitude),
-                    lng: parseFloat(server.serverInfoData.longitude)
-                  });},250);
-
+        setTimeout(function() {
+          getGoogleMap({
+            lat: parseFloat(server.serverInfoData.latitude),
+            lng: parseFloat(server.serverInfoData.longitude)
+          });
+        }, 250);
       });
       /* listen for bridge updates */
       socket.on('bridgeInfo', function(bridge) {
@@ -84,33 +91,56 @@
       };
 
       /* bridge rename */
-
       server.leaveServer = function() {
-        socket.emit('permServerRemove', server.activeUser.email, function(argument) {
-          console.log(argument);
+        socket.emit('permServerRemoveSelf', null, function(response) {
+          if (response) {
+            leaveServerModal.style.display = 'block';
+            socket.emit('getServers', null, function(servers) {
+              console.log(servers);
+              if (servers.length > 1) {
+                server.leveServers = servers;
+              } else if (server.length == 1) {
+                server.switchServer(servers[0]);
+              } else {
+                sessionStorage.removeItem('activeServer');
+                sessionStorage.removeItem('userInfoData');
+                sessionStorage.removeItem('gravatar');
+                location.reload(true);
+              }
+            });
+          }
         });
       };
 
+      server.switchServer = function(server) {
+        console.log(server);
+        sessionStorage.activeServer = JSON.stringify(server);
+        sessionStorage.activeRoom = JSON.stringify({
+          name: 'Dashboard',
+          id: 'dashboard'
+        });
+        location.reload(true);
+      };
 
       /*  delete server */
       server.deleteServer = function() {
         deleteServerCount += 1;
         if (deleteServerCount === 2) {
 
-            socket.emit('deleteServer', null, function(data) {
-              console.log(data);
-              /* redirect */
-              if (data) {
-                socket.emit('getServers', null, function(servers) {
-                  sessionStorage.activeServer = JSON.stringify(servers[0]);
-                  location.reload(true);
-                });
-              }
-            });
-          } else {
-            server.ownerPermissions = true;
-            return;
-          }
+          socket.emit('deleteServer', null, function(data) {
+            console.log(data);
+            /* redirect */
+            if (data) {
+              socket.emit('getServers', null, function(servers) {
+                sessionStorage.activeServer = JSON.stringify(servers[0]);
+                location.reload(true);
+              });
+            }
+          });
+        } else {
+          server.ownerPermissions = true;
+          return;
+        }
       };
 
       /* google maps */
@@ -134,16 +164,20 @@
       /* USERS SETTINGS */
       /* user setings, invite, delete, change level */
       server.inviteUser = function() {
-        var inviteEmail = document.getElementById('invite-email');
-        var inviteMsg = document.getElementById('invite-msg');
-        var inviteStatus = document.getElementById('invite-status');
+        var inviteEmail = document.getElementById('invite-email').value;
+        var inviteMsg = document.getElementById('invite-msg').value;
+        var inviteStatus = document.getElementById('invite-status').value;
+
+        console.log(inviteMsg, inviteStatus);
 
         socket.emit4('inviteUser', inviteEmail, inviteMsg, inviteStatus, function(invite) {
+          console.log(invite);
           if (!invite) {
-            alert('Inviting ' + email + ' failed!');
+            alert('Inviting ' + inviteEmail + ' failed!');
           }
         });
-      }
+      };
+
       server.changeUserLevel = function(email, level) {
         if (level === 'DELETE') {
           deleteUser(email);

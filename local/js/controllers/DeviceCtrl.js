@@ -60,36 +60,37 @@
         device.saveDeviceOptions = function() {
           angular.forEach(device.asignedRooms, function(addRoom) {
             socket.emit('catAddDevice', addRoom.id, device.activeDevice.id);
+            device.activeDevice.categories.push(addRoom.id);
           });
           angular.forEach(device.unAsignedRooms, function(removeRoom) {
             socket.emit('catDeleteDevice', removeRoom.id, device.activeDevice.id);
+            angular.forEach(device.activeDevice.categories, function(cat) {
+              if (cat === removeRoom.id) {
+                device.activeDevice.categories
+                  .splice(device.activeDevice.categories.indexOf(cat), 1);
+              }
+            })
           });
           socket.emit('setDeviceName', device.activeDevice.id, device.activeDevice.name);
 
           if (device.activeDevice.type === 'camera') {
-            socket.emit('updateCamera', device.activeDevice.id, function(response) {
-              console.log(response);
-            });
+            socket.emit('updateCamera', device.activeDevice);
           } else if (device.activeDevice.type === 'tv') {
-            socket.emit('updateCustomRemote', {
-              id: device.activeDevice.id,
-              name: device.activeDevice.name,
-              keys: device.activeDevice.keys,
-              type: device.activeDevice.type,
-              deviceid: device.activeDevice.deviceid
-            }, function(response) {
-              console.log(response);
-            });
+            socket.emit('updateCustomRemote', device.activeDevice);
           }
+
+          console.log(device.allLights);
         };
+
         device.deleteDevice = function() {
           if (device.activeDevice.type === 'tv') {
             socket.emit('deleteCustomRemote', device.activeDevice.id);
           } else if (device.activeDevice.type === 'camera') {
             socket.emit('deleteCamera', device.activeDevice.id);
+          } else {
+            socket.emit('blacklistDevice', device.activeDevice.id);
           }
         };
-
         device.addRemote = function() {
           addRemoteModal.style.display = 'block';
         };

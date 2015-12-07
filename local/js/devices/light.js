@@ -26,7 +26,7 @@
             scope.linfo.state = state;
 
             $("#light-color-" + scope.linfo.count).ColorPickerSliders({
-              color: scope.linfo.state.hex,
+              color: 'hsl(' + state.hsl[0] + ',' + state.hsl[1] + ',' + state.hsl[2] + ')',
               updateinterval: 1,
               flat: true,
               swatches: false,
@@ -39,7 +39,9 @@
                 hsllightness: ''
               },
               onchange: function(container, color) {
-                scope.linfo.state.hex = color.tiny.toHex();
+                scope.linfo.state.hsl[0] = color.tiny.toHsl().h;
+                scope.linfo.state.hsl[1] = color.tiny.toHsl().s;
+                scope.linfo.state.hsl[2] = color.tiny.toHsl().l;
               }
             });
             scope.$watch('linfo.state.on', function() {
@@ -63,13 +65,17 @@
 
             /* set light color */
             scope.setColor = function(lightId, lightColor) {
-              console.log(lightColor);
-              socket.emit4('setLightColor', lightId, lightColor, 'hex');
+              socket.emit4('setLightColor', lightId, lightColor, 'hsl');
             };
 
             /* set light to full white */
             scope.setLightWhite = function(lightId) {
-              socket.emit('setLightWhite', lightId, 100, 1);
+              socket.emit4('setLightColor', lightId, [0,0,1], 'hsl');
+              scope.linfo.state.hsl = [0,0,1];
+            };
+
+            scope.setBrightness = function(lightId, brightness){
+              socket.emit4('setLightWhite', lightId, parseInt(brightness), 100);
             };
 
             /* toggle light state on/off */

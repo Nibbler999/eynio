@@ -7,56 +7,17 @@
 
       var God = this;
       God.activeRoomSensors = [];
-      var activeCat, notActiveCat, wentOffline, deleteRoomClickCount;
-      if (sessionStorage.activeServer) {
-        var activeServer = JSON.parse(sessionStorage.activeServer);
-      }
-      /* HELPER FUNCTIONS */
+      var activeCat, notActiveCat, wentOffline, deleteRoomClickCount,
+        serverActiveLog = {};
 
-      /* request data from server */
-      var socketData = function(token, serverId) {
-        dataService.socketConnect(token, serverId).then(function() {
-
-          /* get weather */
-          socket.emit('getWeather', null, function(weatherInfo) {
-            God.weather = weatherInfo;
-          });
-          /* get alarm state */
-          socket.emit('isAlarmEnabled', null, function(alarmState) {
-            God.alarmState = alarmState;
-          });
-          /* get categories */
-          socket.emit('getCategories', null, function(categories) {
-            God.categories = categories;
-          });
-          /* sensor value change */
-          socket.on('sensorValue', function(sensorChange) {
-            angular.forEach(God.allSensors, function(sensor) {
-              if (sensor.id === sensorChange.id) {
-                sensor.value = sensorChange.value;
-              }
-            });
-          });
-
-          God.allSensors = dataService.sensors();
-        });
-      };
-
-      /* filter sensors by catId */
-      var filterSensorsByCatId = function(catId) {
-        God.activeRoomSensors = [];
-        angular.forEach(God.allSensors, function(sensor) {
-          angular.forEach(sensor.categories, function(sensorCategoiresId) {
-            if (sensorCategoiresId === catId) {
-              God.activeRoomSensors.push(sensor);
-            }
-          })
-        });
-      };
+      // connect to socket
+      dataService.socketConnect().then(function() {
+        socketEmits();
+      });
 
       /* SET DEFAULT VALUES */
-      God.lastState = 'frame.dashboard';
 
+      //set active room
       if (sessionStorage.activeRoom) {
         God.activeRoom = {
           name: JSON.parse(sessionStorage.activeRoom).name,
@@ -68,16 +29,78 @@
           id: 'dashboard'
         };
       }
-
-      socketData();
-
-      /* after server clam reload */
+      /* after server claim reload and rename */
       if (sessionStorage.newServerName && God.activeServer.name === sessionStorage.newServerName) {
         console.log(sessionStorage.newServerName);
         socket.emit3('configSet', 'name', sessionStorage.newServerName, function(data) {
           console.log(data);
         });
         sessionStorage.removeItem('newServerName');
+      };
+      //Set user avatar
+      //document.querySelector('.user-avatar').style.backgroundImage = 'url(' + God.userInfoData.avatar + ')';
+      if (sessionStorage.sessionActionLog) {
+        God.sessionActionLog = JSON.parse(sessionStorage.sessionActionLog)[God.activeServer.id];
+      } else {
+        God.sessionActionLog = [];
+      }
+
+      /* request data for frame from server */
+      function socketEmits() {
+        /* get servers */
+        socket.emit('getServers', null, function(servers) {
+          God.allServers = servers;
+        });
+        /* get weather */
+        socket.emit('getWeather', null, function(weatherInfo) {
+          God.weather = weatherInfo;
+        });
+        /* get alarm state */
+        socket.emit('isAlarmEnabled', null, function(alarmState) {
+          God.alarmState = alarmState;
+        });
+        /* listen for action log updates */
+        socket.on('actionLogUpdate', function(newAction) {
+          God.sessionActionLog.unshift(newAction);
+          serverActiveLog[God.activeServer.id] = God.sessionActionLog;
+          sessionStorage.sessionActionLog = JSON.stringify(serverActiveLog);
+        });
+        /* get categories */
+        socket.emit('getCategories', null, function(categories) {
+          God.categories = categories;
+        });
+        /* server offline notification */
+        socket.on('serverOnline', function(online) {
+          console.log(online);
+          if (!online) {
+            God.serverOffline = true;
+            wentOffline = true;
+            document.querySelector('.frame-wrap').style.backgroundColor = '#ad3642';
+          } else {
+            God.serverOffline = false;
+            if (wentOffline) {
+              location.reload(true);
+              document.querySelector('.frame-wrap').style.backgroundColor = '#1362AC'
+              wentOffline = false;
+            }
+          }
+        });
+        socket.emit('getDevices', 'sensor', function(sensors) {
+          God.allSensors = sensors
+          filterSensorsByCatId(God.activeRoom.id);
+        });
+      };
+
+      /* filter sensors by catId */
+      function filterSensorsByCatId(catId) {
+        God.activeRoomSensors = [];
+        angular.forEach(God.allSensors, function(sensor) {
+          angular.forEach(sensor.categories, function(sensorCategoiresId) {
+            if (sensorCategoiresId === catId) {
+              God.activeRoomSensors.push(sensor);
+            }
+          })
+        });
       };
 
       /* filter devices by category */
@@ -92,12 +115,12 @@
 
         $state.go('frame.dashboard');
         $scope.$broadcast('filterData', category.id);
-        notActiveCat = document.getElementsByClassName('category');
+        /*notActiveCat = document.getElementsByClassName('category');
         angular.forEach(notActiveCat, function(cat) {
           cat.classList.remove('category-active');
         });
         activeCat = document.getElementById(category.name);
-        activeCat.classList.add('category-active');
+        activeCat.classList.add('category-active');*/
       };
 
       /* add new category */
@@ -159,15 +182,39 @@
 
       /* turn alarm on/off */
       God.alarmStateToggle = function() {
-        if (God.alarmState) {
+        if (!God.alarmState) {
           socket.emit('enableAlarm');
+          God.alarmState = true;
         } else {
           socket.emit('disableAlarm');
+          God.alarmState = false;
         }
+      };
+      /* logout user */
+      God.logout = function() {
+        $state.go('login');
+        sessionStorage.removeItem('activeServer');
+        sessionStorage.removeItem('userInfoData');
+        sessionStorage.removeItem('gravatar');
+        dataRequest.logout()
+          .then(function(reponse) {
+            location.reload();
+          });
       };
 
       /* CUSTOM EMITS */
 
+      /* name or email changed */
+      $scope.$on('newUserProfile', function(event, userProfile) {
+        God.userInfoData.user_name = userProfile.username;
+        God.userInfoData.email = userProfile.email;
+        sessionStorage.userInfoData = JSON.stringify(God.userInfoData);
+      });
+      /* new avatar */
+      $scope.$on('newAvatar', function(event, newAvatar) {
+        God.userInfoData.avatar = newAvatar;
+        sessionStorage.userInfoData = JSON.stringify(God.userInfoData);
+      });
       /* server claimed */
       $scope.$on('addNewServer', function(event, newServer) {
         God.allServers.push(newServer);
@@ -177,6 +224,7 @@
         God.activeServer = newServerName;
         console.log(newServerName);
       });
+
       /* remove active room class */
       $rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
         if (to.name !== 'frame.dashboard') {

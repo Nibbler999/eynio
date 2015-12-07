@@ -63,7 +63,7 @@ button:focus {
   -webkit-transition: all 0.25s ease;
   transition: all 0.25s ease;
   height: 2.5em;
-  margin: auto 0;
+  margin: auto 0.25em;
   outline: 0;
   border: 0.1em solid transparent;
   text-align: center;
@@ -85,6 +85,7 @@ button:focus {
 .form-label {
   display: block;
   margin: 0.5em 0 0 0;
+  color: rgba(255, 255, 255, 0.5);
 }
 .form-input {
   border-radius: 0.35em;
@@ -236,6 +237,7 @@ input[type="radio"]:checked ~ label{
   -ms-flex-pack: justify;
   justify-content: space-between;
 }
+
 .display-devices {
   color: #7BA0BF;
   padding: 1em 2em;
@@ -276,4 +278,16 @@ width: 100%;
 }
 .color-white{
   color:#fff !important;
+}
+.blue-btn{
+  background-color: #1986D9;
+}
+.orange-btn{
+  background-color: #EE8615;
+}
+.red-btn{
+  background-color: #D50000;
+}
+.justify-end{
+  justify-content: flex-end;
 }

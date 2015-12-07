@@ -142,5 +142,6 @@
   text-align: center;
   padding: 5em;
   background-color: rgba(29,131,228, 0.85);
-  animation: popUp 0.5s ease;
+  -webkit-animation: popUp 0.5s ease;
+          animation: popUp 0.5s ease;
 }

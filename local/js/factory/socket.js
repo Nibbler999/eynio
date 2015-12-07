@@ -13,6 +13,12 @@
           }
           return socket;
         },
+        connectLocal: function(ip){
+          if(!socket){
+            socket = io.connect('http://' + ip + ':8008/client')
+          }
+          return socket;
+        },
         on: function(eventName, callback) {
           if (typeof callback === 'function') {
             socket.on(eventName, function() {

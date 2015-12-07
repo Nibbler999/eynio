@@ -1,105 +1,18 @@
-/* ACCOUNT SETTINGS */
+/* DOWNLOADS */
 
-.settings-title {
+.downloads-title {
   background-color: #0D1E2E;
   color: #fff;
   text-align: left;
   text-indent: 2em;
   padding: 1em 0;
 }
-.settings-close {
+.downloads-close-btn {
   position: absolute;
-  top: 1em;
   right: 1em;
+  top: 1em;
   cursor: pointer;
 }
-.settings-close:hover .settings-close-btn {
-  -webkit-transform: scale(1.1);
-  -ms-transform: scale(1.1);
-  transform: scale(1.1);
-  -webkit-transition: all 0.5s ease;
-  transition: all 0.5s ease;
-}
-.account-user-data {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-flow: row nowrap;
-  -ms-flex-flow: row nowrap;
-  flex-flow: row nowrap;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  background-color: #21384B;
-  margin: 2em;
-}
-.settings-user-avatar {
-  height: 5em;
-  width: 5em;
-  margin: auto 1em;
-}
-.account-upload-img {
-  display: inherit;
-  margin-bottom: 2em;
-}
-.account-upload-img input {
-  display: none;
-}
-.upload-btn {
-  padding: 0.5em 2em;
-  font-weight: bold;
-  text-align: left;
-  text-indent: 1em;
-  cursor: pointer;
-}
-.upload-btn:hover {
-  color: #fff;
-}
-.upload-avatar {
-  background: #0D96FF url() 5% 50% no-repeat;
-  border-top-left-radius: 0.35em;
-  border-bottom-left-radius: 0.35em;
-}
-.upload-gravatar {
-  background: #214461 url() 5% 50% no-repeat;
-  border-top-right-radius: 0.35em;
-  border-bottom-right-radius: 0.35em;
-  margin-left: -0.25em;
-}
-.account-form {
-  margin: 1em 2em;
-}
-.settings-btn {
-  width: 100%;
-  margin: 2em auto 0;
-  padding: 1em 0;
-  font-weight: bold;
-  text-align: center;
-  border: 0;
-  color: #fff;
-}
-.settings-save-btn {
-  background-color: #2292CD;
-}
-
-.settings-btn:active {
-  -webkit-transform: scale(0.95);
-      -ms-transform: scale(0.95);
-          transform: scale(0.95);
-  -webkit-transition: all 0.25s ease;
-          transition: all 0.25s ease;
-}
-.settings-cancel-btn {
-  background-color: #1B4D77;
-}
-.account-notifications-wrap{
-  width: 90%;
-  margin: 0 auto;
-}
-/* DOWNLOADS */
-
 .download-link {
   display: block;
 }
@@ -152,215 +65,201 @@
   background-size: 2.5em;
 }
 
-/* SERVER SETTINGS */
+/* GENERAL SETTINGS */
 
-.settings-tab {
-  width: 90%;
-  background-color: #16354E;
-  margin: 1em auto;
-  padding: 0.5em 1em;
-  box-shadow: 0.1em 0.1em 0.2em rgba(7, 23, 36, 0.4), -0.1em -0.1em 0.2em rgba(7, 23, 36, 0.4);
-  border-radius: 0.5em;
+.settings-title {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
 }
-.settings-tab p{
-  white-space: nowrap;
+.settings-title > a {
+  color: #4D5E6E;
+  padding-left: 2em;
+  margin-right: 1.5em;
 }
-.server-info-wrap{
-  width: 50%;
-  float: left;
+.settings-title > a > h3 {
+  margin: 0;
 }
-#server-log{
-  max-height: 20em;
-  overflow: auto;
-}
-.server-log-pre{
-  background-color: inherit;
-  border: 0;
+.settings-active-btn {
+  background-image: url(../img/button/category-active.png);
+  background-position: 0% 50%;
+  background-repeat: no-repeat;
+  color: #fff !important;
 }
 .settings-tab-hlp {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  -webkit-flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+}
+
+/* SERVER SETTINGS */
+
+.settings-toggle-btns-wrap {
+  position: relative;
+  margin: 1em auto;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
   -webkit-flex-flow: row nowrap;
   -ms-flex-flow: row nowrap;
   flex-flow: row nowrap;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  margin: auto 0;
-}
-.settings-tab-default {
-  width: 90%;
-  margin: auto;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-}
-.settings-backup{
-  width: 90%;
-  margin: auto;
-}
-.settings-backup h4{
-  margin: 0;
-}
-.server-log-btn {
-  width: 100%;
-  height: 2.5em;
-  cursor: pointer;
-  font-size: 1.25em;
-  line-height: 2.5;
-  text-align: left;
-  border: 0;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  background: url(../img/button/chevron-down.png) 100% 50% no-repeat;
-}
-.settings-btn-wrap {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
   -webkit-box-pack: center;
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center;
-  -webkit-flex-flow: row nowrap;
-  -ms-flex-flow: row nowrap;
-  flex-flow: row nowrap;
+  color: #356288;
+  max-width: 20em;
 }
-.update-btn {
-  background-color: #EE8615;
-  height: 2em;
-  line-height: 2;
+.settings-toggle-btns-wrap > p {
+  margin: 0 1em;
+  cursor: pointer;
+  -webkit-transition: all 0.25s ease;
+  transition: all 0.25s ease;
+}
+.settings-toggle-btns-indicator {
+  bottom: -0.5em;
+  left: 5%;
+  right: 45%;
+  -webkit-animation: all 0.25s ease;
+  animation: all 0.25s ease;
+}
+.slide-line-indicator {
+  left: 50%;
+  right: 100%;
+}
+.settings-content-wrap {
+  margin-top: 2em;
+  color: #fff;
+  font-weight: 100;
+}
+.settings-content-wrap p, .settings-content-wrap h4 {
   margin: auto 1em;
 }
-.reboot-btn {
-  background-color: #071724;
-  height: 2em;
-  line-height: 2;
+.settings-row {
+  padding: 1em;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
 }
-.restore-btn {
-  background-color: #2292CD;
-  height: 2em;
-  line-height: 2;
-  margin: auto 1em;
+.settings-row:nth-child(odd) {
+  background-color: #193954;
 }
-#settings-users > h3 {
+.settings-backup {
+  padding-left: 1em;
+}
+.settings-box {
+  background-color: #193954;
+  color: #fff;
+  border-radius: 0.5em;
+  margin: 1em;
+  padding: 1em 0;
+  height: 25em;
+  overflow: auto;
+  text-indent: 1em;
+  box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.5);
+}
+.settings-box > small {
   margin-left: 1em;
 }
-#settings-users > p {
-  margin-left: 2em;
+.settings-box-wrap {
+  background-color: #193954;
+  padding: 1em;
+  margin-bottom: 2em;
+  border-radius: 0.5em;
+  box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.5);
+}
+.settings-user-list-wrap {
+  padding: 1em;
+  max-height: 35em;
+  overflow: auto;
+}
+.server-log-pre {
+  margin: 0 !important;
+  padding: 1.25em 0;
+}
+.server-log-pre:nth-child(odd) {
+  background-color: #16344D;
+}
+.server-log-pre > span:first-child {
+  margin-right: 1em;
+}
+.server-log-pre > span:last-child {
+  float: right;
+  margin-right: 1em;
 }
 .settings-user-list-nav {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-justify-content: space-around;
-  -ms-flex-pack: distribute;
-  justify-content: space-around;
-  color: #476F91;
-}
-.settings-user-list {
-  list-style: none;
-  padding: 0;
-  max-height: 20em;
-  overflow: auto;
-}
-.settings-user-list li {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
+  -webkit-flex-flow: row nowrap;
+  -ms-flex-flow: row nowrap;
+  flex-flow: row nowrap;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
   justify-content: space-between;
-  min-height: 3em;
 }
-.settings-user-list li:nth-child(even) {
-  background-color: #21425E;
+.settings-user-list {
+  list-style: none;
+  padding: 0;
 }
-.settings-user-list li > p {
-  word-break: break-all;
-  width: 100%;
-  padding: 0 1em;
-  text-align: center;
-  white-space: inherit;
+.settings-user-list > li {
+  height: 3em;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: row nowrap;
+  -ms-flex-flow: row nowrap;
+  flex-flow: row nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
 }
-.settings-user-list li > select {
-  width: 100%;
+.settings-user-list > li:nth-child(odd) {
+  background-color: #1A3852;
+}
+.settings-user-list-item {
+  width: 33%;
   margin: auto;
 }
-.settings-delet-user{
-  background-color: #172E42;
-}
-.settings-delete-server-btn{
-  background-color: #D50000;
-}
-/* bootstrap class override */
 
-.panel {
-  background-color: #122C42;
-  border: 0;
-}
-.panel-heading {
-  background-color: inherit !important;
-  border: 0;
-  height: 4em;
-  cursor: pointer;
-}
-.panel-heading:hover {
-  background-color: #21384B !important;
-  -webkit-transition: all 0.3s ease;
-  transition: all 0.3s ease;
-}
-.panel-heading h4 {
-  color: #fff;
-  font-weight: bold;
-  line-height: 2;
-  text-indent: 4em;
-}
-.panel-body {
-  border-top: 0.1em solid rgba(255, 255, 255, 0.2) !important;
-}
-.nav-tabs {
-  border-bottom: 0.1em solid rgba(255, 255, 255, 0.1);
-}
-.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
-  color: #fff;
-  cursor: default;
-  background-color: #0C253A;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  ;
-  border-bottom-color: transparent;
-}
-.nav-tabs>li {
-  width: 40%;
-  text-align: center;
-}
-.nav-tabs>li:first-child {
-  margin-left: 3em;
-}
-.nav-tabs>li>a {
-  margin-right: 2px;
-  line-height: 1.42857143;
-  border: 1px solid transparent;
-  border-radius: 0;
-  cursor: pointer;
-  font-weight: bold;
-}
-.nav-tabs>li>a:hover {
-  background-color: transparent;
-}
+/* ACCOUNT SETTINGS */
 
-/* bootstrap end */
+.account-user-info {
+  padding: 1em;
+}
+.account-settings-user-info-wrap {
+  background-color: #193954;
+  border-radius: 0.5em;
+  margin: 2em 0 1em;
+  padding: 1em 0;
+  box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.5);
+}
+.upload-avatar {
+  background: #1986D9 url(../img/button/upload-white.png) 10% 50% no-repeat;
+  text-indent: 2em;
+}

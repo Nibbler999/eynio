@@ -55,36 +55,22 @@
           controllerAs: 'schedule'
         })
         .state('frame.server-settings', {
-          views: {
-            'settings': {
-              url: '/server',
-              templateUrl: 'html_route/settings/server_template.html ',
-              controller: 'SettingsServerCtrl',
-              controllerAs: 'server'
-            }
-          }
+          url: '/server',
+          templateUrl: 'html_route/settings/server_template.html ',
+          controller: 'SettingsServerCtrl',
+          controllerAs: 'server'
         })
         .state('frame.account-settings', {
-          views: {
-            'settings': {
-              url: '/account',
-              templateUrl: 'html_route/settings/account_template.html',
-              controller: 'SettingsAccountCtrl',
-              controllerAs: 'acc'
-            }
-          }
+          url: '/account',
+          templateUrl: 'html_route/settings/account_template.html',
+          controller: 'SettingsAccountCtrl',
+          controllerAs: 'acc'
         })
-        .state('frame.downloads', {
-          views: {
-            'settings': {
-              url: '/downloads',
-              templateUrl: 'html_route/settings/downloads_template.html'
-            }
-          }
-        })
-        .state('frame.accessdenied', {
-          url: '/denied',
-          templateUrl: 'html_route/denied_template.html'
+        .state('frame.all-rooms', {
+          url: '/all-rooms',
+          templateUrl: 'html_route/all_rooms_template.html',
+          controller: 'AllRoomsCtrl',
+          controllerAs: 'allRooms'
         });
     });
 }());

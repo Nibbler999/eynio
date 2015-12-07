@@ -59,7 +59,8 @@
 }
 .schedule-edit-mode {
   margin: auto;
-  animation: expandAddCategory 0.3s ease;
+  -webkit-animation: expandAddCategory 0.3s ease;
+          animation: expandAddCategory 0.3s ease;
 }
 .save-edit-schedule-btn {
   height: 2.5em;

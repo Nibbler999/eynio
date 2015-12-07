@@ -182,7 +182,8 @@
 .new-scene-sun-time:disabled ~ .new-scene-sun-label, .new-scene-day:disabled ~ .new-scene-day-label, .form-number:disabled {
   opacity: 0.35;
   cursor: no-drop;
-  transition: all 0.3s ease;
+  -webkit-transition: all 0.3s ease;
+          transition: all 0.3s ease;
 }
 .new-scene-selected-devices {
   max-height: 15%;

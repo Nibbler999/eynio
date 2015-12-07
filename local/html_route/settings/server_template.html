@@ -1,181 +1,182 @@
-<section class="settings-title">
-  <h3>Server Settings</h3>
-  <a ui-sref="frame" class="settings-close">
-    <img src="img/button/cross.png" class="settings-close-btn">
+<div class="settings-title">
+  <a ui-sref="frame.server-settings" ui-sref-active="settings-active-btn">
+    <h3>Server Settings</h3>
   </a>
-</section>
+</div>
 
-<section class="settings-server">
-  <ul id="myTab" class="nav nav-tabs">
-    <li class="active">
-      <a data-target="#settings-general" data-toggle="tab">
-      General
-    </a>
-    </li>
-  </ul>
+<div class="settings-toggle-btns-wrap">
+  <p ng-click="settingsToggleBtn = false" ng-class="{'color-white' : !settingsToggleBtn}">General Settings</p>
+  <div class="active-line-indicator settings-toggle-btns-indicator" ng-class="{'slide-line-indicator' : settingsToggleBtn}"></div>
+</div>
 
-  <div id="myTabContent" class="tab-content">
-
-    <!-- user settings !-->
-    <section class="tab-pane fade" id="settings-users">
-      <h3>Invite</h3>
-      <p class="color-transparent">Invite Users to Your Server</p>
-
-      <div class="settings-tab">
-        <form type="form" autocomplete="off" ng-submit="server.inviteUser()">
-          <div class="form-input-wrap">
-            <label for="invite-email" class="form-label">Email</label>
-            <input type="email" class="form-input" id="invite-email" name="Email" required>
-
-            <label for="invite-msg" class="form-label">Short Message</label>
-            <input type="text" class="form-input" id="invite-msg" name="Invite Message" required>
-
-            <label for="invite-status" class="form-label">Choose Status</label>
-            <select class="form-select" id="invite-status">
-              <option value="OWNER">Owner</option>
-              <option value="ADMIN">Admin</option>
-              <option value="USER">User</option>
-            </select>
-          </div>
-          <div class="settings-btn-wrap">
-            <button type="submit" class="settings-btn settings-save-btn">
-              Save
-            </button>
-            <button type="reset" class="settings-btn settings-cancel-btn">
-              Cancel
-            </button>
-          </div>
-        </form>
-      </div>
-
-      <h3>User list</h3>
-      <div class="settings-tab">
-        <div class="settings-user-list-nav">
-          <p>Email</p>
-          <p>Name</p>
-          <p>Status</p>
-        </div>
-
-        <ul class="settings-user-list">
-          <li ng-repeat="user in server.userList">
-            <p>{{user.email}}</p>
-            <p>{{user.username}}</p>
-            <select class="form-select" ng-model="user.level" ng-change="server.changeUserLevel(user.email, user.level)">
-              <option value="OWNER">Owner</option>
-              <option value="ADMIN">Admin</option>
-              <option value="USER">User</option>
-              <option value="DELETE" class="settings-delet-user">Delete</option>
-            </select>
-          </li>
-        </ul>
-      </div>
-
-    </section>
-
-    <!-- general settings !-->
-    <section class="tab-pane fade in active" id="settings-general">
-      <div class="settings-tab">
-        <div class="settings-tab-hlp">
-          <h3>Server Status</h3>
-          <div class="settings-tab-hlp">
-            <button ng-if="!server.upToDate" type="button" class="button update-btn" ng-click="server.updateApp()">
-              Update
-            </button>
-            <button ng-if="server.upToDate" type="button" class="button reboot-btn" ng-click="server.updateApp()">
-              Reboot
-            </button>
-          </div>
-        </div>
-        <hr>
-        <div class="settings-tab-hlp">
-          <h4>Up to date:
-            <span ng-class="{'color-green':server.upToDate,'color-orange': !server.upToDate}">
-              <span ng-if="server.upToDate">Yes</span>
-              <span ng-if="!server.upToDate">No</span>
-              <span ng-if="server.upToDate === 'undefined'">Check failed</span>
-            </span>
-          </h4>
-          <h4>Version:
-            <span class="color-transparent">{{server.serverInfoData.version}}</span>
-          </h4>
-        </div>
-      </div>
-
-      <div class="settings-tab-default">
-        <form type="form" id="change-server-name-form" autocomplete="off" ng-submit="server.changeServerName(server.serverInfoData.name)">
-          <input type="text" id="settings-server-name" placeholder="Server name" class="form-input" ng-model="server.serverInfoData.name">
-        </form>
-        <button type="submit" form="change-server-name-form" class="button restore-btn">Rename</button>
-      </div>
-
-      <div class="settings-tab">
-        <button type="button" class="server-log-btn" data-toggle="collapse" data-target="#server-log">
-          Server log
-        </button>
-
-        <div id="server-log" class="collapse">
-          <pre class="server-log-pre color-transparent">{{server.serverLog}}</pre>
-        </div>
-      </div>
-
-      <div class="settings-tab">
-        <div class="server-info-wrap">
-          <p>Ping:
-            <span class="color-transparent">{{server.serverInfoData.ping}}</span>
-          </p>
-          <p>IP:
-            <span class="color-transparent">{{server.serverInfoData.ip}}</span>
-          </p>
-          <p>External IP:
-            <span class="color-transparent">{{server.serverInfoData.external_ip}}</span>
-          </p>
-        </div>
-
-        <div class="server-info-wrap">
-          <p>OS:
-            <span class="color-transparent">{{server.serverInfoData.node_platform}}</span>
-          </p>
-          <p>Node version:
-            <span class="color-transparent">{{server.serverInfoData.node_version}}</span>
-          </p>
-          <p>Node arch:
-            <span class="color-transparent">{{server.serverInfoData.node_arch}}</span>
-          </p>
-        </div>
-        <div>
-          <h3>Bridges:</h3>
-          <p>
-            <span class="color-blue" ng-repeat="bridge in server.bridges">{{bridge.name}}<span ng-hide="$index == server.bridges.length-1">,</span> </span>
-          </p>
-        </div>
-      </div>
-
-      <div class="settings-tab-default">
-        <h3>Server Backup</h3>
-        <div class="settings-tab-hlp">
-          <input type="file" id="restore-server" accept="application/json" onchange="angular.element(this).scope().restore(this)">
-          <label for="restore-server" class="button restore-btn">
-            Restore
-          </label>
-          <button type="button" class="button reboot-btn" data-toggle="collapse" data-target="#backup">
-            Backup
-          </button>
-        </div>
-      </div>
-      <div id="backup" class="collapse settings-backup">
-        <h4>Download your backup form <a id="download-backup" download="nhome-config.json">HERE</a>
-      </div>
-      <div class="settings-tab">
-        <h3>Server Location</h3>
-        <google-maps></google-maps>
-
-        <div class="custom-input-wrap">
-          <h3>Use IP address</h3>
-          <input type="checkbox" id="google-maps-IP" ng-click="server.useIpAddress()">
-          <label for="google-maps-IP" class="checkbox-label"></label>
-        </div>
-      </div>
-
-    </section>
+<!-- general server settings !-->
+<div class="settings-content-wrap" ng-hide="settingsToggleBtn">
+  <div class="row settings-row">
+    <div class="col-xs-12 col-sm-12 col-md-10 settings-tab-hlp">
+      <h4>Server Status</h4>
+      <h4>Up to date:
+        <span ng-class="{'color-green':server.upToDate,'color-orange': !server.upToDate}">
+          <span ng-if="server.upToDate">Yes</span>
+          <span ng-if="!server.upToDate">No</span>
+          <span ng-if="server.upToDate === 'undefined'">Check failed</span>
+        </span>
+      </h4>
+      <h4>Version:
+        <span class="color-transparent">{{server.serverInfoData.version}}</span>
+      </h4>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-2 settings-tab-hlp">
+      <button ng-if="!server.upToDate" type="button" class="button blue-btn" ng-click="server.updateApp()">
+        Update
+      </button>
+      <button ng-if="server.upToDate" type="button" class="button orange-btn" ng-click="server.updateApp()">
+        Reboot
+      </button>
+    </div>
   </div>
-</section>
+
+  <div class="row settings-row">
+    <h4>Server Info</h4>
+    <p>Ping:
+      <span class="color-transparent">{{server.serverInfoData.ping}}</span>
+    </p>
+    <p>IP:
+      <span class="color-transparent">{{server.serverInfoData.ip}}</span>
+    </p>
+    <p>External IP:
+      <span class="color-transparent">{{server.serverInfoData.external_ip}}</span>
+    </p>
+    <p>OS:
+      <span class="color-transparent">{{server.serverInfoData.node_platform}}</span>
+    </p>
+    <p>Node version:
+      <span class="color-transparent">{{server.serverInfoData.node_version}}</span>
+    </p>
+    <p>Node arch:
+      <span class="color-transparent">{{server.serverInfoData.node_arch}}</span>
+    </p>
+  </div>
+
+  <div class="row settings-row">
+    <div class="col-xs-12 col-sm-8 col-lg-9 settings-tab-hlp">
+      <h4>Bridges:</h4>
+      <p>
+        <span class="color-blue" ng-repeat="bridge in server.bridges">{{bridge.name}}
+          <span ng-hide="$index == server.bridges.length-1">,</span>
+        </span>
+      </p>
+    </div>
+    <div class="col-xs-12 col-sm-4 col-lg-3 settings-tab-hlp">
+      <form type="form" id="change-server-name-form" autocomplete="off" ng-submit="server.changeServerName(server.serverInfoData.name)">
+        <input type="text" id="settings-server-name" placeholder="Server name" class="form-input" ng-model="server.serverInfoData.name">
+      </form>
+      <button type="submit" form="change-server-name-form" class="button blue-btn">Rename</button>
+    </div>
+  </div>
+
+  <div class="row settings-row">
+    <div class="col-xs-12 col-sm-12 col-md-6 settings-tab-hlp">
+      <h4>Server Backup</h4>
+      <input type="file" id="restore-server" accept="application/json" onchange="angular.element(this).scope().restore(this)">
+      <label for="restore-server" class="button orange-btn">
+        Restore
+      </label>
+      <button type="button" class="button blue-btn" data-toggle="collapse" data-target="#backup">
+        Backup
+      </button>
+    </div>
+  </div>
+
+  <div id="backup" class="collapse settings-backup">
+    <h4 class="color-white">Download your backup form <a id="download-backup" download="nhome-config.json">HERE</a>
+  </div>
+  <div>
+    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-4 settings-box">
+      <h3>Server Location</h3>
+      <small class="color-transparent">Set your location according to the location of your server</small>
+      <google-maps></google-maps>
+
+      <div class="custom-input-wrap">
+        <h3>Use IP address</h3>
+        <input type="checkbox" id="google-maps-IP" ng-click="server.useIpAddress()">
+        <label for="google-maps-IP" class="checkbox-label"></label>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-7 settings-box">
+      <h3>Server Log</h3>
+      <div id="server-log">
+        <p class="server-log-pre" ng-repeat="log in server.serverLog">
+          <span class="color-blue">{{log.name}}</span>
+          <span class="color-white">{{log.msg}} </span>
+          <span class="color-transparent">{{log.time * 1000 | date: 'd/MMM/yyyy HH:mm:ss'}}</span>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <button ng-show="server.activeUser.level === 'OWNER'" type="button" class="button red-btn" title="double click to confirm" ng-click="server.deleteServer()">
+    Delete Server
+  </button>
+</div>
+
+<!-- user settings !-->
+<div class="settings-content-wrap" ng-show="settingsToggleBtn">
+  <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 settings-box-wrap">
+    <h3>Invite User</h3>
+    <small class="color-transparent">Invite users to your server</small>
+
+    <form type="form" autocomplete="off" ng-submit="server.inviteUser()">
+      <div class="form-input-wrap">
+        <label for="invite-email" class="form-label">Email</label>
+        <input type="email" class="form-input" id="invite-email" name="Email" required>
+
+        <label for="invite-msg" class="form-label">Short Message</label>
+        <input type="text" class="form-input" id="invite-msg" name="Invite Message" required>
+
+        <label for="invite-status" class="form-label">Choose Status</label>
+        <select class="form-select" id="invite-status">
+          <option value="ADMIN">Admin</option>
+          <option value="OWNER">Owner</option>
+          <!-- <option value="USER">User</option> !-->
+        </select>
+      </div>
+      <br>
+      <button type="submit" class="button  blue-btn">
+        Invite
+      </button>
+      <button type="reset" class="button orange-btn">
+        Cancel
+      </button>
+    </form>
+  </div>
+
+  <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7 settings-user-list-wrap">
+    <h3>User list</h3>
+    <div class="settings-user-list-nav">
+      <p>Email</p>
+      <p>Name</p>
+      <p>Status</p>
+    </div>
+
+    <ul class="settings-user-list">
+      <li ng-repeat="user in server.userList">
+        <p class="settings-user-list-item">{{user.email}}</p>
+        <p class="settings-user-list-item">{{user.username}}</p>
+        <select class="form-select settings-user-list-item" ng-model="user.level" ng-change="server.changeUserLevel(user.email, user.level)">
+          <option value="OWNER">Owner</option>
+          <option value="ADMIN">Admin</option>
+          <option value="USER">User</option>
+          <option value="DELETE" class="settings-delet-user">Delete</option>
+        </select>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="custom-modal-window leave-server-modal">
+  <div class="leave-server-content-wrap">
+    <h2 class="color-white">You're about to leave server.</h2>
+    <h3 class="color-white">Choose where you wan't to connect</h3>
+    <button type="button" ng-repeat="server in server.leveServers" class="button leve-server-btn" ng-click="God.switchServer(server)">{{server.name}}</button>
+  </div>
+</div>
