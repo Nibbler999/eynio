@@ -37,8 +37,7 @@
         });
         sessionStorage.removeItem('newServerName');
       };
-      //Set user avatar
-      //document.querySelector('.user-avatar').style.backgroundImage = 'url(' + God.userInfoData.avatar + ')';
+
       if (sessionStorage.sessionActionLog) {
         God.sessionActionLog = JSON.parse(sessionStorage.sessionActionLog)[God.activeServer.id];
       } else {
@@ -88,6 +87,15 @@
         socket.emit('getDevices', 'sensor', function(sensors) {
           God.allSensors = sensors
           filterSensorsByCatId(God.activeRoom.id);
+        });
+
+        /* sensor value change */
+        socket.on('sensorValue', function(sensorChange) {
+          angular.forEach(God.allSensors, function(sensor) {
+            if (sensor.id === sensorChange.id) {
+              sensor.value = sensorChange.value;
+            }
+          });
         });
       };
 

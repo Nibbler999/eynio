@@ -18,9 +18,9 @@
       dashboard.allLights = [];
       dashboard.allThermos = [];
       dashboard.allShutters = [];
-      dashboard.allTVcustomRemotes = [];
-      dashboard.allACcustomRemotes = [];
-      dashboard.allMEDIAcustomRemotes = [];
+      dashboard.allTvRemotes = [];
+      dashboard.allAcRemtoes = [];
+      dashboard.allMediaRemotes = [];
       dashboard.allCameras = [];
 
 
@@ -44,11 +44,11 @@
 
       var customRemotesSortByType = function(remote) {
         if (remote.type.toLowerCase() === 'tv') {
-          dashboard.allTVcustomRemotes.push(remote);
+          dashboard.allTvRemotes.push(remote);
         } else if (remote.type.toLowerCase() === 'ac') {
-          dashboard.allACcustomRemotes.push(remote);
+          dashboard.allAcRemtoes.push(remote);
         } else if (remote.type.toLowerCase() === 'media') {
-          dashboard.allMEDIAcustomRemotes.push(remote);
+          dashboard.allMediaRemotes.push(remote);
         }
       };
 
@@ -87,7 +87,7 @@
           dashboard.liveImage = src;
         }
       });
-      
+
       /* full screen for cameras */
       dashboard.fullScreen = function() {
         dataService.fullScreen(liveStreamImg);
@@ -111,9 +111,9 @@
         dashboard.allSwitches = [];
         dashboard.allThermos = [];
         dashboard.allShutters = [];
-        dashboard.allTVcustomRemotes = [];
-        dashboard.allACcustomRemotes = [];
-        dashboard.allMEDIAcustomRemotes = [];
+        dashboard.allTvRemotes = [];
+        dashboard.allAcRemtoes = [];
+        dashboard.allMediaRemotes = [];
         dashboard.allCameras = [];
 
         filterDevices(catId);
@@ -121,7 +121,7 @@
 
       /* get data */
       var allDev = dataService.allDev();
-      var customRemotes = dataService.customRemotes();
+      var customRemotes = dataService.allCustomRemotes();
       if (sessionStorage.activeRoom) {
         filterDevices(JSON.parse(sessionStorage.activeRoom).id);
       } else {
@@ -132,7 +132,7 @@
         dataService.dataPending().then(function() {
 
           allDev = dataService.allDev();
-          customRemotes = dataService.customRemotes();
+          customRemotes = dataService.allCustomRemotes();
           if (sessionStorage.activeRoom) {
             filterDevices(JSON.parse(sessionStorage.activeRoom).id);
           } else {

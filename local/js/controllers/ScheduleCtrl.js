@@ -202,20 +202,32 @@
         }
       };
 
-      /* wait for socket */
+      /* get data */
       var allDev = dataService.allDev();
-
+      var allRemotes = dataService.allCustomRemotes();
+      /* wait on socket to connect than get data */
       if (!allDev) {
         dataService.dataPending().then(function() {
+
           allDev = dataService.allDev();
-          schedule.allSwitches = dataService.switches();
-          schedule.allLights = dataService.lights();
-          schedule.allTvRemotes = dataService.TVcustomRemotes();
+          allRemotes = dataService.allCustomRemotes();
+
+          schedule.allLights = dataService.sortDevicesByType(allDev, 'light');
+          schedule.allSwitches = dataService.sortDevicesByType(allDev, 'switch');
+          schedule.allShutters = dataService.sortDevicesByType(allDev, 'shutter');
+
+          schedule.allTvRemotes = dataService.sortRemotesByType(allRemotes, 'tv');
         });
       } else {
-        schedule.allSwitches = dataService.switches();
-        schedule.allLights = dataService.lights();
-        schedule.allTvRemotes = dataService.TVcustomRemotes();
+
+        allDev = dataService.allDev();
+        allRemotes = dataService.allCustomRemotes();
+
+        schedule.allLights = dataService.sortDevicesByType(allDev, 'light');
+        schedule.allSwitches = dataService.sortDevicesByType(allDev, 'switch');
+        schedule.allShutters = dataService.sortDevicesByType(allDev, 'shutter');
+
+        schedule.allTvRemotes = dataService.sortRemotesByType(allRemotes, 'tv');
       }
 
     }]);

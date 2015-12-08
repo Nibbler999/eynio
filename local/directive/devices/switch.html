@@ -1,4 +1,8 @@
 <div class="device-wrap">
+  <span class="device-add-to-favorites">
+    <input type="checkbox" id="add-to-favorites-{{sinfo.id}}" ng-model="sinfo.favorites" ng-chnage="toggleAddToFavorites(sinfo.favorites, sinfo.id)">
+    <label for="add-to-favorites-{{sinfo.id}}" class="device-add-to-favorites-label" title="add to favorites"></label>
+  </span>
   <div class="device-header">
     <img ng-src="{{switchIcon}}" class="device-icon" ng-click="toggleDevicePowerState(sinfo.id)" title="toggle state">
     <div class="device-content-data">

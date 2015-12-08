@@ -37,22 +37,7 @@
     <!-- side bar !-->
     <section class="frame-sidebar">
       <div class="dropdown server-dropdown">
-        <div class="active-server-btn" id="dLabel" role="button" data-toggle="dropdown" data-target="#">
-          <a>
-          {{God.activeServer.name}}
-        </a>
-          <i>
-          <img src="img/button/chevron-down.png">
-        </i>
-        </div>
 
-        <ul class="dropdown-menu server-dropdown-ul" role="menu" aria-labelledby="dLabel">
-          <li ng-repeat="server in God.allServers" ng-class="{'server-status-online': server.online, 'server-status-offline': !server.online}">
-            <a href="" ng-click="God.switchServer(server)">
-              {{server.name}}
-            </a>
-          </li>
-        </ul>
       </div>
 
       <a ui-sref="frame.devices" class="sidebar-nav-btn devices-btn" ui-sref-active="devices-btn-active">

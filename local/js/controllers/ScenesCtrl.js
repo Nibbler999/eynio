@@ -197,8 +197,8 @@
               sceneObj.id = scene.sceneForEdit.id;
               socket.emit('updateScene', sceneObj, function(sceneEdited) {
                 if (sceneEdited) {
-                  angular.forEach(scene.allScenes, function(sce){
-                    if(sce.id === sceneEdited.id){
+                  angular.forEach(scene.allScenes, function(sce) {
+                    if (sce.id === sceneEdited.id) {
                       scene.allScenes.splice(scene.allScenes.indexOf(sce), 1);
                       scene.allScenes.push(sceneEdited);
                     }
@@ -257,24 +257,32 @@
           console.log(scene.actionsArr);
         });
 
-        /* get devices from server */
+        /* get data */
         var allDev = dataService.allDev();
-        console.log(allDev);
+        var allRemotes = dataService.allCustomRemotes();
+        /* wait on socket to connect than get data */
         if (!allDev) {
           dataService.dataPending().then(function() {
-            allDev = dataService.allDev();
 
-            scene.allScenes = dataService.scenes();
-            scene.allSwitches = dataService.switches();
-            scene.allLights = dataService.lights();
-            scene.allTvRemotes = dataService.TVcustomRemotes();
-            console.log(scene.allLights);
+            allDev = dataService.allDev();
+            allRemotes = dataService.allCustomRemotes();
+
+            scene.allLights = dataService.sortDevicesByType(allDev, 'light');
+            scene.allSwitches = dataService.sortDevicesByType(allDev, 'switch');
+            scene.allShutters = dataService.sortDevicesByType(allDev, 'shutter');
+
+            scene.allTvRemotes = dataService.sortRemotesByType(allRemotes, 'tv');
           });
         } else {
-          scene.allScenes = dataService.scenes();
-          scene.allSwitches = dataService.switches();
-          scene.allLights = dataService.lights();
-          scene.allTvRemotes = dataService.TVcustomRemotes();
+
+          allDev = dataService.allDev();
+          allRemotes = dataService.allCustomRemotes();
+
+          scene.allLights = dataService.sortDevicesByType(allDev, 'light');
+          scene.allSwitches = dataService.sortDevicesByType(allDev, 'switch');
+          scene.allShutters = dataService.sortDevicesByType(allDev, 'shutter');
+
+          scene.allTvRemotes = dataService.sortRemotesByType(allRemotes, 'tv');
         }
 
       }

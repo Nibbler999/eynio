@@ -1,4 +1,11 @@
 <div class="device-wrap">
+  <span class="device-add-to-favorites">
+    <input type="checkbox" id="add-to-favorites-{{linfo.id}}" ng-model="linfo.favorites" ng-chnage="toggleAddToFavorites(linfo.favorites, linfo.id)">
+    <label for="add-to-favorites-{{linfo.id}}" class="device-add-to-favorites-label" title="add to favorites"></label>
+  </span>
+  <div class="device-blacklisted" ng-show="linfo.blacklisted">
+    <button type="button" name="unblacklist" title="unblacklist device" class="button unblacklist-btn" ng-click="unblacklistDev(linfo.id)">Device locked</button>
+  </div>
   <div class="device-header">
     <img ng-src="{{lightIcon}}" class="device-icon" ng-click="toggleDevicePowerState(linfo.id)" title="toggle state">
     <div class="device-content-data">

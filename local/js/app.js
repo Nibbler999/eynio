@@ -71,6 +71,12 @@
           templateUrl: 'html_route/all_rooms_template.html',
           controller: 'AllRoomsCtrl',
           controllerAs: 'allRooms'
-        });
+        })
+        .state('frame.favorites', {
+          url: '/favorites',
+          templateUrl: 'html_route/favorites_template.html',
+          controller: 'FavoritesCtrl',
+          controllerAs: 'favorites'
+        })
     });
 }());

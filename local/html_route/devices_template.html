@@ -57,12 +57,12 @@
   </div>
 </section>
 <!-- show all remotes !-->
-<section class="display-devices" ng-if="device.allCustomRemotes.length">
+<section class="display-devices" ng-if="device.allTvRemotes.length">
   <h4>Remotes</h4>
   <hr>
   <div class="row display-devices-row" id="remotes">
 
-    <remote ng-repeat="cRemote in device.allCustomRemotes track by cRemote.id" crinfo="cRemote" ng-click="device.editDevice(cRemote)"></remote>
+    <remote ng-repeat="cRemote in device.allTvRemotes track by cRemote.id" crinfo="cRemote" ng-click="device.editDevice(cRemote)"></remote>
   </div>
 </section>
 <!-- show all cameras !-->
@@ -88,6 +88,11 @@
   <section class="custom-modal-wrap">
     <div class="edit-device-rename">
       <h3>Device Settings</h3>
+      <span class="color-transparent">
+        Add to favorites
+        <input type="checkbox" id="add-to-favorites" ng-model="device.activeDevice.favorites">
+        <label for="add-to-favorites" title="add to favorites"></label>
+      </span>
       <div class="form-input-wrap">
         <label for="rename-device" class="form-label">
           Rename device
@@ -116,7 +121,7 @@
 
           <label class="form-label" for="ir-output-remote">IR Output</label>
           <select id="ir-output-remote" class="form-select" ng-model="device.activeDevice.deviceid">
-            <option ng-repeat="remote in device.remotes" value={{remote.id}}>
+            <option ng-repeat="remote in device.bridges" value={{remote.id}}>
               {{remote.name}}
             </option>
           </select>
@@ -140,10 +145,10 @@
       </div>
 
       <div class="edit-devices-btn-wrap">
-        <button type="" class="button settings-cancel-btn" ng-click="device.deleteDevice(); device.closeCustomModal()">
+        <button type="" class="button red-btn" ng-click="device.deleteDevice(); device.closeCustomModal()">
           Delete
         </button>
-        <button type="submit" class="button settings-save-btn" ng-click="device.saveDeviceOptions(); device.closeCustomModal()">
+        <button type="submit" class="button blue-btn" ng-click="device.saveDeviceOptions(); device.closeCustomModal()">
           Save
         </button>
       </div>
@@ -259,7 +264,7 @@
       <hr>
       <div class="add-remote-radio-select">
         <h4>Remote bridge</h4>
-        <span ng-repeat="remote in device.remotes">
+        <span ng-repeat="remote in device.bridges">
           <input type="radio" id="add-remote-bridge-{{remote.id}}" value="{{remote.id}}" name="add-remote-bridge" class="form-radio" checked>
           <label for="add-remote-bridge-{{remote.id}}" class="radio-label"></label>
           <i>{{remote.name}}</i>

@@ -1,0 +1,27 @@
+<div ng-repeat="category in allRooms.categories">
+  <div class="template-nav">
+    <div class="display-devices-row">
+      <h3>{{category.name}}</h3>
+    </div>
+    <div class="horizontal-line"></div>
+  </div>
+  <div class="display-devices-row">
+    <switch ng-repeat="switch in allRooms.switch[category.id]" sinfo="switch"></switch>
+    <light ng-repeat="light in allRooms.light[category.id]" linfo="light"></light>
+    <thermostat ng-repeat="thermo in allRooms.allThermos" tinfo="thermo"></thermostat>
+    <shutter ng-repeat="shutter in allRooms.allShutters" shinfo="shutter"></shutter>
+    <remote ng-repeat="cRemote in allRooms.allTVcustomRemotes" crinfo="cRemote"></remote>
+  </div>
+
+  <div class="display-devices-row">
+    <camera ng-repeat="camera in allRooms.camera[category.id]" cinfo="camera"></camera>
+  </div>
+</div>
+
+<section class="custom-modal-window cam-live-stream-modal">
+  <section class="custom-modal-wrap">
+    <img src="img/button/cross.png" class="close-live-stream-modal" ng-click="allRooms.stopLiveStream()">
+    <img ng-src={{allRooms.liveImage}} class="camera-live-stream">
+    <button type="button" ng-click="allRooms.fullScreen()" class="button full-screen-btn"></button>
+  </section>
+</section>

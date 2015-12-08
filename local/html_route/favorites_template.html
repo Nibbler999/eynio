@@ -1,0 +1,24 @@
+<div class="template-nav">
+  <div class="display-devices-row">
+    <h3>Favorites</h3>
+  </div>
+</div>
+<div class="display-devices-row">
+  <switch ng-repeat="switch in favorites.allSwitches" sinfo="switch"></switch>
+  <light ng-repeat="light in favorites.allLights" linfo="light"></light>
+  <thermostat ng-repeat="thermo in favorites.allThermos" tinfo="thermo"></thermostat>
+  <shutter ng-repeat="shutter in favorites.allShutters" shinfo="shutter"></shutter>
+  <remote ng-repeat="cRemote in favorites.allTvRemotes" crinfo="cRemote"></remote>
+</div>
+
+<div class="display-devices-row">
+  <camera ng-repeat="camera in favorites.allCameras" cinfo="camera"></camera>
+</div>
+
+<section class="custom-modal-window cam-live-stream-modal">
+  <section class="custom-modal-wrap">
+    <img src="img/button/cross.png" class="close-live-stream-modal" ng-click="favorites.stopLiveStream()">
+    <img ng-src={{favorites.liveImage}} class="camera-live-stream">
+    <button type="button" ng-click="favorites.fullScreen()" class="button full-screen-btn"></button>
+  </section>
+</section>

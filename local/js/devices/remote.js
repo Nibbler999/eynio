@@ -55,7 +55,15 @@
                 } else {
                   socket.emit('sendKey', remoteId, key);
                 }
-              }
+              };
+
+              scope.toggleAddToFavorites = function(favorites, devId) {
+                if (favorites) {
+                  socket.emit4('setDeviceProperty', devId, 'favorites', true);
+                } else {
+                  socket.emit4('setDeviceProperty', devId, 'favorites', false);
+                }
+              };
             };
 
             socket.on('IRKeyLearned', function(keyLearned) {
@@ -63,7 +71,7 @@
                 scope.crinfo.keys.push(keyLearned.key);
                 document.getElementById('remote-' + scope.crinfo.count + '-' + keyLearned.key).classList.remove('remote-btn-inactive');
 
-                if(quickKeys.indexOf(keyLearned.key) !== -1){
+                if (quickKeys.indexOf(keyLearned.key) !== -1) {
                   document.getElementById('remote-quick-' + scope.crinfo.count + '-' + keyLearned.key).classList.remove('remote-btn-inactive');
                 }
                 scope.learnKey = false;

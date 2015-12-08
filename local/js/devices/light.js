@@ -59,6 +59,14 @@
             }
           };
 
+          scope.unblacklistDev = function(devId) {
+            socket.emit('unblacklistDevice', devId, function(response) {
+              if (response) {
+                scope.linfo.blacklisted = false;
+              }
+            })
+          };
+
           if (scope.currentState === 'frame.devices') {
             return false;
           } else {
@@ -70,11 +78,11 @@
 
             /* set light to full white */
             scope.setLightWhite = function(lightId) {
-              socket.emit4('setLightColor', lightId, [0,0,1], 'hsl');
-              scope.linfo.state.hsl = [0,0,1];
+              socket.emit4('setLightColor', lightId, [0, 0, 1], 'hsl');
+              scope.linfo.state.hsl = [0, 0, 1];
             };
 
-            scope.setBrightness = function(lightId, brightness){
+            scope.setBrightness = function(lightId, brightness) {
               socket.emit4('setLightWhite', lightId, parseInt(brightness), 100);
             };
 
@@ -95,6 +103,14 @@
             };
             scope.toggleDevicePowerState = function(lightId) {
               socket.emit('toggleDevicePowerState', lightId);
+            };
+
+            scope.toggleAddToFavorites = function(favorites, devId) {
+              if (favorites) {
+                socket.emit4('setDeviceProperty', devId, 'favorites', true);
+              } else {
+                socket.emit4('setDeviceProperty', devId, 'favorites', false);
+              }
             };
           }
 

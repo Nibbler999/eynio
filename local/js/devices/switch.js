@@ -52,6 +52,14 @@
             scope.toggleDevicePowerState = function(devId) {
               socket.emit('toggleDevicePowerState', devId);
             };
+
+            scope.toggleAddToFavorites = function(favorites, devId) {
+              if (favorites) {
+                socket.emit4('setDeviceProperty', devId, 'favorites', true);
+              } else {
+                socket.emit4('setDeviceProperty', devId, 'favorites', false);
+              }
+            };
           }
 
           /* on switchState change state */

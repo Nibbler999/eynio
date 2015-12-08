@@ -1,4 +1,8 @@
 <div class="device-wrap" ng-class="{'full-remote': fullRemote, 'learning-mode': learningMode}">
+  <span class="device-add-to-favorites">
+    <input type="checkbox" id="add-to-favorites-{{crinfo.id}}" ng-model="crinfo.favorites" ng-chnage="toggleAddToFavorites(crinfo.favorites, crinfo.id)">
+    <label for="add-to-favorites-{{crinfo.id}}" class="device-add-to-favorites-label" title="add to favorites"></label>
+  </span>
   <div class="device-header">
     <img ng-src="img/device/remote.png" class="device-icon" ng-show="currentState === 'frame.devices'">
     <img ng-src="img/device/remote.png" class="device-icon" ng-click="fullRemote = true" title="full remote" ng-hide="currentState === 'frame.devices'">

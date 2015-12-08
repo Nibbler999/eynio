@@ -206,6 +206,43 @@
 .device-options-brightness{
   padding: 1em 0.5em;
 }
+.device-blacklisted{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  background-color: rgba(0, 0, 0, 0.65);
+}
+.unblacklist-btn{
+  position: absolute;
+  bottom: 1em;
+  right: 1em;
+  border: 0.1em solid #558CB9;
+  text-indent: 1em;
+  background: transparent url(../../img/button/lock.png) 5% 50% no-repeat;
+}
+.device-add-to-favorites{
+  position: absolute;
+  top: 1em;
+  right: 1em;
+}
+.device-add-to-favorites > label{
+    width: 1em;
+    height: 1em;
+    margin: 0;
+    cursor: pointer;
+    background: transparent url(../../img/button/favorite-hollow.png) 50% no-repeat;
+}
+
+.device-add-to-favorites > input:checked ~ label{
+  width: 1em;
+  height: 1em;
+  background: transparent url(../../img/button/favorite-white.png) 50% no-repeat;
+  box-shadow: none;
+  animation: popUp 0.5s ease;
+}
 /* DEVICE END */
 
 

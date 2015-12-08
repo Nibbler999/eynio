@@ -6,7 +6,9 @@
     .service('dataService', ['$q', '$rootScope', 'socket', function($q, $rootScope, socket) {
 
       // data
-      var allDev, allRemotes, allScenes, allCategories, allCustomRemotes, actionLog;
+      var allDev, allBlacklistedDev, allBridges, allScenes, allCategories, allRemotes, actionLog;
+
+      var activeUser, bridges, userList;
 
       var allSwitches = [];
       var allLights = [];
@@ -20,59 +22,57 @@
       var allACcutomRemotes = [];
       var allMEDIAcustomRemotes = [];
 
+      // connect to socket via net
       this.socketConnect = function(token, serverId) {
         var deferred = $q.defer();
         socket.connect(token, serverId);
         deferred.resolve();
         return deferred.promise;
       };
-
-      this.localSocketConnect = function(ip){
+      // connect to socket localy
+      this.localSocketConnect = function(ip) {
         var deferred = $q.defer();
         socket.connectLocal(ip);
         deferred.resolve();
         return deferred.promise;
       };
 
+      // get data form socket
       this.dataPending = function() {
         var deferred = $q.defer();
-
+        // get all devices
         socket.emit('getDevices', null, function(data) {
           console.log(data);
-          localStorage.devices = JSON.stringify(data);
-
-          for (var i = 0; i < data.length; i++) {
-            data[i].count = i;
-            data[i].scene_select = false;
-            data[i].schedule_select = false;
-          }
+          //localStorage.devices = JSON.stringify(data);
+          // for (var i = 0; i < data.length; i++) {
+          //   data[i].count = i;
+          //   data[i].scene_select = false;
+          //   data[i].schedule_select = false;
+          // }
 
           allDev = data;
-          sortDevicesByType(data);
           deferred.resolve();
         });
+        // get blacklist devices
+        socket.emit('getBlacklist', 'devices', function(blacklistedDev){
+          allBlacklistedDev = blacklistedDev;
+        });
+        // get reotes
         socket.emit('getCustomRemotes', null, function(customRemotes) {
           console.log(customRemotes);
-          if (customRemotes) {
-            for (var i = 0; i < customRemotes.length; i++) {
-              customRemotes[i].count = i;
-              if (customRemotes[i].type.toLowerCase() === 'tv') {
-                allTVcustomRemotes.push(customRemotes[i]);
-              } else if (customRemotes[i].type.toLowerCase() === 'ac') {
-                allACcutomRemotes.push(customRemotes[i]);
-              } else if (customRemotes[i].type.toLowerCase() === 'multi') {
-                allMEDIAcustomRemotes.push(customRemotes[i]);
-              }
-              allCustomRemotes = customRemotes;
-            }
-          }
+          allRemotes = customRemotes;
         });
-        socket.emit('getRemotes', null, function(remotes) {
-          allRemotes = remotes;
+        // get bridges
+        socket.emit('getRemotes', null, function(bridges) {
+          allBridges = bridges;
         });
         /* get scenes from server */
         socket.emit('getScenes', null, function(scenes) {
           allScenes = scenes;
+        });
+        /* get activity log, listen for updates */
+        socket.emit('getActionLog', null, function(log) {
+          actionLog = log.reverse();
         });
         socket.emit('getCategories', null, function(categories) {
           allCategories = categories;
@@ -82,15 +82,6 @@
       };
 
       var socketListeners = function() {
-
-        /* sensor value change */
-        /*socket.on('sensorValue', function(sensorChange) {
-          angular.forEach(God.allSensors, function(sensor) {
-            if (sensor.id === sensorChange.id) {
-              sensor.value = sensorChange.value;
-            }
-          });
-        });*/
 
         socket.on('cameraAdded', function(newCam) {
           console.log(newCam);
@@ -105,26 +96,26 @@
         });
         socket.on('customRemoteAdded', function(newRemote) {
           console.log(newRemote);
-          newRemote.count = allCustomRemotes.length;
-          allCustomRemotes.push(newRemote);
+          newRemote.count = allRemotes.length;
+          allRemotes.push(newRemote);
         });
         socket.on('customRemoteDeleted', function(delRemote) {
-          angular.forEach(allCustomRemotes, function(rem) {
+          angular.forEach(allRemotes, function(rem) {
             if (rem.id === delRemote) {
-              allCustomRemotes.splice(allCustomRemotes.indexOf(rem), 1);
+              allRemotes.splice(allRemotes.indexOf(rem), 1);
             }
           });
         });
         socket.on('customRemoteUpdated', function(updateRemote) {
-          angular.forEach(allCustomRemotes, function(remote) {
+          angular.forEach(allRemotes, function(remote) {
             if (remote.id === updateRemote.id) {
               remote = updateRemote;
             };
           });
         });
         socket.on('deviceRenamed', function(devId, devName) {
-          angular.forEach(allDev, function(dev){
-            if(dev.id === devId){
+          angular.forEach(allDev, function(dev) {
+            if (dev.id === devId) {
               dev.name = devName;
             }
           });
@@ -138,22 +129,21 @@
           });
         });
 
-        socket.on('deviceBlacklisted', function(devType, devId){
+        socket.on('deviceBlacklisted', function(devType, devId) {
           console.log(devType, devId);
-          angular.forEach(allDev, function(dev){
-            if(dev.id === devId){
+          angular.forEach(allDev, function(dev) {
+            if (dev.id === devId) {
               allDev.splice(allDev.indexOf(dev), 1);
             }
           });
         });
 
-        socket.on('deviceUnblacklisted', function(devType, devId){
+        socket.on('deviceUnblacklisted', function(devType, devId) {
           console.log(devType, devId);
         });
 
         serverSettingsData();
       };
-      var activeUser, bridges, userList;
 
       var serverSettingsData = function() {
 
@@ -169,24 +159,6 @@
         /* get full list of users */
         socket.emit('permServerGet', null, function(allUsers) {
           userList = allUsers;
-        });
-      };
-
-      var sortDevicesByType = function(allDev) {
-        angular.forEach(allDev, function(dev) {
-          if (dev.type === 'switch') {
-            allSwitches.push(dev);
-          } else if (dev.type === 'light') {
-            allLights.push(dev);
-          } else if (dev.type === 'thermostat') {
-            allThermos.push(dev);
-          } else if (dev.type === 'shutter') {
-            allShutters.push(dev);
-          } else if (dev.type === 'sensor') {
-            allSensors.push(dev);
-          } else if (dev.type === 'camera') {
-            allCameras.push(dev);
-          }
         });
       };
 
@@ -213,20 +185,11 @@
       this.cameras = function() {
         return allCameras;
       };
-      this.customRemotes = function() {
-        return allCustomRemotes;
-      };
-      this.TVcustomRemotes = function() {
-        return allTVcustomRemotes;
-      };
-      this.ACcustomRemotes = function() {
-        return allACcutomRemotes;
-      };
-      this.MEDIAcustomRemotes = function() {
-        return allMEDIAcustomRemotes;
-      };
-      this.remotes = function() {
+      this.allCustomRemotes = function() {
         return allRemotes;
+      };
+      this.bridges = function() {
+        return allBridges;
       };
       this.scenes = function() {
         return allScenes;
@@ -247,12 +210,45 @@
         return allCategories;
       };
 
-      this.getActionLog = function(){
-        return actionLog;
-      }
-      /* return scenes */
+      this.getActionLog = function() {
+          return actionLog;
+        }
+        /* return scenes */
       this.scenes = function() {
         return allScenes;
+      };
+
+      // helper functions
+      this.sortDevicesByType = function(devArr, type) {
+        var arr = [];
+        angular.forEach(devArr, function(dev) {
+          if (dev.type === type) {
+            arr.push(dev);
+          }
+        });
+        return arr;
+      };
+
+      this.sortRemotesByType = function(remotesArr, type) {
+        var arr = [];
+        angular.forEach(remotesArr, function(remote) {
+          if (remote.type === type) {
+            arr.push(remote);
+          }
+        });
+        return arr;
+      };
+
+      this.getBlacklistDevices = function(devArr){
+        var arr = [];
+
+        angular.forEach(devArr, function(dev){
+          if(dev.blacklisted){
+            arr.push(dev);
+          }
+        });
+
+        return arr;
       };
 
       this.blobToImage = function(imageData) {
