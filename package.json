@@ -28,7 +28,7 @@
     "mjpeg-consumer": "1.0.3",
     "motion": "0.2.2",
     "netatmo": "1.2.0",
-    "node-hue-api": "1.1.2",
+    "node-hue-api": "1.2.1",
     "node-lifx": "0.3.0",
     "node-schedule": "0.3.0",
     "node-uuid": "1.4.7",
