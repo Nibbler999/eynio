@@ -3,9 +3,9 @@
 
   angular
     .module('nHome')
-    .controller('FavoritesCtrl', ['$scope', '$rootScope', 'socket', 'dataService', function($scope, $rootScope, socket, dataService) {
+    .controller('MostUsedCtrl', ['$scope', '$rootScope', 'socket', 'dataService', function($scope, $rootScope, socket, dataService) {
 
-      var favorites = this;
+      var mostUsed = this;
 
       var contentWrapParent = document.querySelector('.frame-page-content-wrap');
       var liveStreamModal = document.querySelector('.cam-live-stream-modal');
@@ -15,11 +15,10 @@
 
       contentWrapParent.appendChild(liveStreamModal);
 
-
       /* Live stream */
       $scope.$on('requestLiveStream', function(event, camData) {
         liveStreamModal.style.display = 'block';
-        favorites.liveImage = camData.thumbnail;
+        mostUsed.liveImage = camData.thumbnail;
         console.log(camData);
 
         liveStreamId = camData.camId;
@@ -30,58 +29,61 @@
         if (liveStream) {
           var src = dataService.blobToImage(liveStream.image);
           if (!src) return;
-          favorites.liveImage = src;
+          mostUsed.liveImage = src;
         }
       });
 
       /* full screen for cameras */
-      favorites.fullScreen = function() {
+      mostUsed.fullScreen = function() {
         dataService.fullScreen(liveStreamImg);
       };
-      favorites.stopLiveStream = function() {
+      mostUsed.stopLiveStream = function() {
         socket.emit('stopStreaming', liveStreamId, liveStreamOptions);
         liveStreamModal.style.display = 'none';
       };
 
       /* stop live stream if not in all rooms */
       $rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
-        if (to.name !== 'frame.favorites' && liveStreamId) {
+        if (to.name !== 'frame.most-used' && liveStreamId) {
           socket.emit('stopStreaming', liveStreamId, liveStreamOptions);
           liveStreamModal.style.display = 'none';
         };
       });
 
+
       /* get data */
       var allDev = dataService.allDev();
-      favorites.allDev = dataService.allDev();
       var allRemotes = dataService.allCustomRemotes();
 
-      if (favorites.allDev) {
-        // add remotes in allDev
+      if (allDev) {
+        // add remotes to array
         // angular.forEach(allRemotes, function(rem) {
-        //   favorites.allDev.push(rem);
+        //   allDev.push(rem);
         // });
-
-        //filter by favorites
-        favorites.allDev = favorites.allDev.filter(function(dev) {
-          return dev.favorites;
+        // filter array by use count and sort
+        allDev = allDev.filter(function(dev) {
+          return dev.usecount
+        }).sort(function(a, b) {
+          return b.usecount - a.usecount;
         });
-      } else if (!favorites.allDev) {
+
+        mostUsed.allDev = allDev;
+      } else if (!allDev) {
         dataService.dataPending().then(function() {
-
           allDev = dataService.allDev();
-          favorites.allDev = dataService.allDev();
           allRemotes = dataService.allCustomRemotes();
-
-          // add remotes in allDev
+          // add remotes to array
           // angular.forEach(allRemotes, function(rem) {
-          //   favorites.allDev.push(rem);
+          //   allDev.push(rem);
           // });
-
-          //filter by favorites
-          favorites.allDev = favorites.allDev.filter(function(dev) {
-            return dev.favorites;
+          // filter array by use count and sort
+          allDev = allDev.filter(function(dev) {
+            return dev.usecount
+          }).sort(function(a, b) {
+            return b.usecount - a.usecount;
           });
+
+          mostUsed.allDev = allDev
         });
       }
     }]);

@@ -269,12 +269,12 @@
 /* bootstrap css override */
 
 .server-dropdown {
-margin: 1em auto;
+  margin: 1em auto;
   left: auto;
   width: 95%;
   background-color: #21384B;
 }
-.server-dropdown-ul{
+.server-dropdown-ul {
   width: 100%;
   background-color: #21384B;
 }
@@ -327,7 +327,7 @@ margin: 1em auto;
   background-image: url(../img/filter-icon/devices.png);
   background-size: 3em;
 }
-.devices-btn-active, .devices-btn:hover {
+.devices-btn.active, .devices-btn:hover {
   background-color: #1BA1DF;
   background-size: 10em;
   text-indent: 15em;
@@ -339,7 +339,7 @@ margin: 1em auto;
   background-image: url(../img/filter-icon/scenes.png);
   background-size: 3em;
 }
-.scenes-btn-active, .scenes-btn:hover {
+.scenes-btn.active, .scenes-btn:hover {
   background-color: #EC3535;
   background-size: 10em;
   text-indent: 15em;
@@ -351,7 +351,7 @@ margin: 1em auto;
   background-image: url(../img/filter-icon/schedule.png);
   background-size: 3em;
 }
-.schedule-btn-active, .schedule-btn:hover {
+.schedule-btn.active, .schedule-btn:hover {
   background-color: #12C9C6;
   background-size: 10em;
   text-indent: 15em;
@@ -363,7 +363,7 @@ margin: 1em auto;
   background-image: url(../img/filter-icon/security.png);
   background-size: 3em;
 }
-.security-btn-active, .security-btn:hover {
+.security-btn.active, .security-btn:hover {
   background-color: #E9A737;
   background-size: 10em;
   text-indent: 15em;
@@ -386,7 +386,7 @@ margin: 1em auto;
   overflow: auto;
   max-height: 40em;
 }
-.sidebar-activity-log > img{
+.sidebar-activity-log > img {
   padding: 5em;
 }
 .sidebar-activity-log ul {
@@ -665,6 +665,9 @@ margin: 1em auto;
 }
 .sensor-wrap {
   display: inherit;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
   align-items: center;
 }
 .info-sensor {
@@ -714,7 +717,7 @@ margin: 1em auto;
   border-radius: 0.35em !important;
   text-indent: -2.5em;
 }
-.category-dropdown-list{
+.category-dropdown-list {
   background-color: rgba(255, 255, 255, 0.75);
   color: #fff;
 }
@@ -730,7 +733,7 @@ margin: 1em auto;
   position: absolute;
   bottom: 0;
   background-color: #1B3449;
-  border-top: 0.2em solid #264A69;
+  border-top: 0.1em solid #264A69;
   height: 4em;
   width: 100%;
   display: -webkit-box;
@@ -746,26 +749,47 @@ margin: 1em auto;
   justify-content: space-between;
 }
 .filter-btn {
-  min-width: 8m;
+  min-width: 8em;
   height: 4em;
   line-height: 4;
   border-radius: 0;
+  margin: 0;
+  box-sizing: content-box;
   background-color: inherit;
   background-position: 10% 50%;
   background-repeat: no-repeat;
   text-indent: 3em;
+  color: #8295A6;
+  border-top: 0.3em solid transparent;
+}
+.filter-btn.active {
+  border-top: 0.3em solid #1986D9;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
 }
 .all-rooms-filter-btn {
   background-image: url(../img/button/list.png);
 }
+.all-rooms-filter-btn.active, .all-rooms-filter-btn:hover {
+  background-image: url(../img/button/list-white.png);
+}
 .most-used-filter-btn {
   background-image: url(../img/button/most-used.png);
+}
+.most-used-filter-btn.active, .most-used-filter-btn:hover {
+  background-image: url(../img/button/most-used-white.png);
 }
 .favorite-filter-btn {
   background-image: url(../img/button/favorite.png);
 }
+.favorite-filter-btn.active, .favorite-filter-btn:hover {
+  background-image: url(../img/button/favorite-white.png);
+}
 .recently-used-filter-btn {
   background-image: url(../img/button/recently.png);
+}
+.recently-used-filter-btn.active, .recently-used-filter-btn:hover {
+  background-image: url(../img/button/recently-white.png);
 }
 .settings-btn {
   background-image: url(../img/button/cog.png);

@@ -40,6 +40,14 @@
       // get data form socket
       this.dataPending = function() {
         var deferred = $q.defer();
+
+        // get reotes
+        socket.emit('getCustomRemotes', null, function(customRemotes) {
+          allRemotes = customRemotes;
+        });
+        socket.emit('getCategories', null, function(categories) {
+          allCategories = categories;
+        });
         // get all devices
         socket.emit('getDevices', null, function(data) {
           console.log(data);
@@ -51,16 +59,11 @@
           // }
 
           allDev = data;
-          deferred.resolve();
+          deferred.resolve(data);
         });
         // get blacklist devices
         socket.emit('getBlacklist', 'devices', function(blacklistedDev){
           allBlacklistedDev = blacklistedDev;
-        });
-        // get reotes
-        socket.emit('getCustomRemotes', null, function(customRemotes) {
-          console.log(customRemotes);
-          allRemotes = customRemotes;
         });
         // get bridges
         socket.emit('getRemotes', null, function(bridges) {
@@ -73,9 +76,6 @@
         /* get activity log, listen for updates */
         socket.emit('getActionLog', null, function(log) {
           actionLog = log.reverse();
-        });
-        socket.emit('getCategories', null, function(categories) {
-          allCategories = categories;
         });
         socketListeners();
         return deferred.promise;
@@ -247,7 +247,6 @@
             arr.push(dev);
           }
         });
-
         return arr;
       };
 

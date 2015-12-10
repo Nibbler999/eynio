@@ -78,5 +78,17 @@
           controller: 'FavoritesCtrl',
           controllerAs: 'favorites'
         })
+        .state('frame.most-used',{
+          url: '/most-used',
+          templateUrl: 'html_route/most_used_template.html',
+          controller: 'MostUsedCtrl',
+          controllerAs: 'mostUsed'
+        })
+        .state('frame.recently-used',{
+          url: '/recently-used',
+          templateUrl: 'html_route/recently_used_template.html',
+          controller: 'RecentlyUsedCtrl',
+          controllerAs: 'recently'
+        })
     });
 }());

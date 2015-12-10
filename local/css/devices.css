@@ -16,7 +16,7 @@
   position: absolute;
   background-color: rgba(15, 42, 65, 0.8);
 }
-.edit-device-modal, .add-camera-modal, .add-remote-modal{
+.edit-device-modal, .add-camera-modal, .add-remote-modal {
   display: none;
 }
 .custom-modal-wrap {
@@ -30,20 +30,21 @@
   color: #fff;
   z-index: 10;
   -webkit-transition: all 0.5s ease;
-          transition: all 0.5s ease;
+  transition: all 0.5s ease;
 }
-#add-to-favorites ~ label{
+#add-to-favorites ~ label {
   width: 1em;
   height: 1em;
   margin: 0;
   cursor: pointer;
   background: transparent url(../img/button/favorite-hollow.png) 50% no-repeat;
 }
-#add-to-favorites:checked ~ label{
+#add-to-favorites:checked ~ label {
   width: 1em;
   height: 1em;
   background: transparent url(../img/button/favorite-white.png) 50% no-repeat;
   box-shadow: none;
+  -webkit-animation: popUp 0.5s ease;
   animation: popUp 0.5s ease;
 }
 .edit-device-rename {
@@ -66,12 +67,12 @@
   display: -ms-flexbox;
   display: flex;
   -webkit-flex-flow: row wrap;
-      -ms-flex-flow: row wrap;
-          flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
   -webkit-box-pack: start;
   -webkit-justify-content: flex-start;
-      -ms-flex-pack: start;
-          justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
   margin: 1em 0;
   max-height: 8em;
   overflow: auto;
@@ -85,7 +86,7 @@
   margin-right: 1em;
   margin-bottom: 1em;
   -webkit-animation: popUp 0.5s ease forwards;
-          animation: popUp 0.5s ease forwards;
+  animation: popUp 0.5s ease forwards;
 }
 .unasigned-room-btn {
   background: #244E6E url(../img/button/plus.png) 97% 50% no-repeat;
@@ -93,11 +94,11 @@
   margin-right: 1em;
   margin-bottom: 1em;
   -webkit-animation: popUp 0.5s ease forwards;
-          animation: popUp 0.5s ease forwards;
+  animation: popUp 0.5s ease forwards;
 }
-.asigned-room-btn:active, .unasigned-room-btn:active{
+.asigned-room-btn:active, .unasigned-room-btn:active {
   -webkit-animation: popDown 0.5s ease forwards;
-          animation: popDown 0.5s ease forwards;
+  animation: popDown 0.5s ease forwards;
 }
 .edit-devices-btn-wrap {
   margin-top: 2em;
@@ -107,26 +108,26 @@
   display: flex;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
 }
 .edit-devices-btn-wrap button {
   width: 25%;
 }
-.add-camera-header{
+.add-camera-header {
   height: 5em;
   margin-top: -1.75em;
   background: #176BBA url() 5% 50% no-repeat;
   color: #fff;
   text-indent: 10em;
 }
-.add-camera-header h3, .add-remote-header h3{
+.add-camera-header h3, .add-remote-header h3 {
   line-height: 3;
 }
-.add-camera-step-1{
+.add-camera-step-1 {
   width: 100%;
 }
-.add-camera-step-2{
+.add-camera-step-2 {
   display: none;
   width: 100%;
   height: 100%;
@@ -134,103 +135,103 @@
   padding: 2em;
   background-color: #176BBA;
 }
-.add-camera-step-1 div{
+.add-camera-step-1 div {
   padding: 1em 2em;
 }
-.add-new-footer{
+.add-new-footer {
   width: 100%;
-    background-color: #1D4361;
+  background-color: #1D4361;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
   padding: 0 2em;
   height: 5em;
 }
-.add-new-footer button{
+.add-new-footer button {
   width: 25%;
 }
-.add-remote-header{
-    background-color: #176BBA;
-    height: 5em;
-    margin-top: -1.75em;
-    text-indent: 5em;
+.add-remote-header {
+  background-color: #176BBA;
+  height: 5em;
+  margin-top: -1.75em;
+  text-indent: 5em;
 }
-.add-remote-input-wrap{
+.add-remote-input-wrap {
   display: flex;
   justify-content: space-between;
   padding: 1em 2em;
 }
-.add-remote-input-wrap .form-input-wrap{
+.add-remote-input-wrap .form-input-wrap {
   width: 70%;
 }
-.add-remote-select-wrap{
+.add-remote-select-wrap {
   width: 25%;
 }
-.add-remote-select-wrap select{
+.add-remote-select-wrap select {
   width: 100%;
 }
-.add-remote-radio-select{
+.add-remote-radio-select {
   padding: 0 2em;
   margin-top: 1em;
 }
 @-webkit-keyframes popUp {
   0% {
     -webkit-transform: scale(0);
-            transform: scale(0);
+    transform: scale(0);
   }
   75% {
     -webkit-transform: scale(1.15);
-            transform: scale(1.15);
+    transform: scale(1.15);
   }
   100% {
     -webkit-transform: scale(1);
-            transform: scale(1);
+    transform: scale(1);
   }
 }
 @keyframes popUp {
   0% {
     -webkit-transform: scale(0);
-            transform: scale(0);
+    transform: scale(0);
   }
   75% {
     -webkit-transform: scale(1.15);
-            transform: scale(1.15);
+    transform: scale(1.15);
   }
   100% {
     -webkit-transform: scale(1);
-            transform: scale(1);
+    transform: scale(1);
   }
 }
 @-webkit-keyframes popDown {
   0% {
     -webkit-transform: scale(1);
-            transform: scale(1);
+    transform: scale(1);
   }
   50% {
     -webkit-transform: scale(1.15);
-            transform: scale(1.15);
+    transform: scale(1.15);
   }
   100% {
     -webkit-transform: scale(1);
-            transform: scale(1);
+    transform: scale(1);
   }
 }
 @keyframes popDown {
   0% {
     -webkit-transform: scale(1);
-            transform: scale(1);
+    transform: scale(1);
   }
   50% {
     -webkit-transform: scale(1.15);
-            transform: scale(1.15);
+    transform: scale(1.15);
   }
   100% {
     -webkit-transform: scale(1);
-            transform: scale(1);
+    transform: scale(1);
   }
 }

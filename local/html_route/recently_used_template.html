@@ -1,10 +1,10 @@
 <div class="template-nav">
   <div class="display-devices-row">
-    <h3>Favorites</h3>
+    <h3>Recently used</h3>
   </div>
 </div>
 <div class="display-devices-row">
-  <span ng-repeat="dev in favorites.allDev track by dev.id">
+  <span ng-repeat="dev in recently.allDev track by dev.id">
     <switch ng-if="dev.type === 'switch'" sinfo="dev"></switch>
     <light ng-if="dev.type === 'light'" linfo="dev"></light>
     <thermostat ng-if="dev.type === 'thermostat'" tinfo="dev"></thermostat>
@@ -16,8 +16,8 @@
 
 <section class="custom-modal-window cam-live-stream-modal">
   <section class="custom-modal-wrap">
-    <img src="img/button/cross.png" class="close-live-stream-modal" ng-click="favorites.stopLiveStream()">
-    <img ng-src={{favorites.liveImage}} class="camera-live-stream">
-    <button type="button" ng-click="favorites.fullScreen()" class="button full-screen-btn"></button>
+    <img src="img/button/cross.png" class="close-live-stream-modal" ng-click="recently.stopLiveStream()">
+    <img ng-src={{recently.liveImage}} class="camera-live-stream">
+    <button type="button" ng-click="recently.fullScreen()" class="button full-screen-btn"></button>
   </section>
 </section>

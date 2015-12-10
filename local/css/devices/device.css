@@ -197,16 +197,16 @@
 .device-option-set-white:hover {
   background-image: url('../../img/device-options/light-set-white.png');
 }
-.device-option-set-brightness{
+.device-option-set-brightness {
   background-image: url('../../img/device-options/light-brightness-off.png');
 }
-.device-option-set-brightness:hover{
+.device-option-set-brightness:hover {
   background-image: url('../../img/device-options/light-brightness.png');
 }
-.device-options-brightness{
+.device-options-brightness {
   padding: 1em 0.5em;
 }
-.device-blacklisted{
+.device-blacklisted {
   position: absolute;
   top: 0;
   left: 0;
@@ -215,7 +215,7 @@
   z-index: 1;
   background-color: rgba(0, 0, 0, 0.65);
 }
-.unblacklist-btn{
+.unblacklist-btn {
   position: absolute;
   bottom: 1em;
   right: 1em;
@@ -223,26 +223,29 @@
   text-indent: 1em;
   background: transparent url(../../img/button/lock.png) 5% 50% no-repeat;
 }
-.device-add-to-favorites{
+.device-add-to-favorites {
   position: absolute;
-  top: 1em;
-  right: 1em;
+  top: 0.5em;
+  right: 0.5em;
 }
-.device-add-to-favorites > label{
-    width: 1em;
-    height: 1em;
-    margin: 0;
-    cursor: pointer;
-    background: transparent url(../../img/button/favorite-hollow.png) 50% no-repeat;
+.device-add-to-favorites > label {
+  opacity: 0.25;
+  width: 1em;
+  height: 1em;
+  margin: 0;
+  cursor: pointer;
+  background: transparent url(../../img/button/favorite-hollow.png) 50% no-repeat;
 }
-
-.device-add-to-favorites > input:checked ~ label{
+.device-add-to-favorites > input:checked ~ label {
+  opacity: 1;
   width: 1em;
   height: 1em;
   background: transparent url(../../img/button/favorite-white.png) 50% no-repeat;
   box-shadow: none;
+  -webkit-animation: popUp 0.5s ease;
   animation: popUp 0.5s ease;
 }
+
 /* DEVICE END */
 
 
@@ -376,6 +379,7 @@
 }
 
 /* light brightness input */
+
 input[type=range] {
   -webkit-appearance: none;
   margin: 0.5em auto;

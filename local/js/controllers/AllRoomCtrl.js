@@ -19,22 +19,23 @@
       allRooms.light = {};
       allRooms.thermo = {};
       allRooms.shutter = {};
-      allRooms.tvRemote = {};
       allRooms.camera = {};
+      allRooms.tvRemote = {};
+      allRooms.acRemote = {};
+      allRooms.mediaRemote = {};
 
-      allRooms.devices = {};
-
-      function sortDevices() {
-        angular.forEach(allRooms.categories, function(cat) {
-          allRooms.camera[cat.id] = [];
+      function sortDevices(categories, devices, remotes) {
+        angular.forEach(categories, function(cat) {
           allRooms.switch[cat.id] = [];
+          allRooms.light[cat.id] = [];
+          allRooms.camera[cat.id] = [];
           allRooms.thermo[cat.id] = [];
           allRooms.shutter[cat.id] = [];
           allRooms.tvRemote[cat.id] = [];
+          allRooms.acRemote[cat.id] = [];
+          allRooms.mediaRemote[cat.id] = [];
 
-          allRooms.light[cat.id] = [];
-
-          angular.forEach(allDev, function(dev) {
+          angular.forEach(devices, function(dev) {
             angular.forEach(dev.categories, function(devCat) {
               if (cat.id === devCat) {
                 if (dev.type === 'camera') {
@@ -49,11 +50,23 @@
                   allRooms.shutter[cat.id].push(dev);
                 }
               }
-            })
-          })
+            });
+          });
+
+          angular.forEach(remotes, function(remote) {
+            angular.forEach(remote.categories, function(remCat) {
+              if (cat.id === remCat) {
+                if (remote.type === 'tv') {
+                  allRooms.tvRemote[cat.id].push(remote);
+                } else if (remote.type === 'ac') {
+                  allRooms.acRemote[cat.id].push(remote);
+                } else if (remote.type === 'media') {
+                  allRooms.mediaRemote[cat.id].push(remote);
+                }
+              }
+            });
+          });
         });
-        console.log(allRooms.switch);
-        console.log(allRooms.light);
       };
 
       /* Live stream */
@@ -93,18 +106,18 @@
 
       /* get data */
       var allDev = dataService.allDev();
-      allRooms.categories = dataService.categories();
       var customRemotes = dataService.allCustomRemotes();
-      sortDevices();
+      allRooms.categories = dataService.categories();
+      sortDevices(allRooms.categories, allDev, customRemotes);
       /* wait on socket than get data */
-      if (!allDev || !allRooms.categories) {
+      if (!allDev || !allRooms.categories || !customRemotes) {
         dataService.dataPending().then(function() {
 
           allDev = dataService.allDev();
-          allRooms.categories = dataService.categories();
           customRemotes = dataService.allCustomRemotes();
+          allRooms.categories = dataService.categories();
 
-          sortDevices();
+          sortDevices(allRooms.categories, allDev, customRemotes);
         });
       };
 

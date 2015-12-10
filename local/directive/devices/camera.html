@@ -5,5 +5,9 @@
     Refresh feed
   </button>
   <h4>{{cinfo.name}}</h4>
+  <span class="device-add-to-favorites">
+    <input type="checkbox" id="add-to-favorites-{{cinfo.id}}" ng-model="cinfo.favorites" ng-change="toggleAddToFavorites(cinfo.favorites, cinfo.id)">
+    <label for="add-to-favorites-{{cinfo.id}}" class="device-add-to-favorites-label" title="add to favorites"></label>
+  </span>
   <img ng-if="thumbnailImg && currentState !== 'frame.devices'" ng-src="img/button/snapshot.png" class="camera-live-tumb-btn" ng-click="getLiveThumbnail(cinfo.id)" title="get live thumbnail">
 </div>

@@ -15,46 +15,21 @@
       var contentWrapParent = document.querySelector('.frame-page-content-wrap');
       var liveStreamModal = document.querySelector('.cam-live-stream-modal');
       var liveStreamImg = document.querySelector('.camera-live-stream');
-
+      // add custom modal to super parent
       contentWrapParent.appendChild(liveStreamModal);
 
-      security.fullScreen = function(){
-        console.log('bbb');
-        dataService.fullScreen(liveStreamImg);
-      };
-
-      angular.forEach(navToggleBtns, function(navToggle) {
-        navToggle.onclick = function(e) {
-          if (e.target.id === 'alarms') {
-            activeLineIndicator.style.left = '60%';
-            activeLineIndicator.style.width = '40%';
-          } else if (e.target.id === 'surveilance') {
-            activeLineIndicator.style.left = '5%';
-            activeLineIndicator.style.width = '50%';
-          }
-        }
-      });
-
+      // get alarm status
       socket.emit('isAlarmEnabled', null, function(data) {
         console.log(data);
       });
+      // get alarm configuration
       socket.emit('getAlarmConfig', null, function(alarmConf) {
         console.log(alarmConf);
         security.alarmNotification = alarmConf.method;
         alarmDevices = alarmConf.devices;
       });
 
-      security.notificationsType = function(type) {
-        if (type === 'gcm') {
-          socket.emit('setAlarmMethod', 'gcm', function(response) {
-            console.log(response);
-          });
-        } else if (type === 'email') {
-          socket.emit('setAlarmMethod', 'email', function(response) {
-            console.log(response);
-          });
-        }
-      };
+      // add sensors for triggering alarm
       security.toggleAddSensor = function(id) {
         if (alarmDevices.indexOf(id) === -1) {
           alarmDevices.push(id);
@@ -71,15 +46,13 @@
         }
       };
 
+      // camera activated, start live stream
       $scope.$on('requestLiveStream', function(event, camData) {
         liveStreamModal.style.display = 'block';
         security.liveImage = camData.thumbnail;
-        console.log(camData);
-
         liveStreamId = camData.camId;
         liveStreamOptions = camData.video;
       });
-
       socket.on('cameraFrame', function(liveStream) {
         if (liveStream) {
           var src = dataService.blobToImage(liveStream.image);
@@ -87,7 +60,11 @@
           security.liveImage = src;
         }
       });
-
+      // request full screen
+      security.fullScreen = function() {
+        dataService.fullScreen(liveStreamImg);
+      };
+      //stop stream
       security.stopLiveStream = function() {
         socket.emit('stopStreaming', liveStreamId, liveStreamOptions);
         liveStreamModal.style.display = 'none';
@@ -101,17 +78,17 @@
         }
       });
 
-      /* wait on socket */
+      // get data
       var allDev = dataService.allDev();
-
+      security.allCameras = dataService.sortDevicesByType(allDev, 'camera');
+      security.allSensors = dataService.sortDevicesByType(allDev, 'sensor');
+      // if no data, wait on socket
       if (!allDev) {
         dataService.dataPending().then(function() {
-          security.allCameras = dataService.cameras();
-          security.allSensors = dataService.sensors();
+          allDev = dataService.allDev();
+          security.allCameras = dataService.sortDevicesByType(allDev, 'camera');
+          security.allSensors = dataService.sortDevicesByType(allDev, 'sensor');
         });
-      } else {
-        security.allCameras = dataService.cameras();
-        security.allSensors = dataService.sensors();
       }
     }]);
 }());

@@ -1,4 +1,4 @@
-<div ng-repeat="category in allRooms.categories">
+<div ng-repeat="category in allRooms.categories" id="{{category.id}}">
   <div class="template-nav">
     <div class="display-devices-row">
       <h3>{{category.name}}</h3>
@@ -6,15 +6,15 @@
     <div class="horizontal-line"></div>
   </div>
   <div class="display-devices-row">
-    <switch ng-repeat="switch in allRooms.switch[category.id]" sinfo="switch"></switch>
-    <light ng-repeat="light in allRooms.light[category.id]" linfo="light"></light>
-    <thermostat ng-repeat="thermo in allRooms.allThermos" tinfo="thermo"></thermostat>
-    <shutter ng-repeat="shutter in allRooms.allShutters" shinfo="shutter"></shutter>
-    <remote ng-repeat="cRemote in allRooms.allTVcustomRemotes" crinfo="cRemote"></remote>
+    <switch ng-repeat="switch in allRooms.switch[category.id] track by switch.id" sinfo="switch"></switch>
+    <light ng-repeat="light in allRooms.light[category.id] track by light.id" linfo="light"></light>
+    <thermostat ng-repeat="thermo in allRooms.thermo[category.id] track by thermo.id" tinfo="thermo"></thermostat>
+    <shutter ng-repeat="shutter in allRooms.shutter[category.id] track by shutter.id" shinfo="shutter"></shutter>
+    <remote ng-repeat="cRemote in allRooms.tvRemote[category.id] track by cRemote.id" crinfo="cRemote"></remote>
   </div>
 
   <div class="display-devices-row">
-    <camera ng-repeat="camera in allRooms.camera[category.id]" cinfo="camera"></camera>
+    <camera ng-repeat="camera in allRooms.camera[category.id] track by camera.id" cinfo="camera"></camera>
   </div>
 </div>
 

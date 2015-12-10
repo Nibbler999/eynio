@@ -68,6 +68,13 @@
                   video: options
                 });
               };
+              scope.toggleAddToFavorites = function(favorites, devId) {
+                if (favorites) {
+                  socket.emit4('setDeviceProperty', devId, 'favorites', true);
+                } else {
+                  socket.emit4('setDeviceProperty', devId, 'favorites', false);
+                }
+              };
             }
             /* socket events */
             socket.on('cameraUpdated', function(camUpdateData) {

@@ -57,27 +57,28 @@
           device.asignedRooms.splice(index, 1);
           device.unAsignedRooms.push(room);
         };
+
         device.saveDeviceOptions = function() {
+          // remove all categories
+        device.activeDevice.categories = [];
+          // add categories
           angular.forEach(device.asignedRooms, function(addRoom) {
             socket.emit('catAddDevice', addRoom.id, device.activeDevice.id);
             device.activeDevice.categories.push(addRoom.id);
           });
+          //remove categories
           angular.forEach(device.unAsignedRooms, function(removeRoom) {
             socket.emit('catDeleteDevice', removeRoom.id, device.activeDevice.id);
-            angular.forEach(device.activeDevice.categories, function(cat) {
-              if (cat === removeRoom.id) {
-                device.activeDevice.categories
-                  .splice(device.activeDevice.categories.indexOf(cat), 1);
-              }
-            })
           });
+          //  change name
           socket.emit('setDeviceName', device.activeDevice.id, device.activeDevice.name);
+          //add to favorites
           if (device.activeDevice.favorites) {
             socket.emit4('setDeviceProperty', device.activeDevice.id, 'favorites', true);
-          }else{
+          } else {
             socket.emit4('setDeviceProperty', device.activeDevice.id, 'favorites', false);
           }
-
+          // update if camera or remote
           if (device.activeDevice.type === 'camera') {
             socket.emit('updateCamera', device.activeDevice);
           } else if (device.activeDevice.type === 'tv') {

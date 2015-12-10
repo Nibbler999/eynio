@@ -68,6 +68,10 @@
   -webkit-transition: all 0.35s ease;
   transition: all 0.35s ease;
 }
+.active-line-indicator.alarm-active{
+  left: 60%;
+  width: 40%;
+}
 .close-live-stream-modal {
   position: absolute;
   top: 1em;

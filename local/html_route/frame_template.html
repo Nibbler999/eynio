@@ -40,19 +40,19 @@
 
       </div>
 
-      <a ui-sref="frame.devices" class="sidebar-nav-btn devices-btn" ui-sref-active="devices-btn-active">
+      <a ui-sref="frame.devices" class="sidebar-nav-btn devices-btn" ui-sref-active="active">
         <span>Devices</span>
       </a>
 
-      <a ui-sref="frame.scenes" class="sidebar-nav-btn scenes-btn" ui-sref-active="scenes-btn-active">
+      <a ui-sref="frame.scenes" class="sidebar-nav-btn scenes-btn" ui-sref-active="active">
         <span>Scenes</span>
       </a>
 
-      <a ui-sref="frame.schedule" class="sidebar-nav-btn schedule-btn" ui-sref-active="schedule-btn-active">
+      <a ui-sref="frame.schedule" class="sidebar-nav-btn schedule-btn" ui-sref-active="active">
         <span>Schedule</span>
       </a>
 
-      <a ui-sref="frame.security" class="sidebar-nav-btn security-btn" ui-sref-active="security-btn-active">
+      <a ui-sref="frame.security" class="sidebar-nav-btn security-btn" ui-sref-active="active">
         <span>Security</span>
       </a>
 
@@ -227,7 +227,7 @@
             </div>
           </div>
           <small class="color-transparent" ng-show="God.activeRoomSensors.length === 0">
-            You don't have sensors in this room. Go <a ui-sref="frame.devices">assigne</a>
+            You don't have sensors in this room. Go <a ui-sref="frame.devices">assign</a>
           </small>
         </div>
 
@@ -251,19 +251,19 @@
       <section class="frame-view" ui-view></section>
 
       <section class="frame-nav-bottom">
-        <div>
-          <button type="button" class="button filter-btn all-rooms-filter-btn">
+        <div class="display-flex">
+          <a ui-sref="frame.all-rooms" class="button filter-btn all-rooms-filter-btn" ui-sref-active="active">
             All rooms
-          </button>
-          <button type="button" name="Most used" class="button filter-btn most-used-filter-btn">
+          </a>
+          <a ui-sref="frame.most-used" class="button filter-btn most-used-filter-btn" ui-sref-active="active">
             Most used
-          </button>
-          <button type="button" name="Favorite" class="button filter-btn favorite-filter-btn">
-            Favorite
-          </button>
-          <button type="button" name="Recently uesd" class="button filter-btn recently-used-filter-btn">
+          </a>
+          <a ui-sref="frame.favorites" name="Favorite" class="button filter-btn favorite-filter-btn"  ui-sref-active="active">
+            Favorites
+          </a>
+          <a ui-sref="frame.recently-used" class="button filter-btn recently-used-filter-btn" ui-sref-active="active">
             Recently uesd
-          </button>
+          </a>
         </div>
         <a ui-sref="frame.server-settings" class="button filter-btn settings-btn">
           Setting
