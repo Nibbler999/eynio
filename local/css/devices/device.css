@@ -57,9 +57,15 @@
 }
 .device-content-data p, .sensor-content-data p, .sensor-content-data h2 {
   margin: 0;
+  max-width: 10em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
 }
 .device-footer {
   height: 2.5em;
+  width: 100%;
   line-height: 2.5;
   text-align: center;
   display: -webkit-box;
@@ -163,6 +169,13 @@
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
+.close-form-btn {
+  outline: none;
+  background: #618EAE url(../../img/button/cross-dark.png) 50% no-repeat;
+  height: 1.5em;
+  width: 1.5em;
+  border: none;
+}
 .device-option-btn {
   height: 4em;
   width: 4em;
@@ -245,7 +258,30 @@
   -webkit-animation: popUp 0.5s ease;
   animation: popUp 0.5s ease;
 }
-
+.device-schedule-btn {
+  position: absolute;
+  top: 0.5em;
+  opacity: 0.5;
+  right: 2em;
+  height: 1.2em;
+  width: 1.2em;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.device-schedule-btn:hover{
+  opacity: 1;
+}
+.add-schedule-dev-form{
+  padding: 1em;
+}
+.add-schedule-dev-form > input[type="number"]{
+  width: 6em;
+}
+.devices-schedule-footer{
+  position: absolute;
+  bottom: -2.5em;
+  background-color: inherit;
+}
 /* DEVICE END */
 
 

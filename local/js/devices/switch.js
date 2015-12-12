@@ -14,6 +14,8 @@
         link: function(scope, elem, attr) {
 
           scope.currentState = $state.current.name;
+          scope.deviceSchedule = false;
+          scope.scheduleState = scope.sinfo.value;
 
           /* toggle active icon */
           function setIcon() {
@@ -55,10 +57,58 @@
 
             scope.toggleAddToFavorites = function(favorites, devId) {
               if (favorites) {
-                socket.emit4('setDeviceProperty', devId, 'favorites', true);
+                socket.emit4('setUserProperty', devId, 'favorites', true);
               } else {
-                socket.emit4('setDeviceProperty', devId, 'favorites', false);
+                socket.emit4('setUserProperty', devId, 'favorites', false);
               }
+            };
+
+
+            // check hours to prevent schedule in the past
+            scope.checkHours = function(e) {
+              var date = new Date();
+              e.target.min = date.getHours();
+            };
+
+            // check minutes to prevent schedule in the past
+            scope.checkMinutes = function(e) {
+              var date = new Date();
+              e.target.min = date.getMinutes();
+            };
+            // make quick schedule
+            scope.quickSchedule = function(dev, state) {
+              var h = document.getElementById('device-schedule-hours-' + scope.sinfo.id);
+              var m = document.getElementById('device-schedule-minutes-' + scope.sinfo.id);
+              var date = new Date();
+
+              var dateTime = {
+                year: date.getFullYear(),
+                month: date.getMonth(),
+                day: date.getDay(),
+                hour: parseInt(h.value),
+                minute: parseInt(m.value)
+              };
+
+              var job = {
+                name: dev.name,
+                type: 'device',
+                dateTime: dateTime,
+                actions: {
+                  emit_name: 'sendKey',
+                  params: [dev.id, state]
+                }
+              };
+              console.log(job);
+              socket.emit('addNewJob', job, function(response) {
+                if(response){
+                  scope.scheduleSuccess = true;
+                  h.value = '';
+                  m.value = '';
+                }
+                setTimeout(function(){
+                  scope.scheduleSuccess = false;
+                }, 250);
+              });
             };
           }
 

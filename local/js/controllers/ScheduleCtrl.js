@@ -20,21 +20,6 @@
       var newSceneSunset = document.getElementById('new-scene-sunset');
       var newSceneSunrise = document.getElementById('new-scene-sunrise');
 
-      socket.emit('getJobs', null, function(schedules) {
-        schedule.allSchedules = schedules;
-      });
-
-      socket.on('jobAdded', function(newSchedule) {
-        schedule.allSchedules.push(newSchedule);
-      });
-
-      socket.on('jobRemoved', function(deleteSchedule) {
-        angular.forEach(schedule.allSchedules, function(schedule) {
-          if (schedule.id === deleteSchedule) {
-            schedule.allSchedules.splice(schedule.allSchedules.indexOf(schedule), 1);
-          }
-        });
-      });
 
       document.querySelector('.add-new-btn').onclick = function() {
         newScene.style.marginTop = '0%';
@@ -203,32 +188,8 @@
       };
 
       /* get data */
-      var allDev = dataService.allDev();
-      var allRemotes = dataService.allCustomRemotes();
-      /* wait on socket to connect than get data */
-      if (!allDev) {
-        dataService.dataPending().then(function() {
-
-          allDev = dataService.allDev();
-          allRemotes = dataService.allCustomRemotes();
-
-          schedule.allLights = dataService.sortDevicesByType(allDev, 'light');
-          schedule.allSwitches = dataService.sortDevicesByType(allDev, 'switch');
-          schedule.allShutters = dataService.sortDevicesByType(allDev, 'shutter');
-
-          schedule.allTvRemotes = dataService.sortRemotesByType(allRemotes, 'tv');
-        });
-      } else {
-
-        allDev = dataService.allDev();
-        allRemotes = dataService.allCustomRemotes();
-
-        schedule.allLights = dataService.sortDevicesByType(allDev, 'light');
-        schedule.allSwitches = dataService.sortDevicesByType(allDev, 'switch');
-        schedule.allShutters = dataService.sortDevicesByType(allDev, 'shutter');
-
-        schedule.allTvRemotes = dataService.sortRemotesByType(allRemotes, 'tv');
-      }
-
+      schedule.allSchedules = dataService.schedules() ? dataService.schedules() : dataService.dataPending().then(function() {
+        schedule.allSchedules = dataService.schedules();
+      });
     }]);
 }());

@@ -5,7 +5,7 @@
     .module('nHome', ['ui.router', 'services'])
     .config(function($stateProvider, $urlRouterProvider) {
       $urlRouterProvider
-        .when('', 'dashboard');
+        .when('', 'all-rooms');
       $stateProvider
         .state('login', {
           url: '/login',
@@ -23,12 +23,6 @@
           templateUrl: 'html_route/addServer_template.html',
           controller: 'AddServer',
           controllerAs: 'addServer'
-        })
-        .state('frame.dashboard', {
-          url: '/dashboard',
-          templateUrl: 'html_route/dashboard_template.html',
-          controller: 'DashboardCtrl',
-          controllerAs: 'dashboard'
         })
         .state('frame.devices', {
           url: '/devices',

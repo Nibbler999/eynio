@@ -32,12 +32,6 @@
           }
         });
 
-        /* new scene added */
-        socket.on('sceneAdded', function(sceneAdded) {
-          console.log(sceneAdded);
-          scene.allScenes.push(sceneAdded);
-        });
-
         function getDays() {
           daysArr = [];
           angular.forEach(newSceneDays, function(day) {
@@ -260,12 +254,19 @@
         /* get data */
         var allDev = dataService.allDev();
         var allRemotes = dataService.allCustomRemotes();
+        scene.allScenes = dataService.scenes();
+
+        scene.allLights = dataService.sortDevicesByType(allDev, 'light');
+        scene.allSwitches = dataService.sortDevicesByType(allDev, 'switch');
+        scene.allShutters = dataService.sortDevicesByType(allDev, 'shutter');
+        scene.allTvRemotes = dataService.sortRemotesByType(allRemotes, 'tv');
         /* wait on socket to connect than get data */
-        if (!allDev) {
+        if (!allDev || !scene.allScenes) {
           dataService.dataPending().then(function() {
 
             allDev = dataService.allDev();
             allRemotes = dataService.allCustomRemotes();
+            scene.allScenes = dataService.scenes();
 
             scene.allLights = dataService.sortDevicesByType(allDev, 'light');
             scene.allSwitches = dataService.sortDevicesByType(allDev, 'switch');
@@ -273,18 +274,7 @@
 
             scene.allTvRemotes = dataService.sortRemotesByType(allRemotes, 'tv');
           });
-        } else {
-
-          allDev = dataService.allDev();
-          allRemotes = dataService.allCustomRemotes();
-
-          scene.allLights = dataService.sortDevicesByType(allDev, 'light');
-          scene.allSwitches = dataService.sortDevicesByType(allDev, 'switch');
-          scene.allShutters = dataService.sortDevicesByType(allDev, 'shutter');
-
-          scene.allTvRemotes = dataService.sortRemotesByType(allRemotes, 'tv');
         }
-
       }
     ]);
 }());

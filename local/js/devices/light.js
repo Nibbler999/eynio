@@ -17,6 +17,8 @@
           /* where am I */
           scope.currentState = $state.current.name;
           scope.lightIcon = 'img/device/light-off.png';
+          scope.deviceSchedule = false;
+          scope.scheduleState = false;
 
           $('#light-color').attr('id', 'light-color-' + scope.linfo.count);
           $('#light-brightness').attr('id', 'light-brightness-' + scope.linfo.count);
@@ -24,6 +26,7 @@
 
           socket.emit('getLightState', scope.linfo.id, function(state) {
             scope.linfo.state = state;
+            scope.scheduleState = state.on;
 
             $("#light-color-" + scope.linfo.count).ColorPickerSliders({
               color: 'hsl(' + state.hsl[0] + ',' + state.hsl[1] + ',' + state.hsl[2] + ')',
@@ -107,10 +110,57 @@
 
             scope.toggleAddToFavorites = function(favorites, devId) {
               if (favorites) {
-                socket.emit4('setDeviceProperty', devId, 'favorites', true);
+                socket.emit4('setUserProperty', devId, 'favorites', true);
               } else {
-                socket.emit4('setDeviceProperty', devId, 'favorites', false);
+                socket.emit4('setUserProperty', devId, 'favorites', false);
               }
+            };
+
+            // check hours to prevent schedule in the past
+            scope.checkHours = function(e) {
+              var date = new Date();
+              e.target.min = date.getHours();
+              console.log(e);
+            };
+
+            // check minutes to prevent schedule in the past
+            scope.checkMinutes = function(e) {
+              var date = new Date();
+              e.target.min = date.getMinutes() + 1;
+            };
+            scope.quickSchedule = function(dev, state) {
+              var h = document.getElementById('device-schedule-hours-' + scope.linfo.id);
+              var m = document.getElementById('device-schedule-minutes-' + scope.linfo.id);
+              var date = new Date();
+
+              var dateTime = {
+                year: date.getFullYear(),
+                month: date.getMonth(),
+                day: date.getDay(),
+                hour: parseInt(h.value),
+                minute: parseInt(m.value)
+              };
+
+              var job = {
+                name: dev.name,
+                type: 'device',
+                dateTime: dateTime,
+                actions: {
+                  emit_name: 'sendKey',
+                  params: [dev.id, state]
+                }
+              };
+              console.log(job);
+              socket.emit('addNewJob', job, function(response) {
+                if (response) {
+                  scope.scheduleSuccess = true;
+                  h.value = '';
+                  m.value = '';
+                }
+                setTimeout(function() {
+                  scope.scheduleSuccess = false;
+                }, 250);
+              });
             };
           }
 

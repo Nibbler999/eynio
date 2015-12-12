@@ -20,6 +20,7 @@
       allRooms.thermo = {};
       allRooms.shutter = {};
       allRooms.camera = {};
+      allRooms.sensor = {};
       allRooms.tvRemote = {};
       allRooms.acRemote = {};
       allRooms.mediaRemote = {};
@@ -31,6 +32,7 @@
           allRooms.camera[cat.id] = [];
           allRooms.thermo[cat.id] = [];
           allRooms.shutter[cat.id] = [];
+          allRooms.sensor[cat.id] = [];
           allRooms.tvRemote[cat.id] = [];
           allRooms.acRemote[cat.id] = [];
           allRooms.mediaRemote[cat.id] = [];
@@ -48,6 +50,8 @@
                   allRooms.thermo[cat.id].push(dev);
                 } else if (dev.type === 'shutter') {
                   allRooms.shutter[cat.id].push(dev);
+                } else if (dev.type === 'sensor') {
+                  allRooms.sensor[cat.id].push(dev);
                 }
               }
             });
@@ -104,10 +108,19 @@
         };
       });
 
+      allRooms.jumpToRoom = function(room) {
+        var target = document.getElementById(room.id);
+        target.parentNode.scrollTop = target.offsetTop;
+
+        allRooms.activeRoom = room;
+      };
+
       /* get data */
       var allDev = dataService.allDev();
       var customRemotes = dataService.allCustomRemotes();
       allRooms.categories = dataService.categories();
+      allRooms.activeRoom = allRooms.categories ? allRooms.categories[0] : {};
+      allRooms.favoriteSensors = allDev ? allDev.filter(function(dev){return dev.type === 'sensor' && dev.favorites}) : [];
       sortDevices(allRooms.categories, allDev, customRemotes);
       /* wait on socket than get data */
       if (!allDev || !allRooms.categories || !customRemotes) {
@@ -116,8 +129,13 @@
           allDev = dataService.allDev();
           customRemotes = dataService.allCustomRemotes();
           allRooms.categories = dataService.categories();
+          allRooms.activeRoom = allRooms.categories[0];
+          allRooms.favoriteSensors = allDev ? allDev.filter(function(dev){return dev.type === 'sensor' && dev.favorites}) : [];
 
           sortDevices(allRooms.categories, allDev, customRemotes);
+
+          var room = document.getElementsByName('category');
+          console.log(room);
         });
       };
 

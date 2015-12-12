@@ -4,7 +4,7 @@
     Ooops!! Something went wrong, server is offline
   </h3>
   <section class="frame-nav">
-    <a ui-sref="frame.dashboard">
+    <a ui-sref="frame.all-rooms">
       <img src="img/logo/nhome_logo_white.png" class="frame-menu-icon">
     </a>
     <div>
@@ -207,49 +207,11 @@
 
     <!-- page content !-->
     <section class="frame-page-content-wrap">
-      <section class="frame-info">
-        <!-- sensors !-->
-        <div class="sensor-wrap">
-          <div class="info-sensor" ng-repeat="sensor in God.activeRoomSensors">
-            <img ng-if="sensor.subtype === 'temperature'" src="img/sensors/temp.png">
-            <img ng-if="sensor.subtype === 'humidity'" src="img/sensors/humidity.png">
-            <img ng-if="sensor.subtype === 'co2'" src="img/sensors/co.png">
-            <img ng-if="sensor.subtype === 'noise'" src="img/sensors/noise.png">
-            <img ng-if="sensor.subtype === 'rain'" src="img/sensors/rain.png">
-            <img ng-if="sensor.subtype === 'co-alarm'" src="img/sensors/co.png">
-            <img ng-if="sensor.subtype === 'light'" src="img/sensors/lux.png">
-            <img ng-if="sensor.subtype === 'motion'" src="img/sensors/motion.png">
-            <img ng-if="sensor.subtype === 'door' && sensor.value === false" src="img/sensors/door-close.png">
-            <img ng-if="sensor.subtype === 'door' && sensor.value === true" src="img/sensors/door-open.png">
-            <div class="sensor-details">
-              <h1>{{sensor.value}}</h1>
-              <p>{{sensor.name}}</p>
-            </div>
-          </div>
-          <small class="color-transparent" ng-show="God.activeRoomSensors.length === 0">
-            You don't have sensors in this room. Go <a ui-sref="frame.devices">assign</a>
-          </small>
-        </div>
 
-        <!-- categories !-->
-        <div class="category-wrap">
-          <small class="color-transparent">Jump to</small>
-          <div class="dropdown">
-            <button type="button" class="button dropdown-toggle category-dropdown" id="categories-dropdown" data-toggle="dropdown">
-              {{God.activeRoom.name}}
-            </button>
-
-            <ul class="dropdown-menu category-dropdown-list" role="menu" aria-labelledby="categories-dropdown">
-              <li role="presentation" ng-repeat="category in God.categories track by category.id">
-                <a role="menuitem" tabindex="-1" href="#" ng-click="God.filterDevByCategory(category)">{{category.name}}</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
+      <!-- ui router !-->
       <section class="frame-view" ui-view></section>
 
+      <!-- bottom nav !-->
       <section class="frame-nav-bottom">
         <div class="display-flex">
           <a ui-sref="frame.all-rooms" class="button filter-btn all-rooms-filter-btn" ui-sref-active="active">

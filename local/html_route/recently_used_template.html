@@ -1,7 +1,5 @@
 <div class="template-nav">
-  <div class="display-devices-row">
     <h3>Recently used</h3>
-  </div>
 </div>
 <div class="display-devices-row">
   <span ng-repeat="dev in recently.allDev track by dev.id">
@@ -9,7 +7,7 @@
     <light ng-if="dev.type === 'light'" linfo="dev"></light>
     <thermostat ng-if="dev.type === 'thermostat'" tinfo="dev"></thermostat>
     <shutter ng-if="dev.tyoe === 'shutter'" shinfo="dev"></shutter>
-    <remote ng-if="dev.type === 'tv'" crinfo="dev"></remote>
+    <remote ng-if="dev.type === 'tv'" tvinfo="dev"></remote>
     <camera ng-if="dev.type === 'camera'" cinfo="dev"></camera>
   </span>
 </div>

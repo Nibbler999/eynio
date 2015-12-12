@@ -3,6 +3,7 @@
     <input type="checkbox" id="add-to-favorites-{{sinfo.id}}" ng-model="sinfo.favorites" ng-change="toggleAddToFavorites(sinfo.favorites, sinfo.id)">
     <label for="add-to-favorites-{{sinfo.id}}" class="device-add-to-favorites-label" title="add to favorites"></label>
   </span>
+  <img ng-src="img/button/schedule.svg" class="device-schedule-btn" ng-click="deviceSchedule = !deviceSchedule" title="quick schedule">
   <div class="device-header">
     <img ng-src="{{switchIcon}}" class="device-icon" ng-click="toggleDevicePowerState(sinfo.id)" title="toggle state">
     <div class="device-content-data">
@@ -19,6 +20,32 @@
       <button class="device-btn" ng-class="{'device-btn-active': !sinfo.value}" ng-click="switchOff(sinfo.id, sinfo.value)">Off</button>
     </div>
     <div class="device-footer-option-wrap">
+    </div>
+  </div>
+
+  <!-- schedule !-->
+  <div class="option-wrap" ng-show="deviceSchedule">
+    <button type="reset" class="close-device-options close-form-btn" ng-click="deviceSchedule = false">
+    </button>
+    <form class="add-schedule-dev-form" id="dev-schedule-form-{{sinfo.id}}" ng-submit="quickSchedule(sinfo, scheduleState)">
+      <p>Device will turn
+        <span class="color-blue" ng-if="scheduleState">ON</span>
+        <span class="color-orange" ng-if="!scheduleState">OFF</span>
+        at:
+      </p>
+      <input type="number" class="form-number" id="device-schedule-hours-{{sinfo.id}}" placeholder="Hours" min="0" max="23" required ng-blur="checkHours($event)">
+      <input type="number" class="form-number" id="device-schedule-minutes-{{sinfo.id}}" placeholder="Minutes" min="0" max="59" required ng-blur="checkMinutes($event)">
+      <small ng-if="scheduleSuccess" class="color-green pop-up">Scheduled!</small>
+    </form>
+
+    <div class="device-footer devices-schedule-footer">
+      <div class="device-footer-btn-wrap">
+        <button type="button" class="device-btn" ng-class="{'device-btn-active': scheduleState}" ng-click="scheduleState = true">On</button>
+        <button type="button" class="device-btn" ng-class="{'device-btn-active': !scheduleState}" ng-click="scheduleState = false">Off</button>
+      </div>
+      <div class="device-footer-option-wrap">
+        <button type="submit" class="device-options-btn" form="dev-schedule-form-{{sinfo.id}}">Schedule</button>
+      </div>
     </div>
   </div>
 </div>

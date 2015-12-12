@@ -1,38 +1,39 @@
 <div class="device-wrap" ng-class="{'full-remote': fullRemote, 'learning-mode': learningMode}">
   <span class="device-add-to-favorites">
-    <input type="checkbox" id="add-to-favorites-{{crinfo.id}}" ng-model="crinfo.favorites" ng-change="toggleAddToFavorites(crinfo.favorites, crinfo.id)">
-    <label for="add-to-favorites-{{crinfo.id}}" class="device-add-to-favorites-label" title="add to favorites"></label>
+    <input type="checkbox" id="add-to-favorites-{{tvinfo.id}}" ng-model="tvinfo.favorites" ng-change="toggleAddToFavorites(tvinfo.favorites, tvinfo.id)">
+    <label for="add-to-favorites-{{tvinfo.id}}" class="device-add-to-favorites-label" title="add to favorites"></label>
   </span>
+  <img ng-src="img/button/schedule.svg" class="device-schedule-btn" ng-click="deviceSchedule = !deviceSchedule" title="quick schedule">
   <div class="device-header">
     <img ng-src="img/device/remote.png" class="device-icon" ng-show="currentState === 'frame.devices'">
     <img ng-src="img/device/remote.png" class="device-icon" ng-click="fullRemote = true" title="full remote" ng-hide="currentState === 'frame.devices'">
     <div class="device-content-data">
-      <p>{{crinfo.name}}</p>
-      <p>{{crinfo.type}}</p>
+      <p>{{tvinfo.name}}</p>
+      <p>{{tvinfo.type}}</p>
       <div class="remote-learn-wrap" ng-hide="currentState === 'frame.devices'">
-        <input type="checkbox" id="learning-mode-{{crinfo.count}}" ng-model="learningMode">
-        <label for="learning-mode-{{crinfo.count}}" class="button">Learning mode</label>
+        <input type="checkbox" id="learning-mode-{{tvinfo.count}}" ng-model="learningMode">
+        <label for="learning-mode-{{tvinfo.count}}" class="button">Learning mode</label>
       </div>
     </div>
   </div>
 
   <div class="device-footer">
     <div class="device-footer-btn-wrap">
-      <button class="device-btn" ng-class="{'device-btn-active': ''}" ng-click="cRemoteAction(crinfo.id, 'POWER')" id="remote-quick-POWER">Power</button>
+      <button class="device-btn" ng-class="{'device-btn-active': ''}" ng-click="cRemoteAction(tvinfo.id, 'POWER')" id="remote-quick-POWER">Power</button>
     </div>
     <div class="device-footer-option-wrap">
-      <button class="remote-device-btn remote-device-btn-up" ng-click="cRemoteAction(crinfo.id, 'CHUP')" id="remote-quick-CHUP" ng-show="quickRadioBtn === 'ch'"></button>
-      <button class="remote-device-btn remote-device-btn-up" ng-click="cRemoteAction(crinfo.id, 'VOLUP')" id="remote-quick-VOLUP" ng-show="quickRadioBtn === 'vol'"></button>
+      <button class="remote-device-btn remote-device-btn-up" ng-click="cRemoteAction(tvinfo.id, 'CHUP')" id="remote-quick-CHUP" ng-show="quickRadioBtn === 'ch'"></button>
+      <button class="remote-device-btn remote-device-btn-up" ng-click="cRemoteAction(tvinfo.id, 'VOLUP')" id="remote-quick-VOLUP" ng-show="quickRadioBtn === 'vol'"></button>
       <span class="remote-radio-wrap">
-        <input type="radio" name="remote-ch-vol-{{crinfo.count}}" id="remote-radio-ch-{{crinfo.count}}" value="ch" ng-model="quickRadioBtn">
-        <label for="remote-radio-ch-{{crinfo.count}}">CH</label>
+        <input type="radio" name="remote-ch-vol-{{tvinfo.count}}" id="remote-radio-ch-{{tvinfo.count}}" value="ch" ng-model="quickRadioBtn">
+        <label for="remote-radio-ch-{{tvinfo.count}}">CH</label>
       </span>
       <span class="remote-radio-wrap">
-        <input type="radio" name="remote-ch-vol-{{crinfo.count}}" id="remote-radio-vol-{{crinfo.count}}" value="vol" ng-model="quickRadioBtn">
-        <label for="remote-radio-vol-{{crinfo.count}}">Vol</label>
+        <input type="radio" name="remote-ch-vol-{{tvinfo.count}}" id="remote-radio-vol-{{tvinfo.count}}" value="vol" ng-model="quickRadioBtn">
+        <label for="remote-radio-vol-{{tvinfo.count}}">Vol</label>
       </span>
-      <button class="remote-device-btn remote-device-btn-down" ng-click="cRemoteAction(crinfo.id, 'CHDOWN')" id="remote-quick-CHDOWN" ng-show="quickRadioBtn === 'ch'"></button>
-      <button class="remote-device-btn remote-device-btn-down" ng-click="cRemoteAction(crinfo.id, 'VOLDOWN')" id="remote-quick-VOLDOWN" ng-show="quickRadioBtn === 'vol'"></button>
+      <button class="remote-device-btn remote-device-btn-down" ng-click="cRemoteAction(tvinfo.id, 'CHDOWN')" id="remote-quick-CHDOWN" ng-show="quickRadioBtn === 'ch'"></button>
+      <button class="remote-device-btn remote-device-btn-down" ng-click="cRemoteAction(tvinfo.id, 'VOLDOWN')" id="remote-quick-VOLDOWN" ng-show="quickRadioBtn === 'vol'"></button>
     </div>
   </div>
 
@@ -40,57 +41,57 @@
   <div class="remote-full-wrap" ng-show="fullRemote || learningMode">
     <img src="img/button/cross-dark.png" class="close-device-options" ng-click="fullRemote = false; learningMode = false">
     <div class="remote-full-row">
-      <button type="button" class="remote-top-btn remote-power-btn" ng-click="cRemoteAction(crinfo.id, 'POWER')" id="remote-POWER">Power</button>
-      <button type="button" class="remote-top-btn remote-menu-btn" ng-click="cRemoteAction(crinfo.id, 'MENU')" id="remote-MENU">Menu</button>
-      <button type="button" class="remote-top-btn remote-source-btn" ng-click="cRemoteAction(crinfo.id, 'SOURCE')" id="remote-SOURCE">Source</button>
+      <button type="button" class="remote-top-btn remote-power-btn" ng-click="cRemoteAction(tvinfo.id, 'POWER')" id="remote-POWER">Power</button>
+      <button type="button" class="remote-top-btn remote-menu-btn" ng-click="cRemoteAction(tvinfo.id, 'MENU')" id="remote-MENU">Menu</button>
+      <button type="button" class="remote-top-btn remote-source-btn" ng-click="cRemoteAction(tvinfo.id, 'SOURCE')" id="remote-SOURCE">Source</button>
     </div>
-    <h5>{{crinfo.name}} remote</h5>
+    <h5>{{tvinfo.name}} remote</h5>
     <div class="remote-full-row" ng-hide="numpad">
       <div>
-        <button type="button" class="remote-cirucal-btn remote-plus-btn" ng-click="cRemoteAction(crinfo.id, 'VOLUP')" id="remote-VOLUP"></button>
+        <button type="button" class="remote-cirucal-btn remote-plus-btn" ng-click="cRemoteAction(tvinfo.id, 'VOLUP')" id="remote-VOLUP"></button>
         <h5>Vol</h5>
-        <button type="button" class="remote-cirucal-btn remote-minus-btn" ng-click="cRemoteAction(crinfo.id, 'VOLDOWN')" id="remote-VOLDOWN"></button>
+        <button type="button" class="remote-cirucal-btn remote-minus-btn" ng-click="cRemoteAction(tvinfo.id, 'VOLDOWN')" id="remote-VOLDOWN"></button>
       </div>
 
       <div>
-        <button type="button" class="remote-rect-btn remote-up-btn" ng-click="cRemoteAction(crinfo.id, 'UP')" id="remote-UP"></button>
+        <button type="button" class="remote-rect-btn remote-up-btn" ng-click="cRemoteAction(tvinfo.id, 'UP')" id="remote-UP"></button>
         <div>
-          <button type="button" class="remote-rect-btn remote-left-btn" ng-click="cRemoteAction(crinfo.id, 'LEFT')" id="remote-LEFT"></button>
-          <button type="button" class="remote-none-btn remote-ok-btn" ng-click="cRemoteAction(crinfo.id, 'OK')" id="remote-OK">OK</button>
-          <button type="button" class="remote-rect-btn remote-right-btn" ng-click="cRemoteAction(crinfo.id, 'RIGHT')" id="remote-RIGHT"></button>
+          <button type="button" class="remote-rect-btn remote-left-btn" ng-click="cRemoteAction(tvinfo.id, 'LEFT')" id="remote-LEFT"></button>
+          <button type="button" class="remote-none-btn remote-ok-btn" ng-click="cRemoteAction(tvinfo.id, 'OK')" id="remote-OK">OK</button>
+          <button type="button" class="remote-rect-btn remote-right-btn" ng-click="cRemoteAction(tvinfo.id, 'RIGHT')" id="remote-RIGHT"></button>
         </div>
-        <button type="button" class="remote-rect-btn remote-down-btn" ng-click="cRemoteAction(crinfo.id, 'DOWN')" id="remote-DOWN"></button>
+        <button type="button" class="remote-rect-btn remote-down-btn" ng-click="cRemoteAction(tvinfo.id, 'DOWN')" id="remote-DOWN"></button>
       </div>
 
       <div>
-        <button type="button" class="remote-cirucal-btn remote-plus-btn" ng-click="cRemoteAction(crinfo.id, 'CHUP')" id="remote-CHUP"></button>
+        <button type="button" class="remote-cirucal-btn remote-plus-btn" ng-click="cRemoteAction(tvinfo.id, 'CHUP')" id="remote-CHUP"></button>
         <h5>CH</h5>
-        <button type="button" class="remote-cirucal-btn remote-minus-btn" ng-click="cRemoteAction(crinfo.id, 'CHDOWN')" id="remote-CHDOWN"></button>
+        <button type="button" class="remote-cirucal-btn remote-minus-btn" ng-click="cRemoteAction(tvinfo.id, 'CHDOWN')" id="remote-CHDOWN"></button>
       </div>
     </div>
 
     <!-- numpad !-->
     <div class="remote-full-col" ng-show="numpad">
       <div>
-        <button type="button" class="remote-numb-btn remote-num1-btn" ng-click="cRemoteAction(crinfo.id, 'NUM_1')" id="remote-NUM_1">1</button>
-        <button type="button" class="remote-numb-btn remote-num2-btn" ng-click="cRemoteAction(crinfo.id, 'NUM_2')" id="remote-NUM_2">2</button>
-        <button type="button" class="remote-numb-btn remote-num3-btn" ng-click="cRemoteAction(crinfo.id, 'NUM_3')" id="remote-NUM_3">3</button>
+        <button type="button" class="remote-numb-btn remote-num1-btn" ng-click="cRemoteAction(tvinfo.id, 'NUM_1')" id="remote-NUM_1">1</button>
+        <button type="button" class="remote-numb-btn remote-num2-btn" ng-click="cRemoteAction(tvinfo.id, 'NUM_2')" id="remote-NUM_2">2</button>
+        <button type="button" class="remote-numb-btn remote-num3-btn" ng-click="cRemoteAction(tvinfo.id, 'NUM_3')" id="remote-NUM_3">3</button>
       </div>
 
       <div>
-        <button type="button" class="remote-numb-btn remote-num4-btn" ng-click="cRemoteAction(crinfo.id, 'NUM_4')" id="remote-NUM_4">4</button>
-        <button type="button" class="remote-numb-btn remote-num5-btn" ng-click="cRemoteAction(crinfo.id, 'NUM_5')" id="remote-NUM_5">5</button>
-        <button type="button" class="remote-numb-btn remote-num6-btn" ng-click="cRemoteAction(crinfo.id, 'NUM_6')" id="remote-NUM_6">6</button>
+        <button type="button" class="remote-numb-btn remote-num4-btn" ng-click="cRemoteAction(tvinfo.id, 'NUM_4')" id="remote-NUM_4">4</button>
+        <button type="button" class="remote-numb-btn remote-num5-btn" ng-click="cRemoteAction(tvinfo.id, 'NUM_5')" id="remote-NUM_5">5</button>
+        <button type="button" class="remote-numb-btn remote-num6-btn" ng-click="cRemoteAction(tvinfo.id, 'NUM_6')" id="remote-NUM_6">6</button>
       </div>
 
       <div>
-        <button type="button" class="remote-numb-btn remote-num7-btn" ng-click="cRemoteAction(crinfo.id, 'NUM_7')" id="remote-NUM_7">7</button>
-        <button type="button" class="remote-numb-btn remote-num8-btn" ng-click="cRemoteAction(crinfo.id, 'NUM_8')" id="remote-NUM_8">8</button>
-        <button type="button" class="remote-numb-btn remote-num9-btn" ng-click="cRemoteAction(crinfo.id, 'NUM_9')" id="remote-NUM_9">9</button>
+        <button type="button" class="remote-numb-btn remote-num7-btn" ng-click="cRemoteAction(tvinfo.id, 'NUM_7')" id="remote-NUM_7">7</button>
+        <button type="button" class="remote-numb-btn remote-num8-btn" ng-click="cRemoteAction(tvinfo.id, 'NUM_8')" id="remote-NUM_8">8</button>
+        <button type="button" class="remote-numb-btn remote-num9-btn" ng-click="cRemoteAction(tvinfo.id, 'NUM_9')" id="remote-NUM_9">9</button>
       </div>
 
       <div>
-        <button type="button" class="remote-numb-btn remote-num0-btn" ng-click="cRemoteAction(crinfo.id, 'NUM_0')" id="remote-NUM_0">0</button>
+        <button type="button" class="remote-numb-btn remote-num0-btn" ng-click="cRemoteAction(tvinfo.id, 'NUM_0')" id="remote-NUM_0">0</button>
       </div>
     </div>
     <div class="remote-full-row">
@@ -104,6 +105,29 @@
         <h3>{{learnKey}}</h3>
       </div>
       <p>Point your physical remote to the nHome Bridge and press the button you want to program</p>
+    </div>
+  </div>
+
+
+  <!-- schedule !-->
+  <div class="option-wrap" ng-show="deviceSchedule">
+    <button type="reset" class="close-device-options close-form-btn" ng-click="deviceSchedule = false">
+    </button>
+    <form class="add-schedule-dev-form" id="dev-schedule-form-{{tvinfo.id}}" ng-submit="quickSchedule(tvinfo, 'POWER')">
+      <p>Remote will
+        <span class="color-blue">toggle</span>
+         TV power at:
+      </p>
+      <input type="number" class="form-number" id="device-schedule-hours-{{tvinfo.id}}" placeholder="Hours" min="0" max="23" required ng-blur="checkHours($event)">
+      <input type="number" class="form-number" id="device-schedule-minutes-{{tvinfo.id}}" placeholder="Minutes" min="0" max="59" required ng-blur="checkMinutes($event)">
+      <small ng-if="scheduleSuccess" class="color-green pop-up">Scheduled!</small>
+    </form>
+    <div class="device-footer devices-schedule-footer">
+      <div class="device-footer-btn-wrap">
+      </div>
+      <div class="device-footer-option-wrap">
+        <button type="submit" class="device-options-btn" form="dev-schedule-form-{{tvinfo.id}}">Schedule</button>
+      </div>
     </div>
   </div>
 </div>

@@ -70,9 +70,9 @@
               };
               scope.toggleAddToFavorites = function(favorites, devId) {
                 if (favorites) {
-                  socket.emit4('setDeviceProperty', devId, 'favorites', true);
+                  socket.emit4('setUserProperty', devId, 'favorites', true);
                 } else {
-                  socket.emit4('setDeviceProperty', devId, 'favorites', false);
+                  socket.emit4('setUserProperty', devId, 'favorites', false);
                 }
               };
             }

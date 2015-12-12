@@ -74,9 +74,9 @@
           socket.emit('setDeviceName', device.activeDevice.id, device.activeDevice.name);
           //add to favorites
           if (device.activeDevice.favorites) {
-            socket.emit4('setDeviceProperty', device.activeDevice.id, 'favorites', true);
+            socket.emit4('setUserProperty', device.activeDevice.id, 'favorites', true);
           } else {
-            socket.emit4('setDeviceProperty', device.activeDevice.id, 'favorites', false);
+            socket.emit4('setUserProperty', device.activeDevice.id, 'favorites', false);
           }
           // update if camera or remote
           if (device.activeDevice.type === 'camera') {

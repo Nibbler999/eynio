@@ -64,10 +64,6 @@
           serverActiveLog[God.activeServer.id] = God.sessionActionLog;
           sessionStorage.sessionActionLog = JSON.stringify(serverActiveLog);
         });
-        /* get categories */
-        socket.emit('getCategories', null, function(categories) {
-          God.categories = categories;
-        });
         /* server offline notification */
         socket.on('serverOnline', function(online) {
           console.log(online);
@@ -84,19 +80,6 @@
             }
           }
         });
-        socket.emit('getDevices', 'sensor', function(sensors) {
-          God.allSensors = sensors
-          filterSensorsByCatId(God.activeRoom.id);
-        });
-
-        /* sensor value change */
-        socket.on('sensorValue', function(sensorChange) {
-          angular.forEach(God.allSensors, function(sensor) {
-            if (sensor.id === sensorChange.id) {
-              sensor.value = sensorChange.value;
-            }
-          });
-        });
       };
 
       /* filter sensors by catId */
@@ -110,27 +93,6 @@
           })
         });
       };
-
-      /* filter devices by category */
-      God.filterDevByCategory = function(category) {
-        deleteRoomClickCount = 0;
-        God.activeRoom = {
-          name: category.name,
-          id: category.id
-        };
-        sessionStorage.activeRoom = JSON.stringify(category);
-        filterSensorsByCatId(category.id);
-
-        $state.go('frame.dashboard');
-        $scope.$broadcast('filterData', category.id);
-        /*notActiveCat = document.getElementsByClassName('category');
-        angular.forEach(notActiveCat, function(cat) {
-          cat.classList.remove('category-active');
-        });
-        activeCat = document.getElementById(category.name);
-        activeCat.classList.add('category-active');*/
-      };
-
       /* add new category */
       God.addCategory = function() {
         var newCategoryName = document.getElementById('add-category-name');

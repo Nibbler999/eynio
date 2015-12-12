@@ -306,5 +306,8 @@ width: 100%;
   left: 0;
   right: 0;
   top: 5em;
-  border-bottom: 0.1em solid rgba(255, 255, 255, 0.5);
+  border-bottom: 0.1em solid rgba(255, 255, 255, 0.25);
+}
+.pop-up{
+  animation: popUp 0.35s ease;
 }
