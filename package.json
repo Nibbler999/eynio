@@ -46,7 +46,6 @@
   },
   "bundledDependencies": [
     "iotdb-timers",
-    "socket.io",
     "simple-itach",
     "bunyan-prettystream"
   ],
