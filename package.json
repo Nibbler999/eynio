@@ -25,7 +25,7 @@
     "ip": "1.1.0",
     "jpeg-size": "0.0.1",
     "lodash": "3.10.1",
-    "mjpeg-consumer": "1.0.3",
+    "mjpeg-consumer": "1.0.5",
     "motion": "0.2.2",
     "netatmo": "1.2.0",
     "node-hue-api": "1.2.1",
