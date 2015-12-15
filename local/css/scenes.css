@@ -2,6 +2,7 @@
 
 .scene-box {
   position: relative;
+  display: inline-block;
   width: 18em;
   height: 9em;
   background-color: #14314A;
@@ -70,160 +71,66 @@
 }
 
 /* END SCENE BOX CSS */
-
-.new-scene {
-  position: absolute;
-  left: 1em;
-  right: 1em;
-  top: 1em;
-  bottom: 1em;
-  margin-top: 100%;
-  background-color: #14314A;
-  border-radius: 0.5em;
-  box-shadow: 0.1em 0.1em 1em rgba(0, 0, 0, 0.3);
+.new-scene{
+  position: relative;
   color: #fff;
-  -webkit-transition: all 0.35s ease-in-out;
-  transition: all 0.35s ease-in-out;
-  overflow: auto;
+  background-color: #14334B;
+  border-radius: 0.5em;
+  box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.5);
 }
-.new-scene-info {
+.new-scene-nav{
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-flex-flow: row wrap;
-  -ms-flex-flow: row wrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  padding: 2em 1em;
+}
+.new-scene-nav > h3{
+  margin: 0;
+}
+.new-scene-make-schedule-wrap{
+  position: absolute;
+  right: 1em;
+  top: 5em;
+}
+.scene-schedule-btn{
+  background: url(../img/button/schedule.svg) no-repeat 50%;
+  margin: 0.25em;
+  opacity: 0.5;
+}
+#scene-schedule:checked ~ .scene-schedule-btn, .scene-schedule-btn:hover{
+  background: url(../img/button/schedule.svg) no-repeat 50%;
+  margin: 0.25em;
+  opacity: 1;
+  box-shadow: none;
+}
+.new-scene-form{
+  background-color: inherit;
+  padding: 1em;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
   flex-flow: row wrap;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   -webkit-box-align: end;
   -webkit-align-items: flex-end;
-  -ms-flex-align: end;
-  align-items: flex-end;
-  padding: 1em;
+      -ms-flex-align: end;
+          align-items: flex-end;
 }
-.scene-schedule-checbox-wrap{
-  display: inherit;
+.new-scene-schedule-options{
+  min-height: 12em;
 }
-.scene-schedule-checbox-wrap > input:checked ~ label{
-  background: rgba(255, 255, 255, 0.7)url(../img/button/schedule.png) 50% 50% no-repeat;
-  background-size: contain;
-  margin: 0;
-  padding: 0 2em;
-  box-shadow: none;
+.new-scene-selected-devices{
+  margin: 1em;
 }
-.assign-schedule-btn {
-  background: rgba(255, 255, 255, 0.7)url(../img/button/schedule.svg) 50% 50% no-repeat;
-  background-size: contain;
-  margin: 0;
-  padding: 0 2em;
-}
-.new-scene-info div:first-child {
-  min-width: 20em;
-}
-.new-scene-info-days {
-  background: #112B41;
-  border-radius: 0.5em;
-  border: 0.1em solid rgba(255, 255, 255, 0.1);
-  overflow: hidden;
-}
-.new-scene-day-label {
-  min-width: 3em;
-  height: 2.5em;
-  line-height: 2.5;
-  padding: 0 0.5em;
-  margin: 0;
-  color: #fff;
-  cursor: pointer;
-  text-align: center;
-  -webkit-transition: all 0.2s linear;
-  transition: all 0.2s linear;
-}
-.new-scene-sun-label {
-  height: 2.5em;
-  line-height: 2.5;
-  padding: 0 0.75em;
-  margin: 0;
-  border-radius: 0.35em;
-  border: 0.1em solid rgba(255, 255, 255, 0.1);
-  color: #fff;
-  cursor: pointer;
-  text-align: center;
-  -webkit-transition: all 0.2s linear;
-  transition: all 0.2s linear;
-}
-.new-scene-sun-label:hover, .new-scene-day-label:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
-input[type="checkbox"]:checked ~ .new-scene-day-label {
-  background: #21425E;
-  border: 0;
-  box-shadow: 0.1em 0 1em rgba(0, 0, 0, 0.3);
-  ;
-  -webkit-transform: scale(1.1);
-  ;
-  -ms-transform: scale(1.1);
-  ;
-  transform: scale(1.1);
-  box-sizing: border-box;
-}
-.new-scene-sun-time:checked ~ .new-scene-sun-label {
-  background: #21425E;
-  box-shadow: 0.1em 0 1em rgba(0, 0, 0, 0.3);
-  ;
-  border: 0.1em solid rgba(255, 255, 255, 0.25);
-  -webkit-transform: scale(1.1);
-  -ms-transform: scale(1.1);
-  transform: scale(1.1);
-  box-sizing: border-box;
-}
-.new-scene-sun-time:disabled ~ .new-scene-sun-label, .new-scene-day:disabled ~ .new-scene-day-label, .form-number:disabled {
-  opacity: 0.35;
-  cursor: no-drop;
-  -webkit-transition: all 0.3s ease;
-          transition: all 0.3s ease;
-}
-.new-scene-selected-devices {
-  max-height: 15%;
-  overflow: auto;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-flow: row wrap;
-  -ms-flex-flow: row wrap;
-  flex-flow: row wrap;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-.new-scene-dev-btn {
-  background: #234562 url(../img/button/cross-dark.png) 97% 50% no-repeat;
-  color: #6EA7D8;
-  margin-right: 1em;
-  margin-bottom: 1em;
-  box-shadow: 0.1em 0.1em 1em rgba(0, 0, 0, 0.3);
-  -webkit-animation: popUp 0.3s ease forwards;
-  animation: popUp 0.3s ease forwards;
-}
-.new-scene-dev-btn:active {
-  -webkit-animation: popDown 0.5s ease;
-  animation: popDown 0.5s ease;
-}
-.new-scene-dev-btn p{
-  margin-right: 1em;
-}
-.new-scene-devices {
-  position: absolute;
-  bottom: 0;
+.new-scene-devices{
   background-color: #0F2A41;
-  width: 100%;
-  height: 65%;
-  overflow: auto;
-}
-.new-scene-devices > div {
-  padding: 1em;
 }

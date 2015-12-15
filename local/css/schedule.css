@@ -36,27 +36,39 @@
   background-position: 95% 50%;
   background-repeat: no-repeat;
 }
-.edit-schedule-group {
+.schedule-group {
   margin-bottom: 1em;
 }
+.schedule-days-wrap{
+  background-color: #0D1E2E;
+  border-radius: 0.5em;
+  border: 0.1em solid rgba(255, 255, 255, 0.25);
+  overflow: hidden;
+}
 .schedule-label {
+  min-width: 3em;
   height: 2.5em;
-  width: auto;
+  line-height: 2.5;
   padding: 0 0.5em;
   margin: 0;
-  background-color: #112b41;
+  color: #fff;
+  border-bottom: 0.25em solid transparent;
   cursor: pointer;
-  margin: auto;
   text-align: center;
-  line-height: 2.5;
-  font-weight: 100;
-  transition: all 0.35s ease;
+  -webkit-transition: all 0.2s linear;
+  transition: all 0.2s linear;
+}
+.schedule-label:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 input[type="checkbox"]:checked ~ .schedule-label{
-  background: #21425e;
-  transform: scale(1.05);
-  box-shadow: none;
-  font-weight: 700;
+  background: #21425E;
+  border-bottom: 0.25em solid #1D83E4;
+  box-shadow: 0.1em 0 1em rgba(0, 0, 0, 0.3);
+  -webkit-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+  box-sizing: border-box;
 }
 /*
 .schedule-wrap div {

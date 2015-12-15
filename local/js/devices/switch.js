@@ -73,26 +73,22 @@
             // check minutes to prevent schedule in the past
             scope.checkMinutes = function(e) {
               var date = new Date();
-              e.target.min = date.getMinutes();
+              var h = parseInt(document.getElementById('device-schedule-hours-' + scope.sinfo.id).value);
+              if (h <= date.getHours()) {
+                e.target.min = date.getMinutes() + 1;
+              }
             };
             // make quick schedule
             scope.quickSchedule = function(dev, state) {
               var h = document.getElementById('device-schedule-hours-' + scope.sinfo.id);
               var m = document.getElementById('device-schedule-minutes-' + scope.sinfo.id);
               var date = new Date();
-
-              var dateTime = {
-                year: date.getFullYear(),
-                month: date.getMonth(),
-                day: date.getDay(),
-                hour: parseInt(h.value),
-                minute: parseInt(m.value)
-              };
+              date.setHours(parseInt(h.value), parseInt(m.value), 0, 0);
 
               var job = {
                 name: dev.name,
                 type: 'device',
-                dateTime: dateTime,
+                dateTime: Date.parse(date),
                 actions: {
                   emit_name: 'setDevicePowerState',
                   params: [dev.id, state]

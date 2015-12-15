@@ -140,6 +140,14 @@ button:focus {
   color: #fff;
   text-indent: 0.5em;
 }
+.form-date {
+  height: 2.5em;
+  border-radius: 0.25em;
+  background: #21425E;
+  border: 0.1em solid #446B8D;
+  color: #fff;
+  text-indent: 0.5em;
+}
 .slide-toggle-wrap input {
   display: none;
 }
@@ -200,6 +208,12 @@ input[type="radio"]:checked ~ label {
   background: transparent url(../img/button/category-active.png) center no-repeat;
   background-size: contain;
   box-shadow: 0.1em 0.1em 0.4em #1362AC, -0.1em -0.1em 0.4em #1362AC;
+}
+input:disabled ~ label, input:disabled {
+  opacity: 0.35;
+  cursor: no-drop;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 .checkbox-label, .radio-label {
   -webkit-transition: all 0.25s ease-out;
@@ -300,11 +314,11 @@ input[type="radio"]:checked ~ label {
   -ms-flex-pack: end;
   justify-content: flex-end;
 }
-.justify-start{
+.justify-start {
   -webkit-box-pack: start;
   -webkit-justify-content: flex-start;
-      -ms-flex-pack: start;
-          justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
 }
 .horizontal-line {
   position: absolute;
@@ -315,5 +329,5 @@ input[type="radio"]:checked ~ label {
 }
 .pop-up {
   -webkit-animation: popUp 0.35s ease;
-          animation: popUp 0.35s ease;
+  animation: popUp 0.35s ease;
 }

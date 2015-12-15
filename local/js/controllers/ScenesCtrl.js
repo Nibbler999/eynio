@@ -8,142 +8,88 @@
 
         var scene = this;
 
-        var daysArr = [];
-        var itemsArr = [];
+        scene.scheduleRepeat = 'weekly';
         scene.actionsArr = [];
-        var sceneScheduleTime;
 
-        var newScene = document.querySelector('.new-scene');
         var newSceneName = document.getElementById('new-scene-name');
+
         var newSceneHours = document.getElementById('new-scene-hours');
         var newSceneMinutes = document.getElementById('new-scene-minutes');
-        var newSceneDays = document.querySelectorAll('.new-scene-day');
-        var newSceneSunset = document.getElementById('new-scene-sunset');
+        var newSceneDate = document.getElementById('new-scene-date');
+        var newSceneDays = document.getElementsByClassName('new-scene-day');
         var newSceneSunrise = document.getElementById('new-scene-sunrise');
+        var newSceneSunset = document.getElementById('new-scene-sunset');
 
-        /* get add screen menu */
-        document.querySelector('.add-new-btn').onclick = function() {
-          newScene.style.marginTop = '0%';
-        };
-        /* scene schedule days */
-        angular.forEach(newSceneDays, function(day) {
-          day.onclick = function() {
-            getDays();
-          }
-        });
-
-        function getDays() {
-          daysArr = [];
-          angular.forEach(newSceneDays, function(day) {
-            if (day.checked) {
-              daysArr.push(parseInt(day.value));
-            }
-          });
-        };
-
-        /* save schedule for scene */
-        function saveSchedule() {
-          if (newSceneSunset.checked) {
-            sceneScheduleTime = newSceneSunset.value;
-          } else if (newSceneSunrise.checked) {
-            sceneScheduleTime = newSceneSunrise.value;
-          } else if (newSceneHours.value > 23) {
-            newSceneHours.value = 23;
-            alert('Hours above 23 are not allowed!');
-          } else if (newSceneMinutes.value > 59) {
-            newSceneMinutes.value = 59;
-            alert('Minutes above 59 are not allowed!');
-          } else if (!newSceneHours.value || !newSceneMinutes.value) {
-            return
+        // when checkbox is clicked
+        scene.disableInputs = function(e) {
+          var disableCheck = e.target.value === 'sunset' ? newSceneSunrise : newSceneSunset;
+          if (e.target.checked) {
+            disableCheck.disabled = true;
+            newSceneHours.disabled = true;
+            newSceneMinutes.disabled = true;
+            angular.forEach(newSceneDays, function(day) {
+              day.disabled = true;
+            });
           } else {
-            sceneScheduleTime = {
-              'hour': parseInt(newSceneHours.value),
-              'minute': parseInt(newSceneMinutes.value),
-              'dayOfWeek': daysArr
-            };
-          }
-          console.log(sceneScheduleTime);
-        };
-
-        scene.getSunsetSunrise = function(sunTime) {
-          if (sunTime === 'sunrise') {
-            if (newSceneSunrise.checked) {
-
-              angular.forEach(newSceneDays, function(days) {
-                days.disabled = true;
-                days.checked = false;
-              });
-              newSceneSunset.disabled = true;
-              newSceneHours.disabled = true;
-              newSceneHours.value = '';
-              newSceneMinutes.disabled = true;
-              newSceneMinutes.value = '';
-              daysArr = [];
-            } else {
-              angular.forEach(newSceneDays, function(days) {
-                days.disabled = false;
-              });
-
-              newSceneSunset.disabled = false;
-              newSceneHours.disabled = false;
-              newSceneMinutes.disabled = false;
-            }
-          } else if (sunTime === 'sunset') {
-            if (newSceneSunset.checked) {
-
-              angular.forEach(newSceneDays, function(days) {
-                days.disabled = true;
-                days.checked = false;
-              });
-              newSceneSunrise.disabled = true;
-              newSceneHours.disabled = true;
-              newSceneHours.value = '';
-              newSceneMinutes.disabled = true;
-              newSceneMinutes.value = '';
-              daysArr = [];
-            } else {
-              angular.forEach(newSceneDays, function(days) {
-                days.disabled = false;
-              });
-
-              newSceneSunrise.disabled = false;
-              newSceneHours.disabled = false;
-              newSceneMinutes.disabled = false;
-            }
+            disableCheck.disabled = false;
+            newSceneHours.disabled = false;
+            newSceneMinutes.disabled = false;
+            angular.forEach(newSceneDays, function(day) {
+              day.disabled = false;
+            });
           }
         };
 
-        /* cancel Schedule */
-        scene.cancelSchedule = function() {
+        // add scene and schedule
+        scene.addScene = function() {
+          var time, sceneObj, scheduleObj;
 
-          newScene.style.marginTop = '100%';
-          /* clear data */
-          angular.forEach(allDev, function(dev) {
-            dev.schedule_select = false;
-          });
-          angular.forEach(newSceneDays, function(days) {
-            days.disabled = false;
-          });
-          newSceneSunrise.disabled = false;
-          newSceneSunset.disabled = false;
-          newSceneHours.disabled = false;
-          newSceneMinutes.disabled = false;
+          sceneObj = {
+            name: newSceneName.value,
+            actioins: scene.actionsArr
+          };
 
+          socket.emit('addScene', sceneObj, function(response) {
+            if (response && scene.sceneSchedule) {
+              time = newSceneSunset.checked && !newSceneSunset.disabled ? newSceneSunset.value : newSceneSunrise.checked && !newSceneSunrise.disabled ? newSceneSunrise.value : null;
+              if (!time && scene.scheduleRepeat === 'weekly') {
+                time = {};
+                time.dayOfWeek = [];
+                angular.forEach(newSceneDays, function(day) {
+                  if (day.checked && !day.disabled) {
+                    time.dayOfWeek.push(parseInt(day.value));
+                  };
+                });
+                time.hour = parseInt(newSceneHours.value);
+                time.minute = parseInt(newSceneMinutes.value);
+              } else if (!time && scene.scheduleRepeat === 'once') {
 
-          /* clear input data */
-          newSceneName.value = '';
-          angular.forEach(scene.actionsArr, function(dev) {
-            if (dev.device.type === 'switch') {
-              scene.allSwitches.push(dev.device);
-            } else if (dev.device.type === 'light') {
-              scene.allLights.push(dev.device);
+                var date = new Date();
+                date.setTime(Date.parse(newSceneDate.value));
+                date.setHours(parseInt(newSceneHours.value), parseInt(newSceneMinutes.value), 0, 0);
+                time = Date.parse(date);
+              }
+
+              scheduleObj = {
+                name: newSceneName.value,
+                type: 'scene',
+                dateTime: time,
+                actions: scene.actionsArr
+              };
+
+              socket.emit('addNewJob', scheduleObj, function(response) {
+                if (response) {
+                  scene.restoreData();
+                }
+              });
+            } else {
+              scene.restoreData();
             }
           });
-          scene.actionsArr = [];
-          sceneScheduleTime = null;
         };
 
-        scene.selectedForScene = function(device, index) {
+        // select device for scene, remove it from native array
+        scene.selectDevice = function(device, index) {
           console.log(device, index);
 
           if (device.type === 'switch') {
@@ -161,67 +107,40 @@
             });
             scene.allLights.splice(index, 1);
           }
-          console.log(scene.actionsArr);
         };
-
-        scene.deselectDevice = function(deselectDev, index) {
-          if (deselectDev.device.type === 'switch') {
-            console.log(scene.allSwitches);
-            scene.allSwitches.push(deselectDev.device);
-
-            console.log(scene.allSwitches);
-          } else if (deselectDev.device.type === 'light') {
-            scene.allLights.push(deselectDev.device);
+        // return dev in native array
+        scene.deselectDevice = function(dev, index) {
+          if (dev.type === 'light') {
+            scene.allLights.push(dev);
+          } else if (dev.type === 'switch') {
+            scene.allSwitches.push(dev);
           }
           scene.actionsArr.splice(index, 1);
         };
-
-        scene.addScene = function() {
-          if (!scene.actionsArr.length) {
-            return
-          } else {
-            if (scene.sceneSchedule) {
-              saveSchedule();
-            }
-            var sceneObj = {
-              name: newSceneName.value,
-              actions: scene.actionsArr
+        // restore devices, clear inputs
+        scene.restoreData = function() {
+          angular.forEach(scene.actionsArr, function(actionObj) {
+            if (actionObj.device.type === 'switch') {
+              scene.allSwitches.push(actionObj.device);
+            } else if (actionObj.device.type === 'light') {
+              scene.allLights.push(actionObj.device);
             };
-            if (scene.sceneForEdit) {
-              sceneObj.id = scene.sceneForEdit.id;
-              socket.emit('updateScene', sceneObj, function(sceneEdited) {
-                if (sceneEdited) {
-                  angular.forEach(scene.allScenes, function(sce) {
-                    if (sce.id === sceneEdited.id) {
-                      scene.allScenes.splice(scene.allScenes.indexOf(sce), 1);
-                      scene.allScenes.push(sceneEdited);
-                    }
-                  });
-                }
-              });
-            } else {
-              socket.emit('addScene', sceneObj, function(addedScene) {
-                console.log(addedScene);
-              });
-            }
-            if (sceneScheduleTime) {
-              socket.emit4('addNewJob', newSceneName.value, sceneScheduleTime, scene.actionsArr, function(data) {
-                console.log(data);
-              });
-            }
-            /* clear input data */
-            newSceneName.value = '';
-            angular.forEach(scene.actionsArr, function(dev) {
-              if (dev.device.type === 'switch') {
-                scene.allSwitches.push(dev.device);
-              } else if (dev.device.type === 'light') {
-                scene.allLights.push(dev.device);
-              }
-            });
-            scene.actionsArr = [];
-            sceneScheduleTime = null;
-          }
+          });
+          newSceneName.value = '';
+          newSceneHours.value = '';
+          newSceneMinutes.value = '';
+          newSceneDate.value = '';
+          newSceneSunrise.checked = false;
+          newSceneSunrise.disabled = false;
+          newSceneSunset.checked = false;
+          newSceneSunset.disabled = false;
+          angular.forEach(newSceneDays, function(day) {
+            day.checked = false;
+            day.disabled = false;
+          });
+          scene.actionsArr = [];
         };
+
 
         $scope.$on('editScene', function(event, sceneForEdit) {
           /* set new data */
@@ -258,7 +177,6 @@
 
         scene.allLights = dataService.sortDevicesByType(allDev, 'light');
         scene.allSwitches = dataService.sortDevicesByType(allDev, 'switch');
-        scene.allShutters = dataService.sortDevicesByType(allDev, 'shutter');
         scene.allTvRemotes = dataService.sortRemotesByType(allRemotes, 'tv');
         /* wait on socket to connect than get data */
         if (!allDev || !scene.allScenes) {
@@ -270,7 +188,6 @@
 
             scene.allLights = dataService.sortDevicesByType(allDev, 'light');
             scene.allSwitches = dataService.sortDevicesByType(allDev, 'switch');
-            scene.allShutters = dataService.sortDevicesByType(allDev, 'shutter');
 
             scene.allTvRemotes = dataService.sortRemotesByType(allRemotes, 'tv');
           });

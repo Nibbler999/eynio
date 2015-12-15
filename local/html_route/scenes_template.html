@@ -1,99 +1,116 @@
 <div class="template-nav">
   <h3>Scenes</h3>
-  <button class="button add-new-btn">
+  <button class="button add-new-btn" data-toggle="collapse" data-target="#add-new-scene, #display-scenes">
     Add New Scene
   </button>
 </div>
 
-<div class="display-devices-row">
+<div id="display-scenes" class="collapse in">
   <scene ng-repeat="scene in scene.allScenes" scinfo="scene"></scene>
 </div>
 
-<div class="new-scene">
-
-  <div class="new-scene-info">
+<div id="add-new-scene" class="collapse new-scene">
+  <div class="new-scene-nav">
     <h3>Add Scene</h3>
     <div>
-      <button type="reset" class="button orange-btn" form="new-scene-form" ng-click="scene.cancelSchedule()">
+      <button type="reset" class="button orange-btn" form="add-scene-form" ng-click="scene.cancelSchedule()">
         Cancel
       </button>
-      <button type="submit" class="button blue-btn" form="new-scene-form">
+      <button type="submit" class="button blue-btn" form="add-scene-form">
         Done
       </button>
     </div>
   </div>
 
-  <form type="form" ng-submit="scene.addScene()" id="new-scene-form" autocomplete="off">
-    <div class="new-scene-info">
-      <div>
-        <label for="new-scene-name" class="form-label">Scene name</label>
-        <input id="new-scene-name" class="form-input" pattern=".{4,15}" title="4 - 15 characters" required>
-      </div>
-      <div class="scene-schedule-checbox-wrap">
-        <input type="checkbox" id="scene-schedule" ng-model="scene.sceneSchedule">
-        <label for="scene-schedule" class="button assign-schedule-btn"></label>
-      </div>
-      <div ng-show="scene.sceneSchedule">
-        <input type="number" class="form-number" id="new-scene-hours" placeholder="Hours" pattern=".{0,23}" title="0 to 23h">
-        <input type="number" class="form-number" id="new-scene-minutes" placeholder="Minutes" pattern=".{0,59}" title="0 to 59 min">
-      </div>
-      <div ng-show="scene.sceneSchedule" class="new-scene-info-days">
-        <span>
-          <input type="checkbox" id="new-scene-mon" class="new-scene-day" value="1">
-          <label for="new-scene-mon" class="new-scene-day-label">Mon</label>
-        </span>
-        <span>
-          <input type="checkbox" id="new-scene-tue" class="new-scene-day" value="2">
-          <label for="new-scene-tue" class="new-scene-day-label">Tue</label>
-        </span>
-        <span>
-          <input type="checkbox" id="new-scene-wed" class="new-scene-day" value="3">
-          <label for="new-scene-wed" class="new-scene-day-label">Wed</label>
-        </span>
-        <span>
-          <input type="checkbox" id="new-scene-thu" class="new-scene-day" value="4">
-          <label for="new-scene-thu" class="new-scene-day-label">Thu</label>
-        </span>
-        <span>
-          <input type="checkbox" id="new-scene-fri" class="new-scene-day" value="5">
-          <label for="new-scene-fri" class="new-scene-day-label">Fri</label>
-        </span>
-        <span>
-          <input type="checkbox" id="new-scene-sat" class="new-scene-day" value="6">
-          <label for="new-scene-sat" class="new-scene-day-label">Sat</label>
-        </span>
-        <span>
-          <input type="checkbox" id="new-scene-sun" class="new-scene-day" value="7">
-          <label for="new-scene-sun" class="new-scene-day-label">Sun</label>
-        </span>
-      </div>
-      <div ng-show="scene.sceneSchedule">
-        <span>
-          <input type="checkbox" id="new-scene-sunrise" class="new-scene-sun-time" value="sunrise" title="Disables everything else" ng-click="scene.getSunsetSunrise('sunrise')">
-          <label for="new-scene-sunrise" class="new-scene-sun-label">Sunrise</label>
-        </span>
-        <span>
-          <input type="checkbox" id="new-scene-sunset" class="new-scene-sun-time" value="sunset" ng-click="scene.getSunsetSunrise('sunset')">
-          <label for="new-scene-sunset" class="new-scene-sun-label">Sunset</label>
-        </span>
-      </div>
+  <div class="new-scene-make-schedule-wrap">
+    <input type="checkbox" id="scene-schedule" ng-model="scene.sceneSchedule">
+    <label for="scene-schedule" class="button scene-schedule-btn" title="make schedule for scene"></label>
+    <span ng-show="scene.sceneSchedule">
+      <span>
+        <i>Once</i>
+        <input type="radio" name="repeat-schedule" value="once" id="schedule-once" ng-model="scene.scheduleRepeat">
+        <label for="schedule-once" class="radio-label" title="schedule will fire just once"></label>
+      </span>
+      <span>
+        <i>Weekly</i>
+        <input type="radio" name="repeat-schedule" value="weekly" id="schedule-repeat" ng-model="scene.scheduleRepeat">
+        <label for="schedule-repeat" class="radio-label" title="schedule will fire on chosen days, every week"></label>
+      </span>
+    </span>
+  </div>
+
+  <form type="form" ng-submit="scene.addScene()" id="add-scene-form" class="new-scene-form">
+    <div class="schedule-group">
+      <label for="new-scene-name" class="form-label">Scene name</label>
+      <input type="text" id="new-scene-name" class="form-input" pattern=".{4,15}" title="4 - 15 characters" required>
+    </div>
+
+    <div class="schedule-group" ng-show="scene.sceneSchedule">
+      <input type="number" class="form-number" id="new-scene-hours" placeholder="Hrs" pattern=".{0,23}" title="0 to 23h">
+      <input type="number" class="form-number" id="new-scene-minutes" placeholder="Min" pattern=".{0,59}" title="0 to 59 min">
+    </div>
+
+    <div class="schedule-group" ng-show="scene.sceneSchedule && scene.scheduleRepeat === 'once'">
+      <input type="date" class="form-date" id="new-scene-date" title="select date" ng-blur="scene.getDate($event)">
+    </div>
+
+    <div class="schedule-group schedule-days-wrap" ng-show="scene.sceneSchedule && scene.scheduleRepeat === 'weekly'">
+      <span>
+        <input type="checkbox" id="new-scene-mon" class="new-scene-day" value="1">
+        <label for="new-scene-mon" class="schedule-label">Mon</label>
+      </span>
+      <span>
+        <input type="checkbox" id="new-scene-tue" class="new-scene-day" value="2">
+        <label for="new-scene-tue" class="schedule-label">Tue</label>
+      </span>
+      <span>
+        <input type="checkbox" id="new-scene-wed" class="new-scene-day" value="3">
+        <label for="new-scene-wed" class="schedule-label">Wed</label>
+      </span>
+      <span>
+        <input type="checkbox" id="new-scene-thu" class="new-scene-day" value="4">
+        <label for="new-scene-thu" class="schedule-label">Thu</label>
+      </span>
+      <span>
+        <input type="checkbox" id="new-scene-fri" class="new-scene-day" value="5">
+        <label for="new-scene-fri" class="schedule-label">Fri</label>
+      </span>
+      <span>
+        <input type="checkbox" id="new-scene-sat" class="new-scene-day" value="6">
+        <label for="new-scene-sat" class="schedule-label">Sat</label>
+      </span>
+      <span>
+        <input type="checkbox" id="new-scene-sun" class="new-scene-day" value="7">
+        <label for="new-scene-sun" class="schedule-label">Sun</label>
+      </span>
+    </div>
+
+    <div class="schedule-group" ng-show="scene.sceneSchedule">
+      <span>
+        <input type="checkbox" id="new-scene-sunrise" class="new-scene-sun-time" value="sunrise" title="Disables everything else" ng-click="scene.disableInputs($event)">
+        <label for="new-scene-sunrise" class="schedule-label schedule-sunrise-label">Sunrise</label>
+      </span>
+      <span>
+        <input type="checkbox" id="new-scene-sunset" class="new-scene-sun-time" value="sunset" ng-click="scene.disableInputs($event)">
+        <label for="new-scene-sunset" class="schedule-label schedule-sunset-label">Sunset</label>
+      </span>
     </div>
   </form>
 
-  <div class="new-scene-info new-scene-selected-devices">
-    <button class="button new-scene-dev-btn" ng-repeat="dev in scene.actionsArr" ng-click="scene.deselectDevice(dev, index)">
-      <p>{{dev.device.name}}</p>
+  <div class="new-scene-selected-devices">
+    <button class="button blue-btn" ng-repeat="sceneObj in scene.actionsArr" ng-click="scene.deselectDevice(sceneObj.device, $index)">
+      <p>{{sceneObj.device.name}}</p>
     </button>
   </div>
 
   <div class="new-scene-devices">
     <div class="display-devices-row">
 
-      <ss-switch ng-repeat="switch in scene.allSwitches track by switch.id" sinfo="switch" ng-click="scene.selectedForScene(switch, $index)"></ss-switch>
+      <ss-switch ng-repeat="switch in scene.allSwitches track by switch.id" sinfo="switch" ng-click="scene.selectDevice(switch, $index)"></ss-switch>
 
-      <ss-light ng-repeat="light in scene.allLights track by light.id" linfo="light" ng-click="scene.selectedForScene(light, $index)"></ss-light>
+      <ss-light ng-repeat="light in scene.allLights track by light.id" linfo="light" ng-click="scene.selectDevice(light, $index)"></ss-light>
       <!--
-      <ss-tvremote ng-repeat="tvremote in scene.allTvRemotes" tvremote="tvremote" ng-click="scene.selectedForScene()"></ss-tvremote>
+      <ss-tvremote ng-repeat="tvremote in scene.allTvRemotes" tvremote="tvremote" ng-click="scene.selectDevice()"></ss-tvremote>
       !-->
     </div>
   </div>

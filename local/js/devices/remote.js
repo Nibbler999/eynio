@@ -74,25 +74,21 @@
               // check minutes to prevent schedule in the past
               scope.checkMinutes = function(e) {
                 var date = new Date();
-                e.target.min = date.getMinutes() + 1;
+                var h = parseInt(document.getElementById('device-schedule-hours-' + scope.tvinfo.id).value);
+                if (h <= date.getHours()) {
+                  e.target.min = date.getMinutes() + 1;
+                }
               };
               scope.quickSchedule = function(dev, state) {
                 var h = document.getElementById('device-schedule-hours-' + scope.tvinfo.id);
                 var m = document.getElementById('device-schedule-minutes-' + scope.tvinfo.id);
                 var date = new Date();
-                
-                var dateTime = {
-                  year: date.getFullYear(),
-                  month: date.getMonth(),
-                  day: date.getDay(),
-                  hour: parseInt(h.value),
-                  minute: parseInt(m.value)
-                };
+                date.setHours(parseInt(h.value), parseInt(m.value), 0, 0);
 
                 var job = {
                   name: dev.name,
                   type: 'device',
-                  dateTime: dateTime,
+                  dateTime: Date.parse(date),
                   actions: {
                     emit_name: 'sendKey',
                     params: [dev.id, state]

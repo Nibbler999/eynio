@@ -14,55 +14,63 @@
         link: function(scope, elem, attr) {
 
           console.log(scope.schinfo);
-          var timeObj, scheduledDays = [];
+          scope.isNumber = angular.isNumber;
 
-          /*scope.schinfo.dateTime.date = scope.schinfo.dateTime.year ? new Date(scope.schinfo.dateTime.year, scope.schinfo.dateTime.month, scope.schinfo.dateTime.day, scope.schinfo.dateTime.hour, scope.schinfo.dateTime.minute) : null;
-*/
+          var days = document.getElementsByName('day');
+          var time = document.getElementsByName('time');
+          var sunset = document.getElementsByName('sunset')[0];
+          var sunrise = document.getElementsByName('sunrise')[0];
 
-
-          scope.$on('updateJob', function(event, data) {
-
-            if (scope.schinfo.id === data.id) {
-              socket.emit4('updateJob', data.id, data.newName, data.newTimeObj, function(newJob) {
-                if (newJob) {
-                  scope.schinfo.name = data.newName;
-                  scope.schinfo.dateTime = data.newTimeObj;
-                }
+          scope.disableInputs = function(e) {
+            var time = document.getElementsByClassName('form-number');
+            var disableCheck = e.target.value === 'sunset' ? sunrise : sunset;
+            if (e.target.checked) {
+              disableCheck.disabled = true;
+              angular.forEach(time, function(timeInp) {
+                timeInp.disabled = true;
+              });
+              angular.forEach(days, function(day){
+                day.disabled = true;
+              });
+            } else{
+              disableCheck.disabled = false;
+              angular.forEach(time, function(timeInp) {
+                timeInp.disabled = false;
+              });
+              angular.forEach(days, function(day){
+                day.disabled = false;
               });
             }
-          });
-
-          var checkboxDays = document.getElementsByClassName('new-scene-day');
-          /* edit schedule */
-          scope.editSchedule = function(sch) {
-            /* show just edit schedule window */
-            scope.editMode = !scope.editMode;
-
-            angular.forEach(sch.dateTime.dayOfWeek, function(day) {
-              angular.forEach(checkboxDays, function(chbDay) {
-                if (chbDay.value == day && chbDay.id.slice(14) === sch.id) {
-                  chbDay.checked = true;
-                }
-              });
-            })
           };
 
-          scope.saveEditSchedule = function(sch) {
-            scheduledDays = [];
-            /* check the id of checkbox if match id od schedule */
-            angular.forEach(checkboxDays, function(day) {
-              if (day.checked && sch.id === day.id.slice(14)) {
-                scheduledDays.push(parseInt(day.value));
+          scope.editScheaddule = function(sch){
+            var time;
+            time = sunset.checked && !sunset.disabled ? sunset.value : sunrise.checked && !sunrise.disabled ? sunrise.value : null;
+            if(!time){
+              time = {};
+              time.dayOfWeek = [];
+              angular.forEach(days, function(day){
+                if(day.checked &&  !day.disabled){
+                  time.dayOfWeek.push(day.value);
+                };
+              });
+              time.hour = scope.schinfo.dateTime.hour;
+              time.minute = scope.schinfo.dateTime.minute;
+            }
+            console.log(time);
+
+            var job = {
+              id: sch.id,
+              name: sch.name,
+              type: sch.type,
+              dateTime: time,
+              actions: sch.actions
+            }
+            socket.emit('updateJob', job, function(scheduleObj){
+              if(scheduleObj){
+                scope.schinfo = scheduleObj[sch.id];
+                $('#edit-schedule-menu-' + scope.schinfo.id).collapse('hide');
               }
-            });
-            timeObj = {
-              dayOfWeek: scheduledDays,
-              hour: sch.dateTime.hour,
-              minute: sch.dateTime.minute
-            };
-            socket.emit4('updateJob', sch.id, sch.name, timeObj, function(response) {
-              sch.dateTime = timeObj;
-              scope.editMode = false;
             });
           };
 
