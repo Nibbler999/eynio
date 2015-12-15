@@ -1,0 +1,16 @@
+#displayCam{
+	border: 0;
+}
+#dashNav h3 {
+	cursor: pointer;
+}
+
+#dashNav h3:active{
+	color: #000;
+}
+
+.frame-add-room-modal {    
+    width: 30em;
+    margin: 0 auto;
+    text-align: center;
+}

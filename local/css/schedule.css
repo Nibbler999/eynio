@@ -1,22 +1,64 @@
 .schedule-wrap {
   position: relative;
-  height: 4em;
-  width: 100%;
   background-color: #102B42;
   color: #fff;
-  padding: 0 1em;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
+}
+.schedule-wrap p {
+  margin: 1em 0.25em;
 }
 .schedule-wrap:nth-child(odd) {
   background-color: #133048;
 }
+.edit-schedule-btn {
+  background: transparent url(../img/button/three-dots.png) 50% no-repeat;
+  border: none;
+  margin: 0.5em auto;
+}
+.edit-schedule-dropdown {
+  background-color: #224764;
+  top: 1em;
+  left: -7em;
+  width: 7em;
+  min-width: 5em;
+  text-align: left;
+}
+.edit-schedule-dropdown > li > a {
+  color: #fff;
+}
+.edit-schedule-dropdown-btn {
+  background-image: url(../img/button/edit.png);
+  background-position: 95% 50%;
+  background-repeat: no-repeat;
+  border-bottom: 0.1em solid #0C253A;
+}
+.delete-schedule-dropdown-btn {
+  background-image: url(../img/button/trash.png);
+  background-position: 95% 50%;
+  background-repeat: no-repeat;
+}
+.edit-schedule-group {
+  margin-bottom: 1em;
+}
+.schedule-label {
+  height: 2.5em;
+  width: auto;
+  padding: 0 0.5em;
+  margin: 0;
+  background-color: #112b41;
+  cursor: pointer;
+  margin: auto;
+  text-align: center;
+  line-height: 2.5;
+  font-weight: 100;
+  transition: all 0.35s ease;
+}
+input[type="checkbox"]:checked ~ .schedule-label{
+  background: #21425e;
+  transform: scale(1.05);
+  box-shadow: none;
+  font-weight: 700;
+}
+/*
 .schedule-wrap div {
   display: -webkit-box;
   display: -webkit-flex;
@@ -34,29 +76,6 @@
   line-height: 4;
   margin-right: 0.5em;
 }
-.edit-schedule-btn {
-  background: transparent url(../img/button/three-dots.png) 50% no-repeat;
-  border: none;
-}
-.edit-schedule-dropdown {
-  background-color: #224764;
-  top: 1em;
-  left: -7em;
-  width: 7em;
-  min-width: 5em;
-  text-align: left;
-}
-.edit-schedule-dropdown-btn {
-  background-image: url(../img/button/edit.png);
-  background-position: 95% 50%;
-  background-repeat: no-repeat;
-  border-bottom: 0.1em solid #0C253A;
-}
-.delete-schedule-dropdown-btn {
-  background-image: url(../img/button/trash.png);
-  background-position: 95% 50%;
-  background-repeat: no-repeat;
-}
 .schedule-edit-mode {
   margin: auto;
   -webkit-animation: expandAddCategory 0.3s ease;
@@ -72,3 +91,4 @@
   background: #295376 url(../img/button/cross-dark.png) 50% no-repeat;
   height: 2.5em;
 }
+*/

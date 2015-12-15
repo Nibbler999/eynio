@@ -14,11 +14,11 @@
         link: function(scope, elem, attr) {
 
           console.log(scope.schinfo);
-          var timeObj,scheduledDays = [];
+          var timeObj, scheduledDays = [];
 
-          scope.deleteJob = function(jobId) {
-            socket.emit('removeJob', jobId);
-          };
+          /*scope.schinfo.dateTime.date = scope.schinfo.dateTime.year ? new Date(scope.schinfo.dateTime.year, scope.schinfo.dateTime.month, scope.schinfo.dateTime.day, scope.schinfo.dateTime.hour, scope.schinfo.dateTime.minute) : null;
+*/
+
 
           scope.$on('updateJob', function(event, data) {
 
@@ -47,11 +47,11 @@
             })
           };
 
-          scope.saveEditSchedule =function(sch){
-            scheduledDays= [];
+          scope.saveEditSchedule = function(sch) {
+            scheduledDays = [];
             /* check the id of checkbox if match id od schedule */
-            angular.forEach(checkboxDays, function (day) {
-              if(day.checked && sch.id === day.id.slice(14)){
+            angular.forEach(checkboxDays, function(day) {
+              if (day.checked && sch.id === day.id.slice(14)) {
                 scheduledDays.push(parseInt(day.value));
               }
             });
@@ -60,10 +60,14 @@
               hour: sch.dateTime.hour,
               minute: sch.dateTime.minute
             };
-            socket.emit4('updateJob', sch.id, sch.name, timeObj, function(response){
+            socket.emit4('updateJob', sch.id, sch.name, timeObj, function(response) {
               sch.dateTime = timeObj;
               scope.editMode = false;
             });
+          };
+
+          scope.deleteSchedule = function(jobId) {
+            socket.emit('removeJob', jobId);
           };
         }
       }

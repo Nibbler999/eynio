@@ -94,7 +94,7 @@
                 type: 'device',
                 dateTime: dateTime,
                 actions: {
-                  emit_name: 'sendKey',
+                  emit_name: 'setDevicePowerState',
                   params: [dev.id, state]
                 }
               };

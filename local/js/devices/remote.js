@@ -79,10 +79,8 @@
               scope.quickSchedule = function(dev, state) {
                 var h = document.getElementById('device-schedule-hours-' + scope.tvinfo.id);
                 var m = document.getElementById('device-schedule-minutes-' + scope.tvinfo.id);
-                scope.checkHours(h);
-                scope.checkMinutes(m);
                 var date = new Date();
-
+                
                 var dateTime = {
                   year: date.getFullYear(),
                   month: date.getMonth(),
@@ -102,12 +100,12 @@
                 };
                 console.log(job);
                 socket.emit('addNewJob', job, function(response) {
-                  if(response){
+                  if (response) {
                     scope.scheduleSuccess = true;
                     h.value = '';
                     m.value = '';
                   }
-                  setTimeout(function(){
+                  setTimeout(function() {
                     scope.scheduleSuccess = false;
                   }, 250);
                 });

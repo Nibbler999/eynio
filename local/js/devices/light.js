@@ -132,7 +132,8 @@
               var h = document.getElementById('device-schedule-hours-' + scope.linfo.id);
               var m = document.getElementById('device-schedule-minutes-' + scope.linfo.id);
               var date = new Date();
-
+              date.setHours(parseInt(h.value), parseInt(m.value), 0, 0);
+              console.log(Date.parse(date));
               var dateTime = {
                 year: date.getFullYear(),
                 month: date.getMonth(),
@@ -145,10 +146,10 @@
                 name: dev.name,
                 type: 'device',
                 dateTime: dateTime,
-                actions: {
-                  emit_name: 'sendKey',
+                actions: [{
+                  emit_name: 'setDevicePowerState',
                   params: [dev.id, state]
-                }
+                }]
               };
               console.log(job);
               socket.emit('addNewJob', job, function(response) {

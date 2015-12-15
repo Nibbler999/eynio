@@ -157,7 +157,7 @@
 .new-scene-sun-label:hover, .new-scene-day-label:hover {
   background: rgba(255, 255, 255, 0.3);
 }
-.new-scene-day:checked ~ .new-scene-day-label {
+input[type="checkbox"]:checked ~ .new-scene-day-label {
   background: #21425E;
   border: 0;
   box-shadow: 0.1em 0 1em rgba(0, 0, 0, 0.3);

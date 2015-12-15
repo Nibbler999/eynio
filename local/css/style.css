@@ -131,7 +131,7 @@ button:focus {
   appearance: none;
   cursor: pointer;
 }
-.form-number{
+.form-number {
   max-width: 6em;
   height: 2.5em;
   border-radius: 0.25em;
@@ -196,7 +196,7 @@ input[type="checkbox"]:checked ~ label {
   background-size: contain;
   box-shadow: 0.1em 0.1em 0.4em #1362AC, -0.1em -0.1em 0.4em #1362AC;
 }
-input[type="radio"]:checked ~ label{
+input[type="radio"]:checked ~ label {
   background: transparent url(../img/button/category-active.png) center no-repeat;
   background-size: contain;
   box-shadow: 0.1em 0.1em 0.4em #1362AC, -0.1em -0.1em 0.4em #1362AC;
@@ -238,13 +238,12 @@ input[type="radio"]:checked ~ label{
   -ms-flex-pack: justify;
   justify-content: space-between;
 }
-
 .display-devices {
   color: #7BA0BF;
   padding: 1em 2em;
 }
 .display-devices-row {
-width: 100%;
+  width: 100%;
   display: -webkit-box;
   display: -ms-flexbox;
   display: -webkit-flex;
@@ -254,13 +253,7 @@ width: 100%;
   flex-flow: row wrap;
   padding: 1em;
 }
-.display-flex{
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-.add-new-btn{
+.add-new-btn {
   background: #1D83E4 url() 95% 50% no-repeat;
   margin: 1em;
 }
@@ -283,31 +276,44 @@ width: 100%;
 .color-blue {
   color: #2292CD;
 }
-.color-white{
-  color:#fff !important;
+.color-white {
+  color: #fff !important;
 }
-.blue-btn{
+.blue-btn {
   background-color: #1986D9;
 }
-.orange-btn{
+.orange-btn {
   background-color: #EE8615;
 }
-.red-btn{
+.red-btn {
   background-color: #D50000;
 }
-.justify-end{
+.display-flex {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+.justify-end {
   -webkit-box-pack: end;
   -webkit-justify-content: flex-end;
-      -ms-flex-pack: end;
-          justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
 }
-.horizontal-line{
+.justify-start{
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+}
+.horizontal-line {
   position: absolute;
   left: 0;
   right: 0;
   top: 5em;
   border-bottom: 0.1em solid rgba(255, 255, 255, 0.25);
 }
-.pop-up{
-  animation: popUp 0.35s ease;
+.pop-up {
+  -webkit-animation: popUp 0.35s ease;
+          animation: popUp 0.35s ease;
 }
