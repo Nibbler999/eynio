@@ -38,7 +38,7 @@
     "socket.io-client": "socketio/socket.io-client",
     "socketio-wildcard": "0.2.0",
     "tcp-ping": "0.1.1",
-    "wemo-client": "0.4.0",
+    "wemo-client": "0.6.1",
     "write-limiter": "0.1.5",
     "ws": "0.8.1",
     "ws-heartbeats": "^1.0.0",
