@@ -1,13 +1,18 @@
 #!/bin/sh
 
+PIDFILE=/var/run/nhome.pid
+
 start_package()
 {
-    HOME=/usr/local/etc /usr/local/bin/node ${APKG_PKG_DIR}/server.js --nocolor &> ${APKG_PKG_DIR}/server.log &
+    HOME=/usr/local/etc /usr/local/bin/node ${APKG_PKG_DIR}/server.js --nocolor --pidfile $PIDFILE &> ${APKG_PKG_DIR}/server.log &
 }
 
 stop_package()
 {
-    /usr/bin/pkill -f server.js
+    if [ -f $PIDFILE ]; then
+        /bin/kill $(cat $PIDFILE)
+        rm $PIDFILE
+    fi
 }
 
 case $1 in
