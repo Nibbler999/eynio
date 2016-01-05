@@ -1,15 +1,19 @@
 #!/bin/sh
 
-PRIVATE_LOCATION="/var/packages/NHome/target"
+PRIVATE_LOCATION=/var/packages/NHome/target
+PIDFILE=/var/run/nhome.pid
 
 start_package()
 {
-    HOME=/var/packages/NHome/etc /usr/bin/node ${PRIVATE_LOCATION}/server.js --nocolor &> /tmp/nhome.log &
+    HOME=/var/packages/NHome/etc /usr/bin/node ${PRIVATE_LOCATION}/server.js --nocolor --pidfile $PIDFILE &> /tmp/nhome.log &
 }
 
 stop_package()
 {
-    /usr/bin/pkill -f server.js
+    if [ -f $PIDFILE ]; then
+        /bin/kill $(cat $PIDFILE)
+        rm $PIDFILE
+    fi
 }
 
 case $1 in
@@ -22,11 +26,10 @@ case $1 in
                 exit 0
                 ;;
         status)
-                COUNT_NHOME=`ps | grep -c server.js`
-                if [ 1 -lt ${COUNT_NHOME} ]; then
-                        exit 0
+                if [ -f $PIDFILE ]; then
+                    exit 0
                 else
-                        exit 1
+                    exit 1
                 fi
                 ;;
         killall)
