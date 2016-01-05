@@ -23,7 +23,7 @@ if (program.pidfile) {
 
     fs.writeFile(program.pidfile, process.pid, function (err) {
         if (err) {
-            logger.error('Failed to write pidfile', err);
+            log.error('Failed to write pidfile: ' + err);
         }
     });
 }
