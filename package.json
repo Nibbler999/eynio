@@ -36,7 +36,7 @@
     "simple-itach": "0.2.1",
     "socket.io": "socketio/socket.io",
     "socket.io-client": "socketio/socket.io-client",
-    "socketio-wildcard": "0.1.1",
+    "socketio-wildcard": "0.3.0",
     "tcp-ping": "0.1.1",
     "wemo-client": "0.6.1",
     "write-limiter": "0.1.5",
