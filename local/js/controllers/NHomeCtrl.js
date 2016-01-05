@@ -6,9 +6,9 @@
     .controller('NHomeCtrl', ['$scope', '$rootScope', '$state', 'dataService', 'socket', function($scope, $rootScope, $state, dataService, socket) {
 
       var God = this;
-      God.activeRoomSensors = [];
-      var activeCat, notActiveCat, wentOffline, deleteRoomClickCount,
-        serverActiveLog = {};
+      //God.activeRoomSensors = [];
+      var sideBar = document.querySelector('.frame-sidebar');
+      var wentOffline, serverActiveLog = sessionStorage.sessionActionLog ? JSON.parse(sessionStorage.sessionActionLog) : {};
 
       // connect to socket
       dataService.socketConnect().then(function() {
@@ -18,17 +18,17 @@
       /* SET DEFAULT VALUES */
 
       //set active room
-      if (sessionStorage.activeRoom) {
-        God.activeRoom = {
-          name: JSON.parse(sessionStorage.activeRoom).name,
-          id: JSON.parse(sessionStorage.activeRoom).id
-        }
-      } else {
-        God.activeRoom = {
-          name: 'Dashboard',
-          id: 'dashboard'
-        };
-      }
+      // if (sessionStorage.activeRoom) {
+      //   God.activeRoom = {
+      //     name: JSON.parse(sessionStorage.activeRoom).name,
+      //     id: JSON.parse(sessionStorage.activeRoom).id
+      //   }
+      // } else {
+      //   God.activeRoom = {
+      //     name: 'Dashboard',
+      //     id: 'dashboard'
+      //   };
+      // }
       /* after server claim reload and rename */
       if (sessionStorage.newServerName && God.activeServer.name === sessionStorage.newServerName) {
         console.log(sessionStorage.newServerName);
@@ -38,11 +38,7 @@
         sessionStorage.removeItem('newServerName');
       };
 
-      if (sessionStorage.sessionActionLog) {
-        God.sessionActionLog = JSON.parse(sessionStorage.sessionActionLog)[God.activeServer.id];
-      } else {
-        God.sessionActionLog = [];
-      }
+      God.sessionActionLog = sessionStorage.sessionActionLog ? JSON.parse(sessionStorage.sessionActionLog)[God.activeServer.id] ? JSON.parse(sessionStorage.sessionActionLog)[God.activeServer.id] : [] : [];
 
       /* request data for frame from server */
       function socketEmits() {
@@ -83,70 +79,67 @@
       };
 
       /* filter sensors by catId */
-      function filterSensorsByCatId(catId) {
-        God.activeRoomSensors = [];
-        angular.forEach(God.allSensors, function(sensor) {
-          angular.forEach(sensor.categories, function(sensorCategoiresId) {
-            if (sensorCategoiresId === catId) {
-              God.activeRoomSensors.push(sensor);
-            }
-          })
-        });
-      };
+      // function filterSensorsByCatId(catId) {
+      //   God.activeRoomSensors = [];
+      //   angular.forEach(God.allSensors, function(sensor) {
+      //     angular.forEach(sensor.categories, function(sensorCategoiresId) {
+      //       if (sensorCategoiresId === catId) {
+      //         God.activeRoomSensors.push(sensor);
+      //       }
+      //     })
+      //   });
+      // };
       /* add new category */
-      God.addCategory = function() {
-        var newCategoryName = document.getElementById('add-category-name');
-        socket.emit('catAdd', {
-          name: newCategoryName.value
-        }, function(newCatId) {
-          var newCat = {
-            id: newCatId,
-            name: newCategoryName.value
-          };
-          God.categories.push(newCat);
-          newCategoryName.value = '';
-        });
-      };
-
-      /* delete category */
-      God.deleteCategorie = function(category) {
-        deleteRoomClickCount += 1;
-        if (deleteRoomClickCount === 2) {
-          socket.emit('catDelete', category.id, function(data) {
-            angular.forEach(God.categories, function(cat) {
-              if (cat.id === category.id) {
-                God.categories.splice(God.categories.indexOf(cat), 1);
-              }
-            });
-          });
-          God.activeRoom = {
-            name: 'Dashboard',
-            id: 'dashboard'
-          };
-          $scope.$broadcast('filterData', God.activeRoom.id);
-          $state.go('frame.dashboard');
-        }
-      };
-
-      /* edit category */
-      God.editCategory = function() {
-        socket.emit('catUpdate', God.activeRoom.id, {
-          name: God.activeRoom.name
-        });
-        angular.forEach(God.categories, function(category) {
-          if (category.id === God.activeRoom.id) {
-            category.name = God.activeRoom.name;
-          }
-        });
-      };
+      // God.addCategory = function() {
+      //   var newCategoryName = document.getElementById('add-category-name');
+      //   socket.emit('catAdd', {
+      //     name: newCategoryName.value
+      //   }, function(newCatId) {
+      //     var newCat = {
+      //       id: newCatId,
+      //       name: newCategoryName.value
+      //     };
+      //     God.categories.push(newCat);
+      //     newCategoryName.value = '';
+      //   });
+      // };
+      //
+      // /* delete category */
+      // God.deleteCategorie = function(category) {
+      //   deleteRoomClickCount += 1;
+      //   if (deleteRoomClickCount === 2) {
+      //     socket.emit('catDelete', category.id, function(data) {
+      //       angular.forEach(God.categories, function(cat) {
+      //         if (cat.id === category.id) {
+      //           God.categories.splice(God.categories.indexOf(cat), 1);
+      //         }
+      //       });
+      //     });
+      //     God.activeRoom = {
+      //       name: 'Dashboard',
+      //       id: 'dashboard'
+      //     };
+      //     $scope.$broadcast('filterData', God.activeRoom.id);
+      //     $state.go('frame.dashboard');
+      //   }
+      // };
+      //
+      // /* edit category */
+      // God.editCategory = function() {
+      //   socket.emit('catUpdate', God.activeRoom.id, {
+      //     name: God.activeRoom.name
+      //   });
+      //   angular.forEach(God.categories, function(category) {
+      //     if (category.id === God.activeRoom.id) {
+      //       category.name = God.activeRoom.name;
+      //     }
+      //   });
+      // };
 
       /* add server name and id to local storage and reload page */
       God.switchServer = function(server) {
         sessionStorage.activeServer = JSON.stringify(server);
-        sessionStorage.activeRoom = JSON.stringify({
-          name: 'Dashboard',
-          id: 'dashboard'
-        });
+        sessionStorage.removeItem('activeRoom');
         location.reload(true);
       };
 
@@ -172,6 +165,10 @@
           });
       };
 
+      God.toggleMenu = function() {
+        sideBar.classList.toggle('active');
+      };
+
       /* CUSTOM EMITS */
 
       /* name or email changed */
@@ -191,18 +188,20 @@
       });
       /* active server name changed */
       $scope.$on('newServerName', function(event, newServerName) {
-        God.activeServer = newServerName;
-        console.log(newServerName);
+        God.activeServer.name = newServerName;
+        sessionStorage.activeServer = JSON.stringify(God.activeServer);
+
+        angular.forEach(God.allServers, function(server) {
+          if (server.id === God.activeServer.id) {
+            server.name = newServerName;
+          }
+        });
       });
 
       /* remove active room class */
       $rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
-        if (to.name !== 'frame.dashboard') {
-          notActiveCat = document.getElementsByClassName('category');
-          angular.forEach(notActiveCat, function(cat) {
-            cat.classList.remove('category-active');
-            God.activeRoom.id = null;
-          });
+        if (window.innerWidth < 992) {
+          sideBar.classList.remove('active');
         }
       });
     }]);

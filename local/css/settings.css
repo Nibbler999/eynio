@@ -94,15 +94,6 @@
   background-repeat: no-repeat;
   color: #fff !important;
 }
-.settings-tab-hlp {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-flow: row wrap;
-  -ms-flex-flow: row wrap;
-  flex-flow: row wrap;
-}
 
 /* SERVER SETTINGS */
 
@@ -145,11 +136,7 @@
   color: #fff;
   font-weight: 100;
 }
-.settings-content-wrap p, .settings-content-wrap h4 {
-  margin: auto 1em;
-}
-.settings-row {
-  padding: 1em;
+.settings-box-wrap {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -157,109 +144,222 @@
   -webkit-flex-flow: row wrap;
   -ms-flex-flow: row wrap;
   flex-flow: row wrap;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-.settings-row:nth-child(odd) {
-  background-color: #193954;
-}
-.settings-backup {
-  padding-left: 1em;
+  -webkit-justify-content: space-around;
+  -ms-flex-pack: distribute;
+  justify-content: space-around;
+  -webkit-box-align: stretch;
+  -webkit-align-items: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+  margin: 1em 0;
 }
 .settings-box {
-  background-color: #193954;
+  position: relative;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  padding: 1em 1.5em;
+  margin: 0.5em;
+  background-color: #1F3A50;
   color: #fff;
-  border-radius: 0.5em;
-  margin: 1em;
-  padding: 1em 0;
-  height: 25em;
-  overflow: auto;
-  text-indent: 1em;
-  box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.5);
 }
-.settings-box > small {
-  margin-left: 1em;
-}
-.settings-box-wrap {
-  background-color: #193954;
+.server-status-btn {
+  margin: 2.5em auto;
   padding: 1em;
-  margin-bottom: 2em;
-  border-radius: 0.5em;
-  box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.5);
+  border-radius: 0.35em;
+  background-color: #355772;
+  background-repeat: no-repeat;
+  background-position: 10% 50%;
+  background-size: 5.5em;
+  text-indent: 40%;
+  text-align: left;
 }
-.settings-user-list-wrap {
-  padding: 1em;
-  max-height: 35em;
-  overflow: auto;
+.server-status-btn.online {
+  border: 0.2em solid #5FCA8F;
+  background-image: url(../img/button/up-to-date.png);
 }
-.server-log-pre {
-  margin: 0 !important;
-  padding: 1.25em 0;
+.server-status-btn.offline {
+  border: 0.2em solid #CF3437;
+  background-image: url(../img/button/not-up-to-date.png);
 }
-.server-log-pre:nth-child(odd) {
-  background-color: #16344D;
+.settings-btn {
+  width: 100%;
+  height: 3.5em;
+  background-color: #415F77;
+  background-position: 10% 50%;
+  background-repeat: no-repeat;
+  border: 0;
+  outline: none;
+  -webkit-transition: all 0.35s ease;
+  transition: all 0.35s ease;
 }
-.server-log-pre > span:first-child {
-  margin-right: 1em;
+.settings-btn:hover {
+  -webkit-transform: scale(1.025);
+  -ms-transform: scale(1.025);
+  transform: scale(1.025);
+  opacity: 0.9;
 }
-.server-log-pre > span:last-child {
-  float: right;
-  margin-right: 1em;
+.settings-btn.location {
+  background-image: url(../img/button/location.png);
 }
-.settings-user-list-nav {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-flow: row nowrap;
-  -ms-flex-flow: row nowrap;
-  flex-flow: row nowrap;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
+.settings-btn.reboot {
+  background-image: url(../img/button/reboot.png);
 }
-.settings-user-list {
-  list-style: none;
+.settings-btn.add {
+  background-image: url(../img/button/add-server-btn.png);
+}
+.settings-btn.leave {
+  margin: 0.1em 0;
+  background-image: url(../img/button/leave-btn.png);
+}
+.settings-btn.delete {
+  background-image: url(../img/button/cross.png);
+}
+.settings-btn.rename {
+  height: auto;
+}
+.settings-btn.green {
+  background-color: #5fca8f;
+}
+.settings-btn.blue{
+  background-color: #006BB7;
+}
+.server-status-indicator {
+  position: absolute;
+  top: 1em;
+  right: 1em;
+}
+.grow-box {
+  -webkit-box-flex: 3;
+  -webkit-flex-grow: 3;
+  -ms-flex-positive: 3;
+  flex-grow: 3;
+}
+.no-padding {
   padding: 0;
 }
-.settings-user-list > li {
-  height: 3em;
+.no-padding > h4 {
+  padding: 1em;
+}
+.settings-box-nav {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-flex-flow: row nowrap;
-  -ms-flex-flow: row nowrap;
-  flex-flow: row nowrap;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+.settings-box-nav > h4, .settings-box-nav > button, .settings-box-nav > span {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+.settings-box-nav > h4 {
+  padding-left: 1em;
+  margin: auto;
+}
+#change-server-name-form {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  margin-bottom: 1.5em;
+}
+.settings-box-btn-wrap > span > label {
+  margin: 0;
+  text-align: center;
+  line-height: 3.5;
+}
+.settings-backup {
+  padding-left: 0.5em;
+}
+.server-log-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 1em;
+  max-height: 20em;
+  overflow: auto;
+}
+.server-log-li {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
   justify-content: space-between;
 }
-.settings-user-list > li:nth-child(odd) {
-  background-color: #1A3852;
+.server-log-load-more {
+  cursor: pointer;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: center;
 }
-.settings-user-list-item {
-  width: 33%;
-  margin: auto;
+.server-log-load-more > img {
+  height: 1em;
+  width: 1em;
+  margin: auto 1em;
 }
-
+.settings-table-wrap{
+  max-height: 26em;
+  overflow: auto;
+}
+.settings-table{
+  width: 100%;
+}
 /* ACCOUNT SETTINGS */
 
-.account-user-info {
+.account-settings-wrap{
+  background-color: #1F3A50;
   padding: 1em;
+  margin: 0.15em;
+  display: inline-block;
+  min-width: 65%;
+  color: #fff;
 }
-.account-settings-user-info-wrap {
-  background-color: #193954;
-  border-radius: 0.5em;
-  margin: 2em 0 1em;
-  padding: 1em 0;
-  box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.5);
+
+.account-settings-box{
+  background-color: #254259;
+  margin: 0.15em;
+  flex-grow: 1;
 }
+.account-settings-avatar-wrap{
+  display: flex;
+  background-color: #2C4B64;
+  padding: 0.5em;
+  padding-right: 1em;
+}
+.account-settings-box.notifications{
+  padding: 0.5em 1em;
+}
+#account-settings-form > div div{
+  width: 100%;
+  margin: 0 0.25em;
+}
+
 .upload-avatar {
-  background: #1986D9 url(../img/button/upload-white.png) 10% 50% no-repeat;
+  background: #006BB7 url(../img/button/upload-white.png) 10% 50% no-repeat;
   text-indent: 2em;
+  padding: 0.75em 1.5em;
+  margin: 0;
+  width: 100%;
+  cursor: pointer;
+}
+@media screen and (min-width: 768px) {
+  .settings-box-btn-wrap {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
 }

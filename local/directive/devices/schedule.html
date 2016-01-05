@@ -27,8 +27,11 @@
         <span ng-hide="$index == schinfo.dateTime.dayOfWeek.length -1">,</span>
       </p>
     </span>
-    <p ng-if="schinfo.dateTime.dayOfWeek.length === 7" class="color-blue">Daily</p>
+    <p ng-if="schinfo.dateTime.dayOfWeek.length === 7 || !schinfo.dateTime.dayOfWeek" class="color-blue">Daily</p>
+    <p ng-if="isNumber(schinfo.dateTime.hour) && isNumber(schinfo.dateTime.minute)"><span class="color-blue">@</span> {{schinfo.dateTime.hour}}:{{schinfo.dateTime.minute}}</p>
     <p ng-if="isNumber(schinfo.dateTime)">{{schinfo.dateTime | date: 'd/MMM/yyyy HH:mm'}}</p>
+    <p ng-if="schinfo.dateTime === 'sunset'" class="color-blue">Sunset</p>
+    <p ng-if="schinfo.dateTime === 'sunrise'" class="color-blue">Sunrise</p>
 
     <!-- dropdown menu, edit, delete !-->
     <div class="dropdown">
@@ -60,31 +63,31 @@
       </div>
       <div class="col-xs-12 col-sm-12 col-md-5 schedule-group">
         <span>
-          <input type="checkbox" name="day" id="edit-schedule-mon-{{schinfo.id}}" ng-checked="schinfo.dateTime.dayOfWeek.indexOf(1) != -1" value="1">
+          <input type="checkbox" name="day-{{schinfo.id}}" id="edit-schedule-mon-{{schinfo.id}}" ng-checked="schinfo.dateTime.dayOfWeek.indexOf(1) != -1" value="1">
           <label for="edit-schedule-mon-{{schinfo.id}}" class="schedule-label">Mon</label>
         </span>
         <span>
-          <input type="checkbox" name="day" id="edit-schedule-tue-{{schinfo.id}}" ng-checked="schinfo.dateTime.dayOfWeek.indexOf(2) != -1" value="2">
+          <input type="checkbox" name="day-{{schinfo.id}}" id="edit-schedule-tue-{{schinfo.id}}" ng-checked="schinfo.dateTime.dayOfWeek.indexOf(2) != -1" value="2">
           <label for="edit-schedule-tue-{{schinfo.id}}" class="schedule-label">Tue</label>
         </span>
         <span>
-          <input type="checkbox" name="day" id="edit-schedule-wed-{{schinfo.id}}" ng-checked="schinfo.dateTime.dayOfWeek.indexOf(3) != -1" value="3">
+          <input type="checkbox" name="day-{{schinfo.id}}" id="edit-schedule-wed-{{schinfo.id}}" ng-checked="schinfo.dateTime.dayOfWeek.indexOf(3) != -1" value="3">
           <label for="edit-schedule-wed-{{schinfo.id}}" class="schedule-label">Wed</label>
         </span>
         <span>
-          <input type="checkbox" name="day" id="edit-schedule-thu-{{schinfo.id}}" ng-checked="schinfo.dateTime.dayOfWeek.indexOf(4) != -1" value="4">
+          <input type="checkbox" name="day-{{schinfo.id}}" id="edit-schedule-thu-{{schinfo.id}}" ng-checked="schinfo.dateTime.dayOfWeek.indexOf(4) != -1" value="4">
           <label for="edit-schedule-thu-{{schinfo.id}}" class="schedule-label">Thu</label>
         </span>
         <span>
-          <input type="checkbox" name="day" id="edit-schedule-fri-{{schinfo.id}}" ng-checked="schinfo.dateTime.dayOfWeek.indexOf(5) != -1" value="5">
+          <input type="checkbox" name="day-{{schinfo.id}}" id="edit-schedule-fri-{{schinfo.id}}" ng-checked="schinfo.dateTime.dayOfWeek.indexOf(5) != -1" value="5">
           <label for="edit-schedule-fri-{{schinfo.id}}" class="schedule-label">Fri</label>
         </span>
         <span>
-          <input type="checkbox" name="day" id="edit-schedule-sat-{{schinfo.id}}" ng-checked="schinfo.dateTime.dayOfWeek.indexOf(6) != -1" value="6">
+          <input type="checkbox" name="day-{{schinfo.id}}" id="edit-schedule-sat-{{schinfo.id}}" ng-checked="schinfo.dateTime.dayOfWeek.indexOf(6) != -1" value="6">
           <label for="edit-schedule-sat-{{schinfo.id}}" class="schedule-label">Sat</label>
         </span>
         <span>
-          <input type="checkbox" name="day" id="edit-schedule-sun-{{schinfo.id}}" ng-checked="schinfo.dateTime.dayOfWeek.indexOf(0) != -1" value="0">
+          <input type="checkbox" name="day-{{schinfo.id}}" id="edit-schedule-sun-{{schinfo.id}}" ng-checked="schinfo.dateTime.dayOfWeek.indexOf(0) != -1" value="0">
           <label for="edit-schedule-sun-{{schinfo.id}}" class="schedule-label">Sun</label>
         </span>
       </div>

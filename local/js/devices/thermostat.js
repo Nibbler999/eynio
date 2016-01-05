@@ -3,7 +3,7 @@
 
   angular
     .module('services')
-    .directive('thermostat', ['dataService', '$state', 'socket', function(dataService, $state, socket) {
+    .directive('thermostat', ['dataService', '$state', '$timeout', 'socket', function(dataService, $state, $timeout, socket) {
       return {
         restrict: 'E',
         replace: true,
@@ -12,100 +12,125 @@
           tinfo: '='
         },
         link: function(scope, elem, attr) {
-          $('#slider').attr('id', 'slider' + scope.tinfo.count);
-          $('#rotor').attr('id', 'rotor' + scope.tinfo.count);
 
-          var slider = $('#slider' + scope.tinfo.count);
-          var rotor = $('#rotor' + scope.tinfo.count);
+          // where am I
+          scope.currentState = $state.current.name;
+          scope.deviceScheduleRepeat = 'daily';
 
-          /* set up themrmo slider */
-          slider.roundSlider({
-            sliderType: "min-range",
-            value: scope.tinfo.target,
-            step: "0.5",
-            circleShape: "pie",
-            startAngle: 315,
-            min: 16,
-            max: "32",
-            radius: 65,
-            width: 10,
-            keyboardAction: false,
-            editableTooltip: false,
-            showTooltip: false,
+          // targete for schedule
+          scope.targetForSchedule = scope.tinfo.target;
 
-            change: function(args) {
-              scope.tinfo.target = args.value;
-              rotor.css('transform', 'rotate(' + (scope.tinfo.target * 16.875) + 'deg)');
-              scope.$apply();
-            },
-            drag: function(args) {
-              scope.tinfo.target = args.value;
-              rotor.css('transform', 'rotate(' + (scope.tinfo.target * 16.875) + 'deg)');
-              scope.$apply();
-            }
-          });
-          socket.on('thermostatValue', function(thermoData) {
-            console.log(thermoData);
-            if (thermoData.id === scope.tinfo.id) {
-              scope.tinfo.value = thermoData.value;
-            }
-          });
-          /* rotate img to temp value */
-          rotor.css('transform', 'rotate(' + (scope.tinfo.target * 16.875) + 'deg)');
-
-          /* TEMP manipulation */
-          scope.tempUp = function() {
-            //dataService.tempUp(scope.tinfo, $state.current.name);
-            if (scope.tinfo.target >= 32) {
-              alert("you're going to fry yourself");
-              return false;
-            } else {
-              scope.tinfo.target += 0.5;
-              slider.roundSlider({
-                value: scope.tinfo.target,
-              });
-              rotor.css('transform', 'rotate(' + (scope.tinfo.target * 16.875) + 'deg)');
-
-            }
-          };
-          scope.tempDowno = function() {
-            if (scope.tinfo.target <= 16) {
-              alert('winter is comming');
-              return false;
-            } else {
-              scope.tinfo.target -= 0.5;
-              slider.roundSlider({
-                value: scope.tinfo.target
-              });
-              rotor.css('transform', 'rotate(' + (scope.tinfo.target * 16.875) + 'deg)');
-            }
-
-          };
-          scope.setTemp = function(id) {
-            socket.emit3('setThermostatValue', id, scope.tinfo.target, function(data) {
-              console.log(data);
-            });
-          };
-
-
-          /* change name of device */
-          scope.changeName = function() {
-            socket.emit3('setDeviceName', scope.tinfo.id, scope.tinfo.name,
-              function(newName) {
-                scope.tinfo.name = newName;
+          if (scope.currentState === 'frame.devices') {
+            scope.unblacklistDev = function(devId) {
+              socket.emit('unblacklistDevice', devId, function(response) {
+                if (response) {
+                  scope.tinfo.blacklisted = false;
+                }
               })
-          };
+            };
+            return false;
+          } else {
+            // themostat target temp up
+            scope.tempUp = function(thermo) {
+              if (thermo.target < 32) {
+                return thermo.target++;
+              }
+            };
+            // thermostat target temp down
+            scope.tempDown = function(thermo) {
+              if (thermo.target > 18) {
+                return thermo.target--;
+              }
+            };
+            // set temperature
+            scope.setTemp = function(thermo) {
+              socket.emit3('setThermostatValue', thermo.id, thermo.target, function(response) {
+                if (response) {
+                  scope.responseSuccess = true;
 
-          /* events */
-          socket.on('thermostatValue', function(tempUpdate) {
-            if (scope.tinfo.id === tempUpdate.id) {
-              scope.tinfo.value === tempUpdate.value;
-            }
-          });
+                  $timeout(function() {
+                    scope.responseSuccess = false;
+                  }, 1000);
+                }
+              });
+            };
+            // add/remove to favorites
+            scope.toggleAddToFavorites = function(favorites, devId) {
+              if (favorites) {
+                socket.emit4('setUserProperty', devId, 'favorites', true);
+              } else {
+                socket.emit4('setUserProperty', devId, 'favorites', false);
+              }
+            };
 
+            // check hours to prevent schedule in the past
+            scope.checkHours = function(e) {
+              if (scope.deviceScheduleRepeat === 'once') {
+                var date = new Date();
+                e.target.min = date.getHours();
+              }
+            };
 
-          /* where am I */
-          scope.devicesState = $state.current.name;
+            // check minutes to prevent schedule in the past
+            scope.checkMinutes = function(e) {
+              if (scope.deviceScheduleRepeat === 'once') {
+                var date = new Date();
+                var h = parseInt(document.getElementById('device-schedule-hours-' + scope.tinfo.id).value);
+                if (h <= date.getHours()) {
+                  e.target.min = date.getMinutes() + 1;
+                }
+              }
+            };
+            // add quick schedule
+            scope.quickSchedule = function(dev, temp) {
+              var h = document.getElementById('device-schedule-hours-' + scope.tinfo.id);
+              var m = document.getElementById('device-schedule-minutes-' + scope.tinfo.id);
+              var date = new Date();
+              date.setHours(parseInt(h.value), parseInt(m.value), 0, 0);
+
+              var job = {
+                name: dev.name,
+                type: 'device',
+                dateTime: {
+                  hour: parseInt(h.value),
+                  minute: parseInt(m.value)
+                },
+                actions: [{
+                  emit_name: 'setThermostatValue',
+                  params: [dev.id, temp]
+                }]
+              };
+              if (scope.deviceScheduleRepeat === 'once') {
+                job.dateTime = Date.parse(date);
+              }
+              console.log(job);
+              socket.emit('addNewJob', job, function(response) {
+                if (response) {
+                  scope.scheduleSuccess = true;
+                  h.value = '';
+                  m.value = '';
+                }
+                $timeout(function() {
+                  scope.scheduleSuccess = false;
+                }, 750);
+              });
+            };
+
+            // quick schedule temp up
+            scope.tempUpSchedule = function(temp) {
+              if (temp < 32) {
+                temp++;
+                scope.targetForSchedule = temp;
+              };
+            };
+
+            scope.tempDownSchedule = function(temp) {
+              if (temp > 18) {
+                temp--;
+                scope.targetForSchedule = temp;
+              }
+            };
+          }
         }
       };
     }]);

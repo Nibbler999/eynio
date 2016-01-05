@@ -9,9 +9,9 @@
 }
 .custom-modal-window {
   display: none;
-  top: 10em;
+  top: 0;
   left: 0;
-  bottom: 5em;
+  bottom: 4em;
   right: 0;
   position: absolute;
   background-color: rgba(15, 42, 65, 0.8);
@@ -20,10 +20,10 @@
   display: none;
 }
 .custom-modal-wrap {
-  position: absolute;
-  width: 50em;
-  top: 5em;
-  left: 25%;
+  position: relative;
+  width: 75%;
+  max-width: 80%;
+  margin: 5em auto;
   background-color: #1D405A;
   border-radius: 0.5em;
   overflow: hidden;
@@ -149,6 +149,7 @@
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
   justify-content: space-between;
+  align-items: center;
   padding: 0 2em;
   height: 5em;
 }
@@ -234,4 +235,40 @@
     -webkit-transform: scale(1);
     transform: scale(1);
   }
+}
+/* DEVICES DEV */
+.devices-dev-wrap{
+  height: 5em;
+  width: 100%;
+  color: #fff;
+  background-color: #193146;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5em;
+  align-items: center;
+}
+.devices-dev-wrap:nth-child(odd){
+  background-color: #1B3449;
+}
+.devices-dev-box{
+  display: inherit;
+  align-items: center;
+}
+.devices-dev-box > img{
+  height: 4em;
+  width: 4em;
+  margin-right: 1.5em;
+}
+.devices-dev-box.actions{
+  margin: auto 0;
+  padding: 0.5em;
+  border-radius: 0.35em;
+  background-color: #274258;
+}
+.devices-dev-box.actions > img{
+  height: auto;
+  width: auto;
+  margin: auto 0.5em;
+  cursor: pointer;
 }

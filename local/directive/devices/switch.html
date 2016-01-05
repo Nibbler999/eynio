@@ -4,6 +4,9 @@
     <label for="add-to-favorites-{{sinfo.id}}" class="device-add-to-favorites-label" title="add to favorites"></label>
   </span>
   <img ng-src="img/button/schedule.svg" class="device-schedule-btn" ng-click="deviceSchedule = !deviceSchedule" title="quick schedule">
+  <div class="device-blacklisted" ng-show="sinfo.blacklisted">
+    <button type="button" name="unblacklist" title="unblacklist device" class="button unblacklist-btn" ng-click="unblacklistDev(sinfo.id)">Device locked</button>
+  </div>
   <div class="device-header">
     <img ng-src="{{switchIcon}}" class="device-icon" ng-click="toggleDevicePowerState(sinfo.id)" title="toggle state">
     <div class="device-content-data">
@@ -35,6 +38,20 @@
       </p>
       <input type="number" class="form-number" id="device-schedule-hours-{{sinfo.id}}" placeholder="Hours" min="0" max="23" required ng-blur="checkHours($event)">
       <input type="number" class="form-number" id="device-schedule-minutes-{{sinfo.id}}" placeholder="Minutes" min="0" max="59" required ng-blur="checkMinutes($event)">
+
+      <div class="add-schedule-dev-options-wrap">
+        <div class="add-schedule-dev-option">
+          <small>Daily</small>
+          <input type="radio" name="repeat-device-schedule" value="daily" id="schedule-device-daily-{{sinfo.id}}" ng-model="deviceScheduleRepeat">
+          <label for="schedule-device-daily-{{sinfo.id}}" class="radio-label" title="schedule will repeat daily"></label>
+        </div>
+        <div class="add-schedule-dev-option">
+          <small>Once</small>
+          <input type="radio" name="repeat-device-schedule" value="once" id="schedule-device-once-{{sinfo.id}}" ng-model="deviceScheduleRepeat">
+          <label for="schedule-device-once-{{sinfo.id}}" class="radio-label" title="schedule will fire just once"></label>
+        </div>
+      </div>
+
       <small ng-if="scheduleSuccess" class="color-green pop-up">Scheduled!</small>
     </form>
 

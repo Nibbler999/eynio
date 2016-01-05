@@ -43,45 +43,30 @@
         liveStreamModal.style.display = 'none';
       };
 
+      // stop livestream on ESC
+      document.body.onkeyup = function(e) {
+        if (e.keyCode === 27) {
+          if (liveStreamId) {
+            socket.emit('stopStreaming', liveStreamId, liveStreamOptions);
+          };
+          liveStreamModal.style.display = 'none';
+        }
+      };
       /* stop live stream if not in all rooms */
       $rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
-        if (to.name !== 'frame.favorites' && liveStreamId) {
+        if (liveStreamId) {
           socket.emit('stopStreaming', liveStreamId, liveStreamOptions);
-          liveStreamModal.style.display = 'none';
         };
+        liveStreamModal.style.display = 'none';
       });
 
       /* get data */
-      var allDev = dataService.allDev();
-      favorites.allDev = dataService.allDev();
-      var allRemotes = dataService.allCustomRemotes();
-
-      if (favorites.allDev) {
-        // add remotes in allDev
-        // angular.forEach(allRemotes, function(rem) {
-        //   favorites.allDev.push(rem);
-        // });
-
-        //filter by favorites
-        favorites.allDev = favorites.allDev.filter(function(dev) {
-          return dev.favorites;
-        });
-      } else if (!favorites.allDev) {
+        favorites.allDev = dataService.allDev();
+        favorites.allRemotes = dataService.allCustomRemotes();
+      if(!favorites.allDev || !favorites.allRemotes) {
         dataService.dataPending().then(function() {
-
-          allDev = dataService.allDev();
           favorites.allDev = dataService.allDev();
-          allRemotes = dataService.allCustomRemotes();
-
-          // add remotes in allDev
-          // angular.forEach(allRemotes, function(rem) {
-          //   favorites.allDev.push(rem);
-          // });
-
-          //filter by favorites
-          favorites.allDev = favorites.allDev.filter(function(dev) {
-            return dev.favorites;
-          });
+          favorites.allRemotes = dataService.allCustomRemotes();
         });
       }
     }]);

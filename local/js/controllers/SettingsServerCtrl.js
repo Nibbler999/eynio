@@ -6,18 +6,11 @@
     .controller('SettingsServerCtrl', ['$scope', '$rootScope', '$http', 'socket', 'dataService', function($scope, $rootScope, $http, socket, dataService) {
 
       var server = this;
-
       var deleteServerCount = 0;
-      server.activeUser = dataService.user();
-      server.bridges = dataService.bridge();
-      server.userList = dataService.userList();
       var leaveServerModal = document.querySelector('.leave-server-modal');
-
       document.querySelector('.frame-wrap').appendChild(leaveServerModal);
-      /* get server log */
-      socket.emit('getLog', null, function(log) {
-        server.serverLog = log;
-      });
+
+
       /* get server data, updates */
       socket.emit('getServerStatus', null, function(serverStatus) {
         console.log(serverStatus);
@@ -42,14 +35,6 @@
           });
         }, 250);
       });
-      /* listen for bridge updates */
-      socket.on('bridgeInfo', function(bridge) {
-        server.bridges = bridge;
-      });
-      /* listen for server log updates */
-      socket.on('log', function(newLog) {
-        server.serverLog = newLog;
-      });
       /* download server configuration, backup */
       socket.emit('configBackup', null, function(config) {
         var data = JSON.stringify(config);
@@ -66,7 +51,6 @@
       /* change server name */
       server.changeServerName = function(newName) {
         socket.emit('configSet', 'name', newName);
-        sessionStorage.activeServerName = newName;
         $rootScope.$broadcast('newServerName', newName);
       };
       /* restore server configuration */
@@ -115,10 +99,7 @@
       server.switchServer = function(server) {
         console.log(server);
         sessionStorage.activeServer = JSON.stringify(server);
-        sessionStorage.activeRoom = JSON.stringify({
-          name: 'Dashboard',
-          id: 'dashboard'
-        });
+        sessionStorage.removeItem('activeRoom');
         location.reload(true);
       };
 
@@ -145,9 +126,7 @@
 
       /* google maps */
       server.useIpAddress = function() {
-        if (document.getElementById('google-maps-IP').checked) {
           $scope.$broadcast('useIP');
-        }
       };
 
       function getGoogleMap(coordinates) {
@@ -155,9 +134,9 @@
       };
 
       /* when IP location is changed */
-      $scope.$on('notIpLocation', function(event) {
-        document.getElementById('google-maps-IP').checked = false;
-      });
+      // $scope.$on('notIpLocation', function(event) {
+      //   document.getElementById('google-maps-IP').checked = false;
+      // });
 
 
 
@@ -172,7 +151,12 @@
 
         socket.emit4('inviteUser', inviteEmail, inviteMsg, inviteStatus, function(invite) {
           console.log(invite);
-          if (!invite) {
+          if (invite) {
+            server.inviteSuccess = true;
+            $timeout(function(){
+              server.inviteSuccess = false;
+            },750);
+          } else{
             alert('Inviting ' + inviteEmail + ' failed!');
           }
         });
@@ -200,5 +184,33 @@
           }
         });
       };
+
+      server.testRegex = function(str, re) {
+        var regex = new RegExp(re);
+        return regex.test(str);
+      };
+      server.loadMoreLog = function() {
+        server.actionLog = server.actionLog.concat(actionLog.slice(server.actionLog.length, server.actionLog.length + 50));
+      };
+
+      server.activeUser = dataService.user();
+      server.bridges = dataService.bridge();
+      server.userList = dataService.userList();
+      server.serverLog = dataService.getLog();
+      var actionLog = dataService.getActionLog() || [];
+      server.actionLog = actionLog.slice(0, 50);
+
+      if (!server.activeUser || !server.bridges || !server.userList) {
+        dataService.dataPending().then(function() {
+
+          server.activeUser = dataService.user();
+          server.bridges = dataService.bridge();
+          server.userList = dataService.userList();
+          server.serverLog = dataService.getLog();
+          actionLog = dataService.getActionLog();
+          server.actionLog = actionLog.slice(0, 50);
+          console.log(server.actionLog);
+        });
+      }
     }]);
 }());

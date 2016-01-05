@@ -2,15 +2,12 @@
     <h3>Favorites</h3>
 </div>
 <div class="display-devices-row">
-  <span ng-repeat="dev in favorites.allDev track by dev.id">
-    <switch ng-if="dev.type === 'switch'" sinfo="dev"></switch>
-    <light ng-if="dev.type === 'light'" linfo="dev"></light>
-    <thermostat ng-if="dev.type === 'thermostat'" tinfo="dev"></thermostat>
-    <shutter ng-if="dev.tyoe === 'shutter'" shinfo="dev"></shutter>
-    <remote ng-if="dev.type === 'tv'" tvinfo="dev"></remote>
-    <camera ng-if="dev.type === 'camera'" cinfo="dev"></camera>
-    <sensor ng-if="dev.type === 'sensor'" sensorinfo="dev"></sensor>
-  </span>
+  <light ng-repeat="light in favorites.allDev.light | filter: {favorites: true}" linfo="light"></light>
+    <switch ng-repeat="switch in favorites.allDev.switch | filter: {favorites: true}" sinfo="switch"></switch>
+    <thermostat ng-repeat="thermostat in favorites.allDev.thermostat | filter: {favorites: true}" tinfo="thermostat"></thermostat>
+    <shutter ng-repeat="shutter in favorites.allDev.shutter | filter: {favorites: true}" shinfo="shutter"></shutter>
+    <camera ng-repeat="camera in favorites.allDev.camera | filter: {favorites: true}" cinfo="camera"></camera>
+  <remote ng-repeat="tv in favorites.allRemotes.tv | filter: {favorites: true}" tvinfo="tv"></remote>
 </div>
 
 <section class="custom-modal-window cam-live-stream-modal">

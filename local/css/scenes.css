@@ -4,11 +4,10 @@
   position: relative;
   display: inline-block;
   width: 18em;
-  height: 9em;
+  height: 10em;
   background-color: #14314A;
   border-radius: 0.35em;
   box-sizing: border-box;
-  overflow: hidden;
   margin: 0.5em;
   box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.5);
 }
@@ -39,6 +38,8 @@
   bottom: 0;
   left: 0;
   right: 0;
+  border-bottom-left-radius: 0.35em;
+  border-bottom-right-radius: 0.35em;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -69,68 +70,90 @@
   -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
 }
-
+.scene-quick-schedule-btn {
+  position: absolute;
+  top: 0.5em;
+  right: 0.5em;
+  opacity: 0.5;
+  height: 1.2em;
+  width: 1.2em;
+  cursor: pointer;
+  -webkit-transition: all 0.25s ease;
+  transition: all 0.25s ease;
+}
+.scene-quick-schedule-btn:hover{
+  opacity: 1;
+}
 /* END SCENE BOX CSS */
-.new-scene{
+
+.new-scene {
   position: relative;
   color: #fff;
   background-color: #14334B;
   border-radius: 0.5em;
   box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.5);
 }
-.new-scene-nav{
+.new-scene-nav {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
   padding: 2em 1em;
 }
-.new-scene-nav > h3{
+.new-scene-nav > h3 {
   margin: 0;
 }
-.new-scene-make-schedule-wrap{
+.new-scene-make-schedule-wrap {
   position: absolute;
   right: 1em;
   top: 5em;
 }
-.scene-schedule-btn{
+.scene-schedule-btn {
   background: url(../img/button/schedule.svg) no-repeat 50%;
   margin: 0.25em;
   opacity: 0.5;
 }
-#scene-schedule:checked ~ .scene-schedule-btn, .scene-schedule-btn:hover{
+#scene-schedule:checked ~ .scene-schedule-btn, .scene-schedule-btn:hover {
   background: url(../img/button/schedule.svg) no-repeat 50%;
   margin: 0.25em;
   opacity: 1;
   box-shadow: none;
 }
-.new-scene-form{
+.new-scene-form {
   background-color: inherit;
   padding: 1em;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  -webkit-flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
   flex-flow: row wrap;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
   -webkit-box-align: end;
   -webkit-align-items: flex-end;
-      -ms-flex-align: end;
-          align-items: flex-end;
+  -ms-flex-align: end;
+  align-items: flex-end;
 }
-.new-scene-schedule-options{
+.new-scene-schedule-options {
   min-height: 12em;
 }
-.new-scene-selected-devices{
+.new-scene-selected-devices {
   margin: 1em;
 }
-.new-scene-devices{
+.new-scene-devices {
   background-color: #0F2A41;
+}
+.scene-device-btn {
+  margin: 0.25em;
+  background-color: #1986D9;
+  -webkit-animation: popUp 0.35s ease;
+  animation: popUp 0.35s ease;
 }

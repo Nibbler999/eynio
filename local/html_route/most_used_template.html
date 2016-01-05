@@ -7,9 +7,9 @@
     <light ng-if="dev.type === 'light'" linfo="dev"></light>
     <thermostat ng-if="dev.type === 'thermostat'" tinfo="dev"></thermostat>
     <shutter ng-if="dev.tyoe === 'shutter'" shinfo="dev"></shutter>
-    <remote ng-if="dev.type === 'tv'" tvinfo="dev"></remote>
     <camera ng-if="dev.type === 'camera'" cinfo="dev"></camera>
   </span>
+  <remote ng-repeat="rem in mostUsed.allRemotes.tv track by rem.id" tvinfo="remote"></remote>
 </div>
 
 <section class="custom-modal-window cam-live-stream-modal">

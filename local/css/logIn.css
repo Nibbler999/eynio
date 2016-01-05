@@ -90,22 +90,17 @@
     padding-right: 1em;
   }
   .login-wrap{
-    top: 30em;
+    top: 25em;
+    height: 22em;
     padding: 0;
   }
   .login-description{
     width: 60%;
-    min-height: 21em;
+    height: 100%;
     padding: 2em 5em;
   }
-  .login-form{
-    min-height: 21em;
-  }
-  .register-form{
-    min-height: 21em;
-  }
-  .forgot-password-form{
-    min-height: 21em;
+  .login-form, .register-form, .forgot-password-form{
+    height: 100%;
   }
 }
 @media screen and (min-width: 1200px) {

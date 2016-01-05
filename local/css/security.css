@@ -87,11 +87,16 @@
 }
 .camera-live-stream {
   width: 100%;
-  height: 100%;
 }
 .full-screen-btn {
   background: url(../img/button/full-screen.png) 50% no-repeat;
   position: absolute;
   bottom: 0.5em;
   right: 0.5em;
+}
+
+@media screen and (min-width: 992px){
+  .camera-live-stream {
+    width: auto;
+  }
 }

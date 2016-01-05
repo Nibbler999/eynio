@@ -42,48 +42,76 @@
         liveStreamModal.style.display = 'none';
       };
 
+      // stop livestream on ESC
+      document.body.onkeyup = function(e) {
+        if (e.keyCode === 27) {
+          if (liveStreamId) {
+            socket.emit('stopStreaming', liveStreamId, liveStreamOptions);
+          };
+          liveStreamModal.style.display = 'none';
+        }
+      };
       /* stop live stream if not in all rooms */
       $rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
-        if (to.name !== 'frame.most-used' && liveStreamId) {
+        if (liveStreamId) {
           socket.emit('stopStreaming', liveStreamId, liveStreamOptions);
-          liveStreamModal.style.display = 'none';
         };
+        liveStreamModal.style.display = 'none';
       });
 
 
       /* get data */
       var allDev = dataService.allDev();
+      var allDevArray = [];
       var allRemotes = dataService.allCustomRemotes();
 
-      if (allDev) {
-        // add remotes to array
-        // angular.forEach(allRemotes, function(rem) {
-        //   allDev.push(rem);
-        // });
-        // filter array by use count and sort
-        allDev = allDev.filter(function(dev) {
-          return dev.usecount
-        }).sort(function(a, b) {
-          return b.usecount - a.usecount;
+      if (allDev && allRemotes) {  mostUsed.allTvRemotes = allRemotes.tv;
+        mostUsed.allAvRemotes = allRemotes.ac;
+        mostUsed.allMultuRemotes = allRemotes.multi;
+
+        angular.forEach(allDev, function(devTypeArray) {
+          angular.forEach(devTypeArray, function(dev) {
+            allDevArray.push(dev);
+          })
+        });
+        allDevArray = allDevArray.sort(function(a, b) {
+          return b.usecount - a.usecount
         });
 
-        mostUsed.allDev = allDev;
+
+        mostUsed.allTvRemotes = mostUsed.allTvRemotes.filter(function(rem) {
+          return rem.usecount
+        }).sort(function(a, b) {
+          return b.usecount - a.usecount
+        });
+
+        mostUsed.allDev = allDevArray;
       } else if (!allDev) {
         dataService.dataPending().then(function() {
           allDev = dataService.allDev();
           allRemotes = dataService.allCustomRemotes();
-          // add remotes to array
-          // angular.forEach(allRemotes, function(rem) {
-          //   allDev.push(rem);
-          // });
-          // filter array by use count and sort
-          allDev = allDev.filter(function(dev) {
-            return dev.usecount
-          }).sort(function(a, b) {
-            return b.usecount - a.usecount;
+
+          mostUsed.allTvRemotes = allRemotes.tv;
+          mostUsed.allAvRemotes = allRemotes.ac;
+          mostUsed.allMultuRemotes = allRemotes.multi;
+
+          angular.forEach(allDev, function(devTypeArray) {
+            angular.forEach(devTypeArray, function(dev) {
+              allDevArray.push(dev);
+            })
+          });
+          allDevArray = allDevArray.sort(function(a, b) {
+            return b.usecount - a.usecount
           });
 
-          mostUsed.allDev = allDev
+
+          mostUsed.allTvRemotes = mostUsed.allTvRemotes.filter(function(rem) {
+            return rem.usecount
+          }).sort(function(a, b) {
+            return b.usecount - a.usecount
+          });
+
+          mostUsed.allDev = allDevArray;
         });
       }
     }]);

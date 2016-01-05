@@ -18,6 +18,7 @@
             scope.currentState = $state.current.name;
             scope.learningMode = false;
             scope.quickRadioBtn = 'ch';
+            scope.deviceScheduleRepeat = 'daily';
 
             var keys = ["POWER", "SOURCE", "UP", "DOWN", "LEFT", "RIGHT", "OK", "MENU", "VOLUP", "VOLDOWN", "CHUP", "CHDOWN", "NUM_0", "NUM_1", "NUM_2", "NUM_3", "NUM_4", "NUM_5", "NUM_6", "NUM_7", "NUM_8", "NUM_9"];
             var quickKeys = ['POWER', 'CHUP', 'CHDOWN', 'VOLUP', 'VOLDOWN'];
@@ -67,16 +68,20 @@
 
               // check hours to prevent schedule in the past
               scope.checkHours = function(e) {
-                var date = new Date();
-                e.target.min = date.getHours();
+                if (scope.deviceScheduleRepeat === 'once') {
+                  var date = new Date();
+                  e.target.min = date.getHours();
+                }
               };
 
               // check minutes to prevent schedule in the past
               scope.checkMinutes = function(e) {
-                var date = new Date();
-                var h = parseInt(document.getElementById('device-schedule-hours-' + scope.tvinfo.id).value);
-                if (h <= date.getHours()) {
-                  e.target.min = date.getMinutes() + 1;
+                if (scope.deviceScheduleRepeat === 'once') {
+                  var date = new Date();
+                  var h = parseInt(document.getElementById('device-schedule-hours-' + scope.tvinfo.id).value);
+                  if (h <= date.getHours()) {
+                    e.target.min = date.getMinutes() + 1;
+                  }
                 }
               };
               scope.quickSchedule = function(dev, state) {
@@ -87,13 +92,21 @@
 
                 var job = {
                   name: dev.name,
-                  type: 'device',
-                  dateTime: Date.parse(date),
-                  actions: {
+                  type: 'remote',
+                  dateTime: {
+                    hour: parseInt(h.value),
+                    minute: parseInt(m.value),
+                    dayOfWeek: []
+                  },
+                  actions: [{
                     emit_name: 'sendKey',
                     params: [dev.id, state]
-                  }
+                  }]
                 };
+
+                if (scope.deviceScheduleRepeat === 'once') {
+                  job.dateTime = Date.parse(date);
+                }
                 console.log(job);
                 socket.emit('addNewJob', job, function(response) {
                   if (response) {

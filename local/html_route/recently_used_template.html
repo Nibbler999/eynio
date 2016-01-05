@@ -7,8 +7,11 @@
     <light ng-if="dev.type === 'light'" linfo="dev"></light>
     <thermostat ng-if="dev.type === 'thermostat'" tinfo="dev"></thermostat>
     <shutter ng-if="dev.tyoe === 'shutter'" shinfo="dev"></shutter>
-    <remote ng-if="dev.type === 'tv'" tvinfo="dev"></remote>
     <camera ng-if="dev.type === 'camera'" cinfo="dev"></camera>
+  </span>
+
+  <span ng-repeat="remote in recently.allRemotes track by remote.id">
+    <remote ng-if="remote.type === 'tv'" tvinfo='remote'></remote>
   </span>
 </div>
 

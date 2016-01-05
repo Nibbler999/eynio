@@ -18,8 +18,8 @@
           controller: 'NHomeCtrl',
           controllerAs: 'God'
         })
-        .state('frame.addserver', {
-          url: '/addServer',
+        .state('frame.add-server', {
+          url: '/add-server',
           templateUrl: 'html_route/addServer_template.html',
           controller: 'AddServer',
           controllerAs: 'addServer'

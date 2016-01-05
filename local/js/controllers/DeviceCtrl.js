@@ -3,8 +3,8 @@
 
   angular
     .module('nHome')
-    .controller('DeviceCtrl', ['$scope', 'dataService', '$rootScope', 'socket',
-      function($scope, dataService, $rootScope, socket) {
+    .controller('DeviceCtrl', ['$scope', 'dataService', '$rootScope', 'socket', '$timeout',
+      function($scope, dataService, $rootScope, socket, $timeout) {
 
         var device = this;
 
@@ -33,7 +33,12 @@
           }
         };
 
-        device.editDevice = function(dev) {
+        // rootScope from device to devices ctr and open modal
+        $scope.$on('editDevice', function(event, data) {
+          editDevice(data);
+        });
+
+        function editDevice(dev) {
           console.log(dev);
           device.activeDevice = dev;
 
@@ -60,7 +65,7 @@
 
         device.saveDeviceOptions = function() {
           // remove all categories
-        device.activeDevice.categories = [];
+          device.activeDevice.categories = [];
           // add categories
           angular.forEach(device.asignedRooms, function(addRoom) {
             socket.emit('catAddDevice', addRoom.id, device.activeDevice.id);
@@ -84,19 +89,9 @@
           } else if (device.activeDevice.type === 'tv') {
             socket.emit('updateCustomRemote', device.activeDevice);
           }
-
-          console.log(device.allLights);
         };
 
-        device.deleteDevice = function() {
-          if (device.activeDevice.type === 'tv') {
-            socket.emit('deleteCustomRemote', device.activeDevice.id);
-          } else if (device.activeDevice.type === 'camera') {
-            socket.emit('deleteCamera', device.activeDevice.id);
-          } else {
-            socket.emit('blacklistDevice', device.activeDevice.id);
-          }
-        };
+        /* show add remote modal */
         device.addRemote = function() {
           addRemoteModal.style.display = 'block';
         };
@@ -143,7 +138,7 @@
           });
         };
 
-        /* add new camera */
+        /* add new camera modal */
         device.addCamera = function() {
           addCameraModal.style.display = 'block';
         };
@@ -222,44 +217,64 @@
           }
         };
 
+
+        // close modals on ESC
+        document.body.onkeyup = function(e) {
+          if (e.keyCode === 27) {
+            device.closeCustomModal();
+          }
+        };
+
+        /* remove active room class */
+        $rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
+          device.closeCustomModal();
+        });
+
         /* get data */
-        var allDev = dataService.allDev();
-        var allRemotes = dataService.allCustomRemotes();
+        device.allDev = dataService.allDev();
+        device.allRemotes = dataService.allCustomRemotes();
+
+        device.bridges = dataService.bridges();
+        //
+        // device.allLights = dataService.sortDevicesByType(device.allDev, 'light');
+        // device.allSwitches = dataService.sortDevicesByType(device.allDev, 'switch');
+        // device.allThermos = dataService.sortDevicesByType(device.allDev, 'thermostat');
+        // device.allShutters = dataService.sortDevicesByType(device.allDev, 'shutter');
+        // device.allCameras = dataService.sortDevicesByType(device.allDev, 'camera');
+        // device.allSensors = dataService.sortDevicesByType(device.allDev, 'sensor');
+
+        // device.allTvRemotes = dataService.sortRemotesByType(allRemotes, 'tv');
+
+        device.allBlacklistedDev = dataService.allBlacklistedDev();
+        if (device.allDev) {
+          // show first set of devices
+          $timeout(function() {
+            contentWrapParent.children[0].children[1].children[1].classList.add('in');
+          }, 100);
+        }
         /* wait on socket to connect than get data */
-        if (!allDev) {
+        if (!device.allDev) {
           dataService.dataPending().then(function() {
             device.bridges = dataService.bridges();
 
-            allDev = dataService.allDev();
-            allRemotes = dataService.allCustomRemotes();
+            device.allDev = dataService.allDev();
+            device.allRemotes = dataService.allCustomRemotes();
+            //
+            // device.allLights = dataService.sortDevicesByType(device.allDev, 'light');
+            // device.allSwitches = dataService.sortDevicesByType(device.allDev, 'switch');
+            // device.allThermos = dataService.sortDevicesByType(device.allDev, 'thermostat');
+            // device.allShutters = dataService.sortDevicesByType(device.allDev, 'shutter');
+            // device.allCameras = dataService.sortDevicesByType(device.allDev, 'camera');
+            // device.allSensors = dataService.sortDevicesByType(device.allDev, 'sensor');
 
-            device.allLights = dataService.sortDevicesByType(allDev, 'light');
-            device.allSwitches = dataService.sortDevicesByType(allDev, 'switch');
-            device.allThermos = dataService.sortDevicesByType(allDev, 'thermostat');
-            device.allShutters = dataService.sortDevicesByType(allDev, 'shutter');
-            device.allCameras = dataService.sortDevicesByType(allDev, 'camera');
-            device.allSensors = dataService.sortDevicesByType(allDev, 'sensor');
+            //device.allTvRemotes = dataService.sortRemotesByType(allRemotes, 'tv');
 
-            device.allBlacklistedDev = dataService.getBlacklistDevices(allDev);
-
-            device.allTvRemotes = dataService.sortRemotesByType(allRemotes, 'tv');
+            device.allBlacklistedDev = dataService.allBlacklistedDev();
+            //show first set of devics
+            $timeout(function() {
+              contentWrapParent.children[0].children[1].children[1].classList.add('in');
+            }, 100);
           });
-        } else {
-          device.bridges = dataService.bridges();
-
-          allDev = dataService.allDev();
-          allRemotes = dataService.allCustomRemotes();
-
-          device.allLights = dataService.sortDevicesByType(allDev, 'light');
-          device.allSwitches = dataService.sortDevicesByType(allDev, 'switch');
-          device.allThermos = dataService.sortDevicesByType(allDev, 'thermostat');
-          device.allShutters = dataService.sortDevicesByType(allDev, 'shutter');
-          device.allCameras = dataService.sortDevicesByType(allDev, 'camera');
-          device.allSensors = dataService.sortDevicesByType(allDev, 'sensor');
-
-          device.allBlacklistedDev = dataService.getBlacklistDevices(allDev);
-
-          device.allTvRemotes = dataService.sortRemotesByType(allRemotes, 'tv');
         }
       }
     ])

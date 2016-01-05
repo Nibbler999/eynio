@@ -70,24 +70,33 @@
         liveStreamModal.style.display = 'none';
       };
 
-      /* stop live stream if not in security */
-      $rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
-        if (to.name !== 'frame.security' && liveStreamId) {
-          socket.emit('stopStreaming', liveStreamId, liveStreamOptions);
+      // close livestream on ESC
+      document.body.onkeyup = function(e) {
+        if (e.keyCode === 27) {
+          if (liveStreamId) {
+            socket.emit('stopStreaming', liveStreamId, liveStreamOptions);
+          }
           liveStreamModal.style.display = 'none';
         }
+      };
+      /* stop live stream if not in security */
+      $rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
+        if (liveStreamId) {
+          socket.emit('stopStreaming', liveStreamId, liveStreamOptions);
+        }
+        liveStreamModal.style.display = 'none';
       });
 
       // get data
       var allDev = dataService.allDev();
-      security.allCameras = dataService.sortDevicesByType(allDev, 'camera');
-      security.allSensors = dataService.sortDevicesByType(allDev, 'sensor');
+      security.allCameras = allDev ? allDev.camera : [];
+      security.allSensors = allDev ? allDev.sensor : [];
       // if no data, wait on socket
       if (!allDev) {
         dataService.dataPending().then(function() {
           allDev = dataService.allDev();
-          security.allCameras = dataService.sortDevicesByType(allDev, 'camera');
-          security.allSensors = dataService.sortDevicesByType(allDev, 'sensor');
+          security.allCameras = allDev.camera;
+          security.allSensors = allDev.sensor;
         });
       }
     }]);

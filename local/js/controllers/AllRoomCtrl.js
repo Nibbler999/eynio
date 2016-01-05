@@ -3,7 +3,7 @@
 
   angular
     .module('nHome')
-    .controller('AllRoomsCtrl', ['dataService', '$scope', '$rootScope', 'socket', function(dataService, $scope, $rootScope, socket) {
+    .controller('AllRoomsCtrl', ['dataService', '$scope', '$rootScope', 'socket', '$state', function(dataService, $scope, $rootScope, socket, $state) {
 
       var allRooms = this;
 
@@ -15,64 +15,44 @@
 
       contentWrapParent.appendChild(liveStreamModal);
 
-      allRooms.switch = {};
-      allRooms.light = {};
-      allRooms.thermo = {};
-      allRooms.shutter = {};
-      allRooms.camera = {};
-      allRooms.sensor = {};
-      allRooms.tvRemote = {};
-      allRooms.acRemote = {};
-      allRooms.mediaRemote = {};
-
       function sortDevices(categories, devices, remotes) {
-        angular.forEach(categories, function(cat) {
-          allRooms.switch[cat.id] = [];
-          allRooms.light[cat.id] = [];
-          allRooms.camera[cat.id] = [];
-          allRooms.thermo[cat.id] = [];
-          allRooms.shutter[cat.id] = [];
-          allRooms.sensor[cat.id] = [];
-          allRooms.tvRemote[cat.id] = [];
-          allRooms.acRemote[cat.id] = [];
-          allRooms.mediaRemote[cat.id] = [];
+        // wild sorting
+        angular.forEach(devices, function(devTypeArray, type){
+          allRooms[type] = {};
+          angular.forEach(categories, function (cat) {
+            allRooms[type][cat.id] = allRooms[type][cat.id] || [];
 
-          angular.forEach(devices, function(dev) {
-            angular.forEach(dev.categories, function(devCat) {
-              if (cat.id === devCat) {
-                if (dev.type === 'camera') {
-                  allRooms.camera[cat.id].push(dev);
-                } else if (dev.type === 'switch') {
-                  allRooms.switch[cat.id].push(dev);
-                } else if (dev.type === 'light') {
-                  allRooms.light[cat.id].push(dev);
-                } else if (dev.type === 'thermo') {
-                  allRooms.thermo[cat.id].push(dev);
-                } else if (dev.type === 'shutter') {
-                  allRooms.shutter[cat.id].push(dev);
-                } else if (dev.type === 'sensor') {
-                  allRooms.sensor[cat.id].push(dev);
+            angular.forEach(devTypeArray, function(dev){
+              angular.forEach(dev.categories, function(devCat){
+                if(devCat === cat.id){
+                  allRooms[type][cat.id].push(dev);
                 }
-              }
-            });
-          });
-
-          angular.forEach(remotes, function(remote) {
-            angular.forEach(remote.categories, function(remCat) {
-              if (cat.id === remCat) {
-                if (remote.type === 'tv') {
-                  allRooms.tvRemote[cat.id].push(remote);
-                } else if (remote.type === 'ac') {
-                  allRooms.acRemote[cat.id].push(remote);
-                } else if (remote.type === 'media') {
-                  allRooms.mediaRemote[cat.id].push(remote);
-                }
-              }
+              });
             });
           });
         });
+
+        angular.forEach(remotes, function(remTypeArray, type){
+          allRooms[type] = {};
+          angular.forEach(categories, function(cat){
+            allRooms[type][cat.id] = allRooms[type][cat.id] || [];
+
+            angular.forEach(remTypeArray, function(rem){
+              angular.forEach(rem.categories, function(remCat){
+                if(remCat === cat.id){
+                  allRooms[type][cat.id].push(rem);
+                }
+              })
+            })
+          })
+        })
       };
 
+      allRooms.changeCategoryName = function(cat) {
+        socket.emit('catUpdate', cat.id, {
+          name: cat.name
+        });
+      };
       /* Live stream */
       $scope.$on('requestLiveStream', function(event, camData) {
         liveStreamModal.style.display = 'block';
@@ -100,19 +80,63 @@
         liveStreamModal.style.display = 'none';
       };
 
+      // stop livestream on ESC
+      document.body.onkeyup = function(e) {
+        if (e.keyCode === 27) {
+          if (liveStreamId) {
+            socket.emit('stopStreaming', liveStreamId, liveStreamOptions);
+          };
+          liveStreamModal.style.display = 'none';
+        }
+      };
+
+      // allRooms.favoritesSensors = function() {
+      //     console.log('a');
+      //     $rootScope.$broadcast('favoritesSensors');
+      //     $state.go('frame.devices')
+      //   }
       /* stop live stream if not in all rooms */
       $rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
-        if (to.name !== 'frame.all-rooms' && liveStreamId) {
+        if (liveStreamId) {
           socket.emit('stopStreaming', liveStreamId, liveStreamOptions);
-          liveStreamModal.style.display = 'none';
         };
+        liveStreamModal.style.display = 'none';
       });
 
-      allRooms.jumpToRoom = function(room) {
-        var target = document.getElementById(room.id);
-        target.parentNode.scrollTop = target.offsetTop;
-
-        allRooms.activeRoom = room;
+      // allRooms.jumpToRoom = function(room) {
+      //   var target = document.getElementById(room.id);
+      //   target.parentNode.scrollTop = target.offsetTop;
+      //
+      //   allRooms.activeRoom = room;
+      // };
+      // add new category
+      allRooms.addRoom = function(e) {
+        socket.emit('catAdd', {
+          name: e.target.children[0].value
+        }, function(response) {
+          if (response) {
+            allRooms.categories.push({
+              id: response,
+              name: e.target.children[0].value
+            });
+            e.target.children[0].value = '';
+            allRooms.addRoomForm = false;
+          }
+          console.log(response);
+        });
+      };
+      //delete category
+      allRooms.deleteCategory = function(cat) {
+        socket.emit('catDelete', cat.id, function(response) {
+          console.log(response);
+          if (response) {
+            angular.forEach(allRooms.categories, function(category) {
+              if (category.id === cat.id) {
+                allRooms.categories.splice(allRooms.categories.indexOf(category), 1);
+              }
+            })
+          }
+        })
       };
 
       /* get data */
@@ -120,7 +144,9 @@
       var customRemotes = dataService.allCustomRemotes();
       allRooms.categories = dataService.categories();
       allRooms.activeRoom = allRooms.categories ? allRooms.categories[0] : {};
-      allRooms.favoriteSensors = allDev ? allDev.filter(function(dev){return dev.type === 'sensor' && dev.favorites}) : [];
+      allRooms.favoriteSensors = allDev ? allDev.sensor.filter(function(dev) {
+        return dev.type === 'sensor' && dev.favorites
+      }) : [];
       sortDevices(allRooms.categories, allDev, customRemotes);
       /* wait on socket than get data */
       if (!allDev || !allRooms.categories || !customRemotes) {
@@ -130,12 +156,10 @@
           customRemotes = dataService.allCustomRemotes();
           allRooms.categories = dataService.categories();
           allRooms.activeRoom = allRooms.categories[0];
-          allRooms.favoriteSensors = allDev ? allDev.filter(function(dev){return dev.type === 'sensor' && dev.favorites}) : [];
-
+          allRooms.favoriteSensors = allDev ? allDev.sensor.filter(function(dev) {
+            return dev.type === 'sensor' && dev.favorites
+          }) : [];
           sortDevices(allRooms.categories, allDev, customRemotes);
-
-          var room = document.getElementsByName('category');
-          console.log(room);
         });
       };
 

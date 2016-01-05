@@ -42,49 +42,90 @@
         liveStreamModal.style.display = 'none';
       };
 
+      // stop livestream on ESC
+      document.body.onkeyup = function(e) {
+        if (e.keyCode === 27) {
+          if (liveStreamId) {
+            socket.emit('stopStreaming', liveStreamId, liveStreamOptions);
+          };
+          liveStreamModal.style.display = 'none';
+        }
+      };
       /* stop live stream if not in all rooms */
       $rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
-        if (to.name !== 'frame.recently-used' && liveStreamId) {
+        if (liveStreamId) {
           socket.emit('stopStreaming', liveStreamId, liveStreamOptions);
-          liveStreamModal.style.display = 'none';
         };
+        liveStreamModal.style.display = 'none';
       });
 
 
       /* get data */
       var allDev = dataService.allDev();
+      var allDevArray = [];
       var allRemotes = dataService.allCustomRemotes();
+      var allRemotesArray = [];
 
       if (allDev) {
-        // add remotes to array
-        // angular.forEach(allRemotes, function(rem) {
-        //   allDev.push(rem);
-        // });
-        // filter array by user
-        recently.allDev = allDev.filter(function(dev) {
-          if (dev.last_activated) {
-            return dev.last_activated.by === JSON.parse(sessionStorage.userInfoData).user_name;
-          }
+
+        angular.forEach(allDev, function(devTypeArray) {
+          angular.forEach(devTypeArray, function(dev) {
+            allDevArray.push(dev);
+          })
         });
-        // sort array by last activated
-        recently.allDev.sort(function(a, b) {
-          return Date.parse(b.last_activated.at) - Date.parse(a.last_activated.at);
+
+        recently.allDev = allDevArray.filter(function(dev) {
+          if (dev.last_activated) {
+            return dev.last_activated.by === JSON.parse(sessionStorage.userInfoData).user_name
+          }
+        }).sort(function(a, b) {
+          return Date.parse(b.last_activated) - Date.parse(a.last_activated);
+        });
+
+        angular.forEach(allRemotes, function(remTypeArray) {
+          angular.forEach(remTypeArray, function(rem) {
+            allRemotesArray.push(rem);
+          });
+        });
+
+        recently.allRemotes = allRemotesArray.filter(function(rem) {
+          if (rem.last_activated) {
+            return rem.last_activated.by === JSON.parse(sessionStorage.userInfoData).user_name
+          }
+        }).sort(function(a, b) {
+          return Date.parse(b.last_activated) - Date.parse(a.last_activated);
         });
       } else if (!allDev) {
         dataService.dataPending().then(function() {
           allDev = dataService.allDev();
           allRemotes = dataService.allCustomRemotes();
-          // add remotes to array
-          // angular.forEach(allRemotes, function(rem) {
-          //   allDev.push(rem);
-          // });
-          // filter array by user and sort
-          recently.allDev = allDev.filter(function(dev) {
+
+          angular.forEach(allDev, function(devTypeArray) {
+            angular.forEach(devTypeArray, function(dev) {
+              allDevArray.push(dev);
+            })
+          });
+
+          recently.allDev = allDevArray.filter(function(dev) {
             if (dev.last_activated) {
-              return dev.last_activated.by === JSON.parse(sessionStorage.userInfoData).user_name;
+              return dev.last_activated.by === JSON.parse(sessionStorage.userInfoData).user_name
             }
           }).sort(function(a, b) {
-            return Date.parse(b.last_activated.at) - Date.parse(a.last_activated.at);
+            return Date.parse(b.last_activated) - Date.parse(a.last_activated);
+          });
+
+          angular.forEach(allRemotes, function(remTypeArray) {
+            angular.forEach(remTypeArray, function(rem) {
+              allRemotesArray.push(rem);
+            });
+          });
+
+          recently.allRemotes = allRemotesArray.filter(function(rem) {
+            if (rem.last_activated) {
+              return rem.last_activated.by === JSON.parse(sessionStorage.userInfoData).user_name
+            }
+          }).sort(function(a, b) {
+            return Date.parse(b.last_activated) - Date.parse(a.last_activated);
           });
         });
       }

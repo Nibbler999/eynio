@@ -1,51 +1,70 @@
-<div class="device-wrap" ng-class="{'show-thermostat': thermostat, 'show-more-options': editDevice}" id="thermostat-{{tinfo.count}}">
-    <div class="device-header">
-        <img src="img/buttons/devIcons/thermostat.png" class="img-responsive device-icon" ng-click="thermostat = !thermostat">
-        <div class="device-content-data">
-            <p>{{tinfo.name}}</p>
-            <p>Current: <span class="HELPERblue">{{tinfo.value}}</span></p>
-            <p ng-hide="thermostat">Target: <span class="HELPERred">{{tinfo.target}}</span></p>
+<div class="device-wrap">
+  <span class="device-add-to-favorites">
+    <input type="checkbox" id="add-to-favorites-{{tinfo.id}}" ng-model="tinfo.favorites" ng-change="toggleAddToFavorites(tinfo.favorites, tinfo.id)">
+    <label for="add-to-favorites-{{tinfo.id}}" class="device-add-to-favorites-label" title="add to favorites"></label>
+  </span>
+  <img ng-src="img/button/schedule.svg" class="device-schedule-btn" ng-click="deviceSchedule = !deviceSchedule" title="quick schedule">
+  <div class="device-blacklisted" ng-show="tinfo.blacklisted">
+    <button type="button" name="unblacklist" title="unblacklist device" class="button unblacklist-btn" ng-click="unblacklistDev(tinfo.id)">Device locked</button>
+  </div>
+
+  <div class="device-header">
+    <img ng-src="img/device/thermostat.png" class="device-icon" ng-click="toggleDevicePowerState(tinfo.id)" title="toggle state">
+    <div class="device-content-data">
+      <p>{{tinfo.name}}</p>
+      <p>{{tinfo.type}}</p>
+      <p>{{tinfo.module}}</p>
+    </div>
+  </div>
+
+  <!-- display +/- set thermostat !-->
+  <div class="device-footer">
+    <div class="device-footer-btn-wrap">
+      <button class="device-btn-opt device-minus-btn" ng-click="tempDown(tinfo)"></button>
+      <butotn class="device-btn-opt" ng-click="setTemp(tinfo)" ng-class="{'success-green': responseSuccess}">
+        <span class="color-blue">{{tinfo.value}}</span> /
+        <span class="color-green">{{tinfo.target}}</span>
+      </butotn>
+      <button class="device-btn-opt device-plus-btn" ng-click="temUp(tinfo)"></button>
+    </div>
+  </div>
+
+  <!-- schedule !-->
+  <div class="option-wrap" ng-show="deviceSchedule">
+    <button type="reset" class="close-device-options close-form-btn" ng-click="deviceSchedule = false">
+    </button>
+    <form class="add-schedule-dev-form" id="dev-schedule-form-{{tinfo.id}}" ng-submit="quickSchedule(tinfo, targetForSchedule)">
+      <p>Set thermostat to
+        <span class="color-orange">{{targetForSchedule}}°</span>
+        at:
+      </p>
+      <input type="number" class="form-number" id="device-schedule-hours-{{tinfo.id}}" placeholder="Hours" min="0" max="23" required ng-blur="checkHours($event)">
+      <input type="number" class="form-number" id="device-schedule-minutes-{{tinfo.id}}" placeholder="Minutes" min="0" max="59" required ng-blur="checkMinutes($event)">
+
+      <div class="add-schedule-dev-options-wrap">
+        <div class="add-schedule-dev-option">
+          <small>Daily</small>
+          <input type="radio" name="repeat-device-schedule" value="daily" id="schedule-device-daily-{{tinfo.id}}" ng-model="deviceScheduleRepeat">
+          <label for="schedule-device-daily-{{tinfo.id}}" class="radio-label" title="schedule will repeat daily"></label>
         </div>
-    </div>
-
-    <!-- thermostat animation !-->
-    <div class="device-options device-options-thermo" ng-show="thermostat">
-        <div id="slider" class="thermoSlide"></div>
-        <div id="rotor" class="rotatingThermo"></div>
-        <div class="tempTxt HELPERblue">Temp</div>
-        <div class="actionBtns">
-            <span ng-click="tempDowno()" class="round">
-                <p class="HELPERblue">-</p>
-            </span>
-            <span>
-                <p class="HELPERgray">{{tinfo.target}}°</p>
-            </span>
-            <span ng-click="tempUp()" class="round">
-                <p class="HELPERblue">+</p>
-            </span>
+        <div class="add-schedule-dev-option">
+          <small>Once</small>
+          <input type="radio" name="repeat-device-schedule" value="once" id="schedule-device-once-{{tinfo.id}}" ng-model="deviceScheduleRepeat">
+          <label for="schedule-device-once-{{tinfo.id}}" class="radio-label" title="schedule will fire just once"></label>
         </div>
-    </div>
+      </div>
 
-    <!-- edit device options !-->
-    <div class="device-edit" ng-show="editDevice">
-        <label for="dev-name" class="sr-only">Name of Device</label>
-        <input type="text" name="dev-name" ng-model="tinfo.name" class="form-text" placeholder="Device Name" maxlength="15">
+      <small ng-if="scheduleSuccess" class="color-green pop-up">Scheduled!</small>
+    </form>
 
-        <div class="device-btns-wrap">
-            <button type="submit" class="btn device-edit-btn" ng-click="changeName()">Rename</button>
-        </div>
+    <div class="device-footer devices-schedule-footer">
+      <div class="device-footer-btn-wrap">
+        <button type="button" class="device-btn device-minus-btn" ng-click="tempDownSchedule(targetForSchedule)"></button>
+        <button type="button" class="device-btn device-plus-btn" ng-click="tempUpSchedule(targetForSchedule)"></button>
+      </div>
+      <div class="device-footer-option-wrap">
+        <button type="submit" class="device-options-btn" form="dev-schedule-form-{{tinfo.id}}">Schedule</button>
+      </div>
     </div>
-
-    <!-- display +/-/set switch !-->
-    <div class="device-footer">
-        <span class="device-btn" ng-click="tempDowno()" ng-hide="thermostat">-
-        </span>
-        <span class="device-btn" ng-click="setTemp(tinfo.id)">SET</span>
-        <span class="device-btn" ng-click="tempUp()" ng-hide="thermostat">+
-        </span>
-    </div>
-    <!-- display in devices !-->
-    <div class="device-footer" ng-show="devicesState === 'frame.devices'">
-        <span class="device-btn device-options-gear" ng-click="editDevice = !editDevice"></span>
-    </div>
+  </div>
 </div>

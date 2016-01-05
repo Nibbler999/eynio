@@ -4,20 +4,19 @@
     Server is offline
   </h3>
   <section class="frame-nav">
-    <a ui-sref="frame.all-rooms">
-      <img src="img/logo/nhome_logo_white.png" class="frame-menu-icon">
-    </a>
+    <img src="img/logo/nhome_logo_white.png" class="frame-menu-icon" ng-click="God.toggleMenu()">
+
     <div>
       <div class="frame-new-server-notification" ng-show="God.foundNewServer.length">
         A new server has been discovered
-        <a ui-sref="frame.addserver">
+        <a ui-sref="frame.add-server">
           <button type="button" class="button frame-new-server-btn">
             Set up
           </button>
         </a>
       </div>
 
-      <div class="frame-notifications" ng-show="God.foundNewServer.length">
+      <!--<div class="frame-notifications" ng-show="God.foundNewServer.length">
         {{God.foundNewServer.length}}
         <div class="frame-notifications-dropdown">
           <ul>
@@ -29,7 +28,7 @@
             More
           </button>
         </div>
-      </div>
+      </div>!-->
     </div>
   </section>
   <!-- content wrap !-->
@@ -39,6 +38,10 @@
       <div class="dropdown server-dropdown">
 
       </div>
+
+      <a ui-sref="frame.all-rooms" class="sidebar-nav-btn nhome-btn" ui-sref-active="active">
+        Dashboard
+      </a>
 
       <a ui-sref="frame.devices" class="sidebar-nav-btn devices-btn" ui-sref-active="active">
         <span>Devices</span>
@@ -181,10 +184,10 @@
         </div>
       </section>
 
-      <button class="sidebar-nav-btn activity-log-btn">
+      <button class="sidebar-nav-btn activity-log-btn hidden-xs hidden-sm">
         Session activity log
       </button>
-      <div class="sidebar-activity-log">
+      <div class="sidebar-activity-log hidden-xs hidden-sm">
         <ul>
           <li ng-repeat="log in God.sessionActionLog track by log.time">
             <div class="activity-log-bullet">
@@ -202,6 +205,10 @@
         </ul>
         <img src="img/frame/activity-log.png" ng-hide="God.sessionActionLog.length > 0">
       </div>
+
+      <a ui-sref="frame.server-settings" class="button filter-btn settings-cog-btn">
+        Settings
+      </a>
     </section>
 
 
@@ -220,16 +227,13 @@
           <a ui-sref="frame.most-used" class="button filter-btn most-used-filter-btn" ui-sref-active="active">
             Most used
           </a>
-          <a ui-sref="frame.favorites" name="Favorite" class="button filter-btn favorite-filter-btn"  ui-sref-active="active">
+          <a ui-sref="frame.favorites" name="Favorite" class="button filter-btn favorite-filter-btn" ui-sref-active="active">
             Favorites
           </a>
           <a ui-sref="frame.recently-used" class="button filter-btn recently-used-filter-btn" ui-sref-active="active">
             Recently uesd
           </a>
         </div>
-        <a ui-sref="frame.server-settings" class="button filter-btn settings-btn">
-          Setting
-        </a>
       </section>
     </section>
   </section>

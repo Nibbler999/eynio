@@ -13,22 +13,20 @@
         },
         link: function(scope, elem, attr) {
 
-
           /* where am I */
           scope.currentState = $state.current.name;
           scope.lightIcon = 'img/device/light-off.png';
-          scope.deviceSchedule = false;
           scope.scheduleState = false;
+          scope.deviceScheduleRepeat = 'daily';
 
-          $('#light-color').attr('id', 'light-color-' + scope.linfo.count);
-          $('#light-brightness').attr('id', 'light-brightness-' + scope.linfo.count);
-          $('#light-saturation').attr('id', 'light-saturation-' + scope.linfo.count);
+          //$('#light-color').attr('id', 'light-color-' + scope.linfo.id);
+          $('#light-brightness').attr('id', 'light-brightness-' + scope.linfo.id);
+          $('#light-saturation').attr('id', 'light-saturation-' + scope.linfo.id);
 
           socket.emit('getLightState', scope.linfo.id, function(state) {
             scope.linfo.state = state;
             scope.scheduleState = state.on;
-
-            $("#light-color-" + scope.linfo.count).ColorPickerSliders({
+            $('#light-color-' + scope.linfo.count).ColorPickerSliders({
               color: 'hsl(' + state.hsl[0] + ',' + state.hsl[1] + ',' + state.hsl[2] + ')',
               updateinterval: 1,
               flat: true,
@@ -62,15 +60,15 @@
             }
           };
 
-          scope.unblacklistDev = function(devId) {
-            socket.emit('unblacklistDevice', devId, function(response) {
-              if (response) {
-                scope.linfo.blacklisted = false;
-              }
-            })
-          };
-
           if (scope.currentState === 'frame.devices') {
+
+            scope.unblacklistDev = function(devId) {
+              socket.emit('unblacklistDevice', devId, function(response) {
+                if (response) {
+                  scope.linfo.blacklisted = false;
+                }
+              })
+            };
             return false;
           } else {
 
@@ -118,18 +116,23 @@
 
             // check hours to prevent schedule in the past
             scope.checkHours = function(e) {
-              var date = new Date();
-              e.target.min = date.getHours();
+              if (scope.deviceScheduleRepeat === 'once') {
+                var date = new Date();
+                e.target.min = date.getHours();
+              }
             };
 
             // check minutes to prevent schedule in the past
             scope.checkMinutes = function(e) {
-              var date = new Date();
-              var h = parseInt(document.getElementById('device-schedule-hours-' + scope.linfo.id).value);
-              if (h <= date.getHours()) {
-                e.target.min = date.getMinutes() + 1;
+              if (scope.deviceScheduleRepeat === 'once') {
+                var date = new Date();
+                var h = parseInt(document.getElementById('device-schedule-hours-' + scope.linfo.id).value);
+                if (h <= date.getHours()) {
+                  e.target.min = date.getMinutes() + 1;
+                }
               }
             };
+            // add quick schedule
             scope.quickSchedule = function(dev, state) {
               var h = document.getElementById('device-schedule-hours-' + scope.linfo.id);
               var m = document.getElementById('device-schedule-minutes-' + scope.linfo.id);
@@ -139,12 +142,18 @@
               var job = {
                 name: dev.name,
                 type: 'device',
-                dateTime: Date.parse(date),
+                dateTime: {
+                  hour: parseInt(h.value),
+                  minute: parseInt(m.value)
+                },
                 actions: [{
                   emit_name: 'setDevicePowerState',
                   params: [dev.id, state]
                 }]
               };
+              if (scope.deviceScheduleRepeat === 'once') {
+                job.dateTime = Date.parse(date);
+              }
               console.log(job);
               socket.emit('addNewJob', job, function(response) {
                 if (response) {

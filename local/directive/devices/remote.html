@@ -120,6 +120,20 @@
       </p>
       <input type="number" class="form-number" id="device-schedule-hours-{{tvinfo.id}}" placeholder="Hours" min="0" max="23" required ng-blur="checkHours($event)">
       <input type="number" class="form-number" id="device-schedule-minutes-{{tvinfo.id}}" placeholder="Minutes" min="0" max="59" required ng-blur="checkMinutes($event)">
+
+      <div class="add-schedule-dev-options-wrap">
+        <div class="add-schedule-dev-option">
+          <small>Daily</small>
+          <input type="radio" name="repeat-device-schedule" value="daily" id="schedule-device-daily-{{sinfo.id}}" ng-model="deviceScheduleRepeat">
+          <label for="schedule-device-daily-{{sinfo.id}}" class="radio-label" title="schedule will repeat daily"></label>
+        </div>
+        <div class="add-schedule-dev-option">
+          <small>Once</small>
+          <input type="radio" name="repeat-device-schedule" value="once" id="schedule-device-once-{{sinfo.id}}" ng-model="deviceScheduleRepeat">
+          <label for="schedule-device-once-{{sinfo.id}}" class="radio-label" title="schedule will fire just once"></label>
+        </div>
+      </div>
+
       <small ng-if="scheduleSuccess" class="color-green pop-up">Scheduled!</small>
     </form>
     <div class="device-footer devices-schedule-footer">

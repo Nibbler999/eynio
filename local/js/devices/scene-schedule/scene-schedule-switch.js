@@ -28,6 +28,21 @@
           scope.$watch('sinfo.value', function() {
             setIcon();
           });
+
+          scope.deviceStateToggle = function(dev){
+            dev.value = !dev.value;
+            scope.$emit('deviceAction', dev, 'setDevicePowerState', dev.value);
+          };
+
+          scope.deviceStateOn = function(dev){
+            dev.value = true;
+            scope.$emit('deviceAction', dev, 'setDevicePowerState', dev.value);
+          };
+
+          scope.deviceStateOff = function(dev){
+            dev.value = false;
+            scope.$emit('deviceAction', dev, 'setDevicePowerState', dev.value);
+          };
         }
       };
     }]);

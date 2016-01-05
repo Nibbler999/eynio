@@ -13,7 +13,7 @@
   <div class="new-scene-nav">
     <h3>Add Scene</h3>
     <div>
-      <button type="reset" class="button orange-btn" form="add-scene-form" ng-click="scene.cancelSchedule()">
+      <button type="reset" class="button orange-btn" form="add-scene-form" ng-click="scene.restoreData()">
         Cancel
       </button>
       <button type="submit" class="button blue-btn" form="add-scene-form">
@@ -39,19 +39,19 @@
     </span>
   </div>
 
-  <form type="form" ng-submit="scene.addScene()" id="add-scene-form" class="new-scene-form">
+  <form type="form" ng-submit="scene.addScene(scene.editSceneObj.id)" id="add-scene-form" class="new-scene-form">
     <div class="schedule-group">
       <label for="new-scene-name" class="form-label">Scene name</label>
       <input type="text" id="new-scene-name" class="form-input" pattern=".{4,15}" title="4 - 15 characters" required>
     </div>
 
     <div class="schedule-group" ng-show="scene.sceneSchedule">
-      <input type="number" class="form-number" id="new-scene-hours" placeholder="Hrs" pattern=".{0,23}" title="0 to 23h">
-      <input type="number" class="form-number" id="new-scene-minutes" placeholder="Min" pattern=".{0,59}" title="0 to 59 min">
+      <input type="number" class="form-number" id="new-scene-hours" placeholder="Hrs" pattern=".{0,23}" title="0 to 23h" min="0" max="23" ng-blur="scene.checkHours($event)">
+      <input type="number" class="form-number" id="new-scene-minutes" placeholder="Min" pattern=".{0,59}" title="0 to 59 min" min="0" max="59" ng-blur="scene.checkMinutes($event)">
     </div>
 
     <div class="schedule-group" ng-show="scene.sceneSchedule && scene.scheduleRepeat === 'once'">
-      <input type="date" class="form-date" id="new-scene-date" title="select date" ng-blur="scene.getDate($event)">
+      <input type="date" class="form-date" id="new-scene-date" title="select date" min="{{scene.dateMin}}">
     </div>
 
     <div class="schedule-group schedule-days-wrap" ng-show="scene.sceneSchedule && scene.scheduleRepeat === 'weekly'">
@@ -98,7 +98,7 @@
   </form>
 
   <div class="new-scene-selected-devices">
-    <button class="button blue-btn" ng-repeat="sceneObj in scene.actionsArr" ng-click="scene.deselectDevice(sceneObj.device, $index)">
+    <button class="button scene-device-btn" ng-repeat="sceneObj in scene.actionsArr" ng-click="scene.deselectDevice(sceneObj.device, $index)">
       <p>{{sceneObj.device.name}}</p>
     </button>
   </div>
@@ -106,12 +106,12 @@
   <div class="new-scene-devices">
     <div class="display-devices-row">
 
-      <ss-switch ng-repeat="switch in scene.allSwitches track by switch.id" sinfo="switch" ng-click="scene.selectDevice(switch, $index)"></ss-switch>
+      <ss-switch ng-repeat="switch in scene.allDev.switch track by switch.id" sinfo="switch"></ss-switch>
 
-      <ss-light ng-repeat="light in scene.allLights track by light.id" linfo="light" ng-click="scene.selectDevice(light, $index)"></ss-light>
-      <!--
-      <ss-tvremote ng-repeat="tvremote in scene.allTvRemotes" tvremote="tvremote" ng-click="scene.selectDevice()"></ss-tvremote>
-      !-->
+      <ss-light ng-repeat="light in scene.allDev.light track by light.id" linfo="light"></ss-light>
+
+      <!--<ss-tvremote ng-repeat="tvremote in scene.allTvRemotes" tvremote="tvremote"></ss-tvremote>!-->
+
     </div>
   </div>
 </div>

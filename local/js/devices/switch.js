@@ -16,6 +16,7 @@
           scope.currentState = $state.current.name;
           scope.deviceSchedule = false;
           scope.scheduleState = scope.sinfo.value;
+          scope.deviceScheduleRepeat = 'daily';
 
           /* toggle active icon */
           function setIcon() {
@@ -31,6 +32,14 @@
           });
 
           if (scope.currentState === 'frame.devices') {
+
+            scope.unblacklistDev = function(devId) {
+              socket.emit('unblacklistDevice', devId, function(response) {
+                if (response) {
+                  scope.sinfo.blacklisted = false;
+                }
+              })
+            };
             return false;
           } else {
             /* toggle switch On/Off */
@@ -66,16 +75,20 @@
 
             // check hours to prevent schedule in the past
             scope.checkHours = function(e) {
-              var date = new Date();
-              e.target.min = date.getHours();
+              if (scope.deviceScheduleRepeat === 'once') {
+                var date = new Date();
+                e.target.min = date.getHours();
+              }
             };
 
             // check minutes to prevent schedule in the past
             scope.checkMinutes = function(e) {
-              var date = new Date();
-              var h = parseInt(document.getElementById('device-schedule-hours-' + scope.sinfo.id).value);
-              if (h <= date.getHours()) {
-                e.target.min = date.getMinutes() + 1;
+              if (scope.deviceScheduleRepeat === 'once') {
+                var date = new Date();
+                var h = parseInt(document.getElementById('device-schedule-hours-' + scope.sinfo.id).value);
+                if (h <= date.getHours()) {
+                  e.target.min = date.getMinutes() + 1;
+                }
               }
             };
             // make quick schedule
@@ -88,20 +101,26 @@
               var job = {
                 name: dev.name,
                 type: 'device',
-                dateTime: Date.parse(date),
-                actions: {
+                dateTime: {
+                  hour: parseInt(h.value),
+                  minute: parseInt(m.value)
+                },
+                actions: [{
                   emit_name: 'setDevicePowerState',
                   params: [dev.id, state]
-                }
+                }]
               };
+              if (scope.deviceScheduleRepeat === 'once') {
+                job.dateTime = Date.parse(date);
+              }
               console.log(job);
               socket.emit('addNewJob', job, function(response) {
-                if(response){
+                if (response) {
                   scope.scheduleSuccess = true;
                   h.value = '';
                   m.value = '';
                 }
-                setTimeout(function(){
+                setTimeout(function() {
                   scope.scheduleSuccess = false;
                 }, 250);
               });

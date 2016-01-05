@@ -1,113 +1,132 @@
-(function () {
-    "use strict";
+(function() {
+  "use strict";
 
-    angular
-        .module('services')
-        .directive('shutter', ['dataService', '$state', 'socket', function (dataService,  $state, socket) {
-            return {
-                restrict: 'E',
-                replace: true,
-                templateUrl: 'directive/devices/shutter.html',
-                scope: {
-                    shinfo: '='
-                },
-                link: function (scope, elem, attr) {
-                    var dragging = false;
+  angular
+    .module('services')
+    .directive('shutter', ['$state', '$timeout', 'socket', function($state, $timeout, socket) {
+      return {
+        restrict: 'E',
+        replace: true,
+        templateUrl: 'directive/devices/shutter.html',
+        scope: {
+          shinfo: '='
+        },
+        link: function(scope, elem, attr) {
 
-                    var shutterAt;
+          /* where am I */
+          scope.currentState = $state.current.name;
+          scope.shutterIcon = scope.shinfo.value < 50 ? 'img/device/shutter-on.png' : 'img/device/shutter-off.png';
+          scope.shutterState = scope.shinfo.value < 50 ? 'open' : 'close';
+          scope.deviceScheduleRepeat = 'daily';
 
-                    var handle = document.getElementById('handle');
-                    var shutterWrap = document.getElementById('shWrap');
-                    var shutterFilter = document.getElementById('shFilter');
+          if (scope.currentState === 'frame.devices') {
+            return false;
+          } else {
+            // fully open chutters
+            scope.openShutter = function(shutter) {
+              socket.emit('openShutter', shutter.id, function(response) {
+                if (response) {
+                  scope.openSuccess = true;
 
-                    handle.id = handle.id + scope.shinfo.count;
-                    shutterWrap.id = shutterWrap.id + scope.shinfo.count;
-                    shutterFilter.id = shutterFilter.id + scope.shinfo.count;
-
-                    handle.onmousedown = function (e) {
-                        e.preventDefault();
-                        dragging = true;
-                        handle.style.cursor = 'move';
-                        var start = e.clientY;
-                        shutterWrap.onmouseup = function (e) {
-                            if (dragging) {
-                                var height = shutterFilter.clientHeight;
-                                shutterFilter.style.height = height + (start - e.clientY) + 'px';
-                                dragging = false;
-                                handle.style.cursor = '-webkit-grab';
-                            }
-                        }
-                    };
-
-                    /* set value of shutter */
-                    socket.emit('getShutterValue', scope.shinfo.id, function (shutterData) {
-                        shutterAt = (shutterData.value / 100) * 126;
-                        shutterFilter.style.height = shutterAt + 'px';
-                        console.log(shutterAt);
-                    });
-                    socket.on('shutterValue', function(newShutterVal){
-                      console.log(newShutterVal);
-                    });
-
-                    scope.setShutterValue = function (id) {
-                        shutterAt = shutterFilter.clientHeight;
-                        console.log(shutterAt);
-                        shutterAt = (shutterAt / 126) * 100;
-                        console.log(shutterAt);
-                        socket.emit3('setShutterValue', id, shutterAt, function (data) {
-                            console.log(data);
-                        });
-                    };
-
-                    /* full open */
-                    scope.fullOpen = function (id) {
-                        socket.emit('openShutter', id, function (newVal) {
-                            shutterFilter.style.height = '126px';
-                        });
-                    };
-                    /* full close */
-                    scope.fullClose = function (id) {
-                        socket.emit('closeShutter', id, function (newVal) {
-                            shutterFilter.style.height = '0px';
-                        });
-                    };
-                    /* stop open/close */
-                    scope.shutterStop = function (id) {
-                        socket.emit('stopShutter', id, function (shutterData) {
-                            if (shutterData.id === id) {
-                                shutterAt = (shutterData.value / 100) * 126;
-                                shutterFilter.style.height = shutterAt + 'px';
-                            }
-                        })
-                    };
-                    /*$('#handle').mousedown(function (e) {
-                        e.preventDefault();
-                        dragging = true;
-                        $(this).css('cursor', 'move');
-                        var start = e.clientY;
-                        $('#shutterWrap').mouseup(function (e) {
-                            if (dragging) {
-                                $('#shutterFilter').css('height', start - e.clientY + 15);
-                                dragging = false;
-                            }
-                        })
-                    })*/
-
-
-                    /* change name of device */
-                    scope.changeName = function () {
-                        socket.emit3('setDeviceName', scope.shinfo.id, scope.shinfo.name,
-                            function (newName) {
-                                scope.shinfo.name = newName;
-                            })
-                    };
-
-
-                    /* where am I */
-                    scope.devicesState = $state.current.name;
-
-
+                  $timeout(function() {
+                    scope.openSuccess = false;
+                  }, 850);
                 }
+              });
             };
-   }]);
+            // fully close shutter
+            scope.closeShutter = function(shutter) {
+              socket.emit('closeShutter', shutter.id, function(response) {
+                if (response) {
+                  scope.closeSuccess = true;
+
+                  $timeout(function() {
+                    scope.closeSuccess = false;
+                  }, 850);
+                }
+              });
+            };
+            // stop shutter at given time
+            scope.stopShutter = function(shutter) {
+              socket.emit('stopShutter', shutter.id, function(shutterObj) {
+                console.log(shutterObj);
+                if (shutterObj) {
+                  scope.shinfo.value = parseInt(shutterObj.value);
+                  scope.stopSuccess = true;
+                  console.log(scope.stopSuccess);
+
+                  $timeout(function() {
+                    scope.stopSuccess = false;
+                  }, 850);
+                }
+              });
+            };
+
+            scope.toggleAddToFavorites = function(favorites, devId) {
+              console.log(favorites, devId);
+              if (favorites) {
+                socket.emit4('setUserProperty', devId, 'favorites', true);
+              } else {
+                socket.emit4('setUserProperty', devId, 'favorites', false);
+              }
+            };
+
+            // check hours to prevent schedule in the past
+            scope.checkHours = function(e) {
+              console.log(e);
+              if (scope.deviceScheduleRepeat === 'once') {
+                var date = new Date();
+                e.target.min = date.getHours();
+              }
+            };
+
+            // check minutes to prevent schedule in the past
+            scope.checkMinutes = function(e) {
+              console.log(e);
+              if (scope.deviceScheduleRepeat === 'once') {
+                var date = new Date();
+                var h = parseInt(document.getElementById('device-schedule-hours-' + scope.shinfo.id).value);
+                if (h <= date.getHours()) {
+                  e.target.min = date.getMinutes() + 1;
+                }
+              }
+            };
+            // add quick schedule
+            scope.quickSchedule = function(dev, state) {
+              var h = document.getElementById('device-schedule-hours-' + scope.shinfo.id);
+              var m = document.getElementById('device-schedule-minutes-' + scope.shinfo.id);
+              var date = new Date();
+              date.setHours(parseInt(h.value), parseInt(m.value), 0, 0);
+
+              var job = {
+                name: dev.name,
+                type: 'device',
+                dateTime: [{
+                  hour: parseInt(h.value),
+                  minute: parseInt(m.value)
+                }],
+                actions: [{
+                  emit_name: state === 'open' ? 'openShutter' : 'closeShutter',
+                  params: [dev.id]
+                }]
+              };
+              if (scope.deviceScheduleRepeat === 'once') {
+                job.dateTime = Date.parse(date);
+              }
+              console.log(job);
+              socket.emit('addNewJob', job, function(response) {
+                if (response) {
+                  scope.scheduleSuccess = true;
+                  h.value = '';
+                  m.value = '';
+                }
+                setTimeout(function() {
+                  scope.scheduleSuccess = false;
+                }, 250);
+              });
+            };
+          }
+        }
+      }
+    }]);
 }());
