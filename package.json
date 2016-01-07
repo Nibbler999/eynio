@@ -46,7 +46,6 @@
     "xml2js": "0.4.15"
   },
   "bundledDependencies": [
-    "iotdb-timers",
     "simple-itach",
     "bunyan-prettystream"
   ],
