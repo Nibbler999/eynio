@@ -4,7 +4,8 @@
 .learning-mode{
   height: 20em;
   background-color: #0D96FF;
-  animation: popUp 0.5s ease;
+  -webkit-animation: popUp 0.5s ease;
+          animation: popUp 0.5s ease;
 }
 .remote-btn-inactive{
   opacity: 0.2;
@@ -60,7 +61,8 @@
   right: 0;
   background-color: inherit;
   text-align: center;
-  animation: popUp 0.5s ease;
+  -webkit-animation: popUp 0.5s ease;
+          animation: popUp 0.5s ease;
 }
 .remote-full-row {
   display: -webkit-box;
@@ -82,13 +84,24 @@
   border-top: 0.1em solid  rgba(13, 150, 255, 0.1);
 }
 .remote-full-row > div > div{
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   margin-bottom: 0.25em;
 }
 .remote-full-col{
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  flex-flow: column nowrap;
-  align-items: center;
+  -webkit-flex-flow: column nowrap;
+      -ms-flex-flow: column nowrap;
+          flex-flow: column nowrap;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 .remote-full-col > div {
   margin: 0.1em;
@@ -192,7 +205,8 @@
   border-radius: 0.35em;
   border: 0.1em solid rgba(13, 150, 255, 0.45);
   background-color: rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease;
+  -webkit-transition: all 0.3s ease;
+          transition: all 0.3s ease;
 }
 .remote-learn-mode-instructions{
   position: absolute;
@@ -202,7 +216,8 @@
     right: 0;
     padding: 1em;
     background-color: rgba(20,49,74,0.9);
-    animation: popUp 0.35s ease;
+    -webkit-animation: popUp 0.35s ease;
+            animation: popUp 0.35s ease;
 }
 .remote-learn-mode-key-wrap{
   width: 90%;

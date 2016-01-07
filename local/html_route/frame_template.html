@@ -4,7 +4,8 @@
     Server is offline
   </h3>
   <section class="frame-nav">
-    <img src="img/logo/nhome_logo_white.png" class="frame-menu-icon" ng-click="God.toggleMenu()">
+    <img src="img/frame/burger-icon.png" class="burger-menu-icon button" ng-click="God.toggleMenu()">
+    <img src="img/logo/nhome_logo_white.png" class="frame-menu-icon" ui-sref="frame.all-rooms">
 
     <div>
       <div class="frame-new-server-notification" ng-show="God.foundNewServer.length">
@@ -184,10 +185,10 @@
         </div>
       </section>
 
-      <button class="sidebar-nav-btn activity-log-btn hidden-xs hidden-sm">
+      <button class="sidebar-nav-btn activity-log-btn hidden-xs hidden-sm hidden-md">
         Session activity log
       </button>
-      <div class="sidebar-activity-log hidden-xs hidden-sm">
+      <div class="sidebar-activity-log hidden-xs hidden-sm hidden-md">
         <ul>
           <li ng-repeat="log in God.sessionActionLog track by log.time">
             <div class="activity-log-bullet">
@@ -206,7 +207,7 @@
         <img src="img/frame/activity-log.png" ng-hide="God.sessionActionLog.length > 0">
       </div>
 
-      <a ui-sref="frame.server-settings" class="button filter-btn settings-cog-btn">
+      <a ui-sref="frame.server-settings" class="button settings-cog-btn">
         Settings
       </a>
     </section>
@@ -220,21 +221,19 @@
 
       <!-- bottom nav !-->
       <section class="frame-nav-bottom">
-        <div class="display-flex">
           <a ui-sref="frame.all-rooms" class="button filter-btn all-rooms-filter-btn" ui-sref-active="active">
-            All rooms
+            <span class="hidden-xs">All rooms</span>
           </a>
           <a ui-sref="frame.most-used" class="button filter-btn most-used-filter-btn" ui-sref-active="active">
-            Most used
+            <span class="hidden-xs">Most used</span>
           </a>
           <a ui-sref="frame.favorites" name="Favorite" class="button filter-btn favorite-filter-btn" ui-sref-active="active">
-            Favorites
+            <span class="hidden-xs">Favorites</span>
           </a>
           <a ui-sref="frame.recently-used" class="button filter-btn recently-used-filter-btn" ui-sref-active="active">
-            Recently uesd
+            <span class="hidden-xs">Recently used</span>
           </a>
         </div>
-      </section>
     </section>
   </section>
 </div>

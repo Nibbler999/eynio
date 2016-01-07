@@ -37,13 +37,19 @@
   background-repeat: no-repeat;
 }
 .schedule-group {
-  margin-bottom: 1em;
+  margin-bottom: 2%;
 }
 .schedule-days-wrap {
   background-color: #0D1E2E;
   border-radius: 0.5em;
   border: 0.1em solid rgba(255, 255, 255, 0.25);
   overflow: hidden;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+}
+.schedule-days-wrap > span{
+  flex: 1;
 }
 .schedule-label {
   min-width: 3em;

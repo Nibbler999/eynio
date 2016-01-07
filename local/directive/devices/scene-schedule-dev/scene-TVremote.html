@@ -1,0 +1,29 @@
+<div class="device-wrap">
+  <div class="device-header">
+    <img ng-src="img/device/remote.png" class="device-icon">
+    <div class="device-content-data">
+      <p>{{tvremote.name}}</p>
+      <p>{{tvremote.type}}</p>
+    </div>
+  </div>
+
+  <div class="device-footer">
+    <div class="device-footer-btn-wrap">
+      <button class="device-btn" ng-class="{'device-btn-active': ''}" ng-click="remoteAction(tvremote, 'POWER')" id="remote-quick-POWER">Power</button>
+    </div>
+    <div class="device-footer-option-wrap">
+      <button class="remote-device-btn remote-device-btn-up" ng-click="remoteAction(tvremote, 'CHUP')" id="remote-quick-CHUP" ng-show="quickRadioBtn === 'ch'" title="channel up"></button>
+      <button class="remote-device-btn remote-device-btn-up" ng-click="remoteAction(tvremote, 'VOLUP')" id="remote-quick-VOLUP" ng-show="quickRadioBtn === 'vol'" title="volume up"></button>
+      <span class="remote-radio-wrap">
+        <input type="radio" name="remote-ch-vol-{{tvremote.count}}" id="remote-radio-ch-{{tvremote.count}}" value="ch" ng-model="quickRadioBtn">
+        <label for="remote-radio-ch-{{tvremote.count}}">CH</label>
+      </span>
+      <span class="remote-radio-wrap">
+        <input type="radio" name="remote-ch-vol-{{tvremote.count}}" id="remote-radio-vol-{{tvremote.count}}" value="vol" ng-model="quickRadioBtn">
+        <label for="remote-radio-vol-{{tvremote.count}}">Vol</label>
+      </span>
+      <button class="remote-device-btn remote-device-btn-down" ng-click="remoteAction(tvremote, 'CHDOWN')" id="remote-quick-CHDOWN" ng-show="quickRadioBtn === 'ch'" title="channel down"></button>
+      <button class="remote-device-btn remote-device-btn-down" ng-click="remoteAction(tvremote, 'VOLDOWN')" id="remote-quick-VOLDOWN" ng-show="quickRadioBtn === 'vol'" title="volume down"></button>
+    </div>
+  </div>
+</div>

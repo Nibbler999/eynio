@@ -5,8 +5,14 @@
 }
 
 .ss-dev-header {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
     display: flex;
-    justify-content: flex-start;
+    -webkit-box-pack: start;
+    -webkit-justify-content: flex-start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
     background-color: #fff;
     border: 0.2em solid #e3e3e3;
     padding: 0.3em;
@@ -25,9 +31,16 @@
 }
 
 .ss-dev-footer {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
     display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-around;
+    -webkit-flex-flow: row nowrap;
+        -ms-flex-flow: row nowrap;
+            flex-flow: row nowrap;
+    -webkit-justify-content: space-around;
+        -ms-flex-pack: distribute;
+            justify-content: space-around;
     overflow: hidden;
     height: 2em;
     width: 90%;
@@ -45,7 +58,9 @@
 
 .ss-dev-footer div:hover {
     color: #fff;
-    transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+        -ms-transform: scale(1.1);
+            transform: scale(1.1);
 }
 
 .schedule-selected {
@@ -63,5 +78,10 @@
 
 .ss-active-state {
     color: #fff;
-    transform: scale((1.1);
+    -webkit-transform: scale((1.1);
+};
+        -ms-transform: scale((1.1);
+};
+            transform: scale((1.1);
+}
 }

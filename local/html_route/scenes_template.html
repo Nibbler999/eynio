@@ -7,6 +7,7 @@
 
 <div id="display-scenes" class="collapse in">
   <scene ng-repeat="scene in scene.allScenes" scinfo="scene"></scene>
+  <p class="color-transparent" ng-if="scene.allScenes.length === 0">You haven't created a single sceen! Click the button in the corner and make one</p>
 </div>
 
 <div id="add-new-scene" class="collapse new-scene">
@@ -106,11 +107,15 @@
   <div class="new-scene-devices">
     <div class="display-devices-row">
 
-      <ss-switch ng-repeat="switch in scene.allDev.switch track by switch.id" sinfo="switch"></ss-switch>
+      <s-switch ng-repeat="switch in scene.allDev.switch track by switch.id" sinfo="switch"></s-switch>
 
-      <ss-light ng-repeat="light in scene.allDev.light track by light.id" linfo="light"></ss-light>
+      <s-light ng-repeat="light in scene.allDev.light track by light.id" linfo="light"></s-light>
 
-      <!--<ss-tvremote ng-repeat="tvremote in scene.allTvRemotes" tvremote="tvremote"></ss-tvremote>!-->
+      <s-thermostat ng-repeat="thermo in scene.allDev.thermostat track by thermo.id" tinfo="thermo"></s-thermostat>
+
+      <s-shutter ng-repeat="shutter in scene.allDev.shutter track by shutter.id" shinfo="shutter"></s-shutter>
+
+      <s-tvremote ng-repeat="tv in scene.allRemotes.tv track by tv.id" tvremote="tv"></s-tvremote>
 
     </div>
   </div>

@@ -3,15 +3,14 @@
   margin: 1em;
 }
 .add-new-device-dorpdown-menu {
-  margin: -0.25em 0 0 1em;
   min-width: auto;
-  width: 82.5% !important;
+  width: 100%;
 }
 .custom-modal-window {
   display: none;
   top: 0;
   left: 0;
-  bottom: 4em;
+  bottom: 3em;
   right: 0;
   position: absolute;
   background-color: rgba(15, 42, 65, 0.8);
@@ -21,12 +20,12 @@
 }
 .custom-modal-wrap {
   position: relative;
-  width: 75%;
-  max-width: 80%;
-  margin: 5em auto;
+  max-width: 95%;
+  max-height: 100%;
+  overflow: auto;
+  margin: 1% auto;
   background-color: #1D405A;
   border-radius: 0.5em;
-  overflow: hidden;
   color: #fff;
   z-index: 10;
   -webkit-transition: all 0.5s ease;
@@ -50,16 +49,16 @@
 .edit-device-rename {
   position: relative;
   background-color: #317FBC;
-  padding: 1em 2em;
+  padding: 1%;
 }
 .edit-devices-close-btn {
   position: absolute;
-  top: 2em;
-  right: 2em;
+  top: 3%;
+  right: 1%;
   cursor: pointer;
 }
 .edit-device-room {
-  padding: 1em 2em;
+  padding: 1%;
 }
 .asing-room {
   display: -webkit-box;
@@ -73,8 +72,8 @@
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
-  margin: 1em 0;
-  max-height: 8em;
+  margin: 1% auto;
+  max-height: 6em;
   overflow: auto;
 }
 .asing-room button > p {
@@ -115,14 +114,14 @@
   width: 25%;
 }
 .add-camera-header {
-  height: 5em;
-  margin-top: -1.75em;
-  background: #176BBA url() 5% 50% no-repeat;
+  height: 4em;
+  background-color: #176BBA;
   color: #fff;
-  text-indent: 10em;
+  text-align: center;
 }
 .add-camera-header h3, .add-remote-header h3 {
   line-height: 3;
+  margin: 0;
 }
 .add-camera-step-1 {
   width: 100%;
@@ -136,7 +135,7 @@
   background-color: #176BBA;
 }
 .add-camera-step-1 div {
-  padding: 1em 2em;
+  padding: 1% 2%;
 }
 .add-new-footer {
   width: 100%;
@@ -149,23 +148,32 @@
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
   justify-content: space-between;
-  align-items: center;
-  padding: 0 2em;
-  height: 5em;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 0 2%;
+  height: 4em;
 }
+/*
 .add-new-footer button {
   width: 25%;
-}
+}*/
 .add-remote-header {
   background-color: #176BBA;
-  height: 5em;
-  margin-top: -1.75em;
-  text-indent: 5em;
+  height: 4em;
+  text-align: center;
 }
 .add-remote-input-wrap {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: space-between;
-  padding: 1em 2em;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  padding: 1% 2%;
 }
 .add-remote-input-wrap .form-input-wrap {
   width: 70%;
@@ -177,8 +185,7 @@
   width: 100%;
 }
 .add-remote-radio-select {
-  padding: 0 2em;
-  margin-top: 1em;
+  padding: 0 2%;
 }
 @-webkit-keyframes popUp {
   0% {
@@ -243,22 +250,39 @@
   color: #fff;
   background-color: #193146;
   position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: space-between;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   padding: 0.5em;
-  align-items: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 .devices-dev-wrap:nth-child(odd){
   background-color: #1B3449;
 }
 .devices-dev-box{
   display: inherit;
-  align-items: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 .devices-dev-box > img{
   height: 4em;
   width: 4em;
   margin-right: 1.5em;
+}
+.devices-dev-box > h4{
+  max-width: 5em;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .devices-dev-box.actions{
   margin: auto 0;
@@ -271,4 +295,25 @@
   width: auto;
   margin: auto 0.5em;
   cursor: pointer;
+}
+@media screen and (min-width: 380px){
+  .devices-dev-box > h4{
+    max-width: 7em;
+  }
+}
+@media screen and (min-width: 410px){
+  .custom-modal-wrap{
+    margin: 2% auto;
+  }
+}
+@media screen and (min-width: 768px){
+  .devices-dev-box > h4 {
+      max-width: 15em;
+  }
+}
+@media screen and (min-width: 1400px){
+  .custom-modal-wrap{
+    margin: 4% auto;
+    max-width: 75%;
+  }
 }

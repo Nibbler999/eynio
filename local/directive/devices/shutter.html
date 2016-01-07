@@ -4,12 +4,9 @@
     <label for="add-to-favorites-{{shinfo.id}}" class="device-add-to-favorites-label" title="add to favorites" ng-click="bbb()"></label>
   </span>
   <img ng-src="img/button/schedule.svg" class="device-schedule-btn" ng-click="deviceSchedule = !deviceSchedule" title="quick schedule">
-  <div class="device-blacklisted" ng-show="shinfo.blacklisted">
-    <button type="button" name="unblacklist" title="unblacklist device" class="button unblacklist-btn" ng-click="unblacklistDev(shinfo.id)">Device locked</button>
-  </div>
 
   <div class="device-header">
-    <img ng-src="{{shutterIcon}}" class="device-icon" ng-click="toggleDevicePowerState(shinfo.id)" title="toggle state">
+    <img ng-src="{{shutterIcon}}" class="device-icon">
     <div class="device-content-data">
       <p>{{shinfo.name}}</p>
       <p>{{shinfo.type}}</p>

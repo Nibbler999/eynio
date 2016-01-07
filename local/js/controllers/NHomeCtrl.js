@@ -56,6 +56,7 @@
         });
         /* listen for action log updates */
         socket.on('actionLogUpdate', function(newAction) {
+          console.log(newAction);
           God.sessionActionLog.unshift(newAction);
           serverActiveLog[God.activeServer.id] = God.sessionActionLog;
           sessionStorage.sessionActionLog = JSON.stringify(serverActiveLog);
@@ -180,6 +181,7 @@
       /* new avatar */
       $scope.$on('newAvatar', function(event, newAvatar) {
         God.userInfoData.avatar = newAvatar;
+        document.querySelector('.user-avatar').style.backgroundImage = 'url(' + newAvatar + ')';
         sessionStorage.userInfoData = JSON.stringify(God.userInfoData);
       });
       /* server claimed */

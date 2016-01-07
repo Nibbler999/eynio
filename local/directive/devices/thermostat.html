@@ -4,12 +4,9 @@
     <label for="add-to-favorites-{{tinfo.id}}" class="device-add-to-favorites-label" title="add to favorites"></label>
   </span>
   <img ng-src="img/button/schedule.svg" class="device-schedule-btn" ng-click="deviceSchedule = !deviceSchedule" title="quick schedule">
-  <div class="device-blacklisted" ng-show="tinfo.blacklisted">
-    <button type="button" name="unblacklist" title="unblacklist device" class="button unblacklist-btn" ng-click="unblacklistDev(tinfo.id)">Device locked</button>
-  </div>
 
   <div class="device-header">
-    <img ng-src="img/device/thermostat.png" class="device-icon" ng-click="toggleDevicePowerState(tinfo.id)" title="toggle state">
+    <img ng-src="img/device/thermostat.png" class="device-icon">
     <div class="device-content-data">
       <p>{{tinfo.name}}</p>
       <p>{{tinfo.type}}</p>
@@ -25,7 +22,7 @@
         <span class="color-blue">{{tinfo.value}}</span> /
         <span class="color-green">{{tinfo.target}}</span>
       </butotn>
-      <button class="device-btn-opt device-plus-btn" ng-click="temUp(tinfo)"></button>
+      <button class="device-btn-opt device-plus-btn" ng-click="tempUp(tinfo)"></button>
     </div>
   </div>
 

@@ -1,0 +1,19 @@
+<div class="device-wrap">
+  <div class="device-header">
+    <img ng-src="{{shutterIcon}}" class="device-icon">
+    <div class="device-content-data">
+      <p>{{shinfo.name}}</p>
+      <p>{{shinfo.type}}</p>
+      <p>{{shinfo.module}}</p>
+    </div>
+  </div>
+
+  <!-- display +/- set thermostat !-->
+  <div class="device-footer">
+    <div class="device-footer-btn-wrap">
+      <button class="device-btn-opt" ng-click="shutterOpen(shinfo)">Open</button>
+      <butotn class="device-btn-opt" ng-click="shutterStop(shinfo)">STOP</butotn>
+      <button class="device-btn-opt" ng-click="shutterClose(shinfo)">Close</button>
+    </div>
+  </div>
+</div>

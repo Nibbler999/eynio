@@ -16,9 +16,10 @@
 }
 .device-wrap {
   position: relative;
-  width: 18em;
+  min-width: 18em;
+  width: 90%;
   height: 10em;
-  margin: 0.5em;
+  margin: 1% auto;
   border-radius: 0.35em;
   background-color: #14334B;
   color: #fff;
@@ -114,12 +115,13 @@
   cursor: pointer;
   border: none;
   background-color: #14334B;
+  -webkit-transition: all 0.5s ease;
   transition: all 0.5s ease;
 }
 .device-btn-opt.success-green {
   background-color: #00E676;
 }
-.device-btn-opt.success-red{
+.device-btn-opt.success-red {
   background-color: #EC3535;
 }
 .device-plus-btn {
@@ -265,7 +267,8 @@
   bottom: 0;
   z-index: 1;
   background-color: rgba(0, 0, 0, 0.65);
-    animation: popUp 0.5s ease;
+  -webkit-animation: popUp 0.5s ease;
+  animation: popUp 0.5s ease;
 }
 .unblacklist-btn {
   position: absolute;
@@ -563,4 +566,14 @@ input[type=range]:focus::-ms-fill-lower {
 }
 input[type=range]:focus::-ms-fill-upper {
   background: #ac51b5;
+}
+@media screen and (min-width: 768px) {
+  .device-wrap {
+    width: 18em;
+  }
+}
+@media screen and (min-width: 992px) {
+  .device-wrap {
+    margin: 1%;
+  }
 }

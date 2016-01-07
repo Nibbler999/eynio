@@ -1,4 +1,4 @@
-.alarm-device-wrap{
+.alarm-device-wrap {
   position: relative;
   width: 18em;
   border-radius: 0.25em;
@@ -8,11 +8,11 @@
   margin: 0.5em;
   box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.3);
   -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
-.alarm-header{
+.alarm-header {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -20,25 +20,25 @@
   padding: 1em;
   height: 7.5em;
 }
-.alarm-header-info{
+.alarm-header-info {
   padding: 0.5em;
 }
-.alarm-header-info p{
+.alarm-header-info p {
   margin: 0;
 }
-.alarm-footer{
+.alarm-footer {
   height: 2.5em;
   text-align: center;
   line-height: 2.5;
   cursor: pointer;
 }
-.alarm-footer-active{
+.alarm-footer-active {
   background-color: #E9A839;
 }
-.alarm-footer-inactive{
+.alarm-footer-inactive {
   background-color: #21425E;
 }
-.alarm-btn{
+.alarm-btn {
   width: 100%;
   height: 100%;
   font-weight: bold;

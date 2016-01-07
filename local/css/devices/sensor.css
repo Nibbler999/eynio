@@ -5,24 +5,25 @@
     background-color: #fff;
     margin: 0.5em;
     -webkit-transition: all 0.3s ease-in-out;
-    -moz-transition: all 0.3s ease-in-out;
-    -o-transition: all 0.3s ease-in-out;
-    transition: all 0.3s -webkit-user-select: none;
+    transition: all 0.3s; -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-    -khtml-user-select: none;
     user-select: none;
 }
 
 .sensor-img-wrap {
     padding: 0.5em;
     display: -webkit-box;
-    display: -moz-box;
     display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
-    flex-flow: row nowrap;
-    justify-content: flex-start;
+    -webkit-flex-flow: row nowrap;
+        -ms-flex-flow: row nowrap;
+            flex-flow: row nowrap;
+    -webkit-box-pack: start;
+    -webkit-justify-content: flex-start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
 }
 
 .sensor-img {

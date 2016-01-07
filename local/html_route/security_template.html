@@ -8,10 +8,12 @@
 
 <div class="display-devices-row" ng-hide="alarmToggle === true">
   <camera ng-repeat="camera in security.allCameras" cinfo="camera"></camera>
+  <p class="color-transparent" ng-if="security.allCameras.length === 0">No cameras were found</p>
 </div>
 
 <div class="display-devices-row" ng-show="alarmToggle">
   <alarm ng-repeat="sensorAlarm in security.allSensors" ainfo="sensorAlarm" ng-click="security.toggleAddSensor(sensorAlarm.id)"></alarm>
+  <p class="color-transparent" ng-if="security.allSensors.length === 0">No sensors for triggering alarm were found</p>
 </div>
 
 <section class="custom-modal-window cam-live-stream-modal">

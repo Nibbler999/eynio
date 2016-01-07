@@ -101,6 +101,7 @@
           });
         });
         socket.on('cameraAdded', function(newCam) {
+          console.log(newCam);
           allDev.camera.push(newCam);
         });
         socket.on('cameraDeleted', function(deletedCamId) {

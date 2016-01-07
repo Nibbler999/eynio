@@ -1,0 +1,37 @@
+<div class="device-wrap">
+  <div class="device-header">
+    <img ng-src="{{lightIcon}}" class="device-icon" ng-click="deviceStateToggle(linfo)" title="toggle state">
+    <div class="device-content-data">
+      <p>{{linfo.name}}</p>
+      <p>{{linfo.type}}</p>
+      <p>{{linfo.module}}</p>
+    </div>
+  </div>
+
+  <!-- display ON/OFF switch !-->
+  <div class="device-footer">
+    <div class="device-footer-btn-wrap">
+      <button class="device-btn" ng-class="{'device-btn-active': linfo.state.on}" ng-click="deviceStateOn(linfo)">On</button>
+      <button class="device-btn" ng-class="{'device-btn-active': !linfo.state.on}" ng-click="deviceStateOff(linfo)">Off</button>
+    </div>
+    <div class="device-footer-option-wrap" ng-hide="currentState === 'frame.devices'">
+
+      <button class="device-options-btn" ng-click="deviceOptions = !deviceOptions">Options</button>
+    </div>
+  </div>
+
+  <div class="device-options" ng-show="deviceOptions">
+    <div title="set color" class="device-option-btn device-option-color" ng-click="colorPicker = true"></div>
+    <div title="set white" class="device-option-btn device-option-set-white" ng-click="deviceSetWhite(linfo)"></div>
+  </div>
+
+  <!-- color picker !-->
+
+  <div class="option-wrap" ng-show="colorPicker">
+    <img src="img/button/cross-dark.png" class="close-device-options" ng-click="colorPicker = false">
+    <div id="light-color-{{linfo.count}}" class="light-set-color"></div>
+    <div>
+      <button class="device-options-btn set-color-btn" ng-click="deviceSetColor(linfo, linfo.state.hsl)">Set color</button>
+    </div>
+  </div>
+</div>

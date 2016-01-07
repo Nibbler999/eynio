@@ -3,7 +3,7 @@
 
   angular
     .module('nHome')
-    .controller('SettingsServerCtrl', ['$scope', '$rootScope', '$http', 'socket', 'dataService', function($scope, $rootScope, $http, socket, dataService) {
+    .controller('SettingsServerCtrl', ['$scope', '$rootScope', '$http', '$timeout', 'socket', 'dataService', function($scope, $rootScope, $http, $timeout, socket, dataService) {
 
       var server = this;
       var deleteServerCount = 0;
@@ -44,9 +44,7 @@
 
       /* update app, if possible */
       server.updateApp = function() {
-        socket.emit('updateApp', null, function(data) {
-          console.log(data);
-        });
+        socket.emit('updateApp');
       };
       /* change server name */
       server.changeServerName = function(newName) {
@@ -155,7 +153,7 @@
             server.inviteSuccess = true;
             $timeout(function(){
               server.inviteSuccess = false;
-            },750);
+            },500);
           } else{
             alert('Inviting ' + inviteEmail + ' failed!');
           }

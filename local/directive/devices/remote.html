@@ -22,8 +22,8 @@
       <button class="device-btn" ng-class="{'device-btn-active': ''}" ng-click="cRemoteAction(tvinfo.id, 'POWER')" id="remote-quick-POWER">Power</button>
     </div>
     <div class="device-footer-option-wrap">
-      <button class="remote-device-btn remote-device-btn-up" ng-click="cRemoteAction(tvinfo.id, 'CHUP')" id="remote-quick-CHUP" ng-show="quickRadioBtn === 'ch'"></button>
-      <button class="remote-device-btn remote-device-btn-up" ng-click="cRemoteAction(tvinfo.id, 'VOLUP')" id="remote-quick-VOLUP" ng-show="quickRadioBtn === 'vol'"></button>
+      <button class="remote-device-btn remote-device-btn-up" ng-click="cRemoteAction(tvinfo.id, 'CHUP')" id="remote-quick-CHUP" ng-show="quickRadioBtn === 'ch'" title="channel down"></button>
+      <button class="remote-device-btn remote-device-btn-up" ng-click="cRemoteAction(tvinfo.id, 'VOLUP')" id="remote-quick-VOLUP" ng-show="quickRadioBtn === 'vol'" title="volume up"></button>
       <span class="remote-radio-wrap">
         <input type="radio" name="remote-ch-vol-{{tvinfo.count}}" id="remote-radio-ch-{{tvinfo.count}}" value="ch" ng-model="quickRadioBtn">
         <label for="remote-radio-ch-{{tvinfo.count}}">CH</label>
@@ -32,8 +32,8 @@
         <input type="radio" name="remote-ch-vol-{{tvinfo.count}}" id="remote-radio-vol-{{tvinfo.count}}" value="vol" ng-model="quickRadioBtn">
         <label for="remote-radio-vol-{{tvinfo.count}}">Vol</label>
       </span>
-      <button class="remote-device-btn remote-device-btn-down" ng-click="cRemoteAction(tvinfo.id, 'CHDOWN')" id="remote-quick-CHDOWN" ng-show="quickRadioBtn === 'ch'"></button>
-      <button class="remote-device-btn remote-device-btn-down" ng-click="cRemoteAction(tvinfo.id, 'VOLDOWN')" id="remote-quick-VOLDOWN" ng-show="quickRadioBtn === 'vol'"></button>
+      <button class="remote-device-btn remote-device-btn-down" ng-click="cRemoteAction(tvinfo.id, 'CHDOWN')" id="remote-quick-CHDOWN" ng-show="quickRadioBtn === 'ch'" title="channel down"></button>
+      <button class="remote-device-btn remote-device-btn-down" ng-click="cRemoteAction(tvinfo.id, 'VOLDOWN')" id="remote-quick-VOLDOWN" ng-show="quickRadioBtn === 'vol'" title="volume down"></button>
     </div>
   </div>
 

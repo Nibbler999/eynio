@@ -2,7 +2,7 @@
     <h3>Most used</h3>
 </div>
 <div class="display-devices-row">
-  <span ng-repeat="dev in mostUsed.allDev track by dev.id">
+  <span ng-repeat="dev in mostUsed.allDev track by dev.id" class="most-used-dev-wrap">
     <switch ng-if="dev.type === 'switch'" sinfo="dev"></switch>
     <light ng-if="dev.type === 'light'" linfo="dev"></light>
     <thermostat ng-if="dev.type === 'thermostat'" tinfo="dev"></thermostat>

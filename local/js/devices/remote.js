@@ -54,7 +54,9 @@
                     console.log(data);
                   });
                 } else {
-                  socket.emit('sendKey', remoteId, key);
+                  if (scope.tvinfo.keys.indexOf(key) !== -1) {
+                    socket.emit('sendKey', remoteId, key);
+                  }
                 }
               };
 

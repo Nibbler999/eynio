@@ -1,7 +1,7 @@
 <div class="all-rooms-nav">
   <!-- favorites sensors !-->
   <div class="favorites-sensors-wrap">
-    <div class="info-sensor" ng-repeat="sensor in allRooms.favoriteSensors track by sensor.id">
+    <div class="info-sensor" ng-repeat="sensor in allRooms.favoriteSensors track by sensor.id" title="{{sensor.name}}">
       <img ng-if="sensor.subtype === 'temperature'" src="img/sensors/temp.png">
       <img ng-if="sensor.subtype === 'humidity'" src="img/sensors/humidity.png">
       <img ng-if="sensor.subtype === 'co2'" src="img/sensors/co.png">
@@ -14,7 +14,6 @@
       <img ng-if="sensor.subtype === 'door' && sensor.value === true" src="img/sensors/door-open.png">
       <div class="sensor-details">
         <h1>{{sensor.value}}</h1>
-        <p>{{sensor.name}}</p>
       </div>
     </div>
   </div>

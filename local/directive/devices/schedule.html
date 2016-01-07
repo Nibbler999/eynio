@@ -61,7 +61,7 @@
         <input type="number" class="form-number" name="time" ng-model="schinfo.dateTime.hour" placeholder="Hours" min="0" max="23">
         <input type="number" class="form-number" name="time" ng-model="schinfo.dateTime.minute" placeholder="Minutes" min="0" max="59">
       </div>
-      <div class="col-xs-12 col-sm-12 col-md-5 schedule-group">
+      <div class="col-xs-12 col-sm-6 col-md-5 schedule-group schedule-days-wrap">
         <span>
           <input type="checkbox" name="day-{{schinfo.id}}" id="edit-schedule-mon-{{schinfo.id}}" ng-checked="schinfo.dateTime.dayOfWeek.indexOf(1) != -1" value="1">
           <label for="edit-schedule-mon-{{schinfo.id}}" class="schedule-label">Mon</label>
@@ -91,7 +91,7 @@
           <label for="edit-schedule-sun-{{schinfo.id}}" class="schedule-label">Sun</label>
         </span>
       </div>
-      <div class="col-xs-12 col-sm-6 col-md-2 schedule-group">
+      <div class="col-xs-12 col-sm-4 col-md-2 schedule-group">
         <span>
           <input type="checkbox" id="edit-schedule-sunset-{{schinfo.id}}" value="sunset" name="sunset" ng-checked="schinfo.dateTime === 'sunset'" ng-click="disableInputs($event)">
           <label for="edit-schedule-sunset-{{schinfo.id}}" class="schedule-label schedule-sunset-label">Sunset</label>
@@ -101,7 +101,7 @@
           <label for="edit-schedule-sunrise-{{schinfo.id}}" class="schedule-label schedule-sunrise-label">Sunrise</label>
         </span>
       </div>
-      <div class="col-xs-12 col-sm-6 col-md-1 schedule-group">
+      <div class="col-xs-12 col-sm-2 col-md-1 schedule-group">
         <button type="submit" class="button blue-btn">Save</button>
       </div>
     </form>

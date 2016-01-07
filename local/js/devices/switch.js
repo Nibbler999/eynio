@@ -44,13 +44,10 @@
           } else {
             /* toggle switch On/Off */
             scope.switchOn = function(devId, devVal) {
-              console.log(devId);
               if (devVal === true) {
                 return false;
               } else {
-                socket.emit('switchOn', devId, function(argument) {
-                  console.log(argument);
-                });
+                socket.emit('switchOn', devId);
               }
             };
             scope.switchOff = function(devId, devVal) {

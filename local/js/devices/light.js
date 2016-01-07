@@ -19,35 +19,39 @@
           scope.scheduleState = false;
           scope.deviceScheduleRepeat = 'daily';
 
+          //if no state, request it
+          if (!scope.linfo.state) {
+            socket.emit('getLightState', scope.linfo.id, function(state) {
+              scope.linfo.state = state;
+            });
+          }
+
+          scope.scheduleState = scope.linfo.state.on;
           //$('#light-color').attr('id', 'light-color-' + scope.linfo.id);
           $('#light-brightness').attr('id', 'light-brightness-' + scope.linfo.id);
           $('#light-saturation').attr('id', 'light-saturation-' + scope.linfo.id);
 
-          socket.emit('getLightState', scope.linfo.id, function(state) {
-            scope.linfo.state = state;
-            scope.scheduleState = state.on;
-            $('#light-color-' + scope.linfo.count).ColorPickerSliders({
-              color: 'hsl(' + state.hsl[0] + ',' + state.hsl[1] + ',' + state.hsl[2] + ')',
-              updateinterval: 1,
-              flat: true,
-              swatches: false,
-              order: {
-                hsl: 1
-              },
-              labels: {
-                hslhue: '',
-                hslsaturation: '',
-                hsllightness: ''
-              },
-              onchange: function(container, color) {
-                scope.linfo.state.hsl[0] = color.tiny.toHsl().h;
-                scope.linfo.state.hsl[1] = color.tiny.toHsl().s;
-                scope.linfo.state.hsl[2] = color.tiny.toHsl().l;
-              }
-            });
-            scope.$watch('linfo.state.on', function() {
-              setIcon();
-            });
+          $('#light-color-' + scope.linfo.count).ColorPickerSliders({
+            color: 'hsl(' + scope.linfo.state.hsl[0] + ',' + scope.linfo.state.hsl[1] + ',' + scope.linfo.state.hsl[2] + ')',
+            updateinterval: 1,
+            flat: true,
+            swatches: false,
+            order: {
+              hsl: 1
+            },
+            labels: {
+              hslhue: '',
+              hslsaturation: '',
+              hsllightness: ''
+            },
+            onchange: function(container, color) {
+              scope.linfo.state.hsl[0] = color.tiny.toHsl().h;
+              scope.linfo.state.hsl[1] = color.tiny.toHsl().s;
+              scope.linfo.state.hsl[2] = color.tiny.toHsl().l;
+            }
+          });
+          scope.$watch('linfo.state.on', function() {
+            setIcon();
           });
 
           /* toggle active icon */
@@ -93,6 +97,7 @@
                 return false;
               } else {
                 socket.emit('setDevicePowerState', lightId, true);
+                window.navigator.vibrate(300);
               }
             };
             scope.lightOff = function(lightId, lightState) {
@@ -100,6 +105,7 @@
                 return false;
               } else {
                 socket.emit('setDevicePowerState', lightId, false);
+                window.navigator.vibrate(300);
               }
             };
             scope.toggleDevicePowerState = function(lightId) {

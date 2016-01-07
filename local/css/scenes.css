@@ -3,12 +3,12 @@
 .scene-box {
   position: relative;
   display: inline-block;
-  width: 18em;
+  width: 90%;
   height: 10em;
   background-color: #14314A;
   border-radius: 0.35em;
   box-sizing: border-box;
-  margin: 0.5em;
+  margin: 1% 5%;
   box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.5);
 }
 .sce-box-content {
@@ -125,7 +125,7 @@
 }
 .new-scene-form {
   background-color: inherit;
-  padding: 1em;
+  padding: 2%;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -146,7 +146,7 @@
   min-height: 12em;
 }
 .new-scene-selected-devices {
-  margin: 1em;
+  margin: 1%;
 }
 .new-scene-devices {
   background-color: #0F2A41;
@@ -156,4 +156,10 @@
   background-color: #1986D9;
   -webkit-animation: popUp 0.35s ease;
   animation: popUp 0.35s ease;
+}
+@media screen and (min-width: 600px) {
+  .scene-box{
+    width: 18em;
+    margin: 1%;
+  }
 }

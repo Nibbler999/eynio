@@ -3,9 +3,10 @@
 .camera-wrap {
   position: relative;
   background-color: #20517F;
-  width: 18em;
+  min-width: 18em;
+  width: 90%;
   height: 10em;
-  margin: 0.5em;
+  margin: 1% auto;
   color: #fff;
   box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.3);
 }
@@ -94,9 +95,18 @@
   bottom: 0.5em;
   right: 0.5em;
 }
-
+@media screen and (min-width: 768px){
+  .camera-wrap {
+    width: 18em;
+  }
+}
 @media screen and (min-width: 992px){
+  .camera-wrap{
+    margin: 1%;
+  }
+}
+@media screen and (min-width: 1200px){
   .camera-live-stream {
-    width: auto;
+    width: auto;%;
   }
 }
