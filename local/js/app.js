@@ -3,6 +3,22 @@
 
   angular
     .module('nHome', ['ui.router', 'services'])
+    .run(function(socket) {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('serviceWorker.js').then(function(reg) {
+          console.dir(reg);
+          reg.pushManager.subscribe({
+            userVisibleOnly: true
+          }).then(function(sub) {
+
+            console.log(sub);
+            console.log('endpoint', sub.endpoint);
+          })
+        }).catch(function(err) {
+          console.log('nooo', err);
+        })
+      }
+    })
     .config(function($stateProvider, $urlRouterProvider) {
       $urlRouterProvider
         .when('', 'all-rooms');
@@ -72,13 +88,13 @@
           controller: 'FavoritesCtrl',
           controllerAs: 'favorites'
         })
-        .state('frame.most-used',{
+        .state('frame.most-used', {
           url: '/most-used',
           templateUrl: 'html_route/most_used_template.html',
           controller: 'MostUsedCtrl',
           controllerAs: 'mostUsed'
         })
-        .state('frame.recently-used',{
+        .state('frame.recently-used', {
           url: '/recently-used',
           templateUrl: 'html_route/recently_used_template.html',
           controller: 'RecentlyUsedCtrl',

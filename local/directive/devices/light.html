@@ -33,7 +33,7 @@
   <!-- color picker !-->
   <div class="option-wrap" ng-show="colorPicker">
     <img src="img/button/cross-dark.png" class="close-device-options" ng-click="colorPicker = false">
-    <div id="light-color-{{linfo.count}}" class="light-set-color"></div>
+    <div id="light-color" class="light-set-color"></div>
     <div>
       <button class="device-options-btn set-color-btn" ng-click="setColor(linfo.id, linfo.state.hsl)">Set color</button>
     </div>
@@ -43,8 +43,8 @@
   <div class="option-wrap" ng-show="brightness">
     <img src="img/button/cross-dark.png" class="close-device-options" ng-click="brightness = false">
     <div class="device-options-brightness">
-      <label class="form-label" for="light-brightness">Brightness</label>
-      <input type="range" id="light-brightness" ng-model="linfo.state.level">
+      <label class="form-label" for="light-brightness-{{linfo.count}}">Brightness</label>
+      <input type="range" id="light-brightness-{{linfo.count}}" ng-model="linfo.state.level">
     </div>
     <div>
       <button class="device-options-btn set-color-btn" ng-click="setBrightness(linfo.id, linfo.state.level)">Set brightness</button>

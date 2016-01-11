@@ -79,7 +79,10 @@
         socket.emit('stopStreaming', liveStreamId, liveStreamOptions);
         liveStreamModal.style.display = 'none';
       };
-
+      document.addEventListener("fullscreenchange",  function(e){
+        console.log(e);
+        console.log('bbb');
+      })
       // stop livestream on ESC
       document.body.onkeyup = function(e) {
         if (e.keyCode === 27) {
@@ -144,9 +147,9 @@
       var customRemotes = dataService.allCustomRemotes();
       allRooms.categories = dataService.categories();
       allRooms.activeRoom = allRooms.categories ? allRooms.categories[0] : {};
-      allRooms.favoriteSensors = allDev ? allDev.sensor.filter(function(dev) {
+      allRooms.favoriteSensors = allDev ? allDev.sensor ? allDev.sensor.filter(function(dev) {
         return dev.type === 'sensor' && dev.favorites
-      }) : [];
+      }) : [] : [];
       sortDevices(allRooms.categories, allDev, customRemotes);
       /* wait on socket than get data */
       if (!allDev || !allRooms.categories || !customRemotes) {
@@ -156,9 +159,9 @@
           customRemotes = dataService.allCustomRemotes();
           allRooms.categories = dataService.categories();
           allRooms.activeRoom = allRooms.categories[0];
-          allRooms.favoriteSensors = allDev ? allDev.sensor.filter(function(dev) {
+          allRooms.favoriteSensors = allDev ? allDev.sensor ? allDev.sensor.filter(function(dev) {
             return dev.type === 'sensor' && dev.favorites
-          }) : [];
+          }) : [] : [];
           sortDevices(allRooms.categories, allDev, customRemotes);
         });
       };

@@ -44,9 +44,6 @@
               }
             });
 
-            if ($state.current.name === 'frame.devices') {
-              return false;
-            } else {
               scope.cRemoteAction = function(remoteId, key) {
                 if (scope.learningMode) {
                   scope.learnKey = key;
@@ -121,10 +118,10 @@
                   }, 250);
                 });
               };
-            };
 
             socket.on('IRKeyLearned', function(keyLearned) {
               if (keyLearned.remoteid === scope.tvinfo.id) {
+              window.navigator.vibrate(200);
                 scope.tvinfo.keys.push(keyLearned.key);
                 document.getElementById('remote-' + scope.tvinfo.count + '-' + keyLearned.key).classList.remove('remote-btn-inactive');
 
