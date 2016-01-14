@@ -209,6 +209,7 @@
   background-image: url(../img/button/reboot.png);
 }
 .settings-btn.add {
+  margin: 0.1em 0;
   background-image: url(../img/button/add-server-btn.png);
 }
 .settings-btn.leave {
@@ -216,6 +217,7 @@
   background-image: url(../img/button/leave-btn.png);
 }
 .settings-btn.delete {
+  margin: 0.1em 0;
   background-image: url(../img/button/cross.png);
 }
 .settings-btn.rename {

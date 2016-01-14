@@ -1,0 +1,14 @@
+<div class="cam-rec-wrap">
+  <span>
+    <i ng-if="camrec.cameraName">{{camrec.cameraName}} <span class="color-blue">@</span> </i>
+    <i>{{camrec.starttime | date: 'd/MMM/yyyy HH:mm:ss'}}</i>
+  </span>
+  <span>
+    <a href="https://nhome.ba/recordings/https://nhome.ba/recording/{{camrec.id}}?apikey={{apiKey}}&server={{serverId}}>">
+      <i class="material-icons">file_download</i>
+    </a>
+    <i class="material-icons" ng-click="startPlayback(camrec.id)">play_arrow</i>
+    <i class="material-icons" ng-click="endPlayback(camrec.id)">stop</i>
+    <i class="material-icons color-red" ng-click="deleteRecording(camrec.id)">delete</i>
+  </span>
+</div>

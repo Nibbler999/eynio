@@ -30,6 +30,7 @@
 }
 .burger-menu-icon{
   height: 1.25em;
+  line-height: 1.25;
   padding: 0 1%;
   margin: auto 0;
 }
@@ -49,41 +50,43 @@
   display: inherit;
 }
 .frame-new-server-notification {
-  background-color: #0A5193;
+  /*background-color: #0A5193;*/
   border-radius: 0.3em;
-  text-align: left;
-  text-indent: 1em;
   color: #C1DBF0;
   padding: 0.25em;
+  height: 100%;
+  margin: auto 1%;
+}
+.server-found-img{
+  max-width: 2em;
 }
 .frame-new-server-btn {
-  background: transparent url(../img/button/chevron-right.png) 95% 50% no-repeat;
-  min-width: 7em;
-  text-align: left;
+  /*background: transparent url(../img/button/chevron-right.png) 95% 50% no-repeat;*/
+  background: transparent;
+  text-align: center;
   -webkit-animation: blink 2s ease-in-out infinite;
   animation: blink 2s ease-in-out infinite;
-  margin-left: 1em;
 }
 @-webkit-keyframes blink {
   0% {
-    background: transparent url(../img/button/chevron-right.png) 95% 50% no-repeat;
+    background: transparent;
   }
   50% {
-    background: rgba(255, 255, 255, 0.5) url(../img/button/chevron-right.png) 95% 50% no-repeat;
+    background: rgba(255, 255, 255, 0.5);
   }
   100 {
-    background: transparent url(../img/button/chevron-right.png) 95% 50% no-repeat;
+    background: transparent;
   }
 }
 @keyframes blink {
   0% {
-    background: transparent url(../img/button/chevron-right.png) 95% 50% no-repeat;
+    background: transparent;
   }
   50% {
-    background: rgba(255, 255, 255, 0.5) url(../img/button/chevron-right.png) 95% 50% no-repeat;
+    background: rgba(255, 255, 255, 0.5);
   }
   100 {
-    background: transparent url(../img/button/chevron-right.png) 95% 50% no-repeat;
+    background: transparent;
   }
 }
 .frame-notifications {
@@ -214,6 +217,11 @@
 .user-details {
   margin: auto 2em auto 1em;
   text-align: left;
+}
+.user-details > h4{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .frame-logout-btn {
   background-color: rgba(17, 89, 157, 0.5);
@@ -427,6 +435,12 @@
   color: #949EAC;
   overflow: auto;
   padding: 0.5em 0;
+}
+.sidebar-activity-log.empty{
+  background-image: url(../img/frame/activity-log.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  height: inherit;
 }
 .sidebar-activity-log > img {
   margin: 1em 35%;
@@ -913,6 +927,8 @@
   }
   .burger-menu-icon{
     height: 1.75em;
+    line-height: 1.75;
+    font-size: 2em;
   }
   .frame-nav {
     margin-bottom: 1%

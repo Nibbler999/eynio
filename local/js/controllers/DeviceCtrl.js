@@ -56,6 +56,10 @@
         };
         device.addRoom = function(index, room) {
           device.unAsignedRooms.splice(index, 1);
+          if (device.asignedRooms[0]) {
+            device.unAsignedRooms.push(device.asignedRooms[0]);
+          }
+          device.asignedRooms = [];
           device.asignedRooms.push(room);
         };
         device.removeRoom = function(index, room) {

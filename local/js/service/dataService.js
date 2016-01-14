@@ -6,7 +6,7 @@
     .service('dataService', ['$q', '$rootScope', 'socket', function($q, $rootScope, socket) {
 
       // data
-      var allDev, allBlacklistedDev, allRemoteBridges, allBridges, allScenes, allSchedules, allCategories, allRemotes, actionLog, serverLog;
+      var allDev, allBlacklistedDev, allRemoteBridges, allBridges, allScenes, allSchedules, allCategories, allRemotes, actionLog, serverLog, allRecorings;
 
       var activeUser, userList;
 
@@ -63,15 +63,8 @@
               allBlacklistedDev.push(dev);
             }
           });
-          console.log(allDev, allBlacklistedDev)
-            // allDev = data.filter(function(dev, index) {
-            //   dev.count = index;
-            //   return !dev.blacklisted;
-            // });
-            // allBlacklistedDev = data.filter(function(dev) {
-            //   return dev.blacklisted;
-            // });
-          deferred.resolve(data);
+          console.log(allDev, allBlacklistedDev);
+          deferred.resolve(allDev);
         });
         // get blacklist devices
         // socket.emit('getBlacklist', 'devices', function(blacklistedDev) {
@@ -85,6 +78,31 @@
         socket.emit('getJobs', null, function(schedules) {
           allSchedules = schedules;
         });
+        /* get camera recordings */
+        socket.emit('getRecordings', null, function(recordings){
+          console.log(recordings);
+          allRecorings = recordings;
+        });
+
+        //check for service worker and implement it
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('serviceWorker.js').then(function(reg) {
+            console.dir(reg);
+            reg.pushManager.subscribe({
+              userVisibleOnly: true
+            }).then(function(sub) {
+              if(sub.endpoint){
+                socket.emit('GCMRegister', sub.endpoint.slice(40), function(response){
+                  console.log(response);
+                })
+              }
+              console.log(sub);
+            })
+          }).catch(function(err) {
+            console.log('nooo', err);
+          })
+        }
+
 
         socketListeners();
         return deferred.promise;
@@ -103,22 +121,26 @@
         socket.on('cameraAdded', function(newCam) {
           console.log(newCam);
           allDev.camera.push(newCam);
+          window.navigator.vibrate(250);
         });
         socket.on('cameraDeleted', function(deletedCamId) {
           angular.forEach(allDev.camera, function(cam, index) {
             if (cam.id === deletedCamId) {
               allDev.camera.splice(index, 1);
+              window.navigator.vibrate(50);
             }
           });
         });
         socket.on('customRemoteAdded', function(newRemote) {
           newRemote.count = allRemotes[newRemote.type].length;
           allRemotes[newRemote.type].push(newRemote);
+          window.navigator.vibrate(250);
         });
         socket.on('customRemoteDeleted', function(remoteID) {
           angular.forEach(allRemotes.tv, function(rem) {
             if (rem.id === remoteID) {
               allRemotes.tv.splice(allRemotes.tv.indexOf(rem), 1);
+              window.navigator.vibrate(50);
             }
           });
         });
@@ -126,6 +148,7 @@
           angular.forEach(allRemotes[updateRemote.type], function(remote) {
             if (remote.id === updateRemote.id) {
               remote = updateRemote;
+              window.navigator.vibrate(150);
             };
           });
         });
@@ -133,6 +156,7 @@
           angular.forEach(allDev, function(dev) {
             if (dev.id === devId) {
               dev.name = devName;
+              window.navigator.vibrate(150);
             }
           });
         });
@@ -141,23 +165,27 @@
           angular.forEach(allScenes, function(scene) {
             if (scene.id === sceneId) {
               allScenes.splice(allScenes.indexOf(scene), 1);
+              window.navigator.vibrate(50);
             }
           });
         });
         /* new scene added */
         socket.on('sceneAdded', function(sceneObj) {
           allScenes.push(sceneObj);
+          window.navigator.vibrate(250);
         });
         socket.on('jobRemoved', function(scheduleId) {
           angular.forEach(allSchedules, function(schedule) {
             if (schedule.id === scheduleId) {
               allSchedules.splice(allSchedules.indexOf(schedule), 1);
+              window.navigator.vibrate(50);
             }
           });
         });
         /* schedule added */
         socket.on('jobAdded', function(scheduleObj) {
           allSchedules.push(scheduleObj);
+          window.navigator.vibrate(250);
         });
 
         socket.on('deviceBlacklisted', function(devType, devId) {
@@ -166,6 +194,7 @@
               if (dev.id === devId) {
                 devArr.splice(index, 1);
                 allBlacklistedDev.push(dev);
+                window.navigator.vibrate(75);
               }
             })
           });
@@ -177,6 +206,7 @@
             if (dev.id === devId) {
               allBlacklistedDev.splice(index, 1);
               allDev[dev.type].push(dev);
+              window.navigator.vibrate(150);
             }
           });
         });
@@ -232,25 +262,6 @@
       this.allBlacklistedDev = function() {
         return allBlacklistedDev;
       };
-      // this.switches = function() {
-      //   return allSwitches;
-      // };
-      // this.lights = function() {
-      //   return allLights;
-      // };
-      // this.thermostats = function() {
-      //   return allThermos;
-      // };
-      // this.shutters = function() {
-      //   return allShutters;
-      // };
-      // this.sensors = function() {
-      //   console.log(allSensors);
-      //   return allSensors;
-      // };
-      // this.cameras = function() {
-      //   return allCameras;
-      // };
       this.allCustomRemotes = function() {
         return allRemotes;
       };
@@ -263,7 +274,9 @@
       this.schedules = function() {
         return allSchedules;
       };
-
+      this.recordings = function(){
+        return allRecorings;
+      };
       /* server status */
       this.user = function() {
         return activeUser

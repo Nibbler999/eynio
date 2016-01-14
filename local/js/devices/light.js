@@ -12,7 +12,6 @@
           linfo: '='
         },
         link: function(scope, elem, attr) {
-
           /* where am I */
           scope.currentState = $state.current.name;
           scope.lightIcon = 'img/device/light-off.png';

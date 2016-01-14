@@ -9,5 +9,7 @@
     <input type="checkbox" id="add-to-favorites-{{cinfo.id}}" ng-model="cinfo.favorites" ng-change="toggleAddToFavorites(cinfo.favorites, cinfo.id)">
     <label for="add-to-favorites-{{cinfo.id}}" class="device-add-to-favorites-label" title="add to favorites"></label>
   </span>
-  <img ng-if="thumbnailImg && currentState !== 'frame.devices'" ng-src="img/button/snapshot.png" class="camera-live-tumb-btn" ng-click="getLiveThumbnail(cinfo.id)" title="get live thumbnail">
+  <i class="material-icons camera-live-tumb-btn" class="camera-live-tumb-btn" ng-click="getLiveThumbnail(cinfo.id)" title="get live thumbnail">photo_camera</i>
+  <i class="material-icons color-red camera-recording" ng-click="startRecording(cinfo.id); recording = true" title="start recording" ng-hide="recording">fiber_manual_record</i>
+  <i class="material-icons color-green camera-recording" ng-click="stopRecording(cinfo.id); recording = false" title="stop recording" ng-show="recording">stop</i>
 </div>

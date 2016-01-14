@@ -290,11 +290,12 @@
   border-radius: 0.35em;
   background-color: #274258;
 }
-.devices-dev-box.actions > img{
+.devices-dev-box.actions > i{
   height: auto;
   width: auto;
   margin: auto 0.5em;
   cursor: pointer;
+  font-size: 1.40em;
 }
 @media screen and (min-width: 380px){
   .devices-dev-box > h4{

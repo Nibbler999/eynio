@@ -38,15 +38,68 @@
 }
 .camera-live-tumb-btn {
   position: absolute;
-  right: 1em;
-  bottom: 0.5em;
+  right: 1.25em;
+  bottom: 0.1em;
   opacity: 0.4;
   cursor: pointer;
   -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
 }
-.camera-live-tumb-btn:hover {
+.camera-live-tumb-btn:hover, .camera-recording:hover {
   opacity: 0.8;
+}
+.camera-recording {
+  position: absolute;
+  right: 0;
+  bottom: 0.1em;
+  opacity: 0.6;
+  cursor: pointer;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+/* END */
+
+
+/* cam recprodmg CSS*/
+
+.cam-rec-wrap {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-flex-flow: column nowrap;
+  -ms-flex-flow: column nowrap;
+  flex-flow: column nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  width: 95%;
+  margin: 1% auto;
+  background-color: #14334B;
+  color: #fff;
+  box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.25);
+  border-radius: 0.25em;
+  text-indent: 0.25em;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.cam-rec-wrap > span:last-child > i {
+  cursor: pointer;
+  opacity: 0.55;
+  -webkit-transition: all 0.25s ease;
+  transition: all 0.25s ease;
+}
+.cam-rec-wrap > span > i:hover {
+  opacity: 1;
 }
 
 /* END */
@@ -69,9 +122,17 @@
   -webkit-transition: all 0.35s ease;
   transition: all 0.35s ease;
 }
-.active-line-indicator.alarm-active{
+.active-line-indicator.alarm-active {
   left: 60%;
   width: 40%;
+}
+.recorings-wrap {
+  color: #fff;
+  width: 100%;
+}
+.recorings-wrap > h3 {
+  margin: 1% 0 0;
+  cursor: pointer;
 }
 .close-live-stream-modal {
   position: absolute;
@@ -90,53 +151,53 @@
   width: 100%;
 }
 .camera-live-stream:-webkit-full-screen {
-  position:fixed;
-  top:0;
-  right:0;
-  bottom:0;
-  left:0;
-  margin:0;
-  box-sizing:border-box;
-  width:100%;
-  height:100%;
-  object-fit:contain;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 .camera-live-stream:-moz-full-screen {
-  position:fixed;
-  top:0;
-  right:0;
-  bottom:0;
-  left:0;
-  margin:0;
-  box-sizing:border-box;
-  width:100%;
-  height:100%;
-  object-fit:contain;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 .camera-live-stream:-ms-fullscreen {
-  position:fixed;
-  top:0;
-  right:0;
-  bottom:0;
-  left:0;
-  margin:0;
-  box-sizing:border-box;
-  width:100%;
-  height:100%;
-  object-fit:contain;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 .camera-live-stream:fullscreen {
-  position:fixed;
-  top:0;
-  right:0;
-  bottom:0;
-  left:0;
-  margin:0;
-  box-sizing:border-box;
-  width:100%;
-  height:100%;
-  -o-object-fit:contain;
-     object-fit:contain;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  -o-object-fit: contain;
+  object-fit: contain;
 }
 .full-screen-btn {
   background: url(../img/button/full-screen.png) 50% no-repeat;
@@ -144,15 +205,20 @@
   bottom: 0.5em;
   right: 0.5em;
 }
-@media screen and (min-width: 768px){
+@media screen and (min-width: 768px) {
   .camera-wrap {
     width: 18em;
   }
+  .cam-rec-wrap {
+    -webkit-flex-flow: row nowrap;
+    -ms-flex-flow: row nowrap;
+    flex-flow: row nowrap;
+    height: 3em;
+  }
 }
-@media screen and (min-width: 992px){
-  .camera-wrap{
+@media screen and (min-width: 992px) {
+  .camera-wrap {
     margin: 1%;
   }
 }
-@media screen and (min-width: 1200px){
-}
+@media screen and (min-width: 1200px) {}

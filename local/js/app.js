@@ -3,22 +3,6 @@
 
   angular
     .module('nHome', ['ui.router', 'services'])
-    .run(function(socket) {
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('serviceWorker.js').then(function(reg) {
-          console.dir(reg);
-          reg.pushManager.subscribe({
-            userVisibleOnly: true
-          }).then(function(sub) {
-
-            console.log(sub);
-            console.log('endpoint', sub.endpoint);
-          })
-        }).catch(function(err) {
-          console.log('nooo', err);
-        })
-      }
-    })
     .config(function($stateProvider, $urlRouterProvider) {
       $urlRouterProvider
         .when('', 'all-rooms');

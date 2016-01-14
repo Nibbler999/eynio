@@ -9,7 +9,10 @@
       //God.activeRoomSensors = [];
       var sideBar = document.querySelector('.frame-sidebar');
       var wentOffline, serverActiveLog = sessionStorage.sessionActionLog ? JSON.parse(sessionStorage.sessionActionLog) : {};
-
+      God.activeServer = {
+        name: 'no servers found'
+      };
+      God.allServers = [];
       // connect to socket
       dataService.socketConnect().then(function() {
         socketEmits();
@@ -17,34 +20,13 @@
 
       /* SET DEFAULT VALUES */
 
-      //set active room
-      // if (sessionStorage.activeRoom) {
-      //   God.activeRoom = {
-      //     name: JSON.parse(sessionStorage.activeRoom).name,
-      //     id: JSON.parse(sessionStorage.activeRoom).id
-      //   }
-      // } else {
-      //   God.activeRoom = {
-      //     name: 'Dashboard',
-      //     id: 'dashboard'
-      //   };
-      // }
-      /* after server claim reload and rename */
-      if (sessionStorage.newServerName && God.activeServer.name === sessionStorage.newServerName) {
-        console.log(sessionStorage.newServerName);
-        socket.emit3('configSet', 'name', sessionStorage.newServerName, function(data) {
-          console.log(data);
-        });
-        sessionStorage.removeItem('newServerName');
-      };
-
       God.sessionActionLog = sessionStorage.sessionActionLog ? JSON.parse(sessionStorage.sessionActionLog)[God.activeServer.id] ? JSON.parse(sessionStorage.sessionActionLog)[God.activeServer.id] : [] : [];
 
       /* request data for frame from server */
       function socketEmits() {
         /* get servers */
         socket.emit('getServers', null, function(servers) {
-          God.allServers = servers;
+          God.allServers = servers ? servers : [];
         });
         /* get weather */
         socket.emit('getWeather', null, function(weatherInfo) {
@@ -56,14 +38,12 @@
         });
         /* listen for action log updates */
         socket.on('actionLogUpdate', function(newAction) {
-          console.log(newAction);
           God.sessionActionLog.unshift(newAction);
           serverActiveLog[God.activeServer.id] = God.sessionActionLog;
           sessionStorage.sessionActionLog = JSON.stringify(serverActiveLog);
         });
         /* server offline notification */
         socket.on('serverOnline', function(online) {
-          console.log(online);
           if (!online) {
             God.serverOffline = true;
             wentOffline = true;
@@ -79,68 +59,9 @@
         });
       };
 
-      /* filter sensors by catId */
-      // function filterSensorsByCatId(catId) {
-      //   God.activeRoomSensors = [];
-      //   angular.forEach(God.allSensors, function(sensor) {
-      //     angular.forEach(sensor.categories, function(sensorCategoiresId) {
-      //       if (sensorCategoiresId === catId) {
-      //         God.activeRoomSensors.push(sensor);
-      //       }
-      //     })
-      //   });
-      // };
-      /* add new category */
-      // God.addCategory = function() {
-      //   var newCategoryName = document.getElementById('add-category-name');
-      //   socket.emit('catAdd', {
-      //     name: newCategoryName.value
-      //   }, function(newCatId) {
-      //     var newCat = {
-      //       id: newCatId,
-      //       name: newCategoryName.value
-      //     };
-      //     God.categories.push(newCat);
-      //     newCategoryName.value = '';
-      //   });
-      // };
-      //
-      // /* delete category */
-      // God.deleteCategorie = function(category) {
-      //   deleteRoomClickCount += 1;
-      //   if (deleteRoomClickCount === 2) {
-      //     socket.emit('catDelete', category.id, function(data) {
-      //       angular.forEach(God.categories, function(cat) {
-      //         if (cat.id === category.id) {
-      //           God.categories.splice(God.categories.indexOf(cat), 1);
-      //         }
-      //       });
-      //     });
-      //     God.activeRoom = {
-      //       name: 'Dashboard',
-      //       id: 'dashboard'
-      //     };
-      //     $scope.$broadcast('filterData', God.activeRoom.id);
-      //     $state.go('frame.dashboard');
-      //   }
-      // };
-      //
-      // /* edit category */
-      // God.editCategory = function() {
-      //   socket.emit('catUpdate', God.activeRoom.id, {
-      //     name: God.activeRoom.name
-      //   });
-      //   angular.forEach(God.categories, function(category) {
-      //     if (category.id === God.activeRoom.id) {
-      //       category.name = God.activeRoom.name;
-      //     }
-      //   });
-      // };
-
       /* add server name and id to local storage and reload page */
       God.switchServer = function(server) {
         sessionStorage.activeServer = JSON.stringify(server);
-        sessionStorage.removeItem('activeRoom');
         location.reload(true);
       };
 
@@ -200,8 +121,14 @@
         });
       });
 
+      // remove server form found servers
+      $scope.$on('serverClaimed', function(event, server) {
+        God.foundNewServer.splice(God.foundNewServer.indexOf(server), 1);
+        God.allServers.push(server);
+      });
+
       /* remove active room class */
-      $rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
+      $rootScope.$on('$stateChangeStart', function(event, to, toParams, from, fromParams) {
         if (window.innerWidth < 992) {
           sideBar.classList.remove('active');
         }

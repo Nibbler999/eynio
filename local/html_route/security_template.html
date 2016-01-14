@@ -1,6 +1,6 @@
 <div class="template-nav">
   <div class="template-nav-toggle">
-    <h3 class="template-nav-toggle-btn" id="surveilance" ng-click="alarmToggle = false">Surveilance</h3>
+    <h3 class="template-nav-toggle-btn" id="surveilance" ng-click="alarmToggle = false">Cameras</h3>
     <h3 class="template-nav-toggle-btn" id="alarms" ng-click="alarmToggle = true">Alarms</h3>
     <div class="active-line-indicator" ng-class="{'alarm-active': alarmToggle}"></div>
   </div>
@@ -9,6 +9,14 @@
 <div class="display-devices-row" ng-hide="alarmToggle === true">
   <camera ng-repeat="camera in security.allCameras" cinfo="camera"></camera>
   <p class="color-transparent" ng-if="security.allCameras.length === 0">No cameras were found</p>
+
+  <div class="recorings-wrap">
+    <h3 data-toggle="collapse" data-target="#camera-recordings">Camera recordings</h3>
+    <div class="collapse" id="camera-recordings">
+      <cam-rec ng-repeat="rec in security.allRecorings track by rec.id" camrec="rec"></cam-rec>
+      <small class="color-transparent" ng-if="!security.allRecorings.length">No camera recordings were found</small>
+    </div>
+  </div>
 </div>
 
 <div class="display-devices-row" ng-show="alarmToggle">

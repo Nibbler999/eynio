@@ -5,10 +5,11 @@
   </div>
 
   <div class="devices-dev-box actions">
-    <img ng-src="img/button/edit-white.svg" title="edit device" ng-click="editDevice(devinfo)">
-    <img ng-src="img/button/show-off.svg" ng-if="devinfo.type != 'camera' && devinfo.type != 'tv'" title="blacklist device" ng-click="blacklistDev(devinfo)">
-    <img ng-src="img/button/trash-white.svg" ng-if="devinfo.type === 'camera' || devinfo.type === 'tv'" title="delete device" ng-click="blacklistDev(devinfo)">
-    <img ng-src="{{deviceFavorites}}" title="favorites" ng-click="toggleAddToFavorites(devinfo.favorites, devinfo.id)">
+    <i class="material-icons" title="edit device" ng-click="editDevice(devinfo)">mode_edit</i>
+    <i class="material-icons" ng-if="devinfo.type != 'camera' && devinfo.type != 'tv'" title="blacklist device" ng-click="blacklistDev(devinfo)">visibility_off</i>
+    <i class="material-icons" ng-if="devinfo.type === 'camera' || devinfo.type === 'tv'" title="delete device" ng-click="blacklistDev(devinfo)">delete</i>
+    <i class="material-icons" title="favorites" ng-click="toggleAddToFavorites(devinfo.favorites, devinfo.id)" ng-show="!devinfo.favorites">star_border</i>
+    <i class="material-icons" title="favorites" ng-click="toggleAddToFavorites(devinfo.favorites, devinfo.id)" ng-show="devinfo.favorites">star</i>
   </div>
 
   <!-- unblacklist device !-->

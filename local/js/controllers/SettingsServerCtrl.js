@@ -3,7 +3,7 @@
 
   angular
     .module('nHome')
-    .controller('SettingsServerCtrl', ['$scope', '$rootScope', '$http', '$timeout', 'socket', 'dataService', function($scope, $rootScope, $http, $timeout, socket, dataService) {
+    .controller('SettingsServerCtrl', ['$scope', '$rootScope', '$http', '$timeout', '$state', 'socket', 'dataService', function($scope, $rootScope, $http, $timeout, $state, socket, dataService) {
 
       var server = this;
       var deleteServerCount = 0;
@@ -75,31 +75,47 @@
       /* bridge rename */
       server.leaveServer = function() {
         socket.emit('permServerRemoveSelf', null, function(response) {
+          console.log(response);
           if (response) {
-            leaveServerModal.style.display = 'block';
             socket.emit('getServers', null, function(servers) {
-              console.log(servers);
-              if (servers.length > 1) {
-                server.leveServers = servers;
-              } else if (server.length == 1) {
-                server.switchServer(servers[0]);
-              } else {
+              if (!servers.length) {
+                $state.go('login');
                 sessionStorage.removeItem('activeServer');
                 sessionStorage.removeItem('userInfoData');
                 sessionStorage.removeItem('gravatar');
+                dataRequest.logout()
+                  .then(function(reponse) {
+                    location.reload();
+                  });
+              } else {
+                sessionStorage.activeServer = JSON.stringify(servers[0]);
                 location.reload(true);
               }
             });
+            // leaveServerModal.style.display = 'block';
+            // socket.emit('getServers', null, function(servers) {
+            //   console.log(servers);
+            //   if (servers.length > 1) {
+            //     server.leveServers = servers;
+            //   } else if (server.length == 1) {
+            //     server.switchServer(servers[0]);
+            //   } else {
+            //     sessionStorage.removeItem('activeServer');
+            //     sessionStorage.removeItem('userInfoData');
+            //     sessionStorage.removeItem('gravatar');
+            //     location.reload(true);
+            //   }
+            // });
           }
         });
       };
-
-      server.switchServer = function(server) {
-        console.log(server);
-        sessionStorage.activeServer = JSON.stringify(server);
-        sessionStorage.removeItem('activeRoom');
-        location.reload(true);
-      };
+      
+      // server.switchServer = function(server) {
+      //   console.log(server);
+      //   sessionStorage.activeServer = JSON.stringify(server);
+      //   sessionStorage.removeItem('activeRoom');
+      //   location.reload(true);
+      // };
 
       /*  delete server */
       server.deleteServer = function() {
@@ -111,8 +127,19 @@
             /* redirect */
             if (data) {
               socket.emit('getServers', null, function(servers) {
-                sessionStorage.activeServer = JSON.stringify(servers[0]);
-                location.reload(true);
+                if (!servers.length) {
+                  $state.go('login');
+                  sessionStorage.removeItem('activeServer');
+                  sessionStorage.removeItem('userInfoData');
+                  sessionStorage.removeItem('gravatar');
+                  dataRequest.logout()
+                    .then(function(reponse) {
+                      location.reload();
+                    });
+                } else {
+                  sessionStorage.activeServer = JSON.stringify(servers[0]);
+                  location.reload(true);
+                }
               });
             }
           });
@@ -124,7 +151,7 @@
 
       /* google maps */
       server.useIpAddress = function() {
-          $scope.$broadcast('useIP');
+        $scope.$broadcast('useIP');
       };
 
       function getGoogleMap(coordinates) {
@@ -151,10 +178,10 @@
           console.log(invite);
           if (invite) {
             server.inviteSuccess = true;
-            $timeout(function(){
+            $timeout(function() {
               server.inviteSuccess = false;
-            },500);
-          } else{
+            }, 500);
+          } else {
             alert('Inviting ' + inviteEmail + ' failed!');
           }
         });
@@ -206,7 +233,7 @@
           server.userList = dataService.userList();
           server.serverLog = dataService.getLog();
           actionLog = dataService.getActionLog();
-          server.actionLog = actionLog.slice(0, 50);
+          server.actionLog = actionLog ? actionLog.slice(0, 50) : [];
           console.log(server.actionLog);
         });
       }

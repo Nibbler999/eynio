@@ -53,11 +53,21 @@
         liveStreamId = camData.camId;
         liveStreamOptions = camData.video;
       });
+      // get camera live stream
       socket.on('cameraFrame', function(liveStream) {
         if (liveStream) {
           var src = dataService.blobToImage(liveStream.image);
           if (!src) return;
           security.liveImage = src;
+        }
+      });
+
+      socket.on('recordingFrame', function(recFrame){
+        console.log(recFrame);
+        if(recFrame){
+            console.log(recFrame);
+            var src = dataService.blobToImage(recFrame.image);
+            console.log(src);
         }
       });
       // request full screen
@@ -88,15 +98,17 @@
       });
 
       // get data
-      var allDev = dataService.allDev();
-      security.allCameras = allDev ? allDev.camera : [];
-      security.allSensors = allDev ? allDev.sensor : [];
+      var allDev = dataService.allDev() || {};
+      security.allCameras = 'camera' in allDev ? allDev.camera : [];
+      security.allSensors = 'sensor' in allDev ? allDev.sensor : [];
+      security.allRecorings = dataService.recordings();
       // if no data, wait on socket
-      if (!allDev) {
+      if (!allDev.length) {
         dataService.dataPending().then(function() {
           allDev = dataService.allDev();
-          security.allCameras = allDev.camera;
-          security.allSensors = allDev.sensor;
+          security.allCameras = 'camera' in allDev ? allDev.camera : [];
+          security.allSensors = 'sensor' in allDev ? allDev.sensor : [];
+          security.allRecorings = dataService.recordings();
         });
       }
     }]);

@@ -4,17 +4,14 @@
     Server is offline
   </h3>
   <section class="frame-nav">
-    <img src="img/frame/burger-icon.png" class="burger-menu-icon button" ng-click="God.toggleMenu()">
+    <i class="material-icons burger-menu-icon button" ng-click="God.toggleMenu()">menu</i>
     <img src="img/logo/nhome_logo_white.png" class="frame-menu-icon" ui-sref="frame.all-rooms">
 
     <div>
       <div class="frame-new-server-notification" ng-show="God.foundNewServer.length">
-        A new server has been discovered
-        <a ui-sref="frame.add-server">
-          <button type="button" class="button frame-new-server-btn">
-            Set up
+          <button type="button" class="button frame-new-server-btn" title="nHome found {{God.foundNewServer.length}} new server(s)" ui-sref="frame.add-server">
+            <img src="img/add-server/server-added.png" class="server-found-img">
           </button>
-        </a>
       </div>
 
       <!--<div class="frame-notifications" ng-show="God.foundNewServer.length">
@@ -40,23 +37,23 @@
 
       </div>
 
-      <a ui-sref="frame.all-rooms" class="sidebar-nav-btn nhome-btn" ui-sref-active="active">
+      <a ui-sref="frame.all-rooms" class="sidebar-nav-btn nhome-btn" ui-sref-active="active" ng-click="showDownloads = false">
         Dashboard
       </a>
 
-      <a ui-sref="frame.devices" class="sidebar-nav-btn devices-btn" ui-sref-active="active">
+      <a ui-sref="frame.devices" class="sidebar-nav-btn devices-btn" ui-sref-active="active" ng-click="showDownloads = false">
         <span>Devices</span>
       </a>
 
-      <a ui-sref="frame.scenes" class="sidebar-nav-btn scenes-btn" ui-sref-active="active">
+      <a ui-sref="frame.scenes" class="sidebar-nav-btn scenes-btn" ui-sref-active="active" ng-click="showDownloads = false">
         <span>Scenes</span>
       </a>
 
-      <a ui-sref="frame.schedule" class="sidebar-nav-btn schedule-btn" ui-sref-active="active">
+      <a ui-sref="frame.schedule" class="sidebar-nav-btn schedule-btn" ui-sref-active="active" ng-click="showDownloads = false">
         <span>Schedule</span>
       </a>
 
-      <a ui-sref="frame.security" class="sidebar-nav-btn security-btn" ui-sref-active="active">
+      <a ui-sref="frame.security" class="sidebar-nav-btn security-btn" ui-sref-active="active" ng-click="showDownloads = false"
         <span>Security</span>
       </a>
 
@@ -188,7 +185,7 @@
       <button class="sidebar-nav-btn activity-log-btn hidden-xs hidden-sm hidden-md">
         Session activity log
       </button>
-      <div class="sidebar-activity-log hidden-xs hidden-sm hidden-md">
+      <div class="sidebar-activity-log hidden-xs hidden-sm hidden-md" ng-class="{'empty': !God.sessionActionLog.length}">
         <ul>
           <li ng-repeat="log in God.sessionActionLog track by log.time">
             <div class="activity-log-bullet">
@@ -204,10 +201,10 @@
             </span>
           </li>
         </ul>
-        <img src="img/frame/activity-log.png" ng-hide="God.sessionActionLog.length > 0">
+        <!--<img src="img/frame/activity-log.png" ng-hide="God.sessionActionLog.length > 0">!-->
       </div>
 
-      <a ui-sref="frame.server-settings" class="button settings-cog-btn">
+      <a ui-sref="frame.server-settings" class="button settings-cog-btn" ng-click="showDownloads = false">
         Settings
       </a>
     </section>
@@ -220,7 +217,7 @@
       <section class="frame-view" ui-view></section>
 
       <!-- bottom nav !-->
-      <section class="frame-nav-bottom">
+      <section class="frame-nav-bottom" ng-click="showDownloads = false">
           <a ui-sref="frame.all-rooms" class="button filter-btn all-rooms-filter-btn" ui-sref-active="active">
             <span class="hidden-xs">All rooms</span>
           </a>
