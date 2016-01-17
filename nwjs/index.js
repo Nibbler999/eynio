@@ -42,7 +42,7 @@ $(function() {
 
     var log = require('../lib/logger.js')({ loglevel: 'info', nocolor: true }, weblog);
 
-    require('../update.js')(log, function (conn) {
+    require('../lib/main.js')(log, function (conn) {
 
         conn.on('setExternalIP', function (command) {
             $('#external_ip').text(command.args[0]);

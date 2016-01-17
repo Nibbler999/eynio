@@ -104,7 +104,11 @@ module.exports = function (log, cb) {
 
     function loaded()
     {
-        require('./lib/main.js')(log, cb);
+        if (process.argv[2] === 'respawn') {
+            require('child_process').spawn('nhome', [], { detached: true });
+        } else {
+            require('./lib/main.js')(log, cb);
+        }
     }
 };
 
