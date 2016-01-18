@@ -1,35 +1,38 @@
 "use strict";
 
 module.exports = function (log, cb) {
-
-    var version = require('./package.json').version;
-
-    var https = require('https');
-
-    https.get('https://neosoft-updates.s3.amazonaws.com/zupdate/NHomeServer/' + version + '.xml', function(res) {
-
-        log.info('Checking for updates');
-
-        var updateXML = '';
-
-        res.on('data', function(d) {
-            updateXML += d;
+ 
+    function checkUpdates()
+    {
+        var version = require('./package.json').version;
+    
+        var https = require('https');
+    
+        https.get('https://neosoft-updates.s3.amazonaws.com/zupdate/NHomeServer/' + version + '.xml', function(res) {
+    
+            log.info('Checking for updates');
+    
+            var updateXML = '';
+    
+            res.on('data', function(d) {
+                updateXML += d;
+            });
+    
+            res.on('end', function() {
+                if (res.statusCode === 200) {
+                    require('xml2js').parseString(updateXML, processUpdateInfo);
+                } else {
+                    log.error('Failed to download update info:', res.statusCode);
+                    loaded();
+                }
+            });
+    
+        }).on('error', function(e) {
+            log.error(e);
+            loaded();
         });
-
-        res.on('end', function() {
-            if (res.statusCode === 200) {
-                require('xml2js').parseString(updateXML, processUpdateInfo);
-            } else {
-                log.error('Failed to download update info:', res.statusCode);
-                loaded();
-            }
-        });
-
-    }).on('error', function(e) {
-        log.error(e);
-        loaded();
-    });
-
+    }
+    
     function processUpdateInfo(err, info)
     {
         if (err) {
@@ -102,18 +105,41 @@ module.exports = function (log, cb) {
         });
     }
 
+    function reSpawn(pid)
+    {
+        try {
+            process.kill(pid, 0);
+            setTimeout(reSpawn, 1000, pid);
+        } catch (e){
+            checkUpdates();
+        }
+    }
+    
     function loaded()
     {
-        if (process.argv[2] === 'respawn') {
+        if (process.argv[2]) {
             require('child_process').spawn('nhome', [], { detached: true });
         } else {
             require('./lib/main.js')(log, cb);
         }
     }
+
+    if (process.argv[2]) {
+        process.kill(process.argv[2]);
+        reSpawn(process.argv[2]);
+    } else {
+        checkUpdates();        
+    }
 };
 
 if (!module.parent) {
-    var dummylog = require('./lib/logger.js')({loglevel: 'info', nocolor: false}, process.stdout);
+    var dummylog;
+    if (process.argv[2]) {
+        var updatelog = require('fs').createWriteStream('update.log');
+        dummylog = require('./lib/logger.js')({loglevel: 'info', nocolor: true}, updatelog);
+    } else {
+        dummylog = require('./lib/logger.js')({loglevel: 'info', nocolor: false}, process.stdout);
+    }
     module.exports(dummylog);
 }
 
