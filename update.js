@@ -1,23 +1,23 @@
 "use strict";
 
 module.exports = function (log, cb) {
- 
+
     function checkUpdates()
     {
         var version = require('./package.json').version;
-    
+
         var https = require('https');
-    
+
         https.get('https://neosoft-updates.s3.amazonaws.com/zupdate/NHomeServer/' + version + '.xml', function(res) {
-    
+
             log.info('Checking for updates');
-    
+
             var updateXML = '';
-    
+
             res.on('data', function(d) {
                 updateXML += d;
             });
-    
+
             res.on('end', function() {
                 if (res.statusCode === 200) {
                     require('xml2js').parseString(updateXML, processUpdateInfo);
@@ -26,13 +26,13 @@ module.exports = function (log, cb) {
                     loaded();
                 }
             });
-    
+
         }).on('error', function(e) {
             log.error(e);
             loaded();
         });
     }
-    
+
     function processUpdateInfo(err, info)
     {
         if (err) {
@@ -114,7 +114,7 @@ module.exports = function (log, cb) {
             checkUpdates();
         }
     }
-    
+
     function loaded()
     {
         if (process.argv[2]) {
@@ -128,7 +128,7 @@ module.exports = function (log, cb) {
         process.kill(process.argv[2]);
         reSpawn(process.argv[2]);
     } else {
-        checkUpdates();        
+        checkUpdates();
     }
 };
 
