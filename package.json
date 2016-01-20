@@ -35,7 +35,7 @@
     "node-schedule": "0.6.0",
     "node-uuid": "1.4.7",
     "request": "2.67.0",
-    "serve-static": "^1.10.1",
+    "serve-static": "1.10.2",
     "simple-itach": "0.2.1",
     "socket.io": "1.4.4",
     "socket.io-client": "1.4.4",
