@@ -63,12 +63,12 @@
 
     <div class="settings-box">
       <h4>Bridges</h4>
-      <p class="server-status-indicator">{{server.bridges.length}}</p>
+      <p class="server-status-indicator">{{server.data.getBridges.length}}</p>
       <p class="color-transparent">Bridges currently on this server</p>
 
       <p>
-        <span class="color-white" ng-repeat="bridge in server.bridges">{{bridge.name}}
-          <span ng-hide="$index == server.bridges.length-1">,</span>
+        <span class="color-white" ng-repeat="bridge in server.data.getBridges">{{bridge.name}}
+          <span ng-hide="$index == server.data.getBridges.length-1">,</span>
         </span>
       </p>
     </div>
@@ -119,7 +119,7 @@
       </div>
 
       <ul class="server-log-list">
-        <li class="server-log-li" ng-repeat="log in server.serverLog">
+        <li class="server-log-li" ng-repeat="log in server.data.getLog">
           <!--<span class="color-white">{{log.name}}</span>!-->
           <p class="color-white">{{log.msg}} </p>
           <p class="color-transparent">{{log.time * 1000 | date: 'd/MMM/yyyy HH:mm:ss'}}</p>
@@ -143,6 +143,7 @@
           <p class="color-white">{{log.user}} turned
             <b ng-if="server.testRegex(log.action, 'off')" class="color-orange">OFF</b>
             <b ng-if="server.testRegex(log.action, 'on')" class="color-blue">ON</b>
+             {{log.device}}
           </p>
           <p class="color-white">{{log.time | date: 'd/MMM/yyyy HH:mm:ss'}}</p>
         </li>
@@ -206,8 +207,8 @@
     <div class="col-xs-12 col-sm-8 col-lg-9 settings-tab-hlp">
       <h4>Bridges:</h4>
       <p>
-        <span class="color-blue" ng-repeat="bridge in server.bridges">{{bridge.name}}
-          <span ng-hide="$index == server.bridges.length-1">,</span>
+        <span class="color-blue" ng-repeat="bridge in server.data.getBridges">{{bridge.name}}
+          <span ng-hide="$index == server.data.getBridges.length-1">,</span>
         </span>
       </p>
     </div>
@@ -259,7 +260,7 @@
     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-7 settings-box">
       <h3>Server Log</h3>
       <div id="server-log">
-        <p class="server-log-pre" ng-repeat="log in server.serverLog">
+        <p class="server-log-pre" ng-repeat="log in server.data.getLog">
           <span class="color-blue">{{log.name}}</span>
           <span class="color-white">{{log.msg}} </span>
           <span class="color-transparent">{{log.time * 1000 | date: 'd/MMM/yyyy HH:mm:ss'}}</span>
@@ -268,7 +269,7 @@
     </div>
   </div>
 
-  <button ng-show="server.activeUser.level === 'OWNER'" type="button" class="button red-btn" title="double click to confirm" ng-click="server.deleteServer()">
+  <button ng-show="server.data.getUserProfile.level === 'OWNER'" type="button" class="button red-btn" title="double click to confirm" ng-click="server.deleteServer()">
     Delete Server
   </button>
 </div>
@@ -276,7 +277,7 @@
 <!-- user settings !-->
 <div class="settings-content-wrap" ng-show="settingsToggleBtn">
   <div class="settings-box-wrap">
-    <div class="settings-box" ng-show="server.activeUser.level === 'OWNER'">
+    <div class="settings-box" ng-show="server.data.getUserProfile.level === 'OWNER'">
       <h3>Invite User</h3>
       <small class="color-transparent">Invite users to your server</small>
 
@@ -291,7 +292,7 @@
           <label for="invite-status" class="form-label">Choose Status</label>
           <select class="form-select" id="invite-status">
             <option value="ADMIN">Admin</option>
-            <option value="OWNER">Owner</option>
+            <!-- <option value="OWNER">Owner</option> -->
             <!-- <option value="USER">User</option> !-->
           </select>
         </div>
@@ -322,19 +323,19 @@
             Staus
           </th>
         </tr>
-        <tr ng-repeat="user in server.userList">
+        <tr ng-repeat="user in server.data.userList">
           <td>
             {{user.email}}
           </td>
           <td>
             {{user.username}}
           </td>
-          <td ng-hide="server.activeUser.level === 'OWNER'">
+          <td ng-hide="server.data.getUserProfile.level === 'OWNER'">
             {{user.level}}
           </td>
-          <td ng-show="server.activeUser.level === 'OWNER'">
-            <select class="form-select settings-user-list-item" ng-model="user.level" ng-change="server.changeUserLevel(user.email, user.level)">
-              <option value="OWNER">Owner</option>
+          <td ng-show="server.data.getUserProfile.level === 'OWNER'">
+            <select class="form-select settings-user-list-item" ng-model="user.level" ng-change="server.changeUserLevel(user.email, user.level, $index)">
+              <!-- <option value="OWNER">Owner</option> -->
               <option value="ADMIN">Admin</option>
               <!--<option value="USER">User</option>!-->
               <option value="DELETE" class="settings-delet-user">Delete</option>
@@ -349,11 +350,11 @@
       </div>
 
       <ul class="server-log-list">
-        <li class="server-log-li" ng-repeat="user in server.userList">
+        <li class="server-log-li" ng-repeat="user in server.data.userList">
           <p class="settings-user-list-item">{{user.email}}</p>
           <p class="settings-user-list-item">{{user.username}}</p>
-          <p class="settings-user-list-item" ng-hide="server.activeUser.level === 'OWNER'">{{user.level}}</p>
-          <select class="form-select settings-user-list-item" ng-model="user.level" ng-change="server.changeUserLevel(user.email, user.level)" ng-show="server.activeUser.level === 'OWNER'">
+          <p class="settings-user-list-item" ng-hide="server.data.getUserProfile.level === 'OWNER'">{{user.level}}</p>
+          <select class="form-select settings-user-list-item" ng-model="user.level" ng-change="server.changeUserLevel(user.email, user.level)" ng-show="server.data.getUserProfile.level === 'OWNER'">
             <option value="OWNER">Owner</option>
             <option value="ADMIN">Admin</option>
             <option value="USER">User</option>
@@ -362,14 +363,5 @@
         </li>
       </ul>!-->
     </div>
-  </div>
-</div>
-
-<!-- leave srever moadl !-->
-<div class="custom-modal-window leave-server-modal">
-  <div class="leave-server-content-wrap">
-    <h2 class="color-white">You're about to leave server.</h2>
-    <h3 class="color-white">Choose where you wan't to connect</h3>
-    <button type="button" ng-repeat="server in server.leveServers" class="button leve-server-btn" ng-click="server.switchServer(server)">{{server.name}}</button>
   </div>
 </div>

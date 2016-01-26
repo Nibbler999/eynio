@@ -6,8 +6,8 @@
 </div>
 
 <div id="display-scenes" class="collapse in">
-  <scene ng-repeat="scene in scene.allScenes" scinfo="scene"></scene>
-  <p class="color-transparent" ng-if="scene.allScenes.length === 0">You haven't created a single sceen! Click the button in the corner and make one</p>
+  <scene ng-repeat="scene in scene.data.getScenes" scinfo="scene"></scene>
+  <p class="color-transparent" ng-if="scene.data.getScenes.length === 0">You haven't created a single sceen! Click the button in the corner and make one</p>
 </div>
 
 <div id="add-new-scene" class="collapse new-scene">
@@ -115,7 +115,7 @@
 
       <s-shutter ng-repeat="shutter in scene.allDev.shutter track by shutter.id" shinfo="shutter"></s-shutter>
 
-      <s-tvremote ng-repeat="tv in scene.allRemotes.tv track by tv.id" tvremote="tv"></s-tvremote>
+      <s-tvremote ng-repeat="tv in scene.allDev.remote track by tv.id" tvremote="tv"></s-tvremote>
 
     </div>
   </div>

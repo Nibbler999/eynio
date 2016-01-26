@@ -184,6 +184,7 @@
   background-color: inherit;
   width: 3em;
   height: 3em;
+  line-height: 0;
   -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
 }

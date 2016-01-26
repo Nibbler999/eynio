@@ -11,18 +11,15 @@
       var liveStreamModal = document.querySelector('.cam-live-stream-modal');
       var liveStreamImg = document.querySelector('.camera-live-stream');
 
-      var liveStreamOptions, liveStreamId;
+      var liveStreamDev;
 
       contentWrapParent.appendChild(liveStreamModal);
 
       /* Live stream */
-      $scope.$on('requestLiveStream', function(event, camData) {
+      $scope.$on('requestLiveStreamPlayback', function(event, camData) {
         liveStreamModal.style.display = 'block';
         mostUsed.liveImage = camData.thumbnail;
-        console.log(camData);
-
-        liveStreamId = camData.camId;
-        liveStreamOptions = camData.video;
+        liveStreamDev = camData
       });
 
       socket.on('cameraFrame', function(liveStream) {
@@ -38,81 +35,48 @@
         dataService.fullScreen(liveStreamImg);
       };
       mostUsed.stopLiveStream = function() {
-        socket.emit('stopStreaming', liveStreamId, liveStreamOptions);
+        socket.emit('stopStreaming', liveStreamDev.dev.id, liveStreamDev.options);
         liveStreamModal.style.display = 'none';
       };
 
       // stop livestream on ESC
       document.body.onkeyup = function(e) {
-        if (e.keyCode === 27) {
-          if (liveStreamId) {
-            socket.emit('stopStreaming', liveStreamId, liveStreamOptions);
-          };
-          liveStreamModal.style.display = 'none';
+        if (e.keyCode === 27 && liveStreamDev.dev.id) {
+          mostUsed.stopLiveStream();
         }
       };
       /* stop live stream if not in all rooms */
       $rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
-        if (liveStreamId) {
-          socket.emit('stopStreaming', liveStreamId, liveStreamOptions);
+        if (liveStreamDev && liveStreamDev.dev.id) {
+          mostUsed.stopLiveStream();
         };
-        liveStreamModal.style.display = 'none';
       });
 
 
       /* get data */
-      var allDev = dataService.allDev();
-      var allDevArray = [];
-      var allRemotes = dataService.allCustomRemotes();
+      mostUsed.data = dataService.getData();
 
-      if (allDev && allRemotes) {  mostUsed.allTvRemotes = allRemotes.tv;
-        mostUsed.allAvRemotes = allRemotes.ac;
-        mostUsed.allMultuRemotes = allRemotes.multi;
+      if (mostUsed.data.getDevicesArray) {
 
-        angular.forEach(allDev, function(devTypeArray) {
-          angular.forEach(devTypeArray, function(dev) {
-            allDevArray.push(dev);
-          })
+        mostUsed.allDevArray = mostUsed.data.getDevicesArray.filter(function(dev){
+          return dev.usecount
+        }).sort(function(a ,b){
+          return b.usecount - a.usecount;
         });
-        allDevArray = allDevArray.sort(function(a, b) {
-          return b.usecount - a.usecount
-        });
-
-
-        mostUsed.allTvRemotes = mostUsed.allTvRemotes.filter(function(rem) {
-          return rem.usecount
-        }).sort(function(a, b) {
-          return b.usecount - a.usecount
-        });
-
-        mostUsed.allDev = allDevArray;
-      } else if (!allDev) {
-        dataService.dataPending().then(function() {
-          allDev = dataService.allDev();
-          allRemotes = dataService.allCustomRemotes();
-
-          mostUsed.allTvRemotes = allRemotes.tv;
-          mostUsed.allAvRemotes = allRemotes.ac;
-          mostUsed.allMultuRemotes = allRemotes.multi;
-
-          angular.forEach(allDev, function(devTypeArray) {
-            angular.forEach(devTypeArray, function(dev) {
-              allDevArray.push(dev);
-            })
+      } else {
+        dataService.getDevicesEmit().then(function(devices){
+          mostUsed.data = dataService.getData();
+          mostUsed.allDevArray = mostUsed.data.getDevicesArray.filter(function(dev){
+            return dev.usecount
+          }).sort(function(a ,b){
+            return b.usecount - a.usecount;
           });
-          allDevArray = allDevArray.sort(function(a, b) {
-            return b.usecount - a.usecount
-          });
-
-
-          mostUsed.allTvRemotes = mostUsed.allTvRemotes.filter(function(rem) {
-            return rem.usecount
-          }).sort(function(a, b) {
-            return b.usecount - a.usecount
-          });
-
-          mostUsed.allDev = allDevArray;
-        });
+        })
+        dataService.getCategoriesEmit();
+        dataService.getScenesEmit();
+        dataService.getSchedulesEmit();
+        dataService.getRecordingsEmit();
+        dataService.getServerEmits();
       }
     }]);
 }());

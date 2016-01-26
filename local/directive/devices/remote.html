@@ -5,12 +5,11 @@
   </span>
   <img ng-src="img/button/schedule.svg" class="device-schedule-btn" ng-click="deviceSchedule = !deviceSchedule" title="quick schedule">
   <div class="device-header">
-    <img ng-src="img/device/remote.png" class="device-icon" ng-show="currentState === 'frame.devices'">
-    <img ng-src="img/device/remote.png" class="device-icon" ng-click="fullRemote = true" title="full remote" ng-hide="currentState === 'frame.devices'">
+    <img ng-src="img/device/remote.png" class="device-icon" ng-click="fullRemote = true" title="full remote">
     <div class="device-content-data">
       <p>{{tvinfo.name}}</p>
       <p>{{tvinfo.type}}</p>
-      <div class="remote-learn-wrap" ng-hide="currentState === 'frame.devices'">
+      <div class="remote-learn-wrap">
         <input type="checkbox" id="learning-mode-{{tvinfo.count}}" ng-model="learningMode">
         <label for="learning-mode-{{tvinfo.count}}" class="button">Learning mode</label>
       </div>
@@ -95,7 +94,9 @@
       </div>
     </div>
     <div class="remote-full-row">
+      <button type="button" class="remote-none-btn remote-mute-btn" ng-click="cRemoteAction(tvinfo.id, 'MUTE')" id="remote-MUTE"><i class="material-icons" ng-if="!numpad">volume_mute</i></button>
       <button type="button" class="remote-none-btn remote-numpad-btn" ng-click="numpad = !numpad">Numpad</button>
+      <button type="button" class="remote-none-btn remote-return-btn" ng-click="cRemoteAction(tvinfo.id, 'RETURN')" id="remote-RETURN" ><i class="material-icons" ng-if="!numpad">keyboard_return</i></button>
     </div>
 
     <!-- wait for learn button !-->
@@ -115,8 +116,7 @@
     </button>
     <form class="add-schedule-dev-form" id="dev-schedule-form-{{tvinfo.id}}" ng-submit="quickSchedule(tvinfo, 'POWER')">
       <p>Remote will
-        <span class="color-blue">toggle</span>
-         TV power at:
+        <span class="color-blue">toggle</span> TV power at:
       </p>
       <input type="number" class="form-number" id="device-schedule-hours-{{tvinfo.id}}" placeholder="Hours" min="0" max="23" required ng-blur="checkHours($event)">
       <input type="number" class="form-number" id="device-schedule-minutes-{{tvinfo.id}}" placeholder="Minutes" min="0" max="59" required ng-blur="checkMinutes($event)">
@@ -124,13 +124,13 @@
       <div class="add-schedule-dev-options-wrap">
         <div class="add-schedule-dev-option">
           <small>Daily</small>
-          <input type="radio" name="repeat-device-schedule" value="daily" id="schedule-device-daily-{{sinfo.id}}" ng-model="deviceScheduleRepeat">
-          <label for="schedule-device-daily-{{sinfo.id}}" class="radio-label" title="schedule will repeat daily"></label>
+          <input type="radio" name="repeat-device-schedule" value="daily" id="schedule-device-daily-{{tvinfo.id}}" ng-model="deviceScheduleRepeat">
+          <label for="schedule-device-daily-{{tvinfo.id}}" class="radio-label" title="schedule will repeat daily"></label>
         </div>
         <div class="add-schedule-dev-option">
           <small>Once</small>
-          <input type="radio" name="repeat-device-schedule" value="once" id="schedule-device-once-{{sinfo.id}}" ng-model="deviceScheduleRepeat">
-          <label for="schedule-device-once-{{sinfo.id}}" class="radio-label" title="schedule will fire just once"></label>
+          <input type="radio" name="repeat-device-schedule" value="once" id="schedule-device-once-{{tvinfo.id}}" ng-model="deviceScheduleRepeat">
+          <label for="schedule-device-once-{{tvinfo.id}}" class="radio-label" title="schedule will fire just once"></label>
         </div>
       </div>
 

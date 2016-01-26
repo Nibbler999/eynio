@@ -21,68 +21,68 @@
 </div>
 
 <!-- show all lights !-->
-<section class="display-devices" ng-if="device.allDev.light.length">
+<section class="display-devices" ng-if="device.data.getDevicesObj.light.length">
   <h4 data-toggle="collapse" data-target="#lights-list">Lights</h4>
   <div class="collapse" id="lights-list">
-    <devices-dev ng-repeat="light in device.allDev.light" devinfo="light"></devices-dev>
+    <devices-dev ng-repeat="light in device.data.getDevicesObj.light" devinfo="light"></devices-dev>
   </div>
   <hr>
 </section>
 
 <!-- show all switches !-->
-<section class="display-devices" ng-if="device.allDev.switch.length">
+<section class="display-devices" ng-if="device.data.getDevicesObj.switch.length">
   <h4 data-toggle="collapse" data-target="#switches-list">Switches</h4>
   <div class="collapse" id="switches-list">
-    <devices-dev ng-repeat="switch in device.allDev.switch" devinfo="switch"></devices-dev>
+    <devices-dev ng-repeat="switch in device.data.getDevicesObj.switch" devinfo="switch"></devices-dev>
   </div>
   <hr>
 </section>
 <!-- show all shutters !-->
-<section class="display-devices" ng-if="device.allDev.shutters.length">
+<section class="display-devices" ng-if="device.data.getDevicesObj.shutters.length">
   <h4 data-toggle="collapse" data-target="#shutters-list">Shutters</h4>
   <hr>
   <div class="collapse" id="shutters-list">
-    <devices-dev ng-repeat="shutter in device.allDev.shutters" devinfo="shutter"></devices-dev>
+    <devices-dev ng-repeat="shutter in device.data.getDevicesObj.shutters" devinfo="shutter"></devices-dev>
   </div>
 </section>
 <!-- show all thermostats !-->
-<section class="display-devices" ng-if="device.allDev.thermostat.length">
+<section class="display-devices" ng-if="device.data.getDevicesObj.thermostat.length">
   <h4 data-toggle="collapse" data-target="#thermostats-list">Thermostat</h4>
   <div class="collapse" id="thermostats-list">
-    <devices-dev ng-repeat="thermo in device.allDev.thermostat" devinfo="thermo"></devices-dev>
+    <devices-dev ng-repeat="thermo in device.data.getDevicesObj.thermostat" devinfo="thermo"></devices-dev>
   </div>
   <hr>
 </section>
 <!-- show all remotes !-->
-<section class="display-devices" ng-if="device.allRemotes.tv.length">
+<section class="display-devices" ng-if="device.data.getDevicesObj.remote.length">
   <h4 data-toggle="collapse" data-target="#remotes-list">Remotes</h4>
   <div class="collapse" id="remotes-list">
-    <devices-dev ng-repeat="cRemote in device.allRemotes.tv track by cRemote.id" devinfo="cRemote"></devices-dev>
+    <devices-dev ng-repeat="cRemote in device.data.getDevicesObj.remote track by cRemote.id" devinfo="cRemote"></devices-dev>
   </div>
   <hr>
 </section>
 <!-- show all cameras !-->
-<section class="display-devices" ng-if="device.allDev.camera.length">
+<section class="display-devices" ng-if="device.data.getDevicesObj.camera.length">
   <h4 data-toggle="collapse" data-target="#cameras-list">Cameras</h4>
   <div class="collapse" id="cameras-list">
-    <devices-dev ng-repeat="camera in device.allDev.camera" devinfo="camera"></devices-dev>
+    <devices-dev ng-repeat="camera in device.data.getDevicesObj.camera" devinfo="camera"></devices-dev>
   </div>
   <hr>
 </section>
 <!-- show all sensors !-->
-<section class="display-devices" ng-if="device.allDev.sensor.length">
+<section class="display-devices" ng-if="device.data.getDevicesObj.sensor.length">
   <h4 data-toggle="collapse" data-target="#sensors-list">Sensors</h4>
   <div class="collapse" id="sensors-list">
-    <devices-dev ng-repeat="sensor in device.allDev.sensor" devinfo="sensor"></devices-dev>
+    <devices-dev ng-repeat="sensor in device.data.getDevicesObj.sensor" devinfo="sensor"></devices-dev>
   </div>
   <hr>
 </section>
 
 <!-- show all sensors !-->
-<section class="display-devices" ng-if="device.allBlacklistedDev.length">
+<section class="display-devices" ng-if="device.data.getBlacklisted.length">
   <h4 data-toggle="collapse" data-target="#blacklisted-list">Blacklisted</h4>
   <div class="collapse" id="blacklisted-list">
-    <devices-dev ng-repeat="dev in device.allBlacklistedDev track by dev.id" devinfo="dev"></devices-dev>
+    <devices-dev ng-repeat="dev in device.data.getBlacklisted track by dev.id" devinfo="dev"></devices-dev>
   </div>
   <hr>
 </section>
@@ -117,6 +117,28 @@
             RTSP
           </label>
           <input type="text" id="rtsp-camera" class="form-input" ng-model="device.activeDevice.rtsp">
+
+          <label class="form-label">Rotation</label>
+          <span>
+            <i>0°</i>
+            <input type="radio" id="camera-rotation-0" name="camera-rotation" value="0" ng-checked="device.activeDevice.rotate === 0" ng-model="device.activeDevice.rotate">
+            <label for="camera-rotation-0" class="radio-label"></label>
+          </span>
+        <span>
+            <i>90°</i>
+            <input type="radio" id="camera-rotation-90" name="camera-rotation" value="90" ng-checked="device.activeDevice.rotate === 90" ng-model="device.activeDevice.rotate">
+            <label for="camera-rotation-90" class="radio-label"></label>
+          </span>
+        <span>
+            <i>180°</i>
+            <input type="radio" id="camera-rotation-180" name="camera-rotation" value="180" ng-checked="device.activeDevice.rotate === 180" ng-model="device.activeDevice.rotate">
+            <label for="camera-rotation-180" class="radio-label"></label>
+          </span>
+        <span>
+            <i>270°</i>
+            <input type="radio" id="camera-rotation-270" name="camera-rotation" value="270" ng-checked="device.activeDevice.rotate === 270" ng-model="device.activeDevice.rotate">
+            <label for="camera-rotation-270" class="radio-label"></label>
+          </span>
         </span>
 
         <!-- if editing remote show options !-->
@@ -124,7 +146,7 @@
 
           <label class="form-label" for="ir-output-remote">IR Output</label>
           <select id="ir-output-remote" class="form-select" ng-model="device.activeDevice.deviceid">
-            <option ng-repeat="remote in device.bridges" value={{remote.id}}>
+            <option ng-repeat="remote in device.data.getBridges" value={{remote.id}}>
               {{remote.name}}
             </option>
           </select>
@@ -195,6 +217,33 @@
           <div class="col-xs-6 col-md-12">
             <label for="add-camera-snapshot" class="form-label">JPEG Snapshot</label>
             <input type="text" id="add-camera-snapshot" class="form-input">
+            <label class="form-label" for="add-camera-rotation">Rotation</label>
+            <select class="form-select" id="add-camera-rotation">
+              <option value="hhh">0°</option>
+              <option value="90">90°</option>
+              <option value="180">180°</option>
+              <option value="270">270°</option>
+            </select>
+            <!--<span>
+              <i>0°</i>
+              <input type="radio" id="add-camera-rotation-0" name="add-camera-rotation" value="0" checked>
+              <label for="add-camera-rotation-0" class="radio-label"></label>
+            </span>
+            <span>
+              <i>90°</i>
+              <input type="radio" id="add-camera-rotation-90" name="add-camera-rotation" value="90">
+              <label for="add-camera-rotation-90" class="radio-label"></label>
+            </span>
+            <span>
+              <i>180°</i>
+              <input type="radio" id="add-camera-rotation-180" name="add-camera-rotation" value="180">
+              <label for="add-camera-rotation-180" class="radio-label"></label>
+            </span>
+            <span>
+              <i>270°</i>
+              <input type="radio" id="add-camera-rotation-270" name="add-camera-rotation" value="270">
+              <label for="add-camera-rotation-270" class="radio-label"></label>
+            </span>!-->
           </div>
         </div>
       </form>
@@ -275,7 +324,7 @@
       <div class="add-remote-radio-select">
         <h4>Remote bridge</h4>
         <div class="asing-room">
-          <span ng-repeat="remote in device.bridges">
+          <span ng-repeat="remote in device.data.getBridges">
             <input type="radio" id="add-remote-bridge-{{remote.id}}" value="{{remote.id}}" name="add-remote-bridge" class="form-radio" checked>
             <label for="add-remote-bridge-{{remote.id}}" class="radio-label"></label>
             <i>{{remote.name}}</i>

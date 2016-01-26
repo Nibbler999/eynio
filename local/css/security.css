@@ -116,7 +116,7 @@
   position: absolute;
   bottom: 0;
   left: 5%;
-  width: 50%;
+  width: 45%;
   border: 0.1em solid #1272CD;
   box-shadow: 0.1em 0.1em 0.5em #1272CD;
   -webkit-transition: all 0.35s ease;
@@ -124,7 +124,7 @@
 }
 .active-line-indicator.alarm-active {
   left: 60%;
-  width: 40%;
+  width: 35%;
 }
 .recorings-wrap {
   color: #fff;
@@ -160,6 +160,7 @@
   box-sizing: border-box;
   width: 100%;
   height: 100%;
+  background-color: #1362AC;
   object-fit: contain;
 }
 .camera-live-stream:-moz-full-screen {
@@ -172,6 +173,7 @@
   box-sizing: border-box;
   width: 100%;
   height: 100%;
+  background-color: #1362AC;
   object-fit: contain;
 }
 .camera-live-stream:-ms-fullscreen {
@@ -184,6 +186,7 @@
   box-sizing: border-box;
   width: 100%;
   height: 100%;
+  background-color: #1362AC;
   object-fit: contain;
 }
 .camera-live-stream:fullscreen {
@@ -196,14 +199,15 @@
   box-sizing: border-box;
   width: 100%;
   height: 100%;
+  background-color: #1362AC;
   -o-object-fit: contain;
   object-fit: contain;
 }
 .full-screen-btn {
-  background: url(../img/button/full-screen.png) 50% no-repeat;
   position: absolute;
-  bottom: 0.5em;
-  right: 0.5em;
+  bottom: 0em;
+  right: 0em;
+  width: auto;
 }
 @media screen and (min-width: 768px) {
   .camera-wrap {

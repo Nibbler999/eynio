@@ -289,17 +289,17 @@
 .active-server-btn a {
   color: #fff;
 }
-.server-status-online {
-  background-image: url(../img/frame/green-dot.png);
-  background-position: 95% 50%;
-  background-repeat: no-repeat;
+.server-status-dot{
+  position: absolute;
+  right: 0.5em;
+  height: 1em;
 }
-.server-status-offline {
-  background-image: url(../img/frame/red-dot.png);
-  background-position: 95% 50%;
-  background-repeat: no-repeat;
+.server-status-dot.online{
+  color: #5FCA8F;
 }
-
+.server-status-dot.offline{
+  color: #EC3535;
+}
 /* bootstrap css override */
 
 .server-dropdown {
@@ -320,6 +320,7 @@
 }
 .server-dropdown-ul>li>a {
   color: #fff;
+  position: relative;
 }
 .downloads-panel-group {
   background-color: #0C253A;
@@ -365,7 +366,7 @@
   background-size: 3em;
 }
 .nhome-btn.active, .nhome-btn:hover {
-  background-color: #e6e6e6;
+  background-color: #BDBDBD;
   background-size: 10em;
   text-indent: 13em;
   -webkit-transition: text-indent 0.4s ease, background-color 0.25s ease 0.2s, background-size 0.5s ease 0.2s;
@@ -679,8 +680,9 @@
 .category-name-reset {
   background: transparent url(../img/button/cross.png) center no-repeat;
 }
-.category-name-delete {
-  background: rgba(236, 53, 53, 0.65) url(../img/button/trash.png) center no-repeat;
+.category-name-delete{
+  line-height: 0;
+  background: rgba(236, 53, 53, 0.65);
 }
 .button.add-new {
   background-image: url(../img/button/add-room.png);
@@ -927,6 +929,7 @@
   }
   .burger-menu-icon{
     height: 1.75em;
+    width: auto;
     line-height: 1.75;
     font-size: 2em;
   }

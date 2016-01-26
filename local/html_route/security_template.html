@@ -7,27 +7,27 @@
 </div>
 
 <div class="display-devices-row" ng-hide="alarmToggle === true">
-  <camera ng-repeat="camera in security.allCameras" cinfo="camera"></camera>
-  <p class="color-transparent" ng-if="security.allCameras.length === 0">No cameras were found</p>
+  <camera ng-repeat="camera in security.data.getDevicesObj.camera" cinfo="camera"></camera>
+  <small class="color-transparent" ng-if="security.data.getDevicesObj.camera.length === 0">No cameras were found</small>
 
   <div class="recorings-wrap">
     <h3 data-toggle="collapse" data-target="#camera-recordings">Camera recordings</h3>
     <div class="collapse" id="camera-recordings">
-      <cam-rec ng-repeat="rec in security.allRecorings track by rec.id" camrec="rec"></cam-rec>
-      <small class="color-transparent" ng-if="!security.allRecorings.length">No camera recordings were found</small>
+      <cam-rec ng-repeat="rec in security.data.getRecordings track by rec.id" camrec="rec"></cam-rec>
+      <small class="color-transparent" ng-if="security.data.getDevicesObj.length === 0 || !security.data.getRecordings.length">No camera recordings were found</small>
     </div>
   </div>
 </div>
 
 <div class="display-devices-row" ng-show="alarmToggle">
-  <alarm ng-repeat="sensorAlarm in security.allSensors" ainfo="sensorAlarm" ng-click="security.toggleAddSensor(sensorAlarm.id)"></alarm>
-  <p class="color-transparent" ng-if="security.allSensors.length === 0">No sensors for triggering alarm were found</p>
+  <alarm ng-repeat="sensorAlarm in security.data.getDevicesObj.sensor" ainfo="sensorAlarm" ng-click="security.toggleAddSensor(sensorAlarm.id)"></alarm>
+  <small class="color-transparent" ng-if="!security.data.getDevicesObj || security.data.getDevicesObj.sensor.length === 0">No sensors for triggering alarm were found</small>
 </div>
 
 <section class="custom-modal-window cam-live-stream-modal">
   <section class="custom-modal-wrap">
     <img src="img/button/cross.png" class="close-live-stream-modal" ng-click="security.stopLiveStream()">
     <img ng-src={{security.liveImage}} class="camera-live-stream">
-    <button type="button" ng-click="security.fullScreen()" class="button full-screen-btn"></button>
+    <i class="material-icons button full-screen-btn" ng-click="security.fullScreen()" title="full screen">fullscreen</i>
   </section>
 </section>

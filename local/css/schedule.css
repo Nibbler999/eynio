@@ -25,14 +25,18 @@
 .edit-schedule-dropdown > li > a {
   color: #fff;
 }
+.edit-schedule-dropdown > li > a > i {
+  position: absolute;
+  right: 0;
+  font-size: 1.5em;
+  color: rgba(0, 0, 0, 0.5);
+}
 .edit-schedule-dropdown-btn {
-  background-image: url(../img/button/edit.png);
   background-position: 95% 50%;
   background-repeat: no-repeat;
   border-bottom: 0.1em solid #0C253A;
 }
 .delete-schedule-dropdown-btn {
-  background-image: url(../img/button/trash.png);
   background-position: 95% 50%;
   background-repeat: no-repeat;
 }
@@ -44,12 +48,23 @@
   border-radius: 0.5em;
   border: 0.1em solid rgba(255, 255, 255, 0.25);
   overflow: hidden;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
+  -webkit-flex-flow: row nowrap;
+      -ms-flex-flow: row nowrap;
+          flex-flow: row nowrap;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
-.schedule-days-wrap > span{
-  flex: 1;
+.schedule-days-wrap > span {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
 }
 .schedule-label {
   min-width: 3em;
@@ -76,38 +91,3 @@ input[type="checkbox"]:checked ~ .schedule-label {
   transform: scale(1.1);
   box-sizing: border-box;
 }
-
-/*
-.schedule-wrap div {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-justify-content: space-around;
-  -ms-flex-pack: distribute;
-  justify-content: space-around;
-}
-.schedule-wrap div p {
-  line-height: 4;
-}
-.schedule-devices p, .schedule-days p {
-  color: #0D96FF;
-  line-height: 4;
-  margin-right: 0.5em;
-}
-.schedule-edit-mode {
-  margin: auto;
-  -webkit-animation: expandAddCategory 0.3s ease;
-          animation: expandAddCategory 0.3s ease;
-}
-.save-edit-schedule-btn {
-  height: 2.5em;
-  text-align: left;
-  margin: 0 0.5em;
-  background: #11599D;
-}
-.cancel-edit-category-btn {
-  background: #295376 url(../img/button/cross-dark.png) 50% no-repeat;
-  height: 2.5em;
-}
-*/

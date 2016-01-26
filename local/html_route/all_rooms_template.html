@@ -19,38 +19,16 @@
   </div>
   <!-- room quick select !-->
   <div class="category-wrap">
-    <!--<small class="color-transparent">Add new room</small>!-->
     <button type="button" class="button add-new blue-btn" ng-click="allRooms.addRoomForm = !allRooms.addRoomForm" ng-hide="allRooms.addRoomForm" title="add room"></button>
     <form ng-submit="allRooms.addRoom($event)" autocomplete="off" ng-if="allRooms.addRoomForm">
-      <input type="text" placeholder="Add new room" pattern=".{3,15}" id="add-room-name" class="form-input" required title="new room name">
+      <input type="text" placeholder="Add new room" pattern=".{3,15}" id="add-room-name" class="form-input" required title="new room name" maxlength="15">
     </form>
-    <!--<div class="dropdown">
-      <button type="button" class="button dropdown-toggle category-dropdown" id="categories-dropdown" data-toggle="dropdown">
-        {{allRooms.activeRoom.name}}
-      </button>
-
-      <ul class="dropdown-menu category-dropdown-list" role="menu" aria-labelledby="categories-dropdown">
-        <li role="presentation" ng-repeat="category in allRooms.categories track by category.id">
-          <a role="menuitem" tabindex="-1" href="#" ng-click="allRooms.jumpToRoom(category)">{{category.name}}</a>
-        </li>
-        <li class="button blue-btn server-log-load-more" ng-click="addCategory = !addCategory">
-          <p>Add room</p>
-          <img src="img/button/plus-lblue.png">
-        </li>
-        <li ng-show="addCategory">
-          <form ng-submit="allRooms.addCategory" class="add-category-form">
-            <input type="text" pattern=".{3,15}" required class="form-input" placeholder="Category name" id="new-category-name">
-            <button type="reset" class="button orange-btn" ng-click="addCategory = false">Cancel</button>
-            <button type="submit" class="button blue-btn">Submit</button>
-          </form>
-        </li>
-      </ul>
-    </div>!-->
   </div>
 </div>
 
 <div class="all-rooms-view-point">
-  <div ng-repeat="category in allRooms.categories" id="{{category.id}}">
+  <small class="color-transparent" ng-if="!allRooms.data.getCategories.length">You don't have any rooms, click on the + button and add one</small>
+  <div ng-repeat="category in allRooms.data.getCategories" id="{{category.id}}">
     <div class="template-nav">
       <h3 class="category-name" ng-click="categoryName = !categoryName" ng-hide="categoryName">{{category.name}}</h3>
 
@@ -59,12 +37,14 @@
         <input type="text" pattern=".{3,15}" required class="form-input" placeholder="Category name" ng-model="category.name">
         <button type="submit" class="button category-name-submit" ng-click="categoryName = false"></button>
         <button type="button" class="button category-name-reset" ng-click="categoryName = false"></button>
-        <button type="reset" class="button category-name-delete" ng-click="allRooms.deleteCategory(category)"></button>
+        <button type="reset" class="button category-name-delete" ng-click="allRooms.deleteCategory(category)">
+          <i class="material-icons">delete</i>
+        </button>
       </form>
 
       <!-- sensors !-->
       <div class="sensor-wrap">
-        <div class="info-sensor" ng-repeat="sensor in allRooms.sensor[category.id] track by sensor.id" title="{{sensor.name}}">
+        <div class="info-sensor" ng-repeat="sensor in allRooms[category.id].sensor track by sensor.id" title="{{sensor.name}}">
           <img ng-if="sensor.subtype === 'temperature'" src="img/sensors/temp.png">
           <img ng-if="sensor.subtype === 'humidity'" src="img/sensors/humidity.png">
           <img ng-if="sensor.subtype === 'co2'" src="img/sensors/co.png">
@@ -80,24 +60,26 @@
             <!--<p>{{sensor.name}}</p>!-->
           </div>
         </div>
-        <small class="color-transparent margin-auto" ng-show="allRooms.sensor[category.id].length === 0">
+        <small class="color-transparent margin-auto" ng-show="allRooms[category.id].sensor.length === 0">
           You don't have sensors in this room. Go <a ui-sref="frame.devices">assign</a>
         </small>
       </div>
       <div class="horizontal-line"></div>
     </div>
     <br>
+
+    <small class="color-transparent" ng-show="allRooms[category.id].length === 0">This room is empty. Got to <a ui-sref="frame.devices">devices</a> and add a few</small>
     <!-- rest of devices !-->
     <div class="display-devices-row">
-      <switch ng-repeat="switch in allRooms.switch[category.id] track by switch.id" sinfo="switch"></switch>
-      <light ng-repeat="light in allRooms.light[category.id] track by light.id" linfo="light"></light>
-      <thermostat ng-repeat="thermo in allRooms.thermostat[category.id] track by thermo.id" tinfo="thermo"></thermostat>
-      <shutter ng-repeat="shutter in allRooms.shutter[category.id] track by shutter.id" shinfo="shutter"></shutter>
-      <remote ng-repeat="cRemote in allRooms.tv[category.id] track by cRemote.id" tvinfo="cRemote"></remote>
+      <switch ng-repeat="switch in allRooms[category.id].switch track by switch.id" sinfo="switch"></switch>
+      <light ng-repeat="light in allRooms[category.id].light track by light.id" linfo="light"></light>
+      <thermostat ng-repeat="thermo in allRooms[category.id].thermostat track by thermo.id" tinfo="thermo"></thermostat>
+      <shutter ng-repeat="shutter in allRooms[category.id].shutter track by shutter.id" shinfo="shutter"></shutter>
+      <remote ng-repeat="cRemote in allRooms[category.id].remote track by cRemote.id" tvinfo="cRemote"></remote>
     </div>
 
     <div class="display-devices-row">
-      <camera ng-repeat="camera in allRooms.camera[category.id] track by camera.id" cinfo="camera"></camera>
+      <camera ng-repeat="camera in allRooms[category.id].camera track by camera.id" cinfo="camera"></camera>
     </div>
   </div>
 </div>
@@ -106,6 +88,6 @@
   <section class="custom-modal-wrap">
     <img src="img/button/cross.png" class="close-live-stream-modal" ng-click="allRooms.stopLiveStream()">
     <img ng-src={{allRooms.liveImage}} class="camera-live-stream">
-    <button type="button" ng-click="allRooms.fullScreen()" class="button full-screen-btn"></button>
+    <i class="material-icons button full-screen-btn" ng-click="allRooms.fullScreen()" title="full screen">fullscreen</i>
   </section>
 </section>

@@ -7,45 +7,28 @@
 
       var allRooms = this;
 
-
       var contentWrapParent = document.querySelector('.frame-page-content-wrap');
       var liveStreamModal = document.querySelector('.cam-live-stream-modal');
       var liveStreamImg = document.querySelector('.camera-live-stream');
-      var liveStreamOptions, liveStreamId;
+      var liveStreamDev;
 
       contentWrapParent.appendChild(liveStreamModal);
 
-      function sortDevices(categories, devices, remotes) {
+      function sortDevices(categories, devices) {
         // wild sorting
-        angular.forEach(devices, function(devTypeArray, type){
-          allRooms[type] = {};
-          angular.forEach(categories, function (cat) {
-            allRooms[type][cat.id] = allRooms[type][cat.id] || [];
 
-            angular.forEach(devTypeArray, function(dev){
-              angular.forEach(dev.categories, function(devCat){
-                if(devCat === cat.id){
-                  allRooms[type][cat.id].push(dev);
-                }
-              });
-            });
-          });
-        });
+        angular.forEach(categories, function(cat) {
+          allRooms[cat.id] = {};
+          angular.forEach(devices, function(devArray, type) {
+            allRooms[cat.id][type] = allRooms[cat.id][type] || [];
 
-        angular.forEach(remotes, function(remTypeArray, type){
-          allRooms[type] = {};
-          angular.forEach(categories, function(cat){
-            allRooms[type][cat.id] = allRooms[type][cat.id] || [];
-
-            angular.forEach(remTypeArray, function(rem){
-              angular.forEach(rem.categories, function(remCat){
-                if(remCat === cat.id){
-                  allRooms[type][cat.id].push(rem);
-                }
-              })
+            angular.forEach(devArray, function(dev) {
+              if (dev.category === cat.id) {
+                allRooms[cat.id][type].push(dev);
+              }
             })
           })
-        })
+        });
       };
 
       allRooms.changeCategoryName = function(cat) {
@@ -53,66 +36,6 @@
           name: cat.name
         });
       };
-      /* Live stream */
-      $scope.$on('requestLiveStream', function(event, camData) {
-        liveStreamModal.style.display = 'block';
-        allRooms.liveImage = camData.thumbnail;
-        console.log(camData);
-
-        liveStreamId = camData.camId;
-        liveStreamOptions = camData.video;
-      });
-
-      socket.on('cameraFrame', function(liveStream) {
-        if (liveStream) {
-          var src = dataService.blobToImage(liveStream.image);
-          if (!src) return;
-          allRooms.liveImage = src;
-        }
-      });
-
-      /* full screen for cameras */
-      allRooms.fullScreen = function() {
-        dataService.fullScreen(liveStreamImg);
-      };
-      allRooms.stopLiveStream = function() {
-        socket.emit('stopStreaming', liveStreamId, liveStreamOptions);
-        liveStreamModal.style.display = 'none';
-      };
-      document.addEventListener("fullscreenchange",  function(e){
-        console.log(e);
-        console.log('bbb');
-      })
-      // stop livestream on ESC
-      document.body.onkeyup = function(e) {
-        if (e.keyCode === 27) {
-          if (liveStreamId) {
-            socket.emit('stopStreaming', liveStreamId, liveStreamOptions);
-          };
-          liveStreamModal.style.display = 'none';
-        }
-      };
-
-      // allRooms.favoritesSensors = function() {
-      //     console.log('a');
-      //     $rootScope.$broadcast('favoritesSensors');
-      //     $state.go('frame.devices')
-      //   }
-      /* stop live stream if not in all rooms */
-      $rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
-        if (liveStreamId) {
-          socket.emit('stopStreaming', liveStreamId, liveStreamOptions);
-        };
-        liveStreamModal.style.display = 'none';
-      });
-
-      // allRooms.jumpToRoom = function(room) {
-      //   var target = document.getElementById(room.id);
-      //   target.parentNode.scrollTop = target.offsetTop;
-      //
-      //   allRooms.activeRoom = room;
-      // };
-      // add new category
       allRooms.addRoom = function(e) {
         socket.emit('catAdd', {
           name: e.target.children[0].value
@@ -128,7 +51,6 @@
           console.log(response);
         });
       };
-      //delete category
       allRooms.deleteCategory = function(cat) {
         socket.emit('catDelete', cat.id, function(response) {
           console.log(response);
@@ -142,29 +64,80 @@
         })
       };
 
-      /* get data */
-      var allDev = dataService.allDev();
-      var customRemotes = dataService.allCustomRemotes();
-      allRooms.categories = dataService.categories();
-      allRooms.activeRoom = allRooms.categories ? allRooms.categories[0] : {};
-      allRooms.favoriteSensors = allDev ? allDev.sensor ? allDev.sensor.filter(function(dev) {
-        return dev.type === 'sensor' && dev.favorites
-      }) : [] : [];
-      sortDevices(allRooms.categories, allDev, customRemotes);
-      /* wait on socket than get data */
-      if (!allDev || !allRooms.categories || !customRemotes) {
-        dataService.dataPending().then(function() {
+      /* full screen for cameras */
+      allRooms.fullScreen = function() {
+        dataService.fullScreen(liveStreamImg);
+      };
+      allRooms.stopLiveStream = function() {
+        socket.emit('stopStreaming', liveStreamDev.dev.id, liveStreamDev.options);
+        liveStreamModal.style.display = 'none';
+      };
+      /* Live stream */
+      $scope.$on('requestLiveStreamPlayback', function(event, camData) {
+        liveStreamModal.style.display = 'block';
+        allRooms.liveImage = camData.thumbnail;
+        liveStreamDev = camData;
+      });
 
-          allDev = dataService.allDev();
-          customRemotes = dataService.allCustomRemotes();
-          allRooms.categories = dataService.categories();
-          allRooms.activeRoom = allRooms.categories[0];
-          allRooms.favoriteSensors = allDev ? allDev.sensor ? allDev.sensor.filter(function(dev) {
-            return dev.type === 'sensor' && dev.favorites
-          }) : [] : [];
-          sortDevices(allRooms.categories, allDev, customRemotes);
-        });
+      socket.on('cameraFrame', function(liveStream) {
+        if (liveStream) {
+          var src = dataService.blobToImage(liveStream.image);
+          if (!src) return;
+          allRooms.liveImage = src;
+        }
+      });
+      // stop livestream on ESC
+      document.body.onkeyup = function(e) {
+        if (e.keyCode === 27 && liveStreamDev.dev.id) {
+          allRooms.stopLiveStream();
+        }
       };
 
+      /* stop live stream if not in all rooms */
+      $rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
+        if (liveStreamDev && liveStreamDev.dev.id) {
+          allRooms.stopLiveStream();
+        };
+      });
+
+      /* get data */
+      console.log('PPPPPPPPPPPP', allRooms.data);
+      allRooms.data = dataService.getData() || {};
+      console.log(allRooms.data);
+      //allRooms.categories = dataService.categories();
+      //allRooms.activeRoom = allRooms.categories ? allRooms.categories[0] : {};
+      allRooms.favoriteSensors = allRooms.data.getDevicesObj && 'sensor' in allRooms.data.getDevicesObj ? allRooms.data.getDevicesObj.sensor.filter(function(dev) {
+        return dev.favorites
+      }) : [];
+      sortDevices(allRooms.data.getCategories, allRooms.data.getDevicesObj);
+
+      console.log('AAAAAAAAAAAAAA', allRooms.data);
+      console.log(allRooms.data.getBlacklisted);
+      /* wait on socket than get data */
+      if (!allRooms.data.getBlacklisted || !allRooms.data.getDevicesObj || !allRooms.data.getCategories) {
+        dataService.getCategoriesEmit().then(function(cats) {
+          allRooms.data = dataService.getData() || {};
+          allRooms.data.getCategories = cats;
+
+          allRooms.favoriteSensors = allRooms.data.getDevicesObj && 'sensor' in allRooms.data.getDevicesObj ? allRooms.data.getDevicesObj.sensor.filter(function(dev) {
+            return dev.favorites
+          }) : [];
+          sortDevices(allRooms.data.getCategories, allRooms.data.getDevicesObj);
+
+          dataService.getDevicesEmit().then(function(devs) {
+            console.log('BBBBBBBBBBBB', allRooms.data);
+            allRooms.data.getDevicesObj = devs;
+
+            allRooms.favoriteSensors = 'sensor' in allRooms.data.getDevicesObj ? allRooms.data.getDevicesObj.sensor.filter(function(dev) {
+              return dev.favorites
+            }) : [];
+            sortDevices(allRooms.data.getCategories, allRooms.data.getDevicesObj);
+          });
+        });
+        dataService.getScenesEmit();
+        dataService.getSchedulesEmit();
+        dataService.getRecordingsEmit();
+        dataService.getServerEmits();
+      }
     }]);
 }());

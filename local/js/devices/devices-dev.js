@@ -13,6 +13,8 @@
         },
         link: function(scope, elem, attr) {
 
+          scope.doubleCheck = 0;
+
           // device icon
           switch (scope.devinfo.type) {
             case 'switch':
@@ -39,7 +41,7 @@
             case 'thermostat':
               scope.devIcon = 'img/device/thermostat.png';
               break;
-            case 'tv':
+            case 'remote':
               scope.devIcon = 'img/device/remote.png';
               break;
             case 'camera':
@@ -82,11 +84,12 @@
           };
 
           scope.blacklistDev = function(dev) {
-            if (dev.type === 'tv') {
+            scope.doubleCheck += 1;
+            if (dev.type === 'remote' && scope.doubleCheck === 2) {
               socket.emit('deleteCustomRemote', dev.id);
-            } else if (dev.type === 'camera') {
+            } else if (dev.type === 'camera' && scope.doubleCheck === 2) {
               socket.emit('deleteCamera', dev.id);
-            } else {
+            } else if (dev.type !== 'remote' && dev.type !== 'camera') {
               socket.emit('blacklistDevice', dev.id, function(response) {
                 if (response) {
                   scope.devinfo.blacklisted = true;

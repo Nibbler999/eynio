@@ -2,20 +2,20 @@
     <h3>Most used</h3>
 </div>
 <div class="display-devices-row">
-  <span ng-repeat="dev in mostUsed.allDev track by dev.id" class="most-used-dev-wrap">
+  <span ng-repeat="dev in mostUsed.allDevArray track by dev.id" class="most-used-dev-wrap">
     <switch ng-if="dev.type === 'switch'" sinfo="dev"></switch>
     <light ng-if="dev.type === 'light'" linfo="dev"></light>
     <thermostat ng-if="dev.type === 'thermostat'" tinfo="dev"></thermostat>
     <shutter ng-if="dev.tyoe === 'shutter'" shinfo="dev"></shutter>
     <camera ng-if="dev.type === 'camera'" cinfo="dev"></camera>
+    <remote ng-if="dev.type === 'remote'" tvinfo="remote"></remote>
   </span>
-  <remote ng-repeat="rem in mostUsed.allRemotes.tv track by rem.id" tvinfo="remote"></remote>
 </div>
 
 <section class="custom-modal-window cam-live-stream-modal">
   <section class="custom-modal-wrap">
     <img src="img/button/cross.png" class="close-live-stream-modal" ng-click="mostUsed.stopLiveStream()">
     <img ng-src={{mostUsed.liveImage}} class="camera-live-stream">
-    <button type="button" ng-click="mostUsed.fullScreen()" class="button full-screen-btn"></button>
+    <i class="material-icons button full-screen-btn" ng-click="mostUsed.fullScreen()" title="full screen">fullscreen</i>
   </section>
 </section>

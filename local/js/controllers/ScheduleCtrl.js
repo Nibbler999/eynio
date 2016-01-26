@@ -8,8 +8,16 @@
       var schedule = this;
 
       /* get data */
-      schedule.allSchedules = dataService.schedules() ? dataService.schedules() : dataService.dataPending().then(function() {
-        schedule.allSchedules = dataService.schedules();
-      });
+      schedule.data = dataService.getData();
+      if(!schedule.data.getSchedules){
+        dataService.getSchedulesEmit().then(function(schedules){
+          schedule.data.getSchedules = schedules;
+        })
+        dataService.getDevicesEmit();
+        dataService.getServerEmits();
+        dataService.getCategoriesEmit();
+        dataService.getScenesEmit();
+        dataService.getRecordingsEmit();
+      }
     }]);
 }());

@@ -5,15 +5,17 @@
     .module('services')
     .service('dataService', ['$q', '$rootScope', 'socket', function($q, $rootScope, socket) {
 
-      // data
-      var allDev, allBlacklistedDev, allRemoteBridges, allBridges, allScenes, allSchedules, allCategories, allRemotes, actionLog, serverLog, allRecorings;
+      var currentServerData = {};
 
-      var activeUser, userList;
+      var IDBServerData, IDBUserData, IDBUser, IDBServerId;
+
+      // try to open IDB and get user and last data
+      openDB('last_user', 1, 'last');
 
       // connect to socket via net
-      this.socketConnect = function(token, serverId) {
+      this.socketConnect = function() {
         var deferred = $q.defer();
-        socket.connect(token, serverId);
+        socket.connect();
         deferred.resolve();
         return deferred.promise;
       };
@@ -25,127 +27,131 @@
         return deferred.promise;
       };
 
-      // get data form socket
-      this.dataPending = function() {
+      this.getCategoriesEmit = function() {
+        var deferred = $q.defer();
+        socket.emit('getCategories', null, function(categories) {
+          deferred.resolve(categories);
+          currentServerData.getCategories = categories;
+          //allCategories = categories;
+          putDB(IDBServerData, IDBServerId, 'getCategories', categories);
+        });
+        return deferred.promise
+      };
+
+      this.getDevicesEmit = function() {
         var deferred = $q.defer();
 
-        // get reotes
-        socket.emit('getCustomRemotes', null, function(customRemotes) {
-          allRemotes = {};
-          allRemotes.tv = [];
-          allRemotes.ac = [];
-          allRemotes.multi = [];
-
-          angular.forEach(customRemotes, function(rem) {
-            if (rem.type === 'tv') {
-              allRemotes.tv.push(rem)
-            } else if (rem.type === 'ac') {
-              allRemotes.ac.push(rem)
-            } else if (rem.type === 'multi') {
-              allRemotes.multi.push(rem)
-            }
-          });
-        });
-        socket.emit('getCategories', null, function(categories) {
-          allCategories = categories;
-        });
-        // get all devices
         socket.emit('getDevices', null, function(data) {
-          allDev = {};
-          allBlacklistedDev = [];
+          currentServerData.getDevicesArray = data;
+          //allDevArray = data;
+          currentServerData.getDevicesObj = {};
+          currentServerData.getBlacklisted = [];
 
           angular.forEach(data, function(dev, index) {
             dev.count = index;
-            allDev[dev.type] = allDev[dev.type] || [];
+            currentServerData.getDevicesObj[dev.type] = currentServerData.getDevicesObj[dev.type] || [];
             if (!dev.blacklisted) {
-              allDev[dev.type].push(dev);
+              currentServerData.getDevicesObj[dev.type].push(dev);
             } else {
-              allBlacklistedDev.push(dev);
+              currentServerData.getBlacklisted.push(dev);
             }
           });
-          console.log(allDev, allBlacklistedDev);
-          deferred.resolve(allDev);
-        });
-        // get blacklist devices
-        // socket.emit('getBlacklist', 'devices', function(blacklistedDev) {
-        //   allBlacklistedDev = blacklistedDev;
-        // });
-        /* get scenes from server */
-        socket.emit('getScenes', null, function(scenes) {
-          allScenes = scenes;
-        });
-        /* get schedules */
-        socket.emit('getJobs', null, function(schedules) {
-          allSchedules = schedules;
-        });
-        /* get camera recordings */
-        socket.emit('getRecordings', null, function(recordings){
-          console.log(recordings);
-          allRecorings = recordings;
-        });
 
-        //check for service worker and implement it
-        if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.register('serviceWorker.js').then(function(reg) {
-            console.dir(reg);
-            reg.pushManager.subscribe({
-              userVisibleOnly: true
-            }).then(function(sub) {
-              if(sub.endpoint){
-                socket.emit('GCMRegister', sub.endpoint.slice(40), function(response){
-                  console.log(response);
-                })
-              }
-              console.log(sub);
-            })
-          }).catch(function(err) {
-            console.log('nooo', err);
-          })
-        }
-
-
-        socketListeners();
-        return deferred.promise;
+          console.log(currentServerData.getDevicesObj, currentServerData.getBlacklisted);
+          deferred.resolve(currentServerData.getDevicesObj);
+          putDB(IDBServerData, IDBServerId, 'getDevices', currentServerData.getDevicesObj);
+        });
+        return deferred.promise
       };
 
-      var socketListeners = function() {
-
-        /* sensor value change */
-        socket.on('sensorValue', function(sensorChange) {
-          angular.forEach(allDev, function(dev) {
-            if (dev.id === sensorChange.id) {
-              dev.value = sensorChange.value;
-            }
-          });
+      this.getScenesEmit = function() {
+        var deferred = $q.defer();
+        socket.emit('getScenes', null, function(scenes) {
+          deferred.resolve(scenes);
+          currentServerData.getScenes = scenes;
+          putDB(IDBServerData, IDBServerId, 'getScenes', scenes);
         });
-        socket.on('cameraAdded', function(newCam) {
-          console.log(newCam);
-          allDev.camera.push(newCam);
+        return deferred.promise
+      };
+
+      this.getSchedulesEmit = function() {
+        var deferred = $q.defer();
+        socket.emit('getJobs', null, function(schedules) {
+          deferred.resolve(schedules);
+          currentServerData.getSchedules = schedules;
+          putDB(IDBServerData, IDBServerId, 'getSchedules', schedules);
+        });
+        return deferred.promise
+      };
+
+      this.getRecordingsEmit = function() {
+        var deferred = $q.defer();
+        socket.emit('getRecordings', null, function(recordings) {
+          deferred.resolve(recordings);
+          currentServerData.getRecordings = recordings;
+          putDB(IDBServerData, IDBServerId, 'getRecordings', recordings);
+          console.log(recordings);
+        });
+        return deferred.promise
+      };
+
+      this.setAllListeners = function() {
+
+        /* listen for server log updates */
+        socket.on('log', function(newLog) {
+          currentServerData.getLog.unshift(newLog)
+        });
+        socket.on('jobAdded', function(scheduleObj) {
+          currentServerData.getSchedules.push(scheduleObj);
+          window.navigator.vibrate(250);
+        });
+        socket.on('customRemoteAdded', function(remoteObj) {
+          currentServerData.getDevicesObj.remote.push(remoteObj);
+          window.navigator.vibrate(250);
+        });
+        socket.on('sceneAdded', function(sceneObj) {
+          currentServerData.getScenes.push(sceneObj);
+          window.navigator.vibrate(250);
+        });
+        socket.on('cameraAdded', function(cameraObj) {
+          console.log(cameraObj);
+          currentServerData.getDevicesObj.camera.push(cameraObj);
           window.navigator.vibrate(250);
         });
         socket.on('cameraDeleted', function(deletedCamId) {
-          angular.forEach(allDev.camera, function(cam, index) {
+          angular.forEach(currentServerData.getDevicesObj.camera, function(cam, index) {
             if (cam.id === deletedCamId) {
-              allDev.camera.splice(index, 1);
+              currentServerData.getDevicesObj.camera.splice(index, 1);
               window.navigator.vibrate(50);
             }
           });
         });
-        socket.on('customRemoteAdded', function(newRemote) {
-          newRemote.count = allRemotes[newRemote.type].length;
-          allRemotes[newRemote.type].push(newRemote);
-          window.navigator.vibrate(250);
-        });
         socket.on('customRemoteDeleted', function(remoteID) {
-          angular.forEach(allRemotes.tv, function(rem) {
+          angular.forEach(currentServerData.getDevicesObj.remote, function(rem, index) {
             if (rem.id === remoteID) {
-              allRemotes.tv.splice(allRemotes.tv.indexOf(rem), 1);
+              currentServerData.getDevicesObj.remote.splice(index, 1);
+              window.navigator.vibrate(50);
+            }
+          });
+        });
+        socket.on('sceneDeleted', function(sceneId) {
+          angular.forEach(currentServerData.getScenes, function(scene, index) {
+            if (scene.id === sceneId) {
+              currentServerData.getScenes.splice(index, 1);
+              window.navigator.vibrate(50);
+            }
+          });
+        });
+        socket.on('jobRemoved', function(scheduleId) {
+          angular.forEach(currentServerData.getSchedules, function(schedule, index) {
+            if (schedule.id === scheduleId) {
+              currentServerData.getSchedules.splice(index, 1);
               window.navigator.vibrate(50);
             }
           });
         });
         socket.on('customRemoteUpdated', function(updateRemote) {
-          angular.forEach(allRemotes[updateRemote.type], function(remote) {
+          angular.forEach(currentServerData.getDevicesObj.remote, function(remote) {
             if (remote.id === updateRemote.id) {
               remote = updateRemote;
               window.navigator.vibrate(150);
@@ -153,170 +159,106 @@
           });
         });
         socket.on('deviceRenamed', function(devId, devName) {
-          angular.forEach(allDev, function(dev) {
+          angular.forEach(currentServerData.getDevicesObj, function(typeArray) {
+            angular.forEach(typeArray, function(dev) {
+              if (dev.id === devId) {
+                dev.name = devName;
+                window.navigator.vibrate(150);
+              }
+            })
+          });
+          /* for most used and recently */
+          angular.forEach(currentServerData.getDevicesArray, function(dev) {
             if (dev.id === devId) {
               dev.name = devName;
-              window.navigator.vibrate(150);
             }
           });
         });
-        /*  scene deleted */
-        socket.on('sceneDeleted', function(sceneId) {
-          angular.forEach(allScenes, function(scene) {
-            if (scene.id === sceneId) {
-              allScenes.splice(allScenes.indexOf(scene), 1);
-              window.navigator.vibrate(50);
-            }
-          });
-        });
-        /* new scene added */
-        socket.on('sceneAdded', function(sceneObj) {
-          allScenes.push(sceneObj);
-          window.navigator.vibrate(250);
-        });
-        socket.on('jobRemoved', function(scheduleId) {
-          angular.forEach(allSchedules, function(schedule) {
-            if (schedule.id === scheduleId) {
-              allSchedules.splice(allSchedules.indexOf(schedule), 1);
-              window.navigator.vibrate(50);
-            }
-          });
-        });
-        /* schedule added */
-        socket.on('jobAdded', function(scheduleObj) {
-          allSchedules.push(scheduleObj);
-          window.navigator.vibrate(250);
-        });
-
         socket.on('deviceBlacklisted', function(devType, devId) {
-          angular.forEach(allDev, function(devArr) {
-            angular.forEach(devArr, function(dev, index) {
+          angular.forEach(currentServerData.getDevicesObj, function(typeArray) {
+            angular.forEach(typeArray, function(dev, index) {
               if (dev.id === devId) {
-                devArr.splice(index, 1);
-                allBlacklistedDev.push(dev);
+                typeArray.splice(index, 1);
+                currentServerData.getBlacklisted.push(dev);
                 window.navigator.vibrate(75);
               }
             })
           });
         });
-
         socket.on('deviceUnblacklisted', function(devType, devId) {
-          console.log(devType, devId);
-          angular.forEach(allBlacklistedDev, function(dev, index) {
+          angular.forEach(currentServerData.getBlacklisted, function(dev, index) {
             if (dev.id === devId) {
-              allBlacklistedDev.splice(index, 1);
-              allDev[dev.type].push(dev);
+              currentServerData.getBlacklisted.splice(index, 1);
+              currentServerData.getDevicesObj[dev.type].push(dev);
               window.navigator.vibrate(150);
             }
           });
         });
+        socket.on('sensorValue', function(sensorChange) {
 
-        /* listen for bridge updates */
-        // socket.on('bridgeInfo', function(bridge) {
-        //   console.log(bridge);
-        //   bridges.push(bridge);
-        // });
-
-        /* listen for server log updates */
-        socket.on('log', function(newLog) {
-          serverLog.unshift(newLog)
+          angular.forEach(currentServerData.getDevicesObj.sensor, function(sensor) {
+            if (sensor.id === sensorChange.id) {
+              sensor.value = sensorChange.value;
+            }
+          });
         });
-
-        serverSettingsData();
       };
 
-      var serverSettingsData = function() {
+      this.getServerEmits = function() {
+        var deferred = $q.defer();
 
         /* get uset profile, LEVEL */
         socket.emit('getUserProfile', null, function(user) {
+          currentServerData.getUserProfile = user;
           console.log(user);
-          activeUser = user;
         });
         /* get bridges */
         socket.emit('getBridges', null, function(bridges) {
-          allBridges = bridges || [];
+          currentServerData.getBridges = bridges || [];
         });
         // get remote bridges
         socket.emit('getRemotes', null, function(remoteBridges) {
-          allRemoteBridges = remoteBridges;
-          allBridges = allBridges.concat(remoteBridges);
+          currentServerData.getRemotes = remoteBridges;
+          currentServerData.getBridges = currentServerData.getBridges.concat(remoteBridges);
         });
         /* get full list of users */
         socket.emit('permServerGet', null, function(allUsers) {
-          userList = allUsers;
+          currentServerData.userList = allUsers;
         });
         /* get activity log, listen for updates */
         socket.emit('getActionLog', null, function(log) {
-          actionLog = log.reverse();
+          currentServerData.getActionLog = log.reverse();
+          deferred.resolve(log);
         });
         /* get server log */
         socket.emit('getLog', null, function(log) {
-          serverLog = log.reverse();
+          currentServerData.getLog = log.reverse();
         });
+        socket.emit('getApiKey', null, function(key) {
+
+        });
+        //get list of server for user
+        socket.emit('getServers', null, function(servers) {
+          currentServerData.getServers = servers;
+        });
+        // get weather from yrno
+        socket.emit('getWeather', null, function(weatherInfo) {
+          currentServerData.getWeather = weatherInfo;
+        });
+        //get alarm status
+        socket.emit('isAlarmEnabled', null, function(alarmState) {
+          currentServerData.isAlarmEnabled = alarmState;
+        });
+
+        return deferred.promise
       };
 
+      this.logOut = function() {
+        currentServerData = {};
+      };
       /* return devices */
-      this.allDev = function() {
-        return allDev;
-      };
-      this.allBlacklistedDev = function() {
-        return allBlacklistedDev;
-      };
-      this.allCustomRemotes = function() {
-        return allRemotes;
-      };
-      this.bridges = function() {
-        return allRemoteBridges;
-      };
-      this.scenes = function() {
-        return allScenes;
-      };
-      this.schedules = function() {
-        return allSchedules;
-      };
-      this.recordings = function(){
-        return allRecorings;
-      };
-      /* server status */
-      this.user = function() {
-        return activeUser
-      };
-      this.bridge = function() {
-        return allBridges;
-      };
-      this.userList = function() {
-        return userList;
-      };
-      this.getLog = function() {
-        return serverLog;
-      };
-      this.getActionLog = function() {
-        return actionLog;
-      };
-      /* categories stuff */
-      this.categories = function() {
-        return allCategories;
-      };
-
-      // helper functions
-      this.sortDevicesByType = function(devArr, type) {
-        var arr = [];
-        angular.forEach(devArr, function(dev) {
-          if (dev.type === type) {
-            arr.push(dev);
-          }
-        });
-        return arr;
-      };
-
-      this.sortRemotesByType = function(remotesArr, type) {
-        var arr = [];
-        angular.forEach(remotesArr, function(remote) {
-          if (remote.type === type) {
-            arr.push(remote);
-          }
-        });
-        return arr;
+      this.getData = function() {
+        return currentServerData;
       };
 
       this.blobToImage = function(imageData) {
@@ -342,6 +284,41 @@
         } else if (element.msRequestFullscreen) {
           element.msRequestFullscreen();
         }
+      };
+
+      // function sendMessage(message) {
+      //   // This wraps the message posting/response in a promise, which will resolve if the response doesn't
+      //   // contain an error, and reject with the error if it does. If you'd prefer, it's possible to call
+      //   // controller.postMessage() and set up the onmessage handler independently of a promise, but this is
+      //   // a convenient wrapper.
+      //   return new Promise(function(resolve, reject) {
+      //     var messageChannel = new MessageChannel();
+      //     messageChannel.port1.onmessage = function(event) {
+      //       if (event.data.error) {
+      //         reject(event.data.error);
+      //       } else {
+      //         resolve(event.data);
+      //       }
+      //     };
+      //
+      //     // This sends the message data as well as transferring messageChannel.port2 to the service worker.
+      //     // The service worker can then use the transferred port to reply via postMessage(), which
+      //     // will in turn trigger the onmessage handler on messageChannel.port1.
+      //     // See https://html.spec.whatwg.org/multipage/workers.html#dom-worker-postmessage
+      //     navigator.serviceWorker.controller.postMessage(message, [messageChannel.port2]);
+      //   });
+      // }
+
+      function openDB(db, dbV, objStore) {
+
+      };
+
+      function putDB(idb, objStore, objStoreKey, data) {
+
+      };
+
+      function getDB(idb, objStore, objStoreKey) {
+
       };
     }]);
 }());

@@ -101,10 +101,10 @@
   color: #8295A6;
   background-color: #133E5F;
   box-sizing: border-box;
-  box-shadow: 0 0.1em 0.5em rgba(0, 0, 0, 0.5);
-  -webkit-transform: scale(1.05);
+  box-shadow: 0 0.1em 0.25em rgba(0, 0, 0, 0.25);
+  /*-webkit-transform: scale(1.05);
   -ms-transform: scale(1.05);
-  transform: scale(1.05);
+  transform: scale(1.05);*/
   -webkit-transition: background-color 0.4s ease, -webkit-transform 0.3s ease 0.1s, box-shadow 0.3s ease 0.25s;
   transition: background-color 0.4s ease, transform 0.3s ease 0.1s, box-shadow 0.3s ease 0.25s;
 }

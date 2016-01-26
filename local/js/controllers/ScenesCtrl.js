@@ -156,27 +156,6 @@
           console.log(scene.actionsArr);
         });
 
-        // // select device for scene, remove it from native array
-        // scene.selectDevice = function(device, index) {
-        //   console.log(device, index);
-        //
-        //   if (device.type === 'switch') {
-        //     scene.actionsArr.push({
-        //       device: device,
-        //       'emit_name': 'setDevicePowerState',
-        //       'params': [device.id, device.value]
-        //     });
-        //     scene.allSwitches.splice(index, 1);
-        //   } else if (device.type === 'light') {
-        //     scene.actionsArr.push({
-        //       device: device,
-        //       'emit_name': 'setDevicePowerState',
-        //       'params': [device.id, device.state.on]
-        //     });
-        //     scene.allLights.splice(index, 1);
-        //   }
-        // };
-        // return dev in native array
         scene.deselectDevice = function(dev, index) {
           if (dev.keys) {
             scene.allRemotes[dev.type].push(dev);
@@ -187,12 +166,12 @@
         };
         // restore devices, clear inputs
         scene.restoreData = function() {
-          angular.forEach(allDev, function(devArray, key) {
+          angular.forEach(scene.data.getDevicesObj, function(devArray, key) {
             scene.allDev[key] = devArray.slice(0);
           });
-          angular.forEach(allRemotes, function(remArray, key) {
-            scene.allRemotes[key] = remArray.slice(0);
-          });
+          // angular.forEach(allRemotes, function(remArray, key) {
+          //   scene.allRemotes[key] = remArray.slice(0);
+          // });
 
           newSceneName.value = '';
           newSceneHours.value = '';
@@ -231,19 +210,6 @@
                 }
               });
             }
-            // if (action.device.type === 'light') {
-            //   angular.forEach(scene.allLights, function(lightDev) {
-            //     if (action.device.id === lightDev.id) {
-            //       scene.allLights.splice(scene.allLights.indexOf(lightDev), 1);
-            //     }
-            //   });
-            // } else if (action.device.type === 'switch') {
-            //   angular.forEach(scene.allSwitches, function(switchDev) {
-            //     if (action.device.id === switchDev.id) {
-            //       scene.allSwitches.splice(scene.allSwitches.indexOf(switchDev), 1);
-            //     }
-            //   })
-            // }
             scene.actionsArr.push(action);
           });
           console.log(scene.actionsArr);
@@ -254,35 +220,31 @@
         });
 
         /* get data */
-        var allDev = dataService.allDev();
-        var allRemotes = dataService.allCustomRemotes();
-        scene.allScenes = dataService.scenes();
+        scene.data = dataService.getData();
         scene.allDev = {};
-        scene.allRemotes = {};
+        console.log(scene.data);
 
-        if (allDev && allRemotes) {
-          angular.forEach(allDev, function(devArray, key) {
+        if (scene.data.getDevicesObj) {
+          angular.forEach(scene.data.getDevicesObj, function(devArray, key) {
             scene.allDev[key] = devArray.slice(0);
-          });
-          angular.forEach(allRemotes, function(remArray, key) {
-            scene.allRemotes[key] = remArray.slice(0);
           });
         }
         /* wait on socket to connect than get data */
-        if (!allDev || !scene.allScenes) {
-          dataService.dataPending().then(function() {
+        if (!scene.data.getDevicesObj || !scene.data.getScenes) {
+          dataService.getScenesEmit().then(function(scenes) {
+            scene.data.getScenes = scenes;
 
-            allDev = dataService.allDev();
-            allRemotes = dataService.allCustomRemotes();
-            scene.allScenes = dataService.scenes();
-
-            angular.forEach(allDev, function(devArray, key) {
-              scene.allDev[key] = devArray.slice(0);
-            });
-            angular.forEach(allRemotes, function(remArray, key) {
-              scene.allRemotes[key] = remArray.slice(0);
-            });
-          });
+            dataService.getDevicesEmit().then(function(devices) {
+              scene.data.getDevicesObj = devices.obj;
+              angular.forEach(scene.data.getDevicesObj, function(devArray, key) {
+                scene.allDev[key] = devArray.slice(0);
+              });
+            })
+          })
+          dataService.getServerEmits();
+          dataService.getCategoriesEmit();
+          dataService.getSchedulesEmit();
+          dataService.getRecordingsEmit();
         }
       }
     ]);

@@ -15,7 +15,7 @@
           templateUrl: 'directive/devices/camera.html',
           link: function(scope, elem, attr) {
 
-            var apiKey;
+            var apiKey, recordingId;
             scope.currentState = $state.current.name;
             var serverId = sessionStorage.activeServerId;
 
@@ -55,13 +55,14 @@
               }
             };
 
-            scope.requestLiveStream = function(camId) {
-              socket.emit('requestStreaming', camId, options);
+            scope.requestLiveStream = function(cam) {
+              socket.emit('requestStreaming', cam.id, options);
 
-              $rootScope.$broadcast('requestLiveStream', {
-                camId: camId,
+              $rootScope.$broadcast('requestLiveStreamPlayback', {
+                dev: cam,
+                type: cam.type,
                 thumbnail: scope.thumbnailImg,
-                video: options
+                options: options
               });
             };
 
@@ -74,12 +75,12 @@
             };
 
             scope.startRecording = function(devId){
-              socket.emit('startRecording', devId, function(response){
-                console.log(response);
+              socket.emit('startRecording', devId, function(recId){
+                recordingId = recId;
               })
             };
-            scope.stopRecording = function(devId){
-              socket.emit('stopRecording', devId, function(response){
+            scope.stopRecording = function(){
+              socket.emit('stopRecording', recordingId, function(response){
                 console.log(response);
               })
             };

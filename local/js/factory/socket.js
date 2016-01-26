@@ -13,8 +13,8 @@
           }
           return socket;
         },
-        connectLocal: function(ip){
-          if(!socket){
+        connectLocal: function(ip) {
+          if (!socket) {
             socket = io.connect('http://' + ip + ':8008/client')
           }
           return socket;
@@ -75,7 +75,9 @@
           });
         },
         disconnect: function() {
-          return socket.disconnect();
+          if (socket) {
+            return socket.disconnect();
+          }
         }
       };
     }]);

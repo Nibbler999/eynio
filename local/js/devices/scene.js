@@ -57,8 +57,7 @@
               type: 'scene',
               dateTime: {
                 hour: parseInt(h.value),
-                minute: parseInt(m.value),
-                dayOfWeek: []
+                minute: parseInt(m.value)
               },
               actions: [{
                 emit_name: 'setScene',

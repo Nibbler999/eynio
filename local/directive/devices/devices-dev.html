@@ -6,8 +6,8 @@
 
   <div class="devices-dev-box actions">
     <i class="material-icons" title="edit device" ng-click="editDevice(devinfo)">mode_edit</i>
-    <i class="material-icons" ng-if="devinfo.type != 'camera' && devinfo.type != 'tv'" title="blacklist device" ng-click="blacklistDev(devinfo)">visibility_off</i>
-    <i class="material-icons" ng-if="devinfo.type === 'camera' || devinfo.type === 'tv'" title="delete device" ng-click="blacklistDev(devinfo)">delete</i>
+    <i class="material-icons" ng-if="devinfo.type != 'camera' && devinfo.type != 'remote'" title="blacklist device" ng-click="blacklistDev(devinfo)">visibility_off</i>
+    <i class="material-icons" ng-if="devinfo.type === 'camera' || devinfo.type === 'remote'" title="delete device" ng-click="blacklistDev(devinfo)" ng-class="{'double-check': doubleCheck}">delete</i>
     <i class="material-icons" title="favorites" ng-click="toggleAddToFavorites(devinfo.favorites, devinfo.id)" ng-show="!devinfo.favorites">star_border</i>
     <i class="material-icons" title="favorites" ng-click="toggleAddToFavorites(devinfo.favorites, devinfo.id)" ng-show="devinfo.favorites">star</i>
   </div>

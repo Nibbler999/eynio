@@ -3,27 +3,25 @@
 
   angular
     .module('nHome')
-    .controller('FavoritesCtrl', ['$scope', '$rootScope', 'socket', 'dataService', function($scope, $rootScope, socket, dataService) {
+    .controller('FavoritesCtrl', ['$scope', '$rootScope', '$timeout', 'socket', 'dataService', function($scope, $rootScope, $timeout, socket, dataService) {
 
       var favorites = this;
 
       var contentWrapParent = document.querySelector('.frame-page-content-wrap');
       var liveStreamModal = document.querySelector('.cam-live-stream-modal');
       var liveStreamImg = document.querySelector('.camera-live-stream');
+      var favoritesWrap = document.getElementById('favorites-wrap');
 
-      var liveStreamOptions, liveStreamId;
+      var liveStreamDev;
 
       contentWrapParent.appendChild(liveStreamModal);
 
 
       /* Live stream */
-      $scope.$on('requestLiveStream', function(event, camData) {
+      $scope.$on('requestLiveStreamPlayback', function(event, camData) {
         liveStreamModal.style.display = 'block';
         favorites.liveImage = camData.thumbnail;
-        console.log(camData);
-
-        liveStreamId = camData.camId;
-        liveStreamOptions = camData.video;
+        liveStreamDev = camData
       });
 
       socket.on('cameraFrame', function(liveStream) {
@@ -39,35 +37,41 @@
         dataService.fullScreen(liveStreamImg);
       };
       favorites.stopLiveStream = function() {
-        socket.emit('stopStreaming', liveStreamId, liveStreamOptions);
+        socket.emit('stopStreaming', liveStreamDev.dev.id, liveStreamDev.options);
         liveStreamModal.style.display = 'none';
       };
 
       // stop livestream on ESC
       document.body.onkeyup = function(e) {
-        if (e.keyCode === 27) {
-          if (liveStreamId) {
-            socket.emit('stopStreaming', liveStreamId, liveStreamOptions);
-          };
-          liveStreamModal.style.display = 'none';
+        if (e.keyCode === 27 && liveStreamDev.dev.id) {
+          favorites.stopLiveStream();
         }
       };
       /* stop live stream if not in all rooms */
       $rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
-        if (liveStreamId) {
-          socket.emit('stopStreaming', liveStreamId, liveStreamOptions);
+        if (liveStreamDev && liveStreamDev.dev.id) {
+          favorites.stopLiveStream();
         };
-        liveStreamModal.style.display = 'none';
       });
 
+      $timeout(function() {
+        console.log(favoritesWrap.children.length);
+        if(favoritesWrap.children.length === 1){
+          document.querySelector('small.color-transparent').classList.remove('hidden')
+        }
+      }, 750);
       /* get data */
-        favorites.allDev = dataService.allDev();
-        favorites.allRemotes = dataService.allCustomRemotes();
-      if(!favorites.allDev || !favorites.allRemotes) {
-        dataService.dataPending().then(function() {
-          favorites.allDev = dataService.allDev();
-          favorites.allRemotes = dataService.allCustomRemotes();
-        });
+      favorites.data = dataService.getData();
+
+      if (!favorites.data.getDevicesObj) {
+        dataService.getDevicesEmit().then(function(devices) {
+          favorites.data.getDevicesObj = devices;
+        })
+        dataService.getCategoriesEmit();
+        dataService.getScenesEmit();
+        dataService.getSchedulesEmit();
+        dataService.getRecordingsEmit();
+        dataService.getServerEmits();
       }
     }]);
 }());

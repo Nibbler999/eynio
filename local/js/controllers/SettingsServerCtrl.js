@@ -6,9 +6,9 @@
     .controller('SettingsServerCtrl', ['$scope', '$rootScope', '$http', '$timeout', '$state', 'socket', 'dataService', function($scope, $rootScope, $http, $timeout, $state, socket, dataService) {
 
       var server = this;
-      var deleteServerCount = 0;
-      var leaveServerModal = document.querySelector('.leave-server-modal');
-      document.querySelector('.frame-wrap').appendChild(leaveServerModal);
+      server.deleteServerCount = 0;
+      // var leaveServerModal = document.querySelector('.leave-server-modal');
+      // document.querySelector('.frame-wrap').appendChild(leaveServerModal);
 
 
       /* get server data, updates */
@@ -92,35 +92,14 @@
                 location.reload(true);
               }
             });
-            // leaveServerModal.style.display = 'block';
-            // socket.emit('getServers', null, function(servers) {
-            //   console.log(servers);
-            //   if (servers.length > 1) {
-            //     server.leveServers = servers;
-            //   } else if (server.length == 1) {
-            //     server.switchServer(servers[0]);
-            //   } else {
-            //     sessionStorage.removeItem('activeServer');
-            //     sessionStorage.removeItem('userInfoData');
-            //     sessionStorage.removeItem('gravatar');
-            //     location.reload(true);
-            //   }
-            // });
           }
         });
       };
-      
-      // server.switchServer = function(server) {
-      //   console.log(server);
-      //   sessionStorage.activeServer = JSON.stringify(server);
-      //   sessionStorage.removeItem('activeRoom');
-      //   location.reload(true);
-      // };
 
       /*  delete server */
       server.deleteServer = function() {
-        deleteServerCount += 1;
-        if (deleteServerCount === 2) {
+        server.deleteServerCount += 1;
+        if (server.deleteServerCount === 2) {
 
           socket.emit('deleteServer', null, function(data) {
             console.log(data);
@@ -158,13 +137,6 @@
         $scope.$broadcast('getGoogleMap', coordinates);
       };
 
-      /* when IP location is changed */
-      // $scope.$on('notIpLocation', function(event) {
-      //   document.getElementById('google-maps-IP').checked = false;
-      // });
-
-
-
       /* USERS SETTINGS */
       /* user setings, invite, delete, change level */
       server.inviteUser = function() {
@@ -180,16 +152,16 @@
             server.inviteSuccess = true;
             $timeout(function() {
               server.inviteSuccess = false;
-            }, 500);
+            }, 1000);
           } else {
             alert('Inviting ' + inviteEmail + ' failed!');
           }
         });
       };
 
-      server.changeUserLevel = function(email, level) {
+      server.changeUserLevel = function(email, level, index) {
         if (level === 'DELETE') {
-          deleteUser(email);
+          deleteUser(email, index);
         } else {
           console.log(email, level);
           socket.emit('permServerSetLevel', email, level, function(data) {
@@ -198,14 +170,10 @@
         }
       };
 
-      function deleteUser(email) {
+      function deleteUser(email, index) {
         socket.emit('permServerRemove', email, function(removeUser) {
           if (removeUser) {
-            angular.forEach(server.userList, function(user) {
-              if (user.email === email) {
-                server.userList.splice(server.userList.indexOf(user), 1);
-              }
-            })
+            server.data.userList.splice(index, 1);
           }
         });
       };
@@ -215,27 +183,22 @@
         return regex.test(str);
       };
       server.loadMoreLog = function() {
-        server.actionLog = server.actionLog.concat(actionLog.slice(server.actionLog.length, server.actionLog.length + 50));
+        server.actionLog = server.actionLog.concat(server.data.getActionLog.slice(server.actionLog.length, server.actionLog.length + 50));
       };
 
-      server.activeUser = dataService.user();
-      server.bridges = dataService.bridge();
-      server.userList = dataService.userList();
-      server.serverLog = dataService.getLog();
-      var actionLog = dataService.getActionLog() || [];
-      server.actionLog = actionLog.slice(0, 50);
+      server.data = dataService.getData();
+      server.actionLog = server.data.getActionLog ? server.data.getActionLog.slice(0, 50) : [];
 
-      if (!server.activeUser || !server.bridges || !server.userList) {
-        dataService.dataPending().then(function() {
-
-          server.activeUser = dataService.user();
-          server.bridges = dataService.bridge();
-          server.userList = dataService.userList();
-          server.serverLog = dataService.getLog();
-          actionLog = dataService.getActionLog();
-          server.actionLog = actionLog ? actionLog.slice(0, 50) : [];
-          console.log(server.actionLog);
-        });
+      if (!server.data.getUserProfile || !server.data.getBridges || !server.data.userList) {
+        dataService.getServerEmits().then(function() {
+          server.data = dataService.getData();
+          server.actionLog = server.data.getActionLog.slice(0, 50);
+        })
+        dataService.getDevicesEmit();
+        dataService.getCategoriesEmit();
+        dataService.getScenesEmit();
+        dataService.getSchedulesEmit();
+        dataService.getRecordingsEmit();
       }
     }]);
 }());

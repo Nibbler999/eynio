@@ -3,7 +3,7 @@
 
   angular
     .module('services')
-    .directive('camRec', ['dataService', 'socket', function(dataService, socket) {
+    .directive('camRec', ['dataService', 'socket', '$rootScope', function(dataService, socket, $rootScope) {
       return {
         restrict: 'E',
         replace: true,
@@ -13,21 +13,24 @@
         },
         link: function(scope, elem, attr) {
 
-          socket.emit('getApiKey', null, function(apiKey) {
-            scope.apiKey = apiKey;
-          });
+          scope.apiKey = dataService.getData().getApiKey;
+          if (!scope.apiKey) {
+            socket.emit('getApiKey', null, function(key) {
+              scope.apiKey = key;
+            });
+          }
+
           scope.serverId = 0;
 
 
           var options = {
             width: -1,
-            height: 120,
-            framerate: 1,
-            encoder: 'jpeg/mpeg1/vp8/vp9'
+            height: -1,
+            framerate: 1
           }
 
-          var allCameras = dataService.allDev();
-          allCameras = allCameras.camera;
+          var allCameras = dataService.getData().getDevicesObj.camera;
+          console.log(allCameras);
 
           angular.forEach(allCameras, function(cam) {
             if (cam.id === scope.camrec.cameraid) {
@@ -35,9 +38,16 @@
             }
           });
 
-          scope.startPlayback = function(recId) {
-            socket.emit('startPlayback', options, function(response) {
-              console.log(response);
+          scope.startPlayback = function(rec) {
+            socket.emit3('startPlayback', rec.id, options, function(response) {
+              if (response) {
+                $rootScope.$broadcast('requestLiveStreamPlayback', {
+                  dev: rec,
+                  type: 'recording',
+                  thumbnail: null,
+                  options: options
+                });
+              }
             });
           };
 

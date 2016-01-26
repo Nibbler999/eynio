@@ -296,6 +296,10 @@
   margin: auto 0.5em;
   cursor: pointer;
   font-size: 1.40em;
+  transition: all 0.3s ease
+}
+.devices-dev-box.actions > i.double-check{
+  color: #EC3535;
 }
 @media screen and (min-width: 380px){
   .devices-dev-box > h4{

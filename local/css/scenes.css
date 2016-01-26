@@ -31,6 +31,9 @@
   line-height: 1em;
   margin: 1em 0.5em 0 0;
   color: #fff;
+  max-width: 9em;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .sce-box-footer {
   position: absolute;

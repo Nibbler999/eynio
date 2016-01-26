@@ -2,16 +2,13 @@
     <h3>Recently used</h3>
 </div>
 <div class="display-devices-row">
-  <span ng-repeat="dev in recently.allDev track by dev.id">
+  <span ng-repeat="dev in recently.allDevArray track by dev.id" class="most-used-dev-wrap">
     <switch ng-if="dev.type === 'switch'" sinfo="dev"></switch>
     <light ng-if="dev.type === 'light'" linfo="dev"></light>
     <thermostat ng-if="dev.type === 'thermostat'" tinfo="dev"></thermostat>
     <shutter ng-if="dev.tyoe === 'shutter'" shinfo="dev"></shutter>
     <camera ng-if="dev.type === 'camera'" cinfo="dev"></camera>
-  </span>
-
-  <span ng-repeat="remote in recently.allRemotes track by remote.id">
-    <remote ng-if="remote.type === 'tv'" tvinfo='remote'></remote>
+    <remote ng-if="dev.type === 'remote'" tvinfo="remote"></remote>
   </span>
 </div>
 
@@ -19,6 +16,6 @@
   <section class="custom-modal-wrap">
     <img src="img/button/cross.png" class="close-live-stream-modal" ng-click="recently.stopLiveStream()">
     <img ng-src={{recently.liveImage}} class="camera-live-stream">
-    <button type="button" ng-click="recently.fullScreen()" class="button full-screen-btn"></button>
+    <i class="material-icons button full-screen-btn" ng-click="recently.fullScreen()" title="full screen">fullscreen</i>
   </section>
 </section>

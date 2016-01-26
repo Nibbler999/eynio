@@ -46,7 +46,7 @@
           device.unAsignedRooms = [];
 
           angular.forEach(allCategories, function(allCat) {
-            if (dev.categories.indexOf(allCat.id) !== -1) {
+            if (dev.category === allCat.id) {
               device.asignedRooms.push(allCat);
             } else {
               device.unAsignedRooms.push(allCat);
@@ -72,8 +72,8 @@
           device.activeDevice.categories = [];
           // add categories
           angular.forEach(device.asignedRooms, function(addRoom) {
-            socket.emit('catAddDevice', addRoom.id, device.activeDevice.id);
-            device.activeDevice.categories.push(addRoom.id);
+            socket.emit('catSet', addRoom.id, device.activeDevice.id);
+            device.activeDevice.category = addRoom.id;
           });
           //remove categories
           angular.forEach(device.unAsignedRooms, function(removeRoom) {
@@ -81,14 +81,9 @@
           });
           //  change name
           socket.emit('setDeviceName', device.activeDevice.id, device.activeDevice.name);
-          //add to favorites
-          if (device.activeDevice.favorites) {
-            socket.emit4('setUserProperty', device.activeDevice.id, 'favorites', true);
-          } else {
-            socket.emit4('setUserProperty', device.activeDevice.id, 'favorites', false);
-          }
           // update if camera or remote
           if (device.activeDevice.type === 'camera') {
+            device.activeDevice.rotate = Number(device.activeDevice.rotate);
             socket.emit('updateCamera', device.activeDevice);
           } else if (device.activeDevice.type === 'tv') {
             socket.emit('updateCustomRemote', device.activeDevice);
@@ -153,11 +148,13 @@
         var addCamRTPS = document.getElementById('add-camera-rtsp');
         var addCamMJPEG = document.getElementById('add-camera-mjpeg');
         var addCamSnapshot = document.getElementById('add-camera-snapshot');
+        var addCamRotation = document.getElementById('add-camera-rotation');
 
         var addCamStep1 = document.querySelector('.add-camera-step-1');
         var addCamStep2 = document.querySelector('.add-camera-step-2');
 
         device.addNewCamera = function() {
+
           var cam = {
             server: sessionStorage.activeServerId,
             name: addCamName.value,
@@ -166,7 +163,8 @@
             snapshot: addCamSnapshot.value,
             rtsp: addCamRTPS.value,
             auth_name: addCamUser.value,
-            auth_pass: addCamPass.value
+            auth_pass: addCamPass.value,
+            rotate: Number(addCamRotation.value)
           }
 
           addCamStep1.style.display = 'none';
@@ -235,50 +233,28 @@
         });
 
         /* get data */
-        device.allDev = dataService.allDev();
-        device.allRemotes = dataService.allCustomRemotes();
+        device.data = dataService.getData();
 
-        device.bridges = dataService.bridges();
-        //
-        // device.allLights = dataService.sortDevicesByType(device.allDev, 'light');
-        // device.allSwitches = dataService.sortDevicesByType(device.allDev, 'switch');
-        // device.allThermos = dataService.sortDevicesByType(device.allDev, 'thermostat');
-        // device.allShutters = dataService.sortDevicesByType(device.allDev, 'shutter');
-        // device.allCameras = dataService.sortDevicesByType(device.allDev, 'camera');
-        // device.allSensors = dataService.sortDevicesByType(device.allDev, 'sensor');
-
-        // device.allTvRemotes = dataService.sortRemotesByType(allRemotes, 'tv');
-
-        device.allBlacklistedDev = dataService.allBlacklistedDev();
-        if (device.allDev) {
+        if (device.data.getDevicesObj) {
           // show first set of devices
           $timeout(function() {
             contentWrapParent.children[0].children[1].children[1].classList.add('in');
           }, 100);
         }
         /* wait on socket to connect than get data */
-        if (!device.allDev) {
-          dataService.dataPending().then(function() {
-            device.bridges = dataService.bridges();
+        if (!device.data.getDevicesObj || !device.data.getBlacklisted) {
+          dataService.getDevicesEmit().then(function(devices){
+            device.data.getDevicesObj = devices;
 
-            device.allDev = dataService.allDev();
-            device.allRemotes = dataService.allCustomRemotes();
-            //
-            // device.allLights = dataService.sortDevicesByType(device.allDev, 'light');
-            // device.allSwitches = dataService.sortDevicesByType(device.allDev, 'switch');
-            // device.allThermos = dataService.sortDevicesByType(device.allDev, 'thermostat');
-            // device.allShutters = dataService.sortDevicesByType(device.allDev, 'shutter');
-            // device.allCameras = dataService.sortDevicesByType(device.allDev, 'camera');
-            // device.allSensors = dataService.sortDevicesByType(device.allDev, 'sensor');
-
-            //device.allTvRemotes = dataService.sortRemotesByType(allRemotes, 'tv');
-
-            device.allBlacklistedDev = dataService.allBlacklistedDev();
-            //show first set of devics
             $timeout(function() {
               contentWrapParent.children[0].children[1].children[1].classList.add('in');
             }, 100);
-          });
+          })
+          dataService.getServerEmits();
+          dataService.getCategoriesEmit();
+          dataService.getScenesEmit();
+          dataService.getSchedulesEmit();
+          dataService.getRecordingsEmit();
         }
       }
     ])

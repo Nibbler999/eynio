@@ -3,7 +3,7 @@
 </div>
 
 <div>
-  <schedule ng-repeat="schedule in schedule.allSchedules" schinfo="schedule"></schedule>
-  <p class="color-transparent" ng-if="schedule.allSchedules.length === 0">You haven't scheduled a single action yet!</p>
-  <p class="color-transparent" ng-if="schedule.allSchedules.length === 0"> If you want a multiple actions schedule a <a ui-sref="frame.scenes">scene</a>, or schedule single <a ui-sref="frame.all-rooms">device</a></p>
+  <schedule ng-repeat="schedule in schedule.data.getSchedules" schinfo="schedule"></schedule>
+  <p class="color-transparent" ng-if="schedule.data.getSchedules.length === 0">You haven't scheduled a single action yet!</p>
+  <p class="color-transparent" ng-if="schedule.data.getSchedules.length === 0"> If you want a multiple actions schedule a <a ui-sref="frame.scenes">scene</a>, or schedule single <a ui-sref="frame.all-rooms">device</a></p>
 </div>

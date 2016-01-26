@@ -3,61 +3,29 @@
 
   angular
     .module('nHome')
-    .controller('NHomeCtrl', ['$scope', '$rootScope', '$state', 'dataService', 'socket', function($scope, $rootScope, $state, dataService, socket) {
+    .controller('NHomeCtrl', ['$scope', '$rootScope', '$state', '$timeout', 'dataService', 'socket', function($scope, $rootScope, $state, $timeout, dataService, socket) {
 
       var God = this;
+
+      God.data = {};
       //God.activeRoomSensors = [];
       var sideBar = document.querySelector('.frame-sidebar');
-      var wentOffline, serverActiveLog = sessionStorage.sessionActionLog ? JSON.parse(sessionStorage.sessionActionLog) : {};
+      var wentOffline;
+      var serverActiveLog = sessionStorage.sessionActionLog ? JSON.parse(sessionStorage.sessionActionLog) : {};
+      God.userInfoData = {};
       God.activeServer = {
+        id: 1,
         name: 'no servers found'
       };
       God.allServers = [];
       // connect to socket
       dataService.socketConnect().then(function() {
-        socketEmits();
+        postSocketConnectAction();
       });
 
       /* SET DEFAULT VALUES */
 
-      God.sessionActionLog = sessionStorage.sessionActionLog ? JSON.parse(sessionStorage.sessionActionLog)[God.activeServer.id] ? JSON.parse(sessionStorage.sessionActionLog)[God.activeServer.id] : [] : [];
-
-      /* request data for frame from server */
-      function socketEmits() {
-        /* get servers */
-        socket.emit('getServers', null, function(servers) {
-          God.allServers = servers ? servers : [];
-        });
-        /* get weather */
-        socket.emit('getWeather', null, function(weatherInfo) {
-          God.weather = weatherInfo;
-        });
-        /* get alarm state */
-        socket.emit('isAlarmEnabled', null, function(alarmState) {
-          God.alarmState = alarmState;
-        });
-        /* listen for action log updates */
-        socket.on('actionLogUpdate', function(newAction) {
-          God.sessionActionLog.unshift(newAction);
-          serverActiveLog[God.activeServer.id] = God.sessionActionLog;
-          sessionStorage.sessionActionLog = JSON.stringify(serverActiveLog);
-        });
-        /* server offline notification */
-        socket.on('serverOnline', function(online) {
-          if (!online) {
-            God.serverOffline = true;
-            wentOffline = true;
-            document.querySelector('.frame-wrap').style.backgroundColor = '#ad3642';
-          } else {
-            God.serverOffline = false;
-            if (wentOffline) {
-              location.reload(true);
-              document.querySelector('.frame-wrap').style.backgroundColor = '#1362AC'
-              wentOffline = false;
-            }
-          }
-        });
-      };
+      God.sessionActionLog = sessionStorage.sessionActionLog && JSON.parse(sessionStorage.sessionActionLog)[God.activeServer.id] ? JSON.parse(sessionStorage.sessionActionLog)[God.activeServer.id] : [];
 
       /* add server name and id to local storage and reload page */
       God.switchServer = function(server) {
@@ -77,13 +45,20 @@
       };
       /* logout user */
       God.logout = function() {
-        $state.go('login');
         sessionStorage.removeItem('activeServer');
         sessionStorage.removeItem('userInfoData');
         sessionStorage.removeItem('gravatar');
         dataRequest.logout()
-          .then(function(reponse) {
-            location.reload();
+          .then(function(response) {
+            if (response.data.success) {
+              socket.disconnect();
+              //dataService.logOut();
+              God.data = {};
+              $state.go('login');
+              $timeout(function() {
+                location.reload();
+              }, 50);
+            }
           });
       };
 
@@ -92,7 +67,6 @@
       };
 
       /* CUSTOM EMITS */
-
       /* name or email changed */
       $scope.$on('newUserProfile', function(event, userProfile) {
         God.userInfoData.user_name = userProfile.username;
@@ -124,14 +98,58 @@
       // remove server form found servers
       $scope.$on('serverClaimed', function(event, server) {
         God.foundNewServer.splice(God.foundNewServer.indexOf(server), 1);
-        God.allServers.push(server);
+        God.data.getServers.push(server);
+        God.userInfoData.servers.push(server);
+        sessionStorage.userInfoData = JSON.stringify(God.userInfoData);
       });
 
       /* remove active room class */
       $rootScope.$on('$stateChangeStart', function(event, to, toParams, from, fromParams) {
-        if (window.innerWidth < 992) {
-          sideBar.classList.remove('active');
+        if (!God.activeServer.id) {
+          event.preventDefault();
+        } else {
+          if (window.innerWidth < 992) {
+            sideBar.classList.remove('active');
+          }
         }
       });
+
+      function postSocketConnectAction() {
+        console.log('post actions');
+        //socketEmits();
+        // God.allServers = dataService.getServers();
+        // God.weather = dataService.getWeather();
+        // God.alarmState = dataService.isAlarmEnabled();
+        // God.serverOffline = dataService.serverOnline();
+        /* listen for server online offline status */
+        socket.on('serverOnline', function(online) {
+          if (!online) {
+            God.serverOffline = true;
+            wentOffline = true;
+            document.querySelector('.frame-wrap').style.backgroundColor = '#ad3642';
+          } else {
+            God.serverOffline = false;
+            if (wentOffline) {
+              location.reload(true);
+              document.querySelector('.frame-wrap').style.backgroundColor = '#1362AC'
+              wentOffline = false;
+            }
+          }
+        });
+
+        socket.on('actionLogUpdate', function(newAction) {
+          God.sessionActionLog.unshift(newAction);
+          serverActiveLog[God.activeServer.id] = God.sessionActionLog;
+          sessionStorage.sessionActionLog = JSON.stringify(serverActiveLog);
+        });
+
+        /* register endpoint for push notifications */
+        if (sessionStorage.GCMReg && sessionStorage.GCMReg != 'undefined') {
+          socket.emit('GCMRegister', sessionStorage.GCMReg);
+        }
+
+        dataService.setAllListeners();
+        God.data = dataService.getData();
+      };
     }]);
 }());
