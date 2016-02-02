@@ -29,6 +29,7 @@
     "jpeg-size": "0.0.1",
     "lodash": "3.10.1",
     "mjpeg-consumer": "1.0.5",
+    "mkdirp": "0.5.1",
     "motion": "0.2.2",
     "netatmo": "1.2.0",
     "node-hue-api": "2.0.0",
