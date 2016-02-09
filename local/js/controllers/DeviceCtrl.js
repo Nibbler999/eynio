@@ -3,8 +3,8 @@
 
   angular
     .module('nHome')
-    .controller('DeviceCtrl', ['$scope', 'dataService', '$rootScope', 'socket', '$timeout',
-      function($scope, dataService, $rootScope, socket, $timeout) {
+    .controller('DeviceCtrl', ['$scope', 'dataService', '$rootScope', 'socket', '$timeout', '$stateParams',
+      function($scope, dataService, $rootScope, socket, $timeout, $stateParams) {
 
         var device = this;
 
@@ -70,6 +70,7 @@
         device.saveDeviceOptions = function() {
           // remove all categories
           device.activeDevice.categories = [];
+          device.activeDevice.category = '';
           // add categories
           angular.forEach(device.asignedRooms, function(addRoom) {
             socket.emit('catSet', addRoom.id, device.activeDevice.id);
@@ -84,6 +85,8 @@
           // update if camera or remote
           if (device.activeDevice.type === 'camera') {
             device.activeDevice.rotate = Number(device.activeDevice.rotate);
+            console.log(device.activeDevice.fps);
+            device.activeDevice.fps = Number(device.activeDevice.fps);
             socket.emit('updateCamera', device.activeDevice);
           } else if (device.activeDevice.type === 'tv') {
             socket.emit('updateCustomRemote', device.activeDevice);
@@ -149,6 +152,7 @@
         var addCamMJPEG = document.getElementById('add-camera-mjpeg');
         var addCamSnapshot = document.getElementById('add-camera-snapshot');
         var addCamRotation = document.getElementById('add-camera-rotation');
+        var addCameraFps = document.getElementById('add-camera-fps');
 
         var addCamStep1 = document.querySelector('.add-camera-step-1');
         var addCamStep2 = document.querySelector('.add-camera-step-2');
@@ -156,7 +160,7 @@
         device.addNewCamera = function() {
 
           var cam = {
-            server: sessionStorage.activeServerId,
+            server: JSON.parse(sessionStorage.activeServer).id,
             name: addCamName.value,
             description: addCamDesc.value,
             mjpeg: addCamMJPEG.value,
@@ -164,7 +168,9 @@
             rtsp: addCamRTPS.value,
             auth_name: addCamUser.value,
             auth_pass: addCamPass.value,
-            rotate: Number(addCamRotation.value)
+            rotate: Number(addCamRotation.value),
+            motion_alarm: false,
+            fps: Number(addCameraFps.value)
           }
 
           addCamStep1.style.display = 'none';
@@ -219,7 +225,6 @@
           }
         };
 
-
         // close modals on ESC
         document.body.onkeyup = function(e) {
           if (e.keyCode === 27) {
@@ -227,30 +232,38 @@
           }
         };
 
-        /* remove active room class */
-        $rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
-          device.closeCustomModal();
+        $scope.$on('closeModals', function(event) {
+          contentWrapParent.removeChild(addCameraModal);
+          contentWrapParent.removeChild(addRemoteModal);
+          contentWrapParent.removeChild(editDevicesModal);
         });
 
         /* get data */
         device.data = dataService.getData();
 
         if (device.data.getDevicesObj) {
-          // show first set of devices
-          $timeout(function() {
-            contentWrapParent.children[0].children[1].children[1].classList.add('in');
-          }, 100);
-        }
-        /* wait on socket to connect than get data */
-        if (!device.data.getDevicesObj || !device.data.getBlacklisted) {
-          dataService.getDevicesEmit().then(function(devices){
-            device.data.getDevicesObj = devices;
-
+          if ($stateParams.deviceType) {
+            $timeout(function() {
+              document.querySelector('#sensors-list').classList.add('in');
+            }, 100);
+          } else {
+            // show first set of devices
             $timeout(function() {
               contentWrapParent.children[0].children[1].children[1].classList.add('in');
             }, 100);
-          })
-          dataService.getServerEmits();
+
+          }
+        }
+        /* wait on socket to connect than get data */
+        if (!device.data.getDevicesObj || !device.data.getBlacklisted) {
+          dataService.getDevicesEmit().then(function(devices) {
+              device.data.getDevicesObj = devices;
+
+              $timeout(function() {
+                contentWrapParent.children[0].children[1].children[1].classList.add('in');
+              }, 100);
+            })
+            // dataService.getServerEmits();
           dataService.getCategoriesEmit();
           dataService.getScenesEmit();
           dataService.getSchedulesEmit();

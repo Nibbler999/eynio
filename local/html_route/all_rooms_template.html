@@ -61,7 +61,7 @@
           </div>
         </div>
         <small class="color-transparent margin-auto" ng-show="allRooms[category.id].sensor.length === 0">
-          You don't have sensors in this room. Go <a ui-sref="frame.devices">assign</a>
+          You don't have sensors in this room. Go <a ui-sref="frame.devices({deviceType: 'sensor'})">assign</a>
         </small>
       </div>
       <div class="horizontal-line"></div>
@@ -83,11 +83,3 @@
     </div>
   </div>
 </div>
-
-<section class="custom-modal-window cam-live-stream-modal">
-  <section class="custom-modal-wrap">
-    <img src="img/button/cross.png" class="close-live-stream-modal" ng-click="allRooms.stopLiveStream()">
-    <img ng-src={{allRooms.liveImage}} class="camera-live-stream">
-    <i class="material-icons button full-screen-btn" ng-click="allRooms.fullScreen()" title="full screen">fullscreen</i>
-  </section>
-</section>

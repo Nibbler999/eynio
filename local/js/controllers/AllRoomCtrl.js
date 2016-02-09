@@ -3,16 +3,9 @@
 
   angular
     .module('nHome')
-    .controller('AllRoomsCtrl', ['dataService', '$scope', '$rootScope', 'socket', '$state', function(dataService, $scope, $rootScope, socket, $state) {
+    .controller('AllRoomsCtrl', ['dataService', '$scope', 'socket', function(dataService, $scope, socket) {
 
       var allRooms = this;
-
-      var contentWrapParent = document.querySelector('.frame-page-content-wrap');
-      var liveStreamModal = document.querySelector('.cam-live-stream-modal');
-      var liveStreamImg = document.querySelector('.camera-live-stream');
-      var liveStreamDev;
-
-      contentWrapParent.appendChild(liveStreamModal);
 
       function sortDevices(categories, devices) {
         // wild sorting
@@ -41,7 +34,7 @@
           name: e.target.children[0].value
         }, function(response) {
           if (response) {
-            allRooms.categories.push({
+            allRooms.data.getCategories.push({
               id: response,
               name: e.target.children[0].value
             });
@@ -55,54 +48,18 @@
         socket.emit('catDelete', cat.id, function(response) {
           console.log(response);
           if (response) {
-            angular.forEach(allRooms.categories, function(category) {
+            angular.forEach(allRooms.data.getCategories, function(category) {
               if (category.id === cat.id) {
-                allRooms.categories.splice(allRooms.categories.indexOf(category), 1);
+                allRooms.data.getCategories.splice(allRooms.data.getCategories.indexOf(category), 1);
               }
             })
           }
         })
       };
 
-      /* full screen for cameras */
-      allRooms.fullScreen = function() {
-        dataService.fullScreen(liveStreamImg);
-      };
-      allRooms.stopLiveStream = function() {
-        socket.emit('stopStreaming', liveStreamDev.dev.id, liveStreamDev.options);
-        liveStreamModal.style.display = 'none';
-      };
-      /* Live stream */
-      $scope.$on('requestLiveStreamPlayback', function(event, camData) {
-        liveStreamModal.style.display = 'block';
-        allRooms.liveImage = camData.thumbnail;
-        liveStreamDev = camData;
-      });
-
-      socket.on('cameraFrame', function(liveStream) {
-        if (liveStream) {
-          var src = dataService.blobToImage(liveStream.image);
-          if (!src) return;
-          allRooms.liveImage = src;
-        }
-      });
-      // stop livestream on ESC
-      document.body.onkeyup = function(e) {
-        if (e.keyCode === 27 && liveStreamDev.dev.id) {
-          allRooms.stopLiveStream();
-        }
-      };
-
-      /* stop live stream if not in all rooms */
-      $rootScope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
-        if (liveStreamDev && liveStreamDev.dev.id) {
-          allRooms.stopLiveStream();
-        };
-      });
-
       /* get data */
-      console.log('PPPPPPPPPPPP', allRooms.data);
       allRooms.data = dataService.getData() || {};
+      console.log('PPPPPPPPPPPP', allRooms.data);
       console.log(allRooms.data);
       //allRooms.categories = dataService.categories();
       //allRooms.activeRoom = allRooms.categories ? allRooms.categories[0] : {};
@@ -112,7 +69,6 @@
       sortDevices(allRooms.data.getCategories, allRooms.data.getDevicesObj);
 
       console.log('AAAAAAAAAAAAAA', allRooms.data);
-      console.log(allRooms.data.getBlacklisted);
       /* wait on socket than get data */
       if (!allRooms.data.getBlacklisted || !allRooms.data.getDevicesObj || !allRooms.data.getCategories) {
         dataService.getCategoriesEmit().then(function(cats) {
@@ -137,7 +93,6 @@
         dataService.getScenesEmit();
         dataService.getSchedulesEmit();
         dataService.getRecordingsEmit();
-        dataService.getServerEmits();
       }
     }]);
 }());

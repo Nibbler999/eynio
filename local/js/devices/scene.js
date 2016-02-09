@@ -3,7 +3,7 @@
 
   angular
     .module('services')
-    .directive('scene', ['socket', 'dataService', '$rootScope', function(socket, dataService, $rootScope) {
+    .directive('scene', ['socket', 'dataService', '$rootScope', '$state', function(socket, dataService, $rootScope, $state) {
       return {
         restrict: 'E',
         replace: true,
@@ -13,7 +13,8 @@
         templateUrl: 'directive/devices/scene.html',
         link: function(scope, elem, attr) {
 
-        scope.deviceScheduleRepeat = 'daily';
+          scope.currentState = $state.current.name;
+          scope.deviceScheduleRepeat = 'daily';
 
           scope.setScene = function(sceneId) {
             socket.emit('setScene', sceneId);
@@ -32,6 +33,8 @@
             if (scope.deviceScheduleRepeat === 'once') {
               var date = new Date();
               e.target.min = date.getHours();
+            } else {
+              e.target.min = 0;
             }
           };
 
@@ -43,6 +46,8 @@
               if (h <= date.getHours()) {
                 e.target.min = date.getMinutes() + 1;
               }
+            } else {
+              e.target.min = 0;
             }
           };
           // add quick schedule
@@ -56,8 +61,11 @@
               name: dev.name,
               type: 'scene',
               dateTime: {
+                dayOfWeek: [0, 1, 2, 3, 4, 5, 6],
                 hour: parseInt(h.value),
-                minute: parseInt(m.value)
+                minute: parseInt(m.value),
+                sunrise: false,
+                sunset: false
               },
               actions: [{
                 emit_name: 'setScene',
@@ -65,7 +73,13 @@
               }]
             };
             if (scope.deviceScheduleRepeat === 'once') {
-              job.dateTime = Date.parse(date);
+              job.dateTime = {
+                hour: 0,
+                minute: 0,
+                sunrise: false,
+                sunset: false,
+                timestamp: Date.parse(date)
+              }
             }
             console.log(job);
             socket.emit('addNewJob', job, function(response) {
@@ -80,8 +94,8 @@
             });
           };
 
-          scope.$on('sceneEdited', function(event, newData){
-            if(scope.scinfo.id === newData.id){
+          scope.$on('sceneEdited', function(event, newData) {
+            if (scope.scinfo.id === newData.id) {
               console.log(newData);
               scope.scinfo = newData;
             }

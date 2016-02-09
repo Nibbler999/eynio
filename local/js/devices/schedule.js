@@ -3,7 +3,7 @@
 
   angular
     .module('nHome')
-    .directive('schedule', ['socket', function(socket) {
+    .directive('schedule', ['socket', '$state', function(socket, $state) {
       return {
         restrict: 'E',
         replace: true,
@@ -14,6 +14,7 @@
         link: function(scope, elem, attr) {
 
           console.log(scope.schinfo);
+          scope.currentState = $state.current.name;
           scope.isNumber = angular.isNumber;
 
           var days = document.getElementsByName('day-' + scope.schinfo.id);
@@ -45,19 +46,23 @@
           };
 
           scope.editSchedule = function(sch) {
-            var time;
-            time = sunset.checked && !sunset.disabled ? sunset.value : sunrise.checked && !sunrise.disabled ? sunrise.value : null;
-            if (!time) {
-              time = {};
-              time.dayOfWeek = [];
-              angular.forEach(days, function(day) {
-                if (day.checked && !day.disabled) {
-                  time.dayOfWeek.push(parseInt(day.value));
-                };
-              });
-              time.hour = scope.schinfo.dateTime.hour;
-              time.minute = scope.schinfo.dateTime.minute;
-            }
+            var time = {
+              dayOfWeek: [],
+              hour: 0,
+              minute: 0,
+              sunrise: false,
+              sunset: false,
+              timestamp: 0
+            };
+            time.sunrise = !sunrise.disabled && sunrise.checked ? true : false;
+            time.sunset = !sunset.disabled && sunset.checked ? true : false;
+            time.hour = scope.schinfo.dateTime.hour;
+            time.minute = scope.schinfo.dateTime.minute;
+            angular.forEach(days, function(day) {
+              if (day.checked && !day.disabled) {
+                time.dayOfWeek.push(parseInt(day.value));
+              };
+            });
 
             var job = {
               id: sch.id,

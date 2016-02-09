@@ -7,6 +7,7 @@
 
       var server = this;
       server.deleteServerCount = 0;
+      server.upToDate = true;
       // var leaveServerModal = document.querySelector('.leave-server-modal');
       // document.querySelector('.frame-wrap').appendChild(leaveServerModal);
 

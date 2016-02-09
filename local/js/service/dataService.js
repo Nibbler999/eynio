@@ -3,14 +3,12 @@
 
   angular
     .module('services')
-    .service('dataService', ['$q', '$rootScope', 'socket', function($q, $rootScope, socket) {
+    .service('dataService', ['$q', 'socket', function($q, socket) {
 
       var currentServerData = {};
 
-      var IDBServerData, IDBUserData, IDBUser, IDBServerId;
-
-      // try to open IDB and get user and last data
-      openDB('last_user', 1, 'last');
+      var fromLogin = sessionStorage.userInfoData ? false : true;
+      console.log(fromLogin);
 
       // connect to socket via net
       this.socketConnect = function() {
@@ -33,7 +31,6 @@
           deferred.resolve(categories);
           currentServerData.getCategories = categories;
           //allCategories = categories;
-          putDB(IDBServerData, IDBServerId, 'getCategories', categories);
         });
         return deferred.promise
       };
@@ -59,7 +56,6 @@
 
           console.log(currentServerData.getDevicesObj, currentServerData.getBlacklisted);
           deferred.resolve(currentServerData.getDevicesObj);
-          putDB(IDBServerData, IDBServerId, 'getDevices', currentServerData.getDevicesObj);
         });
         return deferred.promise
       };
@@ -69,7 +65,6 @@
         socket.emit('getScenes', null, function(scenes) {
           deferred.resolve(scenes);
           currentServerData.getScenes = scenes;
-          putDB(IDBServerData, IDBServerId, 'getScenes', scenes);
         });
         return deferred.promise
       };
@@ -79,7 +74,6 @@
         socket.emit('getJobs', null, function(schedules) {
           deferred.resolve(schedules);
           currentServerData.getSchedules = schedules;
-          putDB(IDBServerData, IDBServerId, 'getSchedules', schedules);
         });
         return deferred.promise
       };
@@ -89,7 +83,6 @@
         socket.emit('getRecordings', null, function(recordings) {
           deferred.resolve(recordings);
           currentServerData.getRecordings = recordings;
-          putDB(IDBServerData, IDBServerId, 'getRecordings', recordings);
           console.log(recordings);
         });
         return deferred.promise
@@ -118,6 +111,18 @@
           currentServerData.getDevicesObj.camera.push(cameraObj);
           window.navigator.vibrate(250);
         });
+        socket.on('recordingAdded', function(recordingObj) {
+          console.log(recordingObj);
+          currentServerData.getRecordings.push(recordingObj);
+        });
+        socket.on('recordingDeleted', function(recId) {
+          console.log(recId);
+          angular.forEach(currentServerData.getRecordings, function(rec, index) {
+            if (rec.id === recId) {
+              currentServerData.getRecordings.splice(index, 1);
+            }
+          })
+        })
         socket.on('cameraDeleted', function(deletedCamId) {
           angular.forEach(currentServerData.getDevicesObj.camera, function(cam, index) {
             if (cam.id === deletedCamId) {
@@ -125,6 +130,13 @@
               window.navigator.vibrate(50);
             }
           });
+        });
+        socket.on('cameraUpdated', function(camUpdate) {
+          angular.forEach(currentServerData.getDevicesObj.camera, function(cam) {
+            if (cam.id === camUpdate.id) {
+              cam = camUpdate;
+            }
+          })
         });
         socket.on('customRemoteDeleted', function(remoteID) {
           angular.forEach(currentServerData.getDevicesObj.remote, function(rem, index) {
@@ -309,16 +321,5 @@
       //   });
       // }
 
-      function openDB(db, dbV, objStore) {
-
-      };
-
-      function putDB(idb, objStore, objStoreKey, data) {
-
-      };
-
-      function getDB(idb, objStore, objStoreKey) {
-
-      };
     }]);
 }());

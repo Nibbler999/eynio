@@ -65,7 +65,7 @@
 <section class="display-devices" ng-if="device.data.getDevicesObj.camera.length">
   <h4 data-toggle="collapse" data-target="#cameras-list">Cameras</h4>
   <div class="collapse" id="cameras-list">
-    <devices-dev ng-repeat="camera in device.data.getDevicesObj.camera" devinfo="camera"></devices-dev>
+    <devices-dev ng-repeat="camera in device.data.getDevicesObj.camera track by camera.id" devinfo="camera"></devices-dev>
   </div>
   <hr>
 </section>
@@ -139,6 +139,8 @@
             <input type="radio" id="camera-rotation-270" name="camera-rotation" value="270" ng-checked="device.activeDevice.rotate === 270" ng-model="device.activeDevice.rotate">
             <label for="camera-rotation-270" class="radio-label"></label>
           </span>
+          <label class="form-label">Frame rate</label>
+          <input type="number" name="fps" ng-model="device.activeDevice.fps" min="1" max="30" class="form-number">
         </span>
 
         <!-- if editing remote show options !-->
@@ -187,16 +189,16 @@
       <h3>Add new camera</h3>
     </div>
     <div class="add-camera-step-1">
-      <form type="form" ng-submit="device.addNewCamera()" autocomplete="off" id="add-camera-form">
+      <form type="form" ng-submit="device.addNewCamera()" id="add-camera-form">
         <div class="col-md-6">
           <div class="col-xs-6 col-md-12">
             <input type="text" class="hidden-input">
             <input type="password" class="hidden-input">
             <label for="add-camera-name" class="form-label">Name</label>
-            <input type="text" id="add-camera-name" class="form-input" required>
+            <input type="text" id="add-camera-name" class="form-input" name="camera name" pattern=".{4,15}" required>
 
             <label for="add-camera-desc" class="form-label">Description</label>
-            <input type="text" id="add-camera-desc" class="form-input">
+            <input type="text" id="add-camera-desc" class="form-input" name="camera description">
           </div>
           <div class="col-xs-6 col-md-12">
             <label for="add-camera-user" class="form-label">Username</label>
@@ -204,6 +206,10 @@
 
             <label for="add-camera-password" class="form-label">Password</label>
             <input type="password" id="add-camera-password" class="form-input">
+          </div>
+          <div class="col-xs-6 col-md-12">
+            <label for="add-camera-fps" class="form-label">Frame rate</label>
+            <input type="number" name="fps" value="1" min="1" max="30" id="add-camera-fps" class="form-number">
           </div>
         </div>
         <div class="col-md-6">
@@ -219,31 +225,11 @@
             <input type="text" id="add-camera-snapshot" class="form-input">
             <label class="form-label" for="add-camera-rotation">Rotation</label>
             <select class="form-select" id="add-camera-rotation">
-              <option value="hhh">0°</option>
+              <option value="0">0°</option>
               <option value="90">90°</option>
               <option value="180">180°</option>
               <option value="270">270°</option>
             </select>
-            <!--<span>
-              <i>0°</i>
-              <input type="radio" id="add-camera-rotation-0" name="add-camera-rotation" value="0" checked>
-              <label for="add-camera-rotation-0" class="radio-label"></label>
-            </span>
-            <span>
-              <i>90°</i>
-              <input type="radio" id="add-camera-rotation-90" name="add-camera-rotation" value="90">
-              <label for="add-camera-rotation-90" class="radio-label"></label>
-            </span>
-            <span>
-              <i>180°</i>
-              <input type="radio" id="add-camera-rotation-180" name="add-camera-rotation" value="180">
-              <label for="add-camera-rotation-180" class="radio-label"></label>
-            </span>
-            <span>
-              <i>270°</i>
-              <input type="radio" id="add-camera-rotation-270" name="add-camera-rotation" value="270">
-              <label for="add-camera-rotation-270" class="radio-label"></label>
-            </span>!-->
           </div>
         </div>
       </form>

@@ -1,68 +1,123 @@
-var IDBServerData, IDBUserData, IDBUser;
-var IDBDataObj = {};
+var CACHE_VERSION = 1;
 
-// self.clients.matchAll().then(function(clients) {
-//   clients.forEach(function(client) {
-//     console.log(client);
-//     client.postMessage('The service worker just started up.');
-//   });
-// });
-// console.log(self.clients);
-self.addEventListener('install', function(e) {
+// Shorthand identifier mapped to specific versioned cache.
+var CURRENT_CACHES = {
+  img: 'img-cache-v' + CACHE_VERSION,
+  other: 'offline-cache-v' + CACHE_VERSION,
+  js: 'js-cache-v' + CACHE_VERSION
+};
 
-  self.skipWaiting();
-  console.log(e);
+function addToCache(req, resp, cacheType) {
+  if (resp.ok) {
+    var copy = resp.clone();
+    console.log(cacheType, req);
+    caches.open(cacheType + CACHE_VERSION)
+      .then(function(cache) {
+        cache.put(req, copy)
+      })
+    return resp
+  }
+}
+
+function getFromCache(req) {
+  return caches.match(req)
+    .then(function(response) {
+      console.log(response);
+      if (!response) {
+        throw Error('NEMA KEŠA')
+      }
+      return response
+    });
+}
+
+self.addEventListener('install', function(event) {
   console.log('SW INSTALL');
 
-  //console.log(socket);
-
   // event.waitUntil(
-  //   caches.open('storePage00').then(function(cache){
+  //   caches.open('offline-v' + CACHE_VERSION)
+  //   .then(function(cache) {
   //     return cache.addAll([
-  //       'index.html',
-  //       'css/',
-  //       'js/',
-  //       'directive/',
-  //       'fonts/',
-  //       'html_route/',
-  //       'img/'
+  //       'index.html'
+  //       'img/favicon.ico',
+  //       'img/login-bg.png',
+  //       'img/device/alarm-off.png',
+  //       'img/device/alarm-on.png',
+  //       'img/device/camera.png',
+  //       'img/device/light-off.png',
+  //       'img/device/light-on.png',
+  //       'img/device/remote.png',
+  //       'img/device/scene-icon.png',
+  //       'img/device/shutter-off.png',
+  //       'img/device/shutter-on.png',
+  //       'img/device/switch-off.png',
+  //       'img/device/switch-on.png',
+  //       'img/device/thermostat.png',
+  //       'img/remote-icons/chevron-down.png',
+  //       'img/remote-icons/chevron-left.png',
+  //       'img/remote-icons/chevron-right.png',
+  //       'img/remote-icons/chevron-up.png',
+  //       'img/remote-icons/learning-mode.png',
+  //       'img/remote-icons/menu.png',
+  //       'img/remote-icons/minus.png',
+  //       'img/remote-icons/numpad.png',
+  //       'img/remote-icons/plus.png',
+  //       'img/remote-icons/power.png',
+  //       'img/remote-icons/source.png',
+  //       'js/libraries/angular.min.js',
+  //       'js/libraries/angular-ui-router.min.js',
+  //       'js/libraries/bootstrap.js',
+  //       'js/libraries/jquery-1.11.3.min.js',
+  //       'js/libraries/npm.js',
+  //       'js/libraries/socket.io.js',
+  //       'js/factory/socket.js'
   //     ]);
   //   })
-  // )
+  // );
 });
 
-// self.addEventListener('fetch', function(event) {
-// console.log(event);
-//   var response;
-//
-//   event.respondWith(caches.match(event.request).catch(function() {
-//     return fetch(event.request);
-//   }).then(function(r) {
-//     response = r;
-//     caches.open('storePage00').then(function(cache) {
-//       cache.put(event.request, response);
-//     });
-//     return response.clone();
-//   }).catch(function() {
-//     console.log('error Cache');
-//   }));
-//  });
+// when fetching resorces store in cache
+self.addEventListener('fetch', function(event) {
+  var request = event.request;
+  var imgReq = request.url.match(/nhomeba\/ js\/factory | js\/libraries | directive\/devices /i);
 
-self.addEventListener('activate', function(e) {
-  console.log(e);
-  console.log('SW ACTIVE');
-
-  //openDB('last_user', 1, 'user');
+  // if (imgReq) {
+  //   event.respondWith(
+  //     getFromCache(request)
+  //     .catch(function() {
+  //       return fetch(request)
+  //         .then(function(response) {
+  //           console.log('nema u kesu, fečam');
+  //           return addToCache(request, response, 'img-cache-v')
+  //         })
+  //     })
+  //   );
+  // } else {
+  //   event.respondWith(
+  //     fetch(request)
+  //     .then(function(response) {
+  //       console.log('fečo sam, stavljam u keš');
+  //       return addToCache(request, response, 'offline-cache-v');
+  //     })
+  //     .catch(function() {
+  //       console.log('probo feč, nije išlo, mozda ima u kešu');
+  //       return getFromCache(request);
+  //     })
+  //   );
+  // }
 });
 
+self.addEventListener('activate', function(event) {
+  caches.keys().then(function(cacheKeys) {
+    console.log(cacheKeys);
+  })
+});
+
+// recive message
 self.addEventListener('message', function(e) {
   console.log(e);
   e.ports[0].postMessage(IDBDataObj);
-  // if (e.data.email === IDBUser.email) {
-  //   console.log('SEND MSGG');
-  //   e.ports[0].postMessage(IDBDataObj);
-  // }
 });
+
 // GCM push notifications
 self.addEventListener('push', function(e) {
   console.log(e);
@@ -77,6 +132,7 @@ self.addEventListener('push', function(e) {
     }));
 });
 
+// click on notifications popUp
 self.addEventListener('notificationclick', function(event) {
   // Android doesn't close the notification when you click on it
   // See: http://crbug.com/463146
@@ -100,97 +156,3 @@ self.addEventListener('notificationclick', function(event) {
     })
   );
 });
-
-
-
-function openDB(db, dbV, objStore) {
-  var req = indexedDB.open(db, dbV);
-
-  req.onsuccess = function(e) {
-    console.log('SUCCESS', e);
-
-    if (e.target.result.name === 'last_user') {
-      IDBUserData = e.target.result;
-      getDB(IDBUserData, 'user', 'last');
-    } else {
-      IDBServerData = e.target.result;
-      getDB(IDBServerData, IDBUser.lastServerId, 'getCategories');
-      getDB(IDBServerData, IDBUser.lastServerId, 'getDevices');
-      getDB(IDBServerData, IDBUser.lastServerId, 'getScenes');
-      getDB(IDBServerData, IDBUser.lastServerId, 'getSchedules');
-      getDB(IDBServerData, IDBUser.lastServerId, 'getRecordings');
-    }
-  };
-
-  req.onerror = function(e) {
-    console.log('DB error', e.target.errorCode);
-  };
-
-  req.onupgradeneeded = function(e) {
-    var store;
-    if (typeof objStore === 'object') {
-      angular.forEach(objStore, function(server) {
-        store = e.target.result.createObjectStore(server.id);
-      })
-    } else if (typeof objStore === 'string') {
-      store = e.target.result.createObjectStore(objStore);
-    }
-  };
-};
-
-function putDB(idb, objStore, objStoreKey, data) {
-  var transaction = idb.transaction(objStore, 'readwrite');
-
-  // transaction.oncomplete = function(e) {
-  //   console.log(e);
-  // };
-  //
-  // transaction.onerror = function(e) {
-  //   console.log(e);
-  // };
-
-  var objectStore = transaction.objectStore(objStore).put(data, objStoreKey);
-  objectStore.onsuccess = function(e) {
-    console.log(e);
-  };
-
-  objectStore.onerror = function(e) {
-    console.log('ERROR');
-    console.log(e);
-  };
-};
-
-function getDB(idb, objStore, objStoreKey) {
-  var req = idb.transaction(objStore).objectStore(objStore).get(objStoreKey);
-
-  req.onerror = function(e) {
-    console.log(e);
-  };
-
-  req.onsuccess = function(e) {
-    switch (objStoreKey) {
-      case 'getDevices':
-        IDBDataObj.allDev = e.target.result;
-        break;
-      case 'getCategories':
-        IDBDataObj.allCategories = e.target.result;
-        break;
-      case 'getScenes':
-        IDBDataObj.allScenes = e.target.result;
-        break;
-      case 'getSchedules':
-        IDBDataObj.allSchedules = e.target.result;
-        break;
-      case 'getRecordings':
-        IDBDataObj.allRecordings = e.target.result;
-        console.log(IDBDataObj);
-        break;
-      case 'last':
-        IDBUser = e.target.result;
-        console.log(e);
-        console.log(IDBUser);
-        openDB(IDBUser.email, IDBUser.servers.length, IDBUser.servers);
-        break;
-    }
-  };
-};

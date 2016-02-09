@@ -17,12 +17,12 @@
     <div class="settings-box">
       <h4>Serever status</h4>
 
-      <div class="server-status-btn online" ng-if="server.upToDate">
+      <div class="server-status-btn online" ng-hide="!server.upToDate">
         <small>Your server is currently</small>
         <p class="color-green">Up to date.</p>
       </div>
 
-      <div class="server-status-btn offline" ng-if="!server.upToDate" ng-click="server.updateApp()">
+      <div class="server-status-btn offline" ng-show="!server.upToDate" ng-click="server.updateApp()">
         <small>Your server is currently</small>
         <p class="color-red">Not up to date.</p>
         <p>Update now</p>
@@ -88,7 +88,7 @@
     <div class="settings-box no-padding">
       <h4>Server Activities</h4>
       <form type="form" id="change-server-name-form" autocomplete="off" ng-submit="server.changeServerName(server.serverInfoData.name)">
-        <input type="text" id="settings-server-name" placeholder="Server name" class="form-input" ng-model="server.serverInfoData.name" required pattern=".{3,15}">
+        <input type="text" id="settings-server-name" placeholder="Server name" class="form-input" ng-model="server.serverInfoData.name" required pattern=".{3,15}" title="3 to 15 characters">
         <button type="submit" class="settings-btn green rename">Rename</button>
       </form>
       <div class="settings-box-nav settings-box-btn-wrap">

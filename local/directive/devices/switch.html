@@ -4,7 +4,7 @@
     <label for="add-to-favorites-{{sinfo.id}}" class="device-add-to-favorites-label" title="add to favorites"></label>
   </span>
   <img ng-src="img/button/schedule.svg" class="device-schedule-btn" ng-click="deviceSchedule = !deviceSchedule" title="quick schedule">
-  
+
   <div class="device-header">
     <img ng-src="{{switchIcon}}" class="device-icon" ng-click="toggleDevicePowerState(sinfo.id)" title="toggle state">
     <div class="device-content-data">
@@ -34,8 +34,8 @@
         <span class="color-orange" ng-if="!scheduleState">OFF</span>
         at:
       </p>
-      <input type="number" class="form-number" id="device-schedule-hours-{{sinfo.id}}" placeholder="Hours" min="0" max="23" required ng-blur="checkHours($event)">
-      <input type="number" class="form-number" id="device-schedule-minutes-{{sinfo.id}}" placeholder="Minutes" min="0" max="59" required ng-blur="checkMinutes($event)">
+      <input type="number" class="form-number" id="device-schedule-hours-{{sinfo.id}}" placeholder="Hours" min="0" max="23" required ng-focus="checkHours($event)">
+      <input type="number" class="form-number" id="device-schedule-minutes-{{sinfo.id}}" placeholder="Minutes" min="0" max="59" required ng-focus="checkMinutes($event)">
 
       <div class="add-schedule-dev-options-wrap">
         <div class="add-schedule-dev-option">

@@ -7,10 +7,12 @@
 
       var God = this;
 
-      God.data = {};
+      //God.data = {};
       //God.activeRoomSensors = [];
       var sideBar = document.querySelector('.frame-sidebar');
-      var wentOffline;
+      var liveStreamModal = document.querySelector('.cam-live-stream-modal');
+      var liveStreamImg = document.querySelector('.camera-live-stream');
+      var wentOffline, liveStreamDev;
       var serverActiveLog = sessionStorage.sessionActionLog ? JSON.parse(sessionStorage.sessionActionLog) : {};
       God.userInfoData = {};
       God.activeServer = {
@@ -105,6 +107,12 @@
 
       /* remove active room class */
       $rootScope.$on('$stateChangeStart', function(event, to, toParams, from, fromParams) {
+        if (liveStreamDev) {
+          God.stopLiveStream();
+        }
+        $scope.$broadcast('closeModals');
+      });
+      $scope.$on('$stateChangeSuccess', function(ev, to, toParams, from, fromParams) {
         if (!God.activeServer.id) {
           event.preventDefault();
         } else {
@@ -113,15 +121,33 @@
           }
         }
       });
+      /* Live stream */
+      $scope.$on('requestLiveStreamPlayback', function(event, camData) {
+        liveStreamModal.style.display = 'block';
+        God.liveImage = camData.dev.thumbnailImg;
+        liveStreamDev = camData;
+      });
+
+      /* full screen for cameras */
+      God.fullScreen = function() {
+        dataService.fullScreen(liveStreamImg);
+      };
+      God.stopLiveStream = function() {
+        if (liveStreamDev.type === 'camera') {
+          socket.emit('stopStreaming', liveStreamDev.dev.id, liveStreamDev.options);
+        } else {
+          socket.emit('stopRecording', liveStreamDev.dev.id, liveStreamDev.options);
+        }
+        liveStreamModal.style.display = 'none';
+      };
+
+      document.body.onkeyup = function(e) {
+        if (e.keyCode === 27 && liveStreamDev.dev.id) {
+          God.stopLiveStream();
+        }
+      };
 
       function postSocketConnectAction() {
-        console.log('post actions');
-        //socketEmits();
-        // God.allServers = dataService.getServers();
-        // God.weather = dataService.getWeather();
-        // God.alarmState = dataService.isAlarmEnabled();
-        // God.serverOffline = dataService.serverOnline();
-        /* listen for server online offline status */
         socket.on('serverOnline', function(online) {
           if (!online) {
             God.serverOffline = true;
@@ -143,13 +169,30 @@
           sessionStorage.sessionActionLog = JSON.stringify(serverActiveLog);
         });
 
+        socket.on('cameraFrame', function(liveStream) {
+          if (liveStream) {
+            var src = dataService.blobToImage(liveStream.image);
+            if (!src) return;
+            God.liveImage = src;
+          }
+        });
+        socket.on('recordingFrame', function(frame) {
+          if (frame) {
+            var src = dataService.blobToImage(frame.image);
+            if (!src) return;
+            God.liveImage = src;
+          }
+        });
+
         /* register endpoint for push notifications */
         if (sessionStorage.GCMReg && sessionStorage.GCMReg != 'undefined') {
           socket.emit('GCMRegister', sessionStorage.GCMReg);
         }
 
         dataService.setAllListeners();
-        God.data = dataService.getData();
+        dataService.getServerEmits().then(function() {
+          God.data = dataService.getData();
+        })
       };
     }]);
 }());

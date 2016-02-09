@@ -9,12 +9,12 @@
 
       /* get data */
       schedule.data = dataService.getData();
-      if(!schedule.data.getSchedules){
-        dataService.getSchedulesEmit().then(function(schedules){
+      if (!schedule.data.getSchedules) {
+        dataService.getSchedulesEmit().then(function(schedules) {
           schedule.data.getSchedules = schedules;
         })
         dataService.getDevicesEmit();
-        dataService.getServerEmits();
+        // dataService.getServerEmits();
         dataService.getCategoriesEmit();
         dataService.getScenesEmit();
         dataService.getRecordingsEmit();

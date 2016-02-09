@@ -5,13 +5,18 @@
     .module('nHome', ['ui.router', 'services'])
     .config(function($stateProvider, $urlRouterProvider) {
       $urlRouterProvider
-        .when('', 'all-rooms');
+        .when('', 'dashboard');
       $stateProvider
         .state('login', {
-          url: '/login',
+          url: '/login:register',
           templateUrl: 'html_route/login_template.html',
           controller: 'LoginCtrl',
-          controllerAs: 'login'
+          controllerAs: 'login',
+          params: {
+            register: {
+              value: 'login'
+            }
+          }
         })
         .state('frame', {
           templateUrl: 'html_route/frame_template.html',
@@ -28,7 +33,12 @@
           url: '/devices',
           templateUrl: 'html_route/devices_template.html',
           controller: 'DeviceCtrl',
-          controllerAs: 'device'
+          controllerAs: 'device',
+          params: {
+            deviceType: {
+              value: undefined
+            }
+          }
         })
         .state('frame.scenes', {
           url: '/scenes',
@@ -66,11 +76,11 @@
           controller: 'AllRoomsCtrl',
           controllerAs: 'allRooms'
         })
-        .state('frame.favorites', {
-          url: '/favorites',
-          templateUrl: 'html_route/favorites_template.html',
-          controller: 'FavoritesCtrl',
-          controllerAs: 'favorites'
+        .state('frame.dashboard', {
+          url: '/dashboard',
+          templateUrl: 'html_route/dashboard_template.html',
+          controller: 'DashboardCtrl',
+          controllerAs: 'dashboard'
         })
         .state('frame.most-used', {
           url: '/most-used',

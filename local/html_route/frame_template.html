@@ -33,11 +33,11 @@
   <section class="frame-content-wrap">
     <!-- side bar !-->
     <section class="frame-sidebar">
-      <div class="dropdown server-dropdown">
+      <div class="dropdown server-dropdown" ng-click="showDownloads = false">
 
       </div>
 
-      <a ui-sref="frame.all-rooms" class="sidebar-nav-btn nhome-btn" ui-sref-active="active" ng-click="showDownloads = false">
+      <a ui-sref="frame.dashboard" class="sidebar-nav-btn nhome-btn" ui-sref-active="active" ng-click="showDownloads = false">
         Dashboard
       </a>
 
@@ -53,8 +53,7 @@
         <span>Schedule</span>
       </a>
 
-      <a ui-sref="frame.security" class="sidebar-nav-btn security-btn" ui-sref-active="active" ng-click="showDownloads = false"
-        <span>Security</span>
+      <a ui-sref="frame.security" class="sidebar-nav-btn security-btn" ui-sref-active="active" ng-click="showDownloads = false" <span>Security</span>
       </a>
 
       <!-- downloads menu toggle by download btn !-->
@@ -74,12 +73,12 @@
 
             <div id="collapse-pi" class="panel-collapse collapse in">
               <div class="panel-body">
-                <a href="https://nhome.s3.amazonaws.com/NHomePi-NOOBS.zip" class="download-link">
+                <!-- <a href="https://nhome.s3.amazonaws.com/NHomePi-NOOBS.zip" class="download-link">
                   Pi - NOOB Installer
                 </a>
                 <a href="https://nhome.s3.amazonaws.com/NHomePi.img.xz" class="download-link">
                   Pi - Raw Image
-                </a>
+                </a> -->
                 <a href="https://nhome.s3.amazonaws.com/NHomePi2-NOOBS.zip" class="download-link">
                   Pi 2 - NOOB Installer
                 </a>
@@ -215,22 +214,28 @@
 
       <!-- ui router !-->
       <section class="frame-view" ui-view></section>
-
+      <section class="custom-modal-window cam-live-stream-modal">
+        <section class="custom-modal-wrap">
+          <img src="img/button/cross.png" class="close-live-stream-modal" ng-click="God.stopLiveStream()">
+          <img ng-src={{God.liveImage}} class="camera-live-stream">
+          <i class="material-icons button full-screen-btn" ng-click="God.fullScreen()" title="full screen">fullscreen</i>
+        </section>
+      </section>
       <!-- bottom nav !-->
       <section class="frame-nav-bottom" ng-click="showDownloads = false">
-          <a ui-sref="frame.all-rooms" class="button filter-btn all-rooms-filter-btn" ui-sref-active="active">
-            <span class="hidden-xs">All rooms</span>
-          </a>
-          <a ui-sref="frame.most-used" class="button filter-btn most-used-filter-btn" ui-sref-active="active">
-            <span class="hidden-xs">Most used</span>
-          </a>
-          <a ui-sref="frame.favorites" name="Favorite" class="button filter-btn favorite-filter-btn" ui-sref-active="active">
-            <span class="hidden-xs">Favorites</span>
-          </a>
-          <a ui-sref="frame.recently-used" class="button filter-btn recently-used-filter-btn" ui-sref-active="active">
-            <span class="hidden-xs">Recently used</span>
-          </a>
-        </div>
-    </section>
-  </section>
+        <a ui-sref="frame.dashboard" name="Favorite" class="button filter-btn dashboard-filter-btn" ui-sref-active="active">
+          <span class="hidden-xs">Dashboard</span>
+        </a>
+        <a ui-sref="frame.all-rooms" class="button filter-btn all-rooms-filter-btn" ui-sref-active="active">
+          <span class="hidden-xs">All rooms</span>
+        </a>
+        <a ui-sref="frame.most-used" class="button filter-btn most-used-filter-btn" ui-sref-active="active">
+          <span class="hidden-xs">Most used</span>
+        </a>
+        <a ui-sref="frame.recently-used" class="button filter-btn recently-used-filter-btn" ui-sref-active="active">
+          <span class="hidden-xs">Recently used</span>
+        </a>
+</div>
+</section>
+</section>
 </div>

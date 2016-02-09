@@ -61,8 +61,8 @@
         <span class="color-orange" ng-if="!scheduleState">OFF</span>
         at:
       </p>
-      <input type="number" class="form-number" id="device-schedule-hours-{{linfo.id}}" placeholder="Hours" min="0" max="23" required ng-blur="checkHours($event)">
-      <input type="number" class="form-number" id="device-schedule-minutes-{{linfo.id}}" placeholder="Minutes" min="0" max="59" required ng-blur="checkMinutes($event)">
+      <input type="number" class="form-number" id="device-schedule-hours-{{linfo.id}}" placeholder="Hours" min="0" max="23" required ng-focus="checkHours($event)">
+      <input type="number" class="form-number" id="device-schedule-minutes-{{linfo.id}}" placeholder="Minutes" min="0" max="59" required ng-focus="checkMinutes($event)">
 
       <div class="add-schedule-dev-options-wrap">
         <div class="add-schedule-dev-option">

@@ -70,6 +70,8 @@
                 if (scope.deviceScheduleRepeat === 'once') {
                   var date = new Date();
                   e.target.min = date.getHours();
+                } else {
+                  e.target.min = 0;
                 }
               };
 
@@ -81,6 +83,8 @@
                   if (h <= date.getHours()) {
                     e.target.min = date.getMinutes() + 1;
                   }
+                } else {
+                  e.target.min = 0;
                 }
               };
               scope.quickSchedule = function(dev, state) {
@@ -93,9 +97,11 @@
                   name: dev.name,
                   type: 'remote',
                   dateTime: {
+                    dayOfWeek: [0, 1, 2, 3, 4, 5, 6],
                     hour: parseInt(h.value),
                     minute: parseInt(m.value),
-                    dayOfWeek: []
+                    sunrise: false,
+                    sunset: false
                   },
                   actions: [{
                     emit_name: 'sendKey',
@@ -104,7 +110,13 @@
                 };
 
                 if (scope.deviceScheduleRepeat === 'once') {
-                  job.dateTime = Date.parse(date);
+                  job.dateTime = {
+                    hour: 0,
+                    minute: 0,
+                    sunrise: false,
+                    sunset: false,
+                    timestamp: Date.parse(date)
+                  }
                 }
                 console.log(job);
                 socket.emit('addNewJob', job, function(response) {

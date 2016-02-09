@@ -3,7 +3,7 @@
 
   angular
     .module('services')
-    .directive('camRec', ['dataService', 'socket', '$rootScope', function(dataService, socket, $rootScope) {
+    .directive('camRec', ['dataService', 'socket', '$rootScope', '$state', function(dataService, socket, $rootScope, $state) {
       return {
         restrict: 'E',
         replace: true,
@@ -12,7 +12,7 @@
           camrec: '='
         },
         link: function(scope, elem, attr) {
-
+scope.currentState = $state.current.name;
           scope.apiKey = dataService.getData().getApiKey;
           if (!scope.apiKey) {
             socket.emit('getApiKey', null, function(key) {
@@ -20,9 +20,11 @@
             });
           }
 
+          socket.emit('getRecordingThumbnail', scope.camrec.id, function(response) {
+            scope.camrec.thumbnailImg = dataService.blobToImage(response);
+          });
+
           scope.serverId = 0;
-
-
           var options = {
             width: -1,
             height: -1,
@@ -30,7 +32,6 @@
           }
 
           var allCameras = dataService.getData().getDevicesObj.camera;
-          console.log(allCameras);
 
           angular.forEach(allCameras, function(cam) {
             if (cam.id === scope.camrec.cameraid) {
@@ -44,7 +45,6 @@
                 $rootScope.$broadcast('requestLiveStreamPlayback', {
                   dev: rec,
                   type: 'recording',
-                  thumbnail: null,
                   options: options
                 });
               }

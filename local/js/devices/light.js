@@ -110,6 +110,8 @@
             if (scope.deviceScheduleRepeat === 'once') {
               var date = new Date();
               e.target.min = date.getHours();
+            } else {
+              e.target.min = 0;
             }
           };
 
@@ -121,6 +123,8 @@
               if (h <= date.getHours()) {
                 e.target.min = date.getMinutes() + 1;
               }
+            } else {
+              e.target.min = 0;
             }
           };
           // add quick schedule
@@ -134,8 +138,11 @@
               name: dev.name,
               type: 'device',
               dateTime: {
+                dayOfWeek: [0, 1, 2, 3, 4, 5, 6],
                 hour: parseInt(h.value),
-                minute: parseInt(m.value)
+                minute: parseInt(m.value),
+                sunrise: false,
+                sunset: false
               },
               actions: [{
                 emit_name: 'setDevicePowerState',
@@ -143,7 +150,13 @@
               }]
             };
             if (scope.deviceScheduleRepeat === 'once') {
-              job.dateTime = Date.parse(date);
+              job.dateTime = {
+                hour: 0,
+                minute: 0,
+                sunrise: false,
+                sunset: false,
+                timestamp: Date.parse(date)
+              }
             }
             console.log(job);
             socket.emit('addNewJob', job, function(response) {

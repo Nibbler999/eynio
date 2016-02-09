@@ -28,7 +28,7 @@
   -ms-flex-pack: justify;
   justify-content: space-between;
 }
-.burger-menu-icon{
+.burger-menu-icon {
   height: 1.25em;
   line-height: 1.25;
   padding: 0 1%;
@@ -57,7 +57,7 @@
   height: 100%;
   margin: auto 1%;
 }
-.server-found-img{
+.server-found-img {
   max-width: 2em;
 }
 .frame-new-server-btn {
@@ -218,7 +218,7 @@
   margin: auto 2em auto 1em;
   text-align: left;
 }
-.user-details > h4{
+.user-details > h4 {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -289,17 +289,18 @@
 .active-server-btn a {
   color: #fff;
 }
-.server-status-dot{
+.server-status-dot {
   position: absolute;
   right: 0.5em;
   height: 1em;
 }
-.server-status-dot.online{
+.server-status-dot.online {
   color: #5FCA8F;
 }
-.server-status-dot.offline{
+.server-status-dot.offline {
   color: #EC3535;
 }
+
 /* bootstrap css override */
 
 .server-dropdown {
@@ -437,7 +438,7 @@
   overflow: auto;
   padding: 0.5em 0;
 }
-.sidebar-activity-log.empty{
+.sidebar-activity-log.empty {
   background-image: url(../img/frame/activity-log.png);
   background-position: center;
   background-repeat: no-repeat;
@@ -680,7 +681,7 @@
 .category-name-reset {
   background: transparent url(../img/button/cross.png) center no-repeat;
 }
-.category-name-delete{
+.category-name-delete {
   line-height: 0;
   background: rgba(236, 53, 53, 0.65);
 }
@@ -833,6 +834,12 @@
 .most-used-filter-btn.active, .most-used-filter-btn:hover {
   background-image: url(../img/button/most-used-white.png);
 }
+.dashboard-filter-btn {
+  background-image: url(../img/button/dashboard.png);
+}
+.dashboard-filter-btn.active, .dashboard-filter-btn:hover {
+  background-image: url(../img/button/dashboard-white.png);
+}
 .favorite-filter-btn {
   background-image: url(../img/button/favorite.png);
 }
@@ -924,10 +931,10 @@
   .frame-view {
     height: 85vh;
   }
-  .frame-menu-icon{
+  .frame-menu-icon {
     height: auto;
   }
-  .burger-menu-icon{
+  .burger-menu-icon {
     height: 1.75em;
     width: auto;
     line-height: 1.75;
@@ -959,7 +966,7 @@
     height: 3em;
     width: 3em;
   }
-  .custom-modal-window{
+  .custom-modal-window {
     bottom: 4em !important;
   }
   .frame-nav-bottom, .filter-btn, .settings-cog-btn {

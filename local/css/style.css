@@ -310,6 +310,19 @@ input:disabled ~ label, input:disabled {
   align-items: center;
   padding: 1%;
 }
+.dashboard-display-wrap{
+  position: relative;
+  background-color: #0F2D45;
+  border: 0.1em solid #173E5D;
+  padding: 1%;
+  margin: 1%;
+  color: #fff;
+}
+.dashboard-display-wrap > button{
+  position: absolute;
+  top: 0;
+  right: 0;
+}
 .add-new-btn {
   background: #1D83E4 url() 95% 50% no-repeat;
 }
