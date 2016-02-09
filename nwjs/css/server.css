@@ -1,0 +1,220 @@
+html, body {
+  background-color: #212A33;
+  color: #fff;
+  font-size: 1em;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  font-family: Arial;
+}
+* {
+  font-weight: 100;
+}
+input[type="checkbox"] {
+  display: none;
+}
+input[type="checkbox"] ~ label {
+  background-color: #2A3F4F;
+  text-align: center;
+  min-width: 2em;
+  padding: 5%;
+  -webkit-transition: 0.3s ease;
+  transition: 0.3s ease;
+}
+input[type="checkbox"] ~ label::before {
+  content: 'OFF'
+}
+input[type="checkbox"]:checked ~ label {
+  background-color: #449EE3;
+}
+input[type="checkbox"]:checked ~ label::before {
+  content: 'ON'
+}
+input[type="email"] {
+  background-color: #13191E;
+  border: none;
+  outline: 0;
+  padding: 5%;
+  margin-left: 0.5em;
+  color: #fff;
+  -webkit-box-flex: 3;
+  -webkit-flex: 3;
+      -ms-flex: 3;
+          flex: 3;
+}
+#settings, #terminal {
+  display: none;
+}
+.active {
+  display: block !important;
+}
+.main-wrap {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+}
+.nhbtn {
+  cursor: pointer;
+  border: none;
+  color: #fff;
+  background-color: inherit;
+  text-align: left;
+  padding: 0;
+  width: 100%;
+}
+
+/* sidebar */
+
+.sidebar-wrap {
+  width: 30%;
+}
+.sidebar-wrap > img {
+  padding: 10% 25%;
+}
+.sidebar-btn > h3 {
+  margin: 0;
+  padding: 5% 0;
+  text-indent: 0.5em;
+}
+.sidebar-btn > p {
+  padding: 5% 0;
+  margin-left: 0.5em;
+}
+.nhbtn.sidebar-btn.active {
+  background-color: #253645;
+}
+.nhbtn.sidebar-btn.active > h3 {
+  background-color: #449EE3;
+}
+.sidebar-btn:last-child {
+  border-top: 0.1em solid #6e6e6e;
+}
+.sidebar-form {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+.sidebar-form > button {
+  border: 0;
+  background: #449EE3 url(../img/chevron-right.png) no-repeat center;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  cursor: pointer;
+}
+
+/* content */
+
+.content-wrap {
+  width: 70%;
+  padding: 5%;
+}
+.content-wrap > h1 {
+  text-indent: 0.5em;
+}
+.content-holder {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: row nowrap;
+      -ms-flex-flow: row nowrap;
+          flex-flow: row nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+.content {
+  background-color: #27333D;
+  padding: 3%;
+  margin: 0 1%;
+  text-align: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: row wrap;
+      -ms-flex-flow: row wrap;
+          flex-flow: row wrap;
+  -webkit-justify-content: space-around;
+      -ms-flex-pack: distribute;
+          justify-content: space-around;
+}
+.content.server {
+  padding: 0;
+  text-align: left;
+  -webkit-flex-flow: column nowrap;
+      -ms-flex-flow: column nowrap;
+          flex-flow: column nowrap;
+  width: 80%;
+}
+.content.server > div:first-child {
+  padding: 3%;
+}
+.content-settings {
+  background-color: #2B3945;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: row nowrap;
+      -ms-flex-flow: row nowrap;
+          flex-flow: row nowrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin: 0;
+}
+.content-settings > small {
+  padding-left: 5%;
+  width: 100%;
+}
+.content.done-wrap {
+  padding: 0;
+  background-color: #212A33;
+}
+.content.done {
+  width: 100%;
+  text-align: left;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column nowrap;
+      -ms-flex-flow: column nowrap;
+          flex-flow: column nowrap;
+}
+.content.done:first-child {
+  margin: 0 1% 2%;
+}
+.content.done > h3 {
+  margin: 5% 0;
+}
+.nhbtn.done {
+  padding: 4%;
+  width: 10em;
+  background: #449EE3 url(../img/checked.png) no-repeat 90% 50%;
+}
+.nhbtn.goto {
+  padding: 4%;
+  width: 10em;
+  background: #334C60 url(../img/chevron-right.png) no-repeat 90% 50%;
+}
+
+/* helper class */
+
+.color-blue {
+  color: #449EE3;
+}
+.color-gray {
+  color: #4C5D6B;
+}

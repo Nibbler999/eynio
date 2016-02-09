@@ -2,114 +2,143 @@
 <html>
 
 <head>
-    <meta name="description" content="NHome Server application">
-    <meta name="author" content="NHome d.o.o.">
-    <meta charset="utf-8">
+  <meta charset="utf-8">
+  <title>NHome server</title>
 
-    <title>NHome Server</title>
+  <link rel="stylesheet" href="css/server.css" media="screen" title="no title" charset="utf-8">
 
-    <!-- roboto !-->
-    <link href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900' rel='stylesheet' type='text/css'>
-    <!-- favicon -->
-    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
-
-    <link rel="stylesheet" type="text/css" href="style.css">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="mobile-web-app-capable" content="yes">
 </head>
 
 <body>
-    <header>
-        <div class="server-nav">
-            <div class="server-nav-tab active-tab" id="status">
-                <p>Status</p>
-            </div>
-            <div class="server-nav-tab" id="general-settings">
-                <p>General Settings</p>
-            </div>
-            <div class="server-nav-tab" id="terminal">
-                <p>Terminal</p>
-            </div>
-        </div>
-    </header>
 
-    <div class="wrap">
-        <!-- status view !-->
-        <div class="content content-active" id="status-view">
-            <div class="status-data">
-                <p>Status</p>
+  <div class="main-wrap">
+    <div class="sidebar-wrap">
+      <img src="img/nhome_logo_white.png" alt="nHome logo" />
 
-                <p class="H_gray">Local: <span class="H_blue"> ON </span></p>
-                <p class="H_gray">Internet: <span class="H_blue" id="connected"></span></p>
-            </div>
+      <button type="button" name="status" class="nhbtn sidebar-btn active" value="settings" id="settings-btn">
+        <h3>Status and settings</h3>
+        <p class="color-gray">
+          See server status and edit its properties
+        </p>
+      </button>
 
-            <div class="status-data">
-                <div>
-                    <p>Version</p>
-                    <p class="H_blue" id="app_version"></p>
-                </div>
+      <button type="button" name="terminal" class="nhbtn sidebar-btn" value="terminal" id="terminal-btn">
+        <h3>Terminal</h3>
+        <p class="color-gray">
+          View server log and stay informed
+        </p>
+      </button>
 
-                <div>
-                    <p>Last Update</p>
-                    <p>-</p>
-                </div>
-
-                <div>
-                    <p></p>
-                    <div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="status-data H_wrap">
-                <p>Ping: <span class="H_blue" id="ping"></span></p>
-                <p>IP: <span class="H_blue" id="local_ip"></span></p>
-                <p>External IP: <span class="H_blue" id="external_ip"></span></p>
-                <p>OS: <span class="H_blue" id="node_platform"></span></p>
-                <p>Node Version: <span class="H_blue" id="node_version"></span></p>
-            </div>
-
-            <div class="status-data">
-                <p>Devices</p>
-
-                <div>
-                    <p>Bridges: <span class="H_blue" id="bridge_count"></span></p>
-                    <p>Devices: <span class="H_blue" id="device_count"></span></p>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- general settings view !-->
-        <div class="content" id="general-settings-view">
-
-            <div class="">
-                <label for="server-name">Server Name</label>
-                <div class="gs-data-input-wrap">
-                    <input type="txt" placeholder="Server Name" class="gs-input" id="server-name">
-
-                    <button type="submit" class="save-btn">
-                        Save
-                    </button>
-                </div>
-            </div>
-
-        </div>
-        
-        
-        <!-- terminal view !-->
-        <div class="content" id="terminal-view">
-            <pre id="console"></pre>
-        </div>
     </div>
 
+    <div class="content-wrap">
+      <div id="settings" class="active">
+        <h1>Status</h1>
+        <hr>
+        <div class="content-holder">
+          <div class="content">
 
-    <footer>
-        <p>To invite users use <a href="https://my.nhome.ba/#/login" target="_blank" class="H_blue">NHome</a></p>
-    </footer>
+            <div>
+              <h4>
+              Connection
+            </h4>
+              <h2 class="color-blue" id="connected">
+              -
+            </h2>
+            </div>
 
-    <!-- load JS !-->
-    <script src="../local/js/libraries/jquery-1.11.3.min.js"></script>
-    <script src="index.js"></script>
+            <div>
+              <h4>
+              Version
+            </h4>
+              <h2 class="color-blue" id="app_version">
+              -
+            </h2>
+            </div>
+
+          </div>
+
+          <div class="content">
+            <div>
+              <h4>
+              Ping
+            </h4>
+              <h2 class="color-blue" id="ping">
+              -
+            </h2>
+            </div>
+
+            <div>
+              <h4>
+              OS
+            </h4>
+              <h2 class="color-blue" id="node_platform">
+              -
+            </h2>
+            </div>
+
+            <div>
+              <h4>
+              Node Version
+            </h4>
+              <h2 class="color-blue" id="node_version">
+              -
+            </h2>
+            </div>
+
+            <div>
+              <h4>
+              IP
+            </h4>
+              <h2 class="color-blue" id="local_ip">
+              -
+            </h2>
+            </div>
+
+            <div>
+              <h4>
+              External IP
+            </h4>
+              <h2 class="color-blue" id="external_ip">
+              -
+            </h2>
+            </div>
+          </div>
+
+          <div class="content">
+            <div>
+              <h4>
+              Bridges
+            </h4>
+              <h2 class="color-blue" id="bridge_count">
+              -
+            </h2>
+            </div>
+
+            <div>
+              <h4>
+              Devices
+            </h4>
+              <h2 class="color-blue" id="device_count">
+              -
+            </h2>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div id="terminal">
+        <pre id="console"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script src="../local/js/libraries/jquery-1.11.3.min.js"></script>
+  <script src="js/main.js"></script>
 </body>
 
 </html>

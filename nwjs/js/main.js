@@ -1,5 +1,20 @@
+window.onload = function() {
 
-$(function() {
+    var sidebarBtns = document.getElementsByClassName('sidebar-btn');
+
+    for (var x in sidebarBtns) {
+      sidebarBtns[x].onclick = function(e) {
+        var oposite = this.value === 'terminal' ? 'settings' : 'terminal';
+        if (this.classList[this.classList.length - 1] === 'active') {
+          console.log('nothing');
+        } else {
+          document.getElementById(oposite).classList.remove('active');
+          document.getElementById(oposite + '-btn').classList.remove('active')
+          this.classList.add('active');
+          document.getElementById(this.value).classList.add('active');
+        }
+      }
+    }
 
     // Load native UI library
     var gui = require('nw.gui');
@@ -8,22 +23,6 @@ $(function() {
     var win = gui.Window.get();
 
     win.show();
-
-    var clickedTab = document.getElementsByClassName('server-nav-tab');
-
-    for (var i = 0; i < clickedTab.length; i++) {
-        clickedTab[i].addEventListener('click', function (e) {
-            e.preventDefault();
-
-            for (var j = 0; j < clickedTab.length; j++) {
-                document.getElementById(clickedTab[j].id).classList.remove('active-tab');
-                document.getElementById(clickedTab[j].id + '-view').classList.remove('content-active');
-            }
-
-            document.getElementById(this.id + '-view').classList.add('content-active');
-            this.classList.add('active-tab');
-        });
-    };
 
     var stream = require('stream');
 
@@ -53,16 +52,16 @@ $(function() {
         });
 
         conn.on('connect', function () {
-            $('#connected').text('Connected');
+            $('#connected').text('On');
         });
 
         conn.on('disconnect', function () {
-            $('#connected').text('Disconnected');
+            $('#connected').text('Off');
             $('#ping').text('-');
         });
 
         conn.command('getServerStatus', function (status) {
-            $('#server-name').val(status.name);
+            $('#server-name').text(status.name);
             $('#local_ip').text(status.ip);
             $('#app_version').text(status.version);
             $('#node_version').text(status.node_version);
@@ -70,6 +69,7 @@ $(function() {
         });
 
         conn.command('getBridges', function (bridges) {
+
             if (bridges) {
                 $('#bridge_count').text(bridges.length);
             } else {
@@ -80,21 +80,10 @@ $(function() {
         conn.command('getDevices', function (devices) {
 
             if (devices) {
-
                 $('#device_count').text(devices.length);
-
-                $('.status-dropdown').remove();
-
-                devices.forEach(function (device) {
-
-                    var d = $('<div class="status-dropdown"><div><p class="H_blue">' + device.name + '</p><p class="H_gray"></p></div><span class="arrow-down"></span></div>');
-
-                    $('#status-view').append(d);
-                });
             } else {
                 $('#device_count').text(0);
             }
         });
     });
-});
-
+};
