@@ -12,7 +12,7 @@
   "dependencies": {
     "adm-zip": "0.4.7",
     "async": "1.5.2",
-    "bl": "1.0.2",
+    "bl": "1.0.3",
     "buffer-indexof": "1.0.0",
     "bunyan": "1.5.1",
     "bunyan-prettystream": "0.1.3",
