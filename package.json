@@ -43,6 +43,7 @@
     "socketio-wildcard": "0.3.0",
     "tcp-ping": "0.1.1",
     "ttq": "0.1.2",
+    "webm-byte-stream": "0.1.4",
     "wemo-client": "0.6.2",
     "write-limiter": "0.1.5",
     "ws": "1.0.1",
