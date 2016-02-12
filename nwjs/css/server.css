@@ -42,7 +42,7 @@ input[type="email"] {
       -ms-flex: 3;
           flex: 3;
 }
-#settings, #terminal {
+.tab {
   display: none;
 }
 .active {

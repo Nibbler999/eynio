@@ -1,20 +1,13 @@
 window.onload = function() {
 
-    var sidebarBtns = document.getElementsByClassName('sidebar-btn');
+    $('.sidebar-btn').click(function() {
+   
+        $('.sidebar-btn').removeClass('active');
+        $(this).addClass('active');
 
-    for (var x in sidebarBtns) {
-      sidebarBtns[x].onclick = function(e) {
-        var oposite = this.value === 'terminal' ? 'settings' : 'terminal';
-        if (this.classList[this.classList.length - 1] === 'active') {
-          console.log('nothing');
-        } else {
-          document.getElementById(oposite).classList.remove('active');
-          document.getElementById(oposite + '-btn').classList.remove('active')
-          this.classList.add('active');
-          document.getElementById(this.value).classList.add('active');
-        }
-      }
-    }
+        $('.tab').removeClass('active');
+        $('#' + $(this).val()).addClass('active');
+    });
 
     // Load native UI library
     var gui = require('nw.gui');
@@ -42,6 +35,8 @@ window.onload = function() {
     var log = require('../lib/logger.js')({ loglevel: 'info', nocolor: true }, weblog);
 
     require('../lib/main.js')(log, function (conn) {
+
+        $('#localframe').attr('src', 'http://127.0.0.1:8008/');
 
         conn.on('setExternalIP', function (command) {
             $('#external_ip').text(command.args[0]);

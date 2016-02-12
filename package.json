@@ -4,8 +4,8 @@
   "license": "(GPL-3.0+ AND MIT AND Apache-2.0 AND BSD-2-Clause)",
   "main": "nwjs/index.html",
   "window": {
-    "width": 800,
-    "height": 600,
+    "width": 1024,
+    "height": 768,
     "toolbar": false,
     "show": false
   },

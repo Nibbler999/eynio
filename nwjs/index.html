@@ -32,10 +32,17 @@
         </p>
       </button>
 
+      <button type="button" name="localmode" class="nhbtn sidebar-btn" value="localmode" id="localmode-btn">
+        <h3>NHome client</h3>
+        <p class="color-gray">
+          Control your home straight from this interface, even offline.
+        </p>
+      </button>
+
     </div>
 
     <div class="content-wrap">
-      <div id="settings" class="active">
+      <div id="settings" class="active tab">
         <h1>Status</h1>
         <hr>
         <div class="content-holder">
@@ -131,9 +138,14 @@
 
       </div>
 
-      <div id="terminal">
+      <div id="terminal" class="tab">
         <pre id="console"></pre>
       </div>
+
+      <div id="localmode" class="tab">
+        <iframe id="localframe" src="" seamless width="640" height="480" ></iframe>
+      </div>
+
     </div>
   </div>
 
