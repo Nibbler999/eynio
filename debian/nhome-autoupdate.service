@@ -1,0 +1,16 @@
+[Unit]
+Description=NHome
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/node /opt/nhome/server.js
+ExecStartPre=/usr/bin/apt-get update
+ExecStartPre=/usr/bin/apt-get -y install nhomeserver
+User=nhome
+PermissionsStartOnly=true
+Restart=always
+Environment=NHOME_CAN_UPDATE=1
+TimeoutStartSec=600
+
+[Install]
+WantedBy=basic.target
