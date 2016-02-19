@@ -17,6 +17,9 @@ window.onload = function() {
 
     win.show();
 
+    // Create a tray icon
+    var tray = new nw.Tray({ title: 'NHomeServer', icon: 'nwjs/img/tray.png' });
+
     var stream = require('stream');
 
     var entries = [];
