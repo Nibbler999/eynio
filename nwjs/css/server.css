@@ -49,6 +49,7 @@ input[type="email"] {
   display: block !important;
 }
 .main-wrap {
+  width: 100%;
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -67,7 +68,7 @@ input[type="email"] {
 /* sidebar */
 
 .sidebar-wrap {
-  width: 30%;
+  width: 25%;
 }
 .sidebar-wrap > img {
   padding: 10% 25%;
@@ -109,8 +110,8 @@ input[type="email"] {
 /* content */
 
 .content-wrap {
-  width: 70%;
-  padding: 5%;
+  width: 100%;
+  padding: 5% 2%;
 }
 .content-wrap > h1 {
   text-indent: 0.5em;
@@ -217,4 +218,9 @@ input[type="email"] {
 }
 .color-gray {
   color: #4C5D6B;
+}
+@media screen and (min-width: 1200px) {
+  .sidebar-wrap{
+    width: 300px;
+  }
 }
