@@ -31,7 +31,7 @@
     "lodash": "4.5.1",
     "mkdirp": "0.5.1",
     "netatmo": "1.4.0",
-    "node-hue-api": "2.0.0",
+    "node-hue-api": "2.2.0",
     "node-lifx": "0.4.0",
     "node-schedule": "1.0.0",
     "node-uuid": "1.4.7",
