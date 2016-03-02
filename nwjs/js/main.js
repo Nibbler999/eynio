@@ -15,8 +15,6 @@ window.onload = function() {
     // Get the current window
     var win = gui.Window.get();
 
-    win.show();
-
     if (gui.App.argv.indexOf('--autostart') !== -1) {
 
         // Create a tray icon
@@ -26,6 +24,21 @@ window.onload = function() {
             win.show();
         });
         
+        // Or you can omit the 'type' field for normal items
+        var item = new gui.MenuItem({ label: 'Simple item' });
+
+        // Bind a callback to item
+        item = new gui.MenuItem({
+            label: "Exit",
+            click: function() {
+                win.close();
+            }
+        });
+
+        var menu = new gui.Menu();
+        menu.append(item);
+        tray.menu = menu;
+
         win.setShowInTaskbar(false);
          
     } else {
