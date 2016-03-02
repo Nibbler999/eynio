@@ -17,8 +17,20 @@ window.onload = function() {
 
     win.show();
 
-    // Create a tray icon
-    var tray = new nw.Tray({ title: 'NHomeServer', icon: 'nwjs/img/tray.png' });
+    if (gui.App.argv.indexOf('--autostart') !== -1) {
+
+        // Create a tray icon
+        var tray = new nw.Tray({ title: 'NHomeServer', icon: 'nwjs/img/tray.png' });
+    
+        tray.on('click', function() {
+            win.show();
+        });
+        
+        win.setShowInTaskbar(false);
+         
+    } else {
+        win.show();
+    }
 
     var stream = require('stream');
 
