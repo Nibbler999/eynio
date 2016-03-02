@@ -74,7 +74,7 @@ SectionEnd
 
 Section "Start on boot"
   SetShellVarContext current
-  CreateShortCut "$SMSTARTUP\NHomeServer.lnk" "$INSTDIR\nhome.exe" "" "$INSTDIR\nhome.ico" 0
+  CreateShortCut "$SMSTARTUP\NHomeServer.lnk" "$INSTDIR\nhome.exe" "--autostart" "$INSTDIR\nhome.ico" 0
 SectionEnd
 
 Section "Uninstall"
