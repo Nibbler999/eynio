@@ -23,12 +23,9 @@ window.onload = function() {
         tray.on('click', function() {
             win.show();
         });
-        
-        // Or you can omit the 'type' field for normal items
-        var item = new gui.MenuItem({ label: 'Simple item' });
 
         // Bind a callback to item
-        item = new gui.MenuItem({
+        var item = new gui.MenuItem({
             label: "Exit",
             click: function() {
                 win.close();
