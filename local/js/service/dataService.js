@@ -6,9 +6,9 @@
     .service('dataService', ['$q', 'socket', function($q, socket) {
 
       var currentServerData = {};
+      var bigServerData = {};
 
       var fromLogin = sessionStorage.userInfoData ? false : true;
-      console.log(fromLogin);
 
       // connect to socket via net
       this.socketConnect = function() {
@@ -53,8 +53,6 @@
               currentServerData.getBlacklisted.push(dev);
             }
           });
-
-          console.log(currentServerData.getDevicesObj, currentServerData.getBlacklisted);
           deferred.resolve(currentServerData.getDevicesObj);
         });
         return deferred.promise
@@ -81,9 +79,22 @@
       this.getRecordingsEmit = function() {
         var deferred = $q.defer();
         socket.emit('getRecordings', null, function(recordings) {
+          console.log(recordings.length);
           deferred.resolve(recordings);
-          currentServerData.getRecordings = recordings;
-          console.log(recordings);
+          bigServerData.getRecordings = recordings.reverse();
+          // putDB(IDBServerData, IDBUser.email, IDBUser.lastServer.id, currentServerData);
+
+          // check for unfinished recordings
+          // angular.forEach(currentServerData.getRecordings, function(rec) {
+          //   if (!rec.endtime) {
+          //     angular.forEach(currentServerData.getDevicesObj.camera, function(cam) {
+          //       if (cam.id === rec.cameraid) {
+          //         cam.recordingId = rec.id;
+          //       }
+          //     })
+          //   }
+          // });
+          // putDB(IDBServerData, IDBUser.email, IDBUser.lastServer.id, currentServerData);
         });
         return deferred.promise
       };
@@ -92,7 +103,7 @@
 
         /* listen for server log updates */
         socket.on('log', function(newLog) {
-          currentServerData.getLog.unshift(newLog)
+          bigServerData.getLog.unshift(newLog)
         });
         socket.on('jobAdded', function(scheduleObj) {
           currentServerData.getSchedules.push(scheduleObj);
@@ -100,6 +111,7 @@
         });
         socket.on('customRemoteAdded', function(remoteObj) {
           currentServerData.getDevicesObj.remote.push(remoteObj);
+          currentServerData.getDevicesArray.push(remoteObj);
           window.navigator.vibrate(250);
         });
         socket.on('sceneAdded', function(sceneObj) {
@@ -107,27 +119,40 @@
           window.navigator.vibrate(250);
         });
         socket.on('cameraAdded', function(cameraObj) {
-          console.log(cameraObj);
           currentServerData.getDevicesObj.camera.push(cameraObj);
+          currentServerData.getDevicesArray.push(cameraObj);
           window.navigator.vibrate(250);
         });
-        socket.on('recordingAdded', function(recordingObj) {
-          console.log(recordingObj);
-          currentServerData.getRecordings.push(recordingObj);
+        socket.on('recordingAdded', function(recObj) {
+          bigServerData.getRecordings.unshift(recObj);
+
+          // check for unfinished recordings
+          // if (!recObj.endtime) {
+          //   angular.forEach(currentServerData.getDevicesObj.camera, function(cam) {
+          //     if (cam.id === recObj.cameraid) {
+          //       cam.recordingId = recObj.id;
+          //       putDB(IDBServerData, IDBUser.email, IDBUser.lastServer.id, currentServerData);
+          //     }
+          //   })
+          // }
         });
         socket.on('recordingDeleted', function(recId) {
-          console.log(recId);
-          angular.forEach(currentServerData.getRecordings, function(rec, index) {
+          angular.forEach(bigServerData.getRecordings, function(rec, index) {
             if (rec.id === recId) {
-              currentServerData.getRecordings.splice(index, 1);
+              bigServerData.getRecordings.splice(index, 1);
             }
           })
-        })
+        });
         socket.on('cameraDeleted', function(deletedCamId) {
           angular.forEach(currentServerData.getDevicesObj.camera, function(cam, index) {
             if (cam.id === deletedCamId) {
               currentServerData.getDevicesObj.camera.splice(index, 1);
               window.navigator.vibrate(50);
+            }
+          });
+          angular.forEach(currentServerData.getDevicesArray, function(dev, index) {
+            if (dev.id === deletedCamId) {
+              currentServerData.getDevicesArray.splice(index, 1);
             }
           });
         });
@@ -145,6 +170,11 @@
               window.navigator.vibrate(50);
             }
           });
+          angular.forEach(currentServerData.getDevicesArray, function(dev, index) {
+            if (dev.id === remoteID) {
+              currentServerData.getDevicesArray.splice(index, 1);
+            }
+          })
         });
         socket.on('sceneDeleted', function(sceneId) {
           angular.forEach(currentServerData.getScenes, function(scene, index) {
@@ -222,7 +252,6 @@
         /* get uset profile, LEVEL */
         socket.emit('getUserProfile', null, function(user) {
           currentServerData.getUserProfile = user;
-          console.log(user);
         });
         /* get bridges */
         socket.emit('getBridges', null, function(bridges) {
@@ -238,20 +267,16 @@
           currentServerData.userList = allUsers;
         });
         /* get activity log, listen for updates */
-        socket.emit('getActionLog', null, function(log) {
+        socket.emit('getActionLog', 1, function(log) {
           currentServerData.getActionLog = log.reverse();
           deferred.resolve(log);
         });
         /* get server log */
         socket.emit('getLog', null, function(log) {
-          currentServerData.getLog = log.reverse();
+          bigServerData.getLog = log.reverse();
         });
         socket.emit('getApiKey', null, function(key) {
 
-        });
-        //get list of server for user
-        socket.emit('getServers', null, function(servers) {
-          currentServerData.getServers = servers;
         });
         // get weather from yrno
         socket.emit('getWeather', null, function(weatherInfo) {
@@ -271,6 +296,10 @@
       /* return devices */
       this.getData = function() {
         return currentServerData;
+      };
+      //  return big data, not saved to IDB
+      this.getBigData = function(){
+        return bigServerData
       };
 
       this.blobToImage = function(imageData) {
@@ -297,29 +326,5 @@
           element.msRequestFullscreen();
         }
       };
-
-      // function sendMessage(message) {
-      //   // This wraps the message posting/response in a promise, which will resolve if the response doesn't
-      //   // contain an error, and reject with the error if it does. If you'd prefer, it's possible to call
-      //   // controller.postMessage() and set up the onmessage handler independently of a promise, but this is
-      //   // a convenient wrapper.
-      //   return new Promise(function(resolve, reject) {
-      //     var messageChannel = new MessageChannel();
-      //     messageChannel.port1.onmessage = function(event) {
-      //       if (event.data.error) {
-      //         reject(event.data.error);
-      //       } else {
-      //         resolve(event.data);
-      //       }
-      //     };
-      //
-      //     // This sends the message data as well as transferring messageChannel.port2 to the service worker.
-      //     // The service worker can then use the transferred port to reply via postMessage(), which
-      //     // will in turn trigger the onmessage handler on messageChannel.port1.
-      //     // See https://html.spec.whatwg.org/multipage/workers.html#dom-worker-postmessage
-      //     navigator.serviceWorker.controller.postMessage(message, [messageChannel.port2]);
-      //   });
-      // }
-
     }]);
 }());

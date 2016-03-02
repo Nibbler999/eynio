@@ -100,7 +100,7 @@
 
   <div class="new-scene-selected-devices">
     <button class="button scene-device-btn" ng-repeat="sceneObj in scene.actionsArr" ng-click="scene.deselectDevice(sceneObj.device, $index)">
-      <p>{{sceneObj.device.name}}</p>
+      <p>{{::sceneObj.device.name}}</p>
     </button>
   </div>
 

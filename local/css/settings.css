@@ -122,14 +122,14 @@
 }
 .settings-toggle-btns-indicator {
   bottom: -0.5em;
-  left: 5%;
-  right: 45%;
+  left: 10%;
+  width: 40%;
   -webkit-animation: all 0.25s ease;
   animation: all 0.25s ease;
 }
-.slide-line-indicator {
-  left: 50%;
-  right: 100%;
+.settings-toggle-btns-indicator.user {
+  left: 56%;
+  width: 34%;
 }
 .settings-content-wrap {
   margin-top: 2em;
@@ -163,6 +163,7 @@
   margin: 0.5em;
   background-color: #1F3A50;
   color: #fff;
+  min-width: 15em;
 }
 .server-status-btn {
   margin: 2.5em auto;
@@ -327,6 +328,12 @@
 .settings-table{
   width: 100%;
 }
+.server-settings-form{
+  display: flex;
+}
+.server-settings-form > button{
+  height: auto;
+}
 /* ACCOUNT SETTINGS */
 
 .account-settings-wrap{
@@ -377,6 +384,9 @@
     bottom: 0;
     left: 0;
     right: 0;
+  }
+  .settings-box{
+    min-width: 20em;
   }
 }
 @media screen and (min-width: 1200px) {

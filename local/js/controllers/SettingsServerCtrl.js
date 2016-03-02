@@ -6,11 +6,9 @@
     .controller('SettingsServerCtrl', ['$scope', '$rootScope', '$http', '$timeout', '$state', 'socket', 'dataService', function($scope, $rootScope, $http, $timeout, $state, socket, dataService) {
 
       var server = this;
+      var activityLogDay = 1;
       server.deleteServerCount = 0;
       server.upToDate = true;
-      // var leaveServerModal = document.querySelector('.leave-server-modal');
-      // document.querySelector('.frame-wrap').appendChild(leaveServerModal);
-
 
       /* get server data, updates */
       socket.emit('getServerStatus', null, function(serverStatus) {
@@ -47,6 +45,19 @@
       server.updateApp = function() {
         socket.emit('updateApp');
       };
+      // set max file size for recordings
+      server.setRecordingsLimit = function(){
+        var maxSize = document.getElementsByName('record-folder-size')[0];
+        console.log(Number(maxSize.value));
+        socket.emit3('configSet', 'recordingQuota', Number(maxSize.value), function(response){
+          if(response){
+            maxSize.classList.add('success');
+            $timeout(function(){
+              maxSize.classList.remove('success');
+            },1500);
+          }
+        })
+      }
       /* change server name */
       server.changeServerName = function(newName) {
         socket.emit('configSet', 'name', newName);
@@ -78,21 +89,7 @@
         socket.emit('permServerRemoveSelf', null, function(response) {
           console.log(response);
           if (response) {
-            socket.emit('getServers', null, function(servers) {
-              if (!servers.length) {
-                $state.go('login');
-                sessionStorage.removeItem('activeServer');
-                sessionStorage.removeItem('userInfoData');
-                sessionStorage.removeItem('gravatar');
-                dataRequest.logout()
-                  .then(function(reponse) {
-                    location.reload();
-                  });
-              } else {
-                sessionStorage.activeServer = JSON.stringify(servers[0]);
-                location.reload(true);
-              }
-            });
+            redirectUser();
           }
         });
       };
@@ -101,26 +98,19 @@
       server.deleteServer = function() {
         server.deleteServerCount += 1;
         if (server.deleteServerCount === 2) {
-
-          socket.emit('deleteServer', null, function(data) {
-            console.log(data);
+          socket.emit('deleteServer', null, function(response) {
             /* redirect */
-            if (data) {
-              socket.emit('getServers', null, function(servers) {
-                if (!servers.length) {
-                  $state.go('login');
-                  sessionStorage.removeItem('activeServer');
-                  sessionStorage.removeItem('userInfoData');
-                  sessionStorage.removeItem('gravatar');
-                  dataRequest.logout()
-                    .then(function(reponse) {
-                      location.reload();
-                    });
-                } else {
-                  sessionStorage.activeServer = JSON.stringify(servers[0]);
-                  location.reload(true);
+            if (response) {
+              // remove deleted server from active user server list
+              var activeServer = JSON.parse(sessionStorage.activeServer);
+              var userInfo = JSON.parse(sessionStorage.userInfoData);
+              angular.forEach(userInfo.servers, function(server, index){
+                if(server.id === activeServer.id){
+                  userInfo.servers.splice(index, 1);
                 }
               });
+              sessionStorage.userInfoData = JSON.stringify(userInfo);
+              redirectUser();
             }
           });
         } else {
@@ -154,6 +144,10 @@
             $timeout(function() {
               server.inviteSuccess = false;
             }, 1000);
+            server.data.userList.push({
+              email: inviteEmail,
+              level: inviteStatus,
+            })
           } else {
             alert('Inviting ' + inviteEmail + ' failed!');
           }
@@ -163,6 +157,22 @@
       server.changeUserLevel = function(email, level, index) {
         if (level === 'DELETE') {
           deleteUser(email, index);
+          if (email === server.data.getUserProfile.email) {
+            redirectUser();
+          }
+        } else if (level === 'OWNER') {
+          socket.emit('permServerChangeOwner', email, function(response) {
+            console.log(response);
+            if (response) {
+              server.data.getUserProfile.level = 'ADMIN';
+              angular.forEach(server.data.userList, function(user){
+                if(user.email === server.data.getUserProfile.email){
+                  user.level === 'ADMIN';
+                  return
+                }
+              });
+            }
+          });
         } else {
           console.log(email, level);
           socket.emit('permServerSetLevel', email, level, function(data) {
@@ -178,22 +188,45 @@
           }
         });
       };
-
+      // redirect user to another server
+      function redirectUser() {
+        socket.emit('getServers', null, function(servers) {
+          if (!servers.length) {
+            $state.go('login');
+            sessionStorage.removeItem('activeServer');
+            sessionStorage.removeItem('userInfoData');
+            sessionStorage.removeItem('gravatar');
+            dataRequest.logout()
+              .then(function(reponse) {
+                location.reload();
+              });
+          } else {
+            sessionStorage.activeServer = JSON.stringify(servers[0]);
+            location.reload(true);
+          }
+        });
+      }
       server.testRegex = function(str, re) {
         var regex = new RegExp(re);
         return regex.test(str);
       };
       server.loadMoreLog = function() {
-        server.actionLog = server.actionLog.concat(server.data.getActionLog.slice(server.actionLog.length, server.actionLog.length + 50));
+        activityLogDay += 1;
+        socket.emit('getActionLog', activityLogDay, function(log) {
+          server.actionLog = log.reverse();
+        });
+        // server.actionLog = server.actionLog.concat(server.bigData.getActionLog.slice(server.actionLog.length, server.actionLog.length + 50));
       };
 
       server.data = dataService.getData();
-      server.actionLog = server.data.getActionLog ? server.data.getActionLog.slice(0, 50) : [];
+      server.bigData = dataService.getBigData();
+      server.actionLog = server.bigData.getActionLog ? server.bigData.getActionLog : [];
 
       if (!server.data.getUserProfile || !server.data.getBridges || !server.data.userList) {
-        dataService.getServerEmits().then(function() {
+        dataService.getServerEmits().then(function(actionLog) {
           server.data = dataService.getData();
-          server.actionLog = server.data.getActionLog.slice(0, 50);
+          server.bigData = dataService.getBigData();
+          server.actionLog = actionLog;
         })
         dataService.getDevicesEmit();
         dataService.getCategoriesEmit();

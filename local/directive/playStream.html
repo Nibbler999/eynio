@@ -1,0 +1,9 @@
+<section class="custom-modal-window cam-live-stream-modal">
+  <section class="custom-modal-wrap">
+    <img src="img/button/cross.png" class="close-live-stream-modal" ng-click="stopStream()">
+    <img ng-src={{streamObj.dev.thumbnailImg}} class="camera-live-stream">
+    <i class="material-icons button full-screen-btn" ng-click="fullScreen()" title="full screen">fullscreen</i>
+    <i class="material-icons stream-key left" ng-hide="!streamObj.dev.type" ng-click="previousCamera()">keyboard_arrow_left</i>
+    <i class="material-icons stream-key right" ng-hide="!streamObj.dev.type" ng-click="nextCamera()">keyboard_arrow_right</i>
+  </section>
+</section>

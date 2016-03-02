@@ -1,15 +1,15 @@
 <div class="device-wrap">
   <span class="device-add-to-favorites">
-    <input type="checkbox" id="add-to-favorites-{{linfo.id}}" ng-model="linfo.favorites" ng-change="toggleAddToFavorites(linfo.favorites, linfo.id)">
-    <label for="add-to-favorites-{{linfo.id}}" class="device-add-to-favorites-label" title="add to favorites"></label>
+    <input type="checkbox" id="add-to-favorites-{{::linfo.id}}" ng-model="linfo.favorites" ng-change="toggleAddToFavorites(linfo.favorites, linfo.id)">
+    <label for="add-to-favorites-{{::linfo.id}}" class="device-add-to-favorites-label" title="add to favorites"></label>
   </span>
   <img ng-src="img/button/schedule.svg" class="device-schedule-btn" ng-click="deviceSchedule = !deviceSchedule" title="quick schedule">
   <div class="device-header">
     <img ng-src="{{lightIcon}}" class="device-icon" ng-click="toggleDevicePowerState(linfo.id)" title="toggle state">
     <div class="device-content-data">
-      <p>{{linfo.name}}</p>
-      <p>{{linfo.type}}</p>
-      <p>{{linfo.module}}</p>
+      <p>{{::linfo.name}}</p>
+      <p>{{::linfo.type}}</p>
+      <p>{{::linfo.module}}</p>
     </div>
   </div>
 
@@ -43,8 +43,8 @@
   <div class="option-wrap" ng-show="brightness">
     <img src="img/button/cross-dark.png" class="close-device-options" ng-click="brightness = false">
     <div class="device-options-brightness">
-      <label class="form-label" for="light-brightness-{{linfo.count}}">Brightness</label>
-      <input type="range" id="light-brightness-{{linfo.count}}" ng-model="linfo.state.level">
+      <label class="form-label" for="light-brightness-{{::linfo.count}}">Brightness</label>
+      <input type="range" id="light-brightness-{{::linfo.count}}" ng-model="linfo.state.level">
     </div>
     <div>
       <button class="device-options-btn set-color-btn" ng-click="setBrightness(linfo.id, linfo.state.level)">Set brightness</button>
@@ -55,25 +55,25 @@
   <div class="option-wrap" ng-show="deviceSchedule">
     <button type="reset" class="close-device-options close-form-btn" ng-click="deviceSchedule = false">
     </button>
-    <form class="add-schedule-dev-form" id="dev-schedule-form-{{linfo.id}}" ng-submit="quickSchedule(linfo, scheduleState)">
+    <form class="add-schedule-dev-form" id="dev-schedule-form-{{::linfo.id}}" ng-submit="quickSchedule(linfo, scheduleState)">
       <p>Device will turn
         <span class="color-blue" ng-if="scheduleState">ON</span>
         <span class="color-orange" ng-if="!scheduleState">OFF</span>
         at:
       </p>
-      <input type="number" class="form-number" id="device-schedule-hours-{{linfo.id}}" placeholder="Hours" min="0" max="23" required ng-focus="checkHours($event)">
-      <input type="number" class="form-number" id="device-schedule-minutes-{{linfo.id}}" placeholder="Minutes" min="0" max="59" required ng-focus="checkMinutes($event)">
+      <input type="number" class="form-number" id="device-schedule-hours-{{::linfo.id}}" placeholder="Hours" min="0" max="23" required ng-focus="checkHours($event)">
+      <input type="number" class="form-number" id="device-schedule-minutes-{{::linfo.id}}" placeholder="Minutes" min="0" max="59" required ng-focus="checkMinutes($event)">
 
       <div class="add-schedule-dev-options-wrap">
         <div class="add-schedule-dev-option">
           <small>Daily</small>
-          <input type="radio" name="repeat-device-schedule" value="daily" id="schedule-device-daily-{{linfo.id}}" ng-model="deviceScheduleRepeat">
-          <label for="schedule-device-daily-{{linfo.id}}" class="radio-label" title="schedule will repeat daily"></label>
+          <input type="radio" name="repeat-device-schedule" value="daily" id="schedule-device-daily-{{::linfo.id}}" ng-model="deviceScheduleRepeat">
+          <label for="schedule-device-daily-{{::linfo.id}}" class="radio-label" title="schedule will repeat daily"></label>
         </div>
         <div class="add-schedule-dev-option">
           <small>Once</small>
-          <input type="radio" name="repeat-device-schedule" value="once" id="schedule-device-once-{{linfo.id}}" ng-model="deviceScheduleRepeat">
-          <label for="schedule-device-once-{{linfo.id}}" class="radio-label" title="schedule will fire just once"></label>
+          <input type="radio" name="repeat-device-schedule" value="once" id="schedule-device-once-{{::linfo.id}}" ng-model="deviceScheduleRepeat">
+          <label for="schedule-device-once-{{::linfo.id}}" class="radio-label" title="schedule will fire just once"></label>
         </div>
       </div>
 
@@ -86,7 +86,7 @@
         <button type="button" class="device-btn" ng-class="{'device-btn-active': !scheduleState}" ng-click="scheduleState = false">Off</button>
       </div>
       <div class="device-footer-option-wrap">
-        <button type="submit" class="device-options-btn" form="dev-schedule-form-{{linfo.id}}">Schedule</button>
+        <button type="submit" class="device-options-btn" form="dev-schedule-form-{{::linfo.id}}">Schedule</button>
       </div>
     </div>
   </div>

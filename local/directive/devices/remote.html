@@ -1,17 +1,17 @@
 <div class="device-wrap" ng-class="{'full-remote': fullRemote, 'learning-mode': learningMode}">
   <span class="device-add-to-favorites">
-    <input type="checkbox" id="add-to-favorites-{{tvinfo.id}}" ng-model="tvinfo.favorites" ng-change="toggleAddToFavorites(tvinfo.favorites, tvinfo.id)">
-    <label for="add-to-favorites-{{tvinfo.id}}" class="device-add-to-favorites-label" title="add to favorites"></label>
+    <input type="checkbox" id="add-to-favorites-{{::tvinfo.id}}" ng-model="tvinfo.favorites" ng-change="toggleAddToFavorites(tvinfo.favorites, tvinfo.id)">
+    <label for="add-to-favorites-{{::tvinfo.id}}" class="device-add-to-favorites-label" title="add to favorites"></label>
   </span>
   <img ng-src="img/button/schedule.svg" class="device-schedule-btn" ng-click="deviceSchedule = !deviceSchedule" title="quick schedule">
   <div class="device-header">
     <img ng-src="img/device/remote.png" class="device-icon" ng-click="fullRemote = true" title="full remote">
     <div class="device-content-data">
-      <p>{{tvinfo.name}}</p>
-      <p>{{tvinfo.type}}</p>
+      <p>{{::tvinfo.name}}</p>
+      <p>{{::tvinfo.type}}</p>
       <div class="remote-learn-wrap">
-        <input type="checkbox" id="learning-mode-{{tvinfo.count}}" ng-model="learningMode">
-        <label for="learning-mode-{{tvinfo.count}}" class="button">Learning mode</label>
+        <input type="checkbox" id="learning-mode-{{::tvinfo.count}}" ng-model="learningMode">
+        <label for="learning-mode-{{::tvinfo.count}}" class="button">Learning mode</label>
       </div>
     </div>
   </div>
@@ -24,12 +24,12 @@
       <button class="remote-device-btn remote-device-btn-up" ng-click="cRemoteAction(tvinfo.id, 'CHUP')" id="remote-quick-CHUP" ng-show="quickRadioBtn === 'ch'" title="channel down"></button>
       <button class="remote-device-btn remote-device-btn-up" ng-click="cRemoteAction(tvinfo.id, 'VOLUP')" id="remote-quick-VOLUP" ng-show="quickRadioBtn === 'vol'" title="volume up"></button>
       <span class="remote-radio-wrap">
-        <input type="radio" name="remote-ch-vol-{{tvinfo.count}}" id="remote-radio-ch-{{tvinfo.count}}" value="ch" ng-model="quickRadioBtn">
-        <label for="remote-radio-ch-{{tvinfo.count}}">CH</label>
+        <input type="radio" name="remote-ch-vol-{{::tvinfo.count}}" id="remote-radio-ch-{{::tvinfo.count}}" value="ch" ng-model="quickRadioBtn">
+        <label for="remote-radio-ch-{{::tvinfo.count}}">CH</label>
       </span>
       <span class="remote-radio-wrap">
-        <input type="radio" name="remote-ch-vol-{{tvinfo.count}}" id="remote-radio-vol-{{tvinfo.count}}" value="vol" ng-model="quickRadioBtn">
-        <label for="remote-radio-vol-{{tvinfo.count}}">Vol</label>
+        <input type="radio" name="remote-ch-vol-{{::tvinfo.count}}" id="remote-radio-vol-{{::tvinfo.count}}" value="vol" ng-model="quickRadioBtn">
+        <label for="remote-radio-vol-{{::tvinfo.count}}">Vol</label>
       </span>
       <button class="remote-device-btn remote-device-btn-down" ng-click="cRemoteAction(tvinfo.id, 'CHDOWN')" id="remote-quick-CHDOWN" ng-show="quickRadioBtn === 'ch'" title="channel down"></button>
       <button class="remote-device-btn remote-device-btn-down" ng-click="cRemoteAction(tvinfo.id, 'VOLDOWN')" id="remote-quick-VOLDOWN" ng-show="quickRadioBtn === 'vol'" title="volume down"></button>
@@ -44,7 +44,7 @@
       <button type="button" class="remote-top-btn remote-menu-btn" ng-click="cRemoteAction(tvinfo.id, 'MENU')" id="remote-MENU">Menu</button>
       <button type="button" class="remote-top-btn remote-source-btn" ng-click="cRemoteAction(tvinfo.id, 'SOURCE')" id="remote-SOURCE">Source</button>
     </div>
-    <h5>{{tvinfo.name}} remote</h5>
+    <h5>{{::tvinfo.name}} remote</h5>
     <div class="remote-full-row" ng-hide="numpad">
       <div>
         <button type="button" class="remote-cirucal-btn remote-plus-btn" ng-click="cRemoteAction(tvinfo.id, 'VOLUP')" id="remote-VOLUP"></button>
@@ -114,23 +114,23 @@
   <div class="option-wrap" ng-show="deviceSchedule">
     <button type="reset" class="close-device-options close-form-btn" ng-click="deviceSchedule = false">
     </button>
-    <form class="add-schedule-dev-form" id="dev-schedule-form-{{tvinfo.id}}" ng-submit="quickSchedule(tvinfo, 'POWER')">
+    <form class="add-schedule-dev-form" id="dev-schedule-form-{{::tvinfo.id}}" ng-submit="quickSchedule(tvinfo, 'POWER')">
       <p>Remote will
         <span class="color-blue">toggle</span> TV power at:
       </p>
-      <input type="number" class="form-number" id="device-schedule-hours-{{tvinfo.id}}" placeholder="Hours" min="0" max="23" required ng-focus="checkHours($event)">
-      <input type="number" class="form-number" id="device-schedule-minutes-{{tvinfo.id}}" placeholder="Minutes" min="0" max="59" required ng-focus="checkMinutes($event)">
+      <input type="number" class="form-number" id="device-schedule-hours-{{::tvinfo.id}}" placeholder="Hours" min="0" max="23" required ng-focus="checkHours($event)">
+      <input type="number" class="form-number" id="device-schedule-minutes-{{::tvinfo.id}}" placeholder="Minutes" min="0" max="59" required ng-focus="checkMinutes($event)">
 
       <div class="add-schedule-dev-options-wrap">
         <div class="add-schedule-dev-option">
           <small>Daily</small>
-          <input type="radio" name="repeat-device-schedule" value="daily" id="schedule-device-daily-{{tvinfo.id}}" ng-model="deviceScheduleRepeat">
-          <label for="schedule-device-daily-{{tvinfo.id}}" class="radio-label" title="schedule will repeat daily"></label>
+          <input type="radio" name="repeat-device-schedule" value="daily" id="schedule-device-daily-{{::tvinfo.id}}" ng-model="deviceScheduleRepeat">
+          <label for="schedule-device-daily-{{::tvinfo.id}}" class="radio-label" title="schedule will repeat daily"></label>
         </div>
         <div class="add-schedule-dev-option">
           <small>Once</small>
-          <input type="radio" name="repeat-device-schedule" value="once" id="schedule-device-once-{{tvinfo.id}}" ng-model="deviceScheduleRepeat">
-          <label for="schedule-device-once-{{tvinfo.id}}" class="radio-label" title="schedule will fire just once"></label>
+          <input type="radio" name="repeat-device-schedule" value="once" id="schedule-device-once-{{::tvinfo.id}}" ng-model="deviceScheduleRepeat">
+          <label for="schedule-device-once-{{::tvinfo.id}}" class="radio-label" title="schedule will fire just once"></label>
         </div>
       </div>
 
@@ -140,7 +140,7 @@
       <div class="device-footer-btn-wrap">
       </div>
       <div class="device-footer-option-wrap">
-        <button type="submit" class="device-options-btn" form="dev-schedule-form-{{tvinfo.id}}">Schedule</button>
+        <button type="submit" class="device-options-btn" form="dev-schedule-form-{{::tvinfo.id}}">Schedule</button>
       </div>
     </div>
   </div>

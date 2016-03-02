@@ -16,24 +16,24 @@
   <div class="option-wrap" ng-show="deviceSchedule">
     <button type="reset" class="close-device-options close-form-btn" ng-click="deviceSchedule = false">
     </button>
-    <form class="add-schedule-dev-form" id="dev-schedule-form-{{scinfo.id}}" ng-submit="quickSchedule(scinfo)">
+    <form class="add-schedule-dev-form" id="dev-schedule-form-{{::scinfo.id}}" ng-submit="quickSchedule(scinfo)">
       <p>Scene will turn
         <span class="color-blue">trigger</span>
         at:
       </p>
-      <input type="number" class="form-number" id="device-schedule-hours-{{scinfo.id}}" placeholder="Hours" min="0" max="23" required ng-focus="checkHours($event)">
-      <input type="number" class="form-number" id="device-schedule-minutes-{{scinfo.id}}" placeholder="Minutes" min="0" max="59" required ng-focus="checkMinutes($event)">
+      <input type="number" class="form-number" id="device-schedule-hours-{{::scinfo.id}}" placeholder="Hours" min="0" max="23" required ng-focus="checkHours($event)">
+      <input type="number" class="form-number" id="device-schedule-minutes-{{::scinfo.id}}" placeholder="Minutes" min="0" max="59" required ng-focus="checkMinutes($event)">
 
       <div class="add-schedule-dev-options-wrap">
         <div class="add-schedule-dev-option">
           <small>Daily</small>
-          <input type="radio" name="repeat-device-schedule" value="daily" id="schedule-device-daily-{{scinfo.id}}" ng-model="deviceScheduleRepeat">
-          <label for="schedule-device-daily-{{scinfo.id}}" class="radio-label" title="schedule will repeat daily"></label>
+          <input type="radio" name="repeat-device-schedule" value="daily" id="schedule-device-daily-{{::scinfo.id}}" ng-model="deviceScheduleRepeat">
+          <label for="schedule-device-daily-{{::scinfo.id}}" class="radio-label" title="schedule will repeat daily"></label>
         </div>
         <div class="add-schedule-dev-option">
           <small>Once</small>
-          <input type="radio" name="repeat-device-schedule" value="once" id="schedule-device-once-{{scinfo.id}}" ng-model="deviceScheduleRepeat">
-          <label for="schedule-device-once-{{scinfo.id}}" class="radio-label" title="schedule will fire just once"></label>
+          <input type="radio" name="repeat-device-schedule" value="once" id="schedule-device-once-{{::scinfo.id}}" ng-model="deviceScheduleRepeat">
+          <label for="schedule-device-once-{{::scinfo.id}}" class="radio-label" title="schedule will fire just once"></label>
         </div>
       </div>
 
@@ -45,7 +45,7 @@
 
       </div>
       <div class="device-footer-option-wrap">
-        <button type="submit" class="device-options-btn" form="dev-schedule-form-{{scinfo.id}}">Schedule</button>
+        <button type="submit" class="device-options-btn" form="dev-schedule-form-{{::scinfo.id}}">Schedule</button>
       </div>
     </div>
   </div>

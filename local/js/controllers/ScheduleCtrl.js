@@ -14,7 +14,7 @@
           schedule.data.getSchedules = schedules;
         })
         dataService.getDevicesEmit();
-        // dataService.getServerEmits();
+        dataService.getServerEmits();
         dataService.getCategoriesEmit();
         dataService.getScenesEmit();
         dataService.getRecordingsEmit();

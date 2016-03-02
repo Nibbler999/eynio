@@ -1,5 +1,6 @@
 .alarm-device-wrap {
   position: relative;
+  display: inline-block;
   width: 18em;
   border-radius: 0.25em;
   overflow: hidden;

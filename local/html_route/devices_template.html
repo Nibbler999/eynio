@@ -144,12 +144,12 @@
         </span>
 
         <!-- if editing remote show options !-->
-        <span ng-show="device.activeDevice.type === 'tv'">
+        <span ng-show="device.activeDevice.type === 'remote'">
 
           <label class="form-label" for="ir-output-remote">IR Output</label>
           <select id="ir-output-remote" class="form-select" ng-model="device.activeDevice.deviceid">
-            <option ng-repeat="remote in device.data.getBridges" value={{remote.id}}>
-              {{remote.name}}
+            <option ng-repeat="remote in device.data.getRemotes" value={{::remote.id}}>
+              {{::remote.name}}
             </option>
           </select>
         </span>
@@ -160,14 +160,14 @@
       <h4>Asigned rooms</h4>
       <div class="asing-room">
         <button type="button" class="button asigned-room-btn" ng-repeat="room in device.asignedRooms" ng-click="device.removeRoom($index, room)">
-          <p>{{room.name}}</p>
+          <p>{{::room.name}}</p>
         </button>
       </div>
       <hr>
       <h4>Unasigned rooms</h4>
       <div class="asing-room">
         <button type="button" class="button unasigned-room-btn" ng-repeat="room in device.unAsignedRooms" ng-click="device.addRoom($index, room)">
-          <p>{{room.name}}</p>
+          <p>{{::room.name}}</p>
         </button>
       </div>
 
@@ -310,10 +310,10 @@
       <div class="add-remote-radio-select">
         <h4>Remote bridge</h4>
         <div class="asing-room">
-          <span ng-repeat="remote in device.data.getBridges">
-            <input type="radio" id="add-remote-bridge-{{remote.id}}" value="{{remote.id}}" name="add-remote-bridge" class="form-radio" checked>
-            <label for="add-remote-bridge-{{remote.id}}" class="radio-label"></label>
-            <i>{{remote.name}}</i>
+          <span ng-repeat="remote in device.data.getRemotes">
+            <input type="radio" id="add-remote-bridge-{{::remote.id}}" value="{{::remote.id}}" name="add-remote-bridge" class="form-radio" checked>
+            <label for="add-remote-bridge-{{::remote.id}}" class="radio-label"></label>
+            <i>{{::remote.name}}</i>
           </span>
         </div>
       </div>

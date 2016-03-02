@@ -69,16 +69,56 @@
             }
           };
 
-          scope.startRecording = function(devId) {
-            socket.emit('startRecording', devId, function(recId) {
-              recordingId = recId;
-            })
+          scope.recOff = function(cam) {
+            socket.emit('disableMotionRecording', cam.id, function(resp) {
+              console.log(resp);
+              if (resp) {
+                cam.motion_recording = false;
+                cam.motion_recording_if_alarm = false;
+                socket.emit('updateCamera', cam);
+              }
+            });
           };
-          scope.stopRecording = function() {
-            socket.emit('stopRecording', recordingId, function(response) {
-              console.log(response);
-            })
+
+          scope.recOnMotion = function(cam) {
+            if (cam.motion_recording) {
+              cam.motion_recording = false;
+              socket.emit('updateCamera', cam);
+            } else {
+              cam.motion_recording = true;
+              socket.emit('updateCamera', cam);
+            }
           };
+
+          scope.recOnMotionAlarm = function(cam) {
+            if (!cam.motion_recording_if_alarm) {
+              if (!cam.motion_recording) {
+                cam.motion_recording = true;
+                cam.motion_recording_if_alarm = true;
+                socket.emit('updateCamera', cam);
+              } else {
+                cam.motion_recording_if_alarm = true;
+                socket.emit('updateCamera', cam);
+              }
+            } else {
+              cam.motion_recording_if_alarm = false;
+              socket.emit('updateCamera', cam);
+            }
+          };
+          // scope.startRecording = function(devId) {
+          //   socket.emit('startRecording', devId, function(recId) {
+          //     scope.cinfo.recordingId = recId;
+          //     recordingId = recId;
+          //   })
+          // };
+          // scope.stopRecording = function() {
+          //   socket.emit('stopRecording', scope.cinfo.recordingId, function(response) {
+          //     console.log(response);
+          //     if(response){
+          //       scope.cinfo.recordingId = null;
+          //     }
+          //   })
+          // };
         }
       };
     }])

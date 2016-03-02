@@ -1,26 +1,31 @@
-<div class="template-nav">
+<div class="template-nav" ng-init="cameras = true">
   <div class="template-nav-toggle">
-    <h3 class="template-nav-toggle-btn" id="surveilance" ng-click="alarmToggle = false">Cameras</h3>
-    <h3 class="template-nav-toggle-btn" id="alarms" ng-click="alarmToggle = true">Alarms</h3>
-    <div class="active-line-indicator" ng-class="{'alarm-active': alarmToggle}"></div>
+    <h3 class="template-nav-toggle-btn" ng-click="cameras = true; recordings = false; alarms = false">Cameras</h3>
+    <h3 class="template-nav-toggle-btn" ng-click="recordings = true; cameras = false; alarms = false">Recordings</h3>
+    <h3 class="template-nav-toggle-btn" ng-click="alarms = true; cameras = false; recordings = false">Alarms</h3>
+    <div class="active-line-indicator" ng-class="{'rec': recordings, 'alarm': alarms}"></div>
   </div>
 </div>
+<!-- cameras -->
+<div class="display-devices-row" ng-hide="recordings || alarms">
+  <camera ng-repeat="camera in security.data.getDevicesObj.camera track by camera.id" cinfo="camera"></camera>
+  <small class="color-transparent" ng-if="!security.data.getDevicesObj.camera.length">No cameras were found</small>
+</div>
+<!-- recordings -->
+<div ng-hide="cameras || alarms">
+    <div class="display-devices-row color-white">
+      <input type="text" class="form-input" name="filter" placeholder="name or date (Mon, 01 Jan 2016)" ng-change="security.filterByInput()" ng-model="security.filterBy" ng-hide="!security.bigData.getRecordings.length">
 
-<div class="display-devices-row" ng-hide="alarmToggle === true">
-  <camera ng-repeat="camera in security.data.getDevicesObj.camera" cinfo="camera"></camera>
-  <small class="color-transparent" ng-if="security.data.getDevicesObj.camera.length === 0">No cameras were found</small>
-
-  <div class="recorings-wrap">
-    <h3 data-toggle="collapse" data-target="#camera-recordings">Camera recordings</h3>
-    <div class="collapse" id="camera-recordings">
-      <cam-rec ng-repeat="rec in security.data.getRecordings track by rec.id" camrec="rec"></cam-rec>
-      <small class="color-transparent" ng-if="security.data.getDevicesObj.length === 0 || !security.data.getRecordings.length">No camera recordings were found</small>
+      <cam-rec ng-repeat="rec in security.latestRecordings | filter: security.filterBy track by rec.id" camrec="rec"></cam-rec>
+      <small class="color-transparent" ng-if="!security.bigData.getRecordings.length">No camera recordings were found</small>
     </div>
-  </div>
+  <button type="button" name="load more recordings" class="button blue-btn" ng-click="security.loadMoreRecordings()" ng-hide="!security.bigData.getRecordings.length">Load More</button>
 </div>
-
-<div class="display-devices-row" ng-show="alarmToggle">
-  <alarm ng-repeat="sensorAlarm in security.data.getDevicesObj.sensor" ainfo="sensorAlarm" ng-click="security.toggleAddSensor(sensorAlarm.id)"></alarm>
-    <alarm ng-repeat="sensorAlarm in security.data.getDevicesObj.camera" ainfo="sensorAlarm" ng-click="security.toggleAddSensor(sensorAlarm.id)"></alarm>
+<!-- alarms -->
+<div class="display-devices-row" ng-hide="recordings || cameras">
+  <!-- list cameras -->
+  <alarm ng-repeat="sensorAlarm in security.data.getDevicesObj.camera track by sensorAlarm.id" ainfo="sensorAlarm" ng-click="security.toggleAddSensor(sensorAlarm.id)"></alarm>
+  <!-- list sensors -->
+  <alarm ng-repeat="sensorAlarm in security.data.getDevicesObj.sensor | filter: {subtype : 'motion'}" ainfo="sensorAlarm" ng-click="security.toggleAddSensor(sensorAlarm.id)"></alarm>
   <small class="color-transparent" ng-if="!security.data.getDevicesObj || security.data.getDevicesObj.sensor.length === 0">No sensors for triggering alarm were found</small>
 </div>

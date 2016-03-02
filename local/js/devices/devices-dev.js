@@ -48,32 +48,32 @@
               scope.devIcon = 'img/device/camera.png';
               break;
             case 'sensor':
-              if (scope.devinfo.subtype === 'temperature') {
-                scope.devIcon = 'img/sensors/temp.png';
-              } else if (scope.devinfo.subtype === 'humidity') {
-                scope.devIcon = 'img/sensors/humidity.png';
-              } else if (scope.devinfo.subtype === 'co2') {
+              if (scope.devinfo.subtype === 'co-alarm') {
                 scope.devIcon = 'img/sensors/co.png';
-              } else if (scope.devinfo.subtype === 'noise') {
-                scope.devIcon = 'img/sensors/noise.png';
-              } else if (scope.devinfo.subtype === 'rain') {
-                scope.devIcon = 'img/sensors/rain.png';
-              } else if (scope.devinfo.subtype === 'light') {
-                scope.devIcon = 'img/sensors/lux.png';
-              } else if (scope.devinfo.subtype === 'rain') {
-                scope.devIcon = 'img/sensors/rain.png';
-              } else if (scope.devinfo.subtype === 'motion') {
-                scope.devIcon = 'img/sensors/motion.png';
+              } else if (scope.devinfo.subtype === 'co2') {
+                scope.devIcon = 'img/sensors/co2.png';
               } else if (scope.devinfo.subtype === 'door') {
                 if (scope.devinfo.value) {
                   scope.devIcon = 'img/sensors/door-open.png';
                 } else {
                   scope.devIcon = 'img/sensors/door-close.png';
                 }
+              } else if (scope.devinfo.subtype === 'humidity') {
+                scope.devIcon = 'img/sensors/humidity.png';
+              } else if (scope.devinfo.subtype === 'light') {
+                scope.devIcon = 'img/sensors/lux.png';
+              } else if (scope.devinfo.subtype === 'motion') {
+                scope.devIcon = 'img/sensors/motion.png';
+              } else if (scope.devinfo.subtype === 'noise') {
+                scope.devIcon = 'img/sensors/noise.png';
               } else if (scope.devinfo.subtype === 'pressure') {
                 scope.devIcon = 'img/sensors/pressure.png';
-              } else if (scope.devinfo.subtype === 'co-alarm') {
-                scope.devIcon = 'img/sensors/co.png';
+              } else if (scope.devinfo.subtype === 'rain') {
+                scope.devIcon = 'img/sensors/rain.png';
+              } else if (scope.devinfo.subtype === 'smoke-alarm') {
+                scope.devIcon = 'img/sensors/smoke.png';
+              } else if (scope.devinfo.subtype === 'temperature') {
+                scope.devIcon = 'img/sensors/temp.png';
               }
               break;
           }

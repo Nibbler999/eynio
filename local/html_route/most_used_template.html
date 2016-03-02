@@ -2,11 +2,12 @@
     <h3>Most used</h3>
 </div>
 <div class="display-devices-row">
+  <small ng-show="!mostUsed.allDevArray.length" class="color-transparent">Start using devices and they will show up here</small>
   <span ng-repeat="dev in mostUsed.allDevArray track by dev.id" class="most-used-dev-wrap">
     <switch ng-if="dev.type === 'switch'" sinfo="dev"></switch>
     <light ng-if="dev.type === 'light'" linfo="dev"></light>
     <thermostat ng-if="dev.type === 'thermostat'" tinfo="dev"></thermostat>
-    <shutter ng-if="dev.tyoe === 'shutter'" shinfo="dev"></shutter>
+    <shutter ng-if="dev.type === 'shutter'" shinfo="dev"></shutter>
     <camera ng-if="dev.type === 'camera'" cinfo="dev"></camera>
     <remote ng-if="dev.type === 'remote'" tvinfo="remote"></remote>
   </span>

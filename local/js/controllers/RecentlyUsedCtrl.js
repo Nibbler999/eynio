@@ -30,7 +30,7 @@
         dataService.getScenesEmit();
         dataService.getSchedulesEmit();
         dataService.getRecordingsEmit();
-        // dataService.getServerEmits();
+        dataService.getServerEmits();
       }
     }]);
 }());

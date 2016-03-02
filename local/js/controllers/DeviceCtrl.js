@@ -14,9 +14,28 @@
         var addCameraModal = document.querySelector('.add-camera-modal');
         var addRemoteModal = document.querySelector('.add-remote-modal');
 
+        /* add new remote */
+        var addRemName = document.getElementById('add-remote-name');
+        var addRemIR = document.getElementById('add-remote-ir-output');
+        var addRemType = document.getElementsByName('add-remote-type');
+        var addRemBridge = document.getElementsByName('add-remote-bridge');
+
+        /* add new camera*/
+        var addCamName = document.getElementById('add-camera-name');
+        var addCamDesc = document.getElementById('add-camera-desc');
+        var addCamUser = document.getElementById('add-camera-user');
+        var addCamPass = document.getElementById('add-camera-password');
+        var addCamRTPS = document.getElementById('add-camera-rtsp');
+        var addCamMJPEG = document.getElementById('add-camera-mjpeg');
+        var addCamSnapshot = document.getElementById('add-camera-snapshot');
+        var addCamRotation = document.getElementById('add-camera-rotation');
+        var addCameraFps = document.getElementById('add-camera-fps');
+        var addCamStep1 = document.querySelector('.add-camera-step-1');
+        var addCamStep2 = document.querySelector('.add-camera-step-2');
+
         var contentWrapParent = document.querySelector('.frame-page-content-wrap');
-        var displayRow = document.getElementsByClassName('display-dev-row');
-        var selectedDev, allCategories;
+        // var displayRow = document.getElementsByClassName('display-dev-row');
+        var allCategories;
 
         contentWrapParent.appendChild(addCameraModal);
         contentWrapParent.appendChild(addRemoteModal);
@@ -33,7 +52,7 @@
           }
         };
 
-        // rootScope from device to devices ctr and open modal
+        // rootScope from device to devicesCtrl and open modal
         $scope.$on('editDevice', function(event, data) {
           editDevice(data);
         });
@@ -70,7 +89,7 @@
         device.saveDeviceOptions = function() {
           // remove all categories
           device.activeDevice.categories = [];
-          device.activeDevice.category = '';
+          device.activeDevice.category = null;
           // add categories
           angular.forEach(device.asignedRooms, function(addRoom) {
             socket.emit('catSet', addRoom.id, device.activeDevice.id);
@@ -85,7 +104,6 @@
           // update if camera or remote
           if (device.activeDevice.type === 'camera') {
             device.activeDevice.rotate = Number(device.activeDevice.rotate);
-            console.log(device.activeDevice.fps);
             device.activeDevice.fps = Number(device.activeDevice.fps);
             socket.emit('updateCamera', device.activeDevice);
           } else if (device.activeDevice.type === 'tv') {
@@ -97,11 +115,6 @@
         device.addRemote = function() {
           addRemoteModal.style.display = 'block';
         };
-        /* add new remote */
-        var addRemName = document.getElementById('add-remote-name');
-        var addRemIR = document.getElementById('add-remote-ir-output');
-        var addRemType = document.getElementsByName('add-remote-type');
-        var addRemBridge = document.getElementsByName('add-remote-bridge');
 
         device.addNewRemote = function() {
           var remType, bridgeType, remote;
@@ -119,7 +132,9 @@
           remote = {
             name: addRemName.value,
             keys: [],
-            type: remType,
+            category: null,
+            type: 'remote',
+            subtype: remType,
             deviceid: bridgeType
           };
           socket.emit('saveCustomRemote', remote, function(newRemote) {
@@ -144,24 +159,13 @@
         device.addCamera = function() {
           addCameraModal.style.display = 'block';
         };
-        var addCamName = document.getElementById('add-camera-name');
-        var addCamDesc = document.getElementById('add-camera-desc');
-        var addCamUser = document.getElementById('add-camera-user');
-        var addCamPass = document.getElementById('add-camera-password');
-        var addCamRTPS = document.getElementById('add-camera-rtsp');
-        var addCamMJPEG = document.getElementById('add-camera-mjpeg');
-        var addCamSnapshot = document.getElementById('add-camera-snapshot');
-        var addCamRotation = document.getElementById('add-camera-rotation');
-        var addCameraFps = document.getElementById('add-camera-fps');
-
-        var addCamStep1 = document.querySelector('.add-camera-step-1');
-        var addCamStep2 = document.querySelector('.add-camera-step-2');
 
         device.addNewCamera = function() {
 
           var cam = {
             server: JSON.parse(sessionStorage.activeServer).id,
             name: addCamName.value,
+            category: null,
             description: addCamDesc.value,
             mjpeg: addCamMJPEG.value,
             snapshot: addCamSnapshot.value,
@@ -251,19 +255,20 @@
             $timeout(function() {
               contentWrapParent.children[0].children[1].children[1].classList.add('in');
             }, 100);
-
           }
         }
         /* wait on socket to connect than get data */
         if (!device.data.getDevicesObj || !device.data.getBlacklisted) {
           dataService.getDevicesEmit().then(function(devices) {
-              device.data.getDevicesObj = devices;
-
-              $timeout(function() {
-                contentWrapParent.children[0].children[1].children[1].classList.add('in');
-              }, 100);
-            })
-            // dataService.getServerEmits();
+            device.data.getDevicesObj = devices;
+            console.log(devices);
+            $timeout(function() {
+              contentWrapParent.children[0].children[1].children[1].classList.add('in');
+            }, 100);
+          });
+          dataService.getServerEmits().then(function(){
+            device.data = dataService.getData();
+          });
           dataService.getCategoriesEmit();
           dataService.getScenesEmit();
           dataService.getSchedulesEmit();

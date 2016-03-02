@@ -2,8 +2,8 @@
   <h3>Dashboard</h3>
 </div>
 <!-- newly added devices / devices without rooms -->
-<div class="dashboard-display-wrap" ng-hide="dashboard.uncategorised.length === 0">
-  <h4>Unasignes devices</h4>
+<div class="dashboard-display-wrap" ng-hide="!dashboard.uncategorised.length">
+  <h4>Unasigned devices</h4>
   <button type="button" name="go to devices" ui-sref="frame.devices" class="button blue-btn">
     Asigne
   </button>

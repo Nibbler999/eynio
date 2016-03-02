@@ -9,9 +9,9 @@
 
     <div>
       <div class="frame-new-server-notification" ng-show="God.foundNewServer.length">
-          <button type="button" class="button frame-new-server-btn" title="nHome found {{God.foundNewServer.length}} new server(s)" ui-sref="frame.add-server">
-            <img src="img/add-server/server-added.png" class="server-found-img">
-          </button>
+        <button type="button" class="button frame-new-server-btn" title="nHome found {{God.foundNewServer.length}} new server(s)" ui-sref="frame.add-server">
+          <img src="img/add-server/server-added.png" class="server-found-img">
+        </button>
       </div>
 
       <!--<div class="frame-notifications" ng-show="God.foundNewServer.length">
@@ -53,7 +53,8 @@
         <span>Schedule</span>
       </a>
 
-      <a ui-sref="frame.security" class="sidebar-nav-btn security-btn" ui-sref-active="active" ng-click="showDownloads = false" <span>Security</span>
+      <a ui-sref="frame.security" class="sidebar-nav-btn security-btn" ui-sref-active="active" ng-click="showDownloads = false">
+        <span>Security</span>
       </a>
 
       <!-- downloads menu toggle by download btn !-->
@@ -137,13 +138,12 @@
             <div id="collapse-generic" class="panel-collapse collapse">
               <div class="panel-body">
                 <a href="https://nhome.s3.amazonaws.com/NHomeServer.zip" class="download-link">
-                    Generic
-                  </a>
+                  Generic
+                </a>
               </div>
             </div>
 
           </div>
-
 
           <div class="panel panel-default downloads-panel">
             <div class="panel-heading downloads-panel-heading download-fedora collapsed" data-toggle="collapse" data-parent="#accordion" data-target="#collapse-fedora">
@@ -162,7 +162,6 @@
 
           </div>
 
-
           <div class="panel panel-default downloads-panel">
             <div class="panel-heading downloads-panel-heading download-android collapsed" data-toggle="collapse" data-parent="#accordion" data-target="#collapse-android">
               <h4 class="panel-title">
@@ -173,7 +172,7 @@
             <div id="collapse-android" class="panel-collapse collapse">
               <div class="panel-body">
                 <a href="https://play.google.com/store/apps/details?id=n.home.smartapp" target="_blank" class="download-link">
-                        Android
+                  Android
                 </a>
               </div>
             </div>
@@ -191,11 +190,13 @@
               <div class="activity-log-bullet-shadow"></div>
             </div>
             <span class="activity-log-info">
-              <p class="activity-log-date">{{log.time | date: 'd/MMM/yyyy HH:mm:ss'}}</p>
-              <p>{{log.user}} turned
+              <p class="activity-log-date">{{::log.time | date: 'd/MMM/yyyy HH:mm:ss'}}</p>
+              <p>{{::log.user}}
+                turned
                 <b ng-if="log.action.slice(log.action.length-3, log.action.length) === 'off'">OFF</b>
                 <b ng-if="log.action.slice(log.action.length-2, log.action.length) === 'on'">ON</b>
-                <b ng-if="log.action ==='scene-set'">triggered scene</b> {{log.device}}
+                <b ng-if="log.action ==='scene-set'">triggered scene</b>
+                {{::log.device}}
               </p>
             </span>
           </li>
@@ -208,19 +209,12 @@
       </a>
     </section>
 
-
     <!-- page content !-->
     <section class="frame-page-content-wrap">
 
       <!-- ui router !-->
       <section class="frame-view" ui-view></section>
-      <section class="custom-modal-window cam-live-stream-modal">
-        <section class="custom-modal-wrap">
-          <img src="img/button/cross.png" class="close-live-stream-modal" ng-click="God.stopLiveStream()">
-          <img ng-src={{God.liveImage}} class="camera-live-stream">
-          <i class="material-icons button full-screen-btn" ng-click="God.fullScreen()" title="full screen">fullscreen</i>
-        </section>
-      </section>
+      <play-stream></play-stream>
       <!-- bottom nav !-->
       <section class="frame-nav-bottom" ng-click="showDownloads = false">
         <a ui-sref="frame.dashboard" name="Favorite" class="button filter-btn dashboard-filter-btn" ui-sref-active="active">
@@ -235,7 +229,7 @@
         <a ui-sref="frame.recently-used" class="button filter-btn recently-used-filter-btn" ui-sref-active="active">
           <span class="hidden-xs">Recently used</span>
         </a>
-</div>
-</section>
-</section>
+      </section>
+    </section>
+  </section>
 </div>

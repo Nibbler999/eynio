@@ -1,9 +1,9 @@
 <div class="cam-rec-wrap">
-  <img ng-src="{{camrec.thumbnailImg}}"/>
+  <img ng-src="{{::camrec.thumbnailImg}}"/>
   <i class="material-icons" ng-click="startPlayback(camrec)">play_circle_outline</i>
   <span>
-    <h5 ng-if="camrec.cameraName">{{camrec.cameraName}}</h5>
-    <h5>{{camrec.starttime | date: 'd/MMM/yyyy HH:mm:ss'}}</h5>
+    <h5 ng-if="camrec.cameraName">{{::camrec.cameraName}}</h5>
+    <h5>{{::camrec.starttime | date: 'd/MMM/yyyy HH:mm:ss'}}</h5>
   </span>
 
     <!-- <i class="material-icons" ng-click="startPlayback(camrec)">play_arrow</i> -->

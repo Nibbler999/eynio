@@ -13,7 +13,6 @@
         },
         link: function(scope, elem, attr) {
 
-          console.log(scope.schinfo);
           scope.currentState = $state.current.name;
           scope.isNumber = angular.isNumber;
 
@@ -71,7 +70,6 @@
               dateTime: time,
               actions: sch.actions
             }
-            console.log(job);
             socket.emit('updateJob', job, function(scheduleObj) {
               console.log(scheduleObj);
               if (scheduleObj) {

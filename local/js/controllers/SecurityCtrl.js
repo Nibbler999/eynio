@@ -33,20 +33,39 @@
         }
       };
 
+      // load more recordings
+      security.loadMoreRecordings = function() {
+        var start = security.latestRecordings.length
+        var end = security.latestRecordings.length + 20;
+        security.latestRecordings = security.latestRecordings
+          .concat(security.bigData.getRecordings.slice(start, end));
+        // console.log(security.latestRecordings, security.latestRecordings.length);
+      };
+      // filter by date
+      // security.filterByInput = function(e) {
+      //   // console.log(security.filterBy);
+      //   var filters = security.filterBy.split(',');
+      //   security.filterName = filters[0];
+      //   security.filterDay = filters[1] ? filters[1].split('/')[0] : undefined;
+      //   security.filterMonth = filters[1] ? filters[1].split('/')[1] : undefined;
+      //   console.log(security.filterName, security.filterDay, security.filterMonth);
+      // };
+
       // get data
       security.data = dataService.getData();
-      console.log(security.data);
-
+      security.bigData = dataService.getBigData();
+      security.latestRecordings = security.bigData.getRecordings ? security.bigData.getRecordings.slice(0, 20) : [];
       // if no data, wait on socket
-      if (!security.data.getDevicesObj || !security.data.getRecordings) {
+      if (!security.data.getDevicesObj || !security.bigData.getRecordings) {
         dataService.getDevicesEmit().then(function(devices) {
-            security.data.getDevicesObj = devices;
-
-            dataService.getRecordingsEmit().then(function(recordings) {
-              security.data.getRecordings = recordings;
-            })
-          })
-          // dataService.getServerEmits();
+          security.data.getDevicesObj = devices;
+          console.log(security.data.getDevicesObj);
+          dataService.getRecordingsEmit().then(function(recordings) {
+            security.bigData.getRecordings = recordings;
+            security.latestRecordings = security.bigData.getRecordings.slice(0, 20);
+          });
+        });
+        dataService.getServerEmits();
         dataService.getCategoriesEmit();
         dataService.getScenesEmit();
         dataService.getSchedulesEmit();

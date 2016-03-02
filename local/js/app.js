@@ -80,7 +80,12 @@
           url: '/dashboard',
           templateUrl: 'html_route/dashboard_template.html',
           controller: 'DashboardCtrl',
-          controllerAs: 'dashboard'
+          controllerAs: 'dashboard',
+          params: {
+            lastRoute: {
+              value: undefined
+            }
+          }
         })
         .state('frame.most-used', {
           url: '/most-used',

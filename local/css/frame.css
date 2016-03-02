@@ -356,6 +356,8 @@
   text-indent: 3em;
   border: 0;
   cursor: pointer;
+  -webkit-transition: text-indent 0.4s ease, background-color 0.25s ease 0.2s, background-size 0.5s ease 0.2s;
+  transition: text-indent 0.4s ease, background-color 0.25s ease 0.2s, background-size 0.5s ease 0.2s;
 }
 .sidebar-nav-btn:hover {
   background-color: inherit;
@@ -370,8 +372,6 @@
   background-color: #BDBDBD;
   background-size: 10em;
   text-indent: 13em;
-  -webkit-transition: text-indent 0.4s ease, background-color 0.25s ease 0.2s, background-size 0.5s ease 0.2s;
-  transition: text-indent 0.4s ease, background-color 0.25s ease 0.2s, background-size 0.5s ease 0.2s;
 }
 .devices-btn {
   text-indent: 5em;
@@ -382,8 +382,6 @@
   background-color: #1BA1DF;
   background-size: 10em;
   text-indent: 13em;
-  -webkit-transition: text-indent 0.4s ease, background-color 0.25s ease 0.2s, background-size 0.5s ease 0.2s;
-  transition: text-indent 0.4s ease, background-color 0.25s ease 0.2s, background-size 0.5s ease 0.2s;
 }
 .scenes-btn {
   text-indent: 5em;
@@ -394,8 +392,6 @@
   background-color: #EC3535;
   background-size: 10em;
   text-indent: 13em;
-  -webkit-transition: text-indent 0.4s ease, background-color 0.25s ease 0.2s, background-size 0.5s ease 0.2s;
-  transition: text-indent 0.4s ease, background-color 0.25s ease 0.2s, background-size 0.5s ease 0.2s;
 }
 .schedule-btn {
   text-indent: 5em;
@@ -406,8 +402,6 @@
   background-color: #12C9C6;
   background-size: 10em;
   text-indent: 13em;
-  -webkit-transition: text-indent 0.4s ease, background-color 0.25s ease 0.2s, background-size 0.5s ease 0.2s;
-  transition: text-indent 0.4s ease, background-color 0.25s ease 0.2s, background-size 0.5s ease 0.2s;
 }
 .security-btn {
   text-indent: 5em;
@@ -418,8 +412,6 @@
   background-color: #E9A737;
   background-size: 10em;
   text-indent: 13em;
-  -webkit-transition: text-indent 0.4s ease, background-color 0.25s ease 0.2s, background-size 0.5s ease 0.2s;
-  transition: text-indent 0.4s ease, background-color 0.25s ease 0.2s, background-size 0.5s ease 0.2s;
 }
 .downloads-btn {
   background-image: url(../img/button/download-white.png);

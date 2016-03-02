@@ -4,12 +4,21 @@
   <button ng-if="!cinfo.thumbnailImg" type="button" class="button camera-refresh-btn" ng-click="refreshFeed(cinfo)">
     Refresh feed
   </button>
-  <h4>{{cinfo.name}}</h4>
+  <h4>{{::cinfo.name}}</h4>
   <span class="device-add-to-favorites">
-    <input type="checkbox" id="add-to-favorites-{{cinfo.id}}" ng-model="cinfo.favorites" ng-change="toggleAddToFavorites(cinfo.favorites, cinfo.id)">
-    <label for="add-to-favorites-{{cinfo.id}}" class="device-add-to-favorites-label" title="add to favorites"></label>
+    <input type="checkbox" id="add-to-favorites-{{::cinfo.id}}" ng-model="cinfo.favorites" ng-change="toggleAddToFavorites(cinfo.favorites, cinfo.id)">
+    <label for="add-to-favorites-{{::cinfo.id}}" class="device-add-to-favorites-label" title="add to favorites"></label>
   </span>
   <i class="material-icons camera-live-tumb-btn" class="camera-live-tumb-btn" ng-click="getLiveThumbnail(cinfo.id)" title="get live thumbnail">photo_camera</i>
-  <i class="material-icons color-red camera-recording" ng-click="startRecording(cinfo.id); recording = true" title="start recording" ng-hide="recording">fiber_manual_record</i>
-  <i class="material-icons color-green camera-recording" ng-click="stopRecording(cinfo.id); recording = false" title="stop recording" ng-show="recording">stop</i>
+  <span class="dropdown camera-dropdown-wrap">
+    <i class="material-icons dropdown-toggle" data-toggle="dropdown">more_vert</i>
+    <ul class = "dropdown-menu">
+      <li title="turn off recording" ng-click="recOff(cinfo)">Recording off</li>
+      <li title="records only when camera detects motion" ng-class="{'green-bg': cinfo.motion_recording}" ng-click="recOnMotion(cinfo)">Recording motion</li>
+      <li title="records only when alarm is turned on and camera detects motion" ng-class="{'green-bg': cinfo.motion_recording_if_alarm}" ng-click="recOnMotionAlarm(cinfo)">Recording motion on alarm</li>
+    </ul>
+  </span>
+
+  <!-- <i class="material-icons color-red camera-recording" ng-click="recOnMotion(cinfo)" title="start recording" ng-hide="cinfo.motion_recording">fiber_manual_record</i>
+  <i class="material-icons color-green camera-recording" ng-click="recOnMotion(cinfo)" title="stop recording" ng-show="cinfo.motion_recording">stop</i> -->
 </div>
