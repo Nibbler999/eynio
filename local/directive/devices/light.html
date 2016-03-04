@@ -1,11 +1,11 @@
 <div class="device-wrap">
   <span class="device-add-to-favorites">
-    <input type="checkbox" id="add-to-favorites-{{::linfo.id}}" ng-model="linfo.favorites" ng-change="toggleAddToFavorites(linfo.favorites, linfo.id)">
+    <input type="checkbox" id="add-to-favorites-{{::linfo.id}}" ng-model="linfo.favorites" ng-change="lightCtrl.toggleDeviceFavorites(linfo.id, linfo.favorites)">
     <label for="add-to-favorites-{{::linfo.id}}" class="device-add-to-favorites-label" title="add to favorites"></label>
   </span>
-  <img ng-src="img/button/schedule.svg" class="device-schedule-btn" ng-click="deviceSchedule = !deviceSchedule" title="quick schedule">
+  <img ng-src="img/button/schedule.svg" class="device-schedule-btn" id="device-schedule-btn" title="quick schedule">
   <div class="device-header">
-    <img ng-src="{{lightIcon}}" class="device-icon" ng-click="toggleDevicePowerState(linfo.id)" title="toggle state">
+    <img ng-src="{{lightCtrl.deviceIcon}}" class="device-icon" ng-click="lightCtrl.toggleDevicePowerState(linfo.id)" title="toggle state">
     <div class="device-content-data">
       <p>{{::linfo.name}}</p>
       <p>{{::linfo.type}}</p>
@@ -14,76 +14,77 @@
   </div>
 
   <!-- display ON/OFF switch !-->
-  <div class="device-footer" ng-hide="deviceSchedule">
+  <div class="device-footer" ng-hide="lightCtrl.deviceSchedule">
     <div class="device-footer-btn-wrap">
-      <button class="device-btn" ng-class="{'device-btn-active': linfo.state.on}" ng-click="lightOn(linfo.id, linfo.state.on)">On</button>
-      <button class="device-btn" ng-class="{'device-btn-active': !linfo.state.on}" ng-click="lightOff(linfo.id, linfo.state.on)">Off</button>
+      <button class="device-btn" ng-class="{'device-btn-active': linfo.state.on}" ng-click="lightCtrl.setDevicePowerState(linfo.id, true)">On</button>
+      <button class="device-btn" ng-class="{'device-btn-active': !linfo.state.on}" ng-click="lightCtrl.setDevicePowerState(linfo.id, false)">Off</button>
     </div>
-    <div class="device-footer-option-wrap" ng-hide="currentState === 'frame.devices'">
-      <button class="device-options-btn" ng-click="deviceOptions = !deviceOptions">Options</button>
+    <div class="device-footer-option-wrap">
+      <button class="device-options-btn" id="device-options-toggle">Options</button>
     </div>
   </div>
 
-  <div class="device-options" ng-show="deviceOptions">
-    <div title="set color" class="device-option-btn device-option-color" ng-click="colorPicker = true" ng-show="linfo.state.hsv"></div>
-    <div title="set brightness" class="device-option-btn device-option-set-brightness" ng-click="brightness = true" ng-show="!linfo.state.hsv"></div>
-    <div title="set white" class="device-option-btn device-option-set-white" ng-click="setLightWhite(linfo.id)"></div>
+  <!-- device options panel -->
+  <div class="device-options hidden">
+    <div title="set color" class="device-option-btn device-option-color" ng-show="linfo.state.hsv"></div>
+    <div title="set brightness" class="device-option-btn device-option-set-brightness" ng-show="!linfo.state.hsv"></div>
+    <div title="set white" class="device-option-btn device-option-set-white" ng-click="lightCtrl.setDeviceWhite(linfo.id)"></div>
   </div>
 
   <!-- color picker !-->
-  <div class="option-wrap" ng-show="colorPicker">
-    <img src="img/button/cross-dark.png" class="close-device-options" ng-click="colorPicker = false">
-    <div id="light-color" class="light-set-color"></div>
+  <div class="option-wrap hidden" id="device-color-picker-wrap">
+    <img src="img/button/cross-dark.png" class="close-device-options" ng-click="lightCtrl.colorPicker = false">
+    <div id="color-picker" class="light-set-color"></div>
     <div>
-      <button class="device-options-btn set-color-btn" ng-click="setColor(linfo.id, linfo.state.hsl)">Set color</button>
+      <button class="device-options-btn set-color-btn" ng-click="lightCtrl.setlightColor(linfo.id, linfo.state.hsl)">Set color</button>
     </div>
   </div>
 
   <!-- set brightness !-->
-  <div class="option-wrap" ng-show="brightness">
-    <img src="img/button/cross-dark.png" class="close-device-options" ng-click="brightness = false">
+  <div class="option-wrap hidden" id="device-brightness">
+    <img src="img/button/cross-dark.png" class="close-device-options">
     <div class="device-options-brightness">
       <label class="form-label" for="light-brightness-{{::linfo.count}}">Brightness</label>
       <input type="range" id="light-brightness-{{::linfo.count}}" ng-model="linfo.state.level">
     </div>
     <div>
-      <button class="device-options-btn set-color-btn" ng-click="setBrightness(linfo.id, linfo.state.level)">Set brightness</button>
+      <button class="device-options-btn set-color-btn" ng-click="lightCtrl.setBrightness(linfo.id, linfo.state.level)">Set brightness</button>
     </div>
   </div>
 
   <!-- schedule !-->
-  <div class="option-wrap" ng-show="deviceSchedule">
-    <button type="reset" class="close-device-options close-form-btn" ng-click="deviceSchedule = false">
+  <div class="option-wrap hidden" id="device-schedule-tab">
+    <button type="reset" class="close-device-options close-form-btn">
     </button>
-    <form class="add-schedule-dev-form" id="dev-schedule-form-{{::linfo.id}}" ng-submit="quickSchedule(linfo, scheduleState)">
+    <form class="add-schedule-dev-form" id="dev-schedule-form-{{::linfo.id}}">
       <p>Device will turn
-        <span class="color-blue" ng-if="scheduleState">ON</span>
-        <span class="color-orange" ng-if="!scheduleState">OFF</span>
+        <span class="color-blue" ng-show="lightCtrl.scheduleState">ON</span>
+        <span class="color-orange" ng-show="!lightCtrl.scheduleState">OFF</span>
         at:
       </p>
-      <input type="number" class="form-number" id="device-schedule-hours-{{::linfo.id}}" placeholder="Hours" min="0" max="23" required ng-focus="checkHours($event)">
-      <input type="number" class="form-number" id="device-schedule-minutes-{{::linfo.id}}" placeholder="Minutes" min="0" max="59" required ng-focus="checkMinutes($event)">
+      <input type="number" class="form-number" id="device-schedule-hours-{{::linfo.id}}" placeholder="Hours" min="0" max="23" required>
+      <input type="number" class="form-number" id="device-schedule-minutes-{{::linfo.id}}" placeholder="Minutes" min="0" max="59" required>
 
       <div class="add-schedule-dev-options-wrap">
         <div class="add-schedule-dev-option">
           <small>Daily</small>
-          <input type="radio" name="repeat-device-schedule" value="daily" id="schedule-device-daily-{{::linfo.id}}" ng-model="deviceScheduleRepeat">
+          <input type="radio" name="repeat-device-schedule" value="daily" id="schedule-device-daily-{{::linfo.id}}" ng-model="lightCtrl.deviceScheduleRepeat">
           <label for="schedule-device-daily-{{::linfo.id}}" class="radio-label" title="schedule will repeat daily"></label>
         </div>
         <div class="add-schedule-dev-option">
           <small>Once</small>
-          <input type="radio" name="repeat-device-schedule" value="once" id="schedule-device-once-{{::linfo.id}}" ng-model="deviceScheduleRepeat">
+          <input type="radio" name="repeat-device-schedule" value="once" id="schedule-device-once-{{::linfo.id}}" ng-model="lightCtrl.deviceScheduleRepeat">
           <label for="schedule-device-once-{{::linfo.id}}" class="radio-label" title="schedule will fire just once"></label>
         </div>
       </div>
 
-      <small ng-if="scheduleSuccess" class="color-green pop-up">Scheduled!</small>
+      <small ng-show="scheduleSuccess" class="color-green pop-up">Scheduled!</small>
     </form>
 
     <div class="device-footer devices-schedule-footer">
       <div class="device-footer-btn-wrap">
-        <button type="button" class="device-btn" ng-class="{'device-btn-active': scheduleState}" ng-click="scheduleState = true">On</button>
-        <button type="button" class="device-btn" ng-class="{'device-btn-active': !scheduleState}" ng-click="scheduleState = false">Off</button>
+        <button type="button" class="device-btn" ng-class="{'device-btn-active': lightCtrl.scheduleState}" ng-click="lightCtrl.scheduleState = true">On</button>
+        <button type="button" class="device-btn" ng-class="{'device-btn-active': !lightCtrl.scheduleState}" ng-click="lightCtrl.scheduleState = false">Off</button>
       </div>
       <div class="device-footer-option-wrap">
         <button type="submit" class="device-options-btn" form="dev-schedule-form-{{::linfo.id}}">Schedule</button>

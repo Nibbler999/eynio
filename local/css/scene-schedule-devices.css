@@ -77,11 +77,7 @@
 }
 
 .ss-active-state {
-    color: #fff;
-    -webkit-transform: scale((1.1);
-};
-        -ms-transform: scale((1.1);
-};
-            transform: scale((1.1);
-}
+  color: #fff;
+  -webkit-transform: scale(1.1);
+          transform: scale(1.1);
 }

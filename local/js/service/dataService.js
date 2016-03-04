@@ -275,9 +275,6 @@
         socket.emit('getLog', null, function(log) {
           bigServerData.getLog = log.reverse();
         });
-        socket.emit('getApiKey', null, function(key) {
-
-        });
         // get weather from yrno
         socket.emit('getWeather', null, function(weatherInfo) {
           currentServerData.getWeather = weatherInfo;

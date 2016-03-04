@@ -261,7 +261,6 @@
         if (!device.data.getDevicesObj || !device.data.getBlacklisted) {
           dataService.getDevicesEmit().then(function(devices) {
             device.data.getDevicesObj = devices;
-            console.log(devices);
             $timeout(function() {
               contentWrapParent.children[0].children[1].children[1].classList.add('in');
             }, 100);

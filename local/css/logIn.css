@@ -18,6 +18,9 @@
   background-color: #1272CD;
   line-height: 1;
 }
+.login-description.register{
+  width: 50%;
+}
 .register-btn {
   margin: 0.25em;
   border: 0.1em solid #fff;
@@ -30,6 +33,10 @@
 .login-form {
   background-color: #1B3449;
   padding: 2%;
+}
+.oauth-logo{
+  height: 2em;
+  cursor: pointer;
 }
 .form-input-wrap {
   display: -webkit-box;
@@ -56,13 +63,11 @@
   overflow: auto;
   background-color: #1B3449;
   padding: 2%;
-  display: none;
 }
 .forgot-password-form {
   min-height: 16em;
   background-color: #1B3449;
   padding: 2em 1em;
-  display: none;
 }
 .back-to-login-btn {
   background-color: #2E506C;

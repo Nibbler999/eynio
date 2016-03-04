@@ -19,9 +19,9 @@
   <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
   <link rel="icon" href="img/favicon.ico" type="image/x-icon">
   <!-- Bootstrap -->
-  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
   <link href="css/bootstrap/glyphicons-halflings-regular.svg">
-
+  <!-- build:css css/style.min.css -->
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
   <!-- Bootstrap color picker !-->
   <link rel="stylesheet" type="text/css" href="css/bootstrap.colorpickersliders.css">
 
@@ -42,11 +42,13 @@
   <link rel="stylesheet" type="text/css" href="css/devices/remotes.css">
   <link rel="stylesheet" type="text/css" href="css/devices/sensor.css">
   <link rel="stylesheet" type="text/css" href="css/devices/alarm.css">
+  <!-- endbuild -->
 </head>
 
 <body ng-app="nHome" ng-cloak>
 
   <ui-view></ui-view>
+  <!-- build:js js/main.min.js -->
   <!-- angularJS -->
   <script src="js/libraries/angular.min.js"></script>
   <!-- ui-router -->
@@ -57,12 +59,9 @@
   <script src="js/bootstrap.min.js"></script>
   <!-- socket.IO -->
   <script src="js/libraries/socket.io.js"></script>
-  <!-- Google Maps -->
-  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDADXlpX2alBz67rIO3mNGK_0tmghDrRLs&libraries=places"></script>
   <!-- color picker !-->
   <script defer src="js/tinycolor-min.js"></script>
   <script defer src="js/bootstrap.colorpickersliders.min.js"></script>
-
   <!-- ng module, ui router logic -->
   <script defer src="js/app.js"></script>
   <script defer src="js/services.js"></script>
@@ -110,6 +109,9 @@
   <script defer src="js/devices/scene-schedule/scene-thermostat.js"></script>
   <script defer src="js/devices/scene-schedule/scene-shutter.js"></script>
   <script defer src="js/devices/scene-schedule/scene-TvRemote.js"></script>
+  <!-- endbuild -->
+  <!-- Google Maps -->
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDADXlpX2alBz67rIO3mNGK_0tmghDrRLs&libraries=places"></script>
 </body>
 
 </html>
