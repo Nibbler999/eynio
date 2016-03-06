@@ -5,7 +5,7 @@ PIDFILE=/var/run/nhome.pid
 
 start_package()
 {
-    HOME=/var/packages/NHome/etc /usr/bin/node ${PRIVATE_LOCATION}/server.js --nocolor --pidfile $PIDFILE &> /tmp/nhome.log &
+    HOME=/var/packages/NHome/etc node ${PRIVATE_LOCATION}/server.js --nocolor --pidfile $PIDFILE &> /tmp/nhome.log &
 }
 
 stop_package()
