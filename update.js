@@ -120,6 +120,7 @@ module.exports = function (log, cb) {
         if (process.argv[2]) {
             require('child_process').spawn('nhome', [], { detached: true });
         } else {
+            delete require.cache[require.resolve('./package.json')];
             require('./lib/main.js')(log, cb);
         }
     }
