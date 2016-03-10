@@ -61,7 +61,9 @@ window.onload = function() {
 
     require('../lib/main.js')(log, function (conn) {
 
-        $('#localframe').attr('src', 'http://127.0.0.1:8008/');
+        $('#localmode-btn').one('click', function() {
+            $('#localframe').attr('src', 'http://127.0.0.1:8008/');
+        });
 
         conn.on('setExternalIP', function (command) {
             $('#external_ip').text(command.args[0]);
