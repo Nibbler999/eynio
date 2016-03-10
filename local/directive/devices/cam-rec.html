@@ -1,13 +1,11 @@
 <div class="cam-rec-wrap">
-  <img ng-src="{{::camrec.thumbnailImg}}"/>
-  <i class="material-icons" ng-click="startPlayback(camrec)">play_circle_outline</i>
-  <span>
-    <h5 ng-if="camrec.cameraName">{{::camrec.cameraName}}</h5>
-    <h5>{{::camrec.starttime | date: 'd/MMM/yyyy HH:mm:ss'}}</h5>
+  <img ng-src="{{::camrecCtrl.deviceObj.thumbnailImg}}" />
+  <i class="material-icons cam-rec-play" ng-click="camrecCtrl.requestPlayback(camrecCtrl.deviceObj)">play_circle_outline</i>
+  <span class="cam-rec-info">
+    <h5>{{::camrecCtrl.deviceObj.cameraName}}</h5>
+    <h5>{{::camrecCtrl.deviceObj.starttime | date: 'd/MMM/yyyy HH:mm:ss'}}</h5>
   </span>
-
-    <!-- <i class="material-icons" ng-click="startPlayback(camrec)">play_arrow</i> -->
-    <!--<i class="material-icons" ng-click="endPlayback(camrec.id)">stop</i>!-->
-    <i class="material-icons color-red" ng-click="deleteRecording(camrec.id)" ng-hide="currentState === 'frame.dashboard'">delete</i>
+  <span class="cam-rec-actions">
+    <i class="material-icons color-red" ng-click="camrecCtrl.deleteRecording(camrecCtrl.deviceObj.id)">delete</i>
   </span>
 </div>

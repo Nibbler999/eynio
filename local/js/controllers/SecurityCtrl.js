@@ -7,50 +7,26 @@
 
       var security = this;
 
-      var alarmDevices = [];
-
-      // get alarm configuration
-      socket.emit('getAlarmConfig', null, function(alarmConf) {
-        console.log(alarmConf);
-        security.alarmNotification = alarmConf.method;
-        alarmDevices = alarmConf.devices;
-      });
-
-      // add sensors for triggering alarm
-      security.toggleAddSensor = function(id) {
-        if (alarmDevices.indexOf(id) === -1) {
-          alarmDevices.push(id);
-          socket.emit('setAlarmDevices', alarmDevices, function(response) {
-            if (response) {
-              $scope.$broadcast('sensorAdded', id);
-            }
-          });
-        } else {
-          alarmDevices.splice(alarmDevices.indexOf(id), 1);
-          socket.emit('setAlarmDevices', alarmDevices, function(response) {
-            $scope.$broadcast('sensorRemoved', id);
-          });
-        }
-      };
-
-      // load more recordings
+      /**
+       * @name loadMoreRecordings
+       * @desc on click, load 20 more recorings
+       * @type {function}
+       * @param {allRec} all recorin
+       */
       security.loadMoreRecordings = function() {
         var start = security.latestRecordings.length
         var end = security.latestRecordings.length + 20;
         security.latestRecordings = security.latestRecordings
           .concat(security.bigData.getRecordings.slice(start, end));
-        // console.log(security.latestRecordings, security.latestRecordings.length);
       };
-      // filter by date
-      // security.filterByInput = function(e) {
-      //   // console.log(security.filterBy);
-      //   var filters = security.filterBy.split(',');
-      //   security.filterName = filters[0];
-      //   security.filterDay = filters[1] ? filters[1].split('/')[0] : undefined;
-      //   security.filterMonth = filters[1] ? filters[1].split('/')[1] : undefined;
-      //   console.log(security.filterName, security.filterDay, security.filterMonth);
-      // };
-
+      // listen for deleted recording and remove from allDevArray
+      $scope.$on('deleteRecording', function(event, recId) {
+        angular.forEach(security.latestRecordings, function(rec, index) {
+          if (rec.id === recId) {
+            security.latestRecordings.splice(index, 1);
+          }
+        });
+      });
       // get data
       security.data = dataService.getData();
       security.bigData = dataService.getBigData();
@@ -65,6 +41,7 @@
             security.latestRecordings = security.bigData.getRecordings.slice(0, 20);
           });
         });
+        // run other data fetches
         dataService.getServerEmits();
         dataService.getCategoriesEmit();
         dataService.getScenesEmit();

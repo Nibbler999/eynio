@@ -312,7 +312,7 @@ input:disabled ~ label, input:disabled {
   -webkit-align-items: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 1%;
+  padding: 2% 1%;
 }
 .dashboard-display-wrap{
   position: relative;

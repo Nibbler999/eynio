@@ -3,7 +3,7 @@
 
   angular
     .module('services')
-    .directive('light', ['$state', 'dataService', 'socket', function($state, dataService, socket) {
+    .directive('light', ['$timeout', '$state', 'dataService', 'socket', function($timeout, $state, dataService, socket) {
       return {
         restrict: 'E',
         replace: true,
@@ -111,14 +111,16 @@
            * @param {scheduleObj} generated schedule obj from link function
            */
           function setDeviceQuickSchedule(scheduleObj) {
-            return socket.emit('addNewJob', scheduleObj, function(response) {
-              console.log(response);
-              return response
+            socket.emit('addNewJob', scheduleObj, function(response) {
+              if (response) {
+                lightCtrl.scheduleSuccess = true;
+                $timeout(function() {
+                  lightCtrl.scheduleSuccess = false;
+                }, 2500);
+              }
             });
           }
-
           setDeviceIcon();
-
           // exports
           lightCtrl.toggleDevicePowerState = toggleDevicePowerState;
           lightCtrl.setDevicePowerState = setDevicePowerState;
@@ -136,7 +138,7 @@
           var deviceScheduleBtn = elem[0].querySelector('#device-schedule-btn');
           var deviceScheduleTab = elem[0].querySelector('#device-schedule-tab');
           var deviceScheduleClose = deviceScheduleTab.querySelector('.close-device-options');
-          var deviceScheduleForm = elem[0].querySelector('form');
+          var deviceScheduleForm = deviceScheduleTab.querySelector('form');
           var hour = deviceScheduleForm.querySelectorAll('input[type="number"]')[0];
           var minute = deviceScheduleForm.querySelectorAll('input[type="number"]')[1];
           // device options DOM
@@ -232,7 +234,7 @@
               },
               actions: [{
                 emit_name: 'setDevicePowerState',
-                params: [deviceObj.id, ctrl.deviceScheduleRepeat]
+                params: [deviceObj.id, ctrl.scheduleState]
               }]
             };
             if (ctrl.deviceScheduleRepeat === 'once') {
@@ -244,7 +246,6 @@
                 timestamp: Date.parse(date)
               }
             }
-
             ctrl.setDeviceQuickSchedule(job);
           }, false);
           /**
@@ -252,7 +253,7 @@
            * @desc schedule form hour input, prevent scheduling in the past
            * @type {evemt}
            */
-          hour.addEventListener('change', function() {
+          hour.addEventListener('click', function() {
             if (ctrl.deviceScheduleRepeat === 'once') {
               var date = new Date();
               this.min = date.getHours();
@@ -265,10 +266,10 @@
            * @desc schedule form minute input, prevent scheduling in the past
            * @type {event}
            */
-          minute.addEventListener('change', function() {
+          minute.addEventListener('click', function() {
             if (ctrl.deviceScheduleRepeat === 'once') {
               var date = new Date();
-              var h = parseInt(document.getElementById('device-schedule-hours-' + scope.linfo.id).value);
+              var h = parseInt(hour.value);
               if (h <= date.getHours()) {
                 this.min = date.getMinutes() + 1;
               }

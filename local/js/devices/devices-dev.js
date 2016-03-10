@@ -11,111 +11,188 @@
         scope: {
           devinfo: '='
         },
-        link: function(scope, elem, attr) {
+        controllerAs: 'devicesDevCtrl',
+        controller: ['$scope', function($scope) {
 
-          scope.doubleCheck = 0;
+          var devicesDevCtrl = this;
+          var deviceObj = $scope.devinfo;
+          var doubleCheckDelete = 0;
 
-          // device icon
-          switch (scope.devinfo.type) {
-            case 'switch':
-              if (scope.devinfo.value) {
-                scope.devIcon = 'img/device/switch-on.png';
-              } else {
-                scope.devIcon = 'img/device/switch-off.png';
-              }
-              break;
-            case 'light':
-              if (scope.devinfo.state.on) {
-                scope.devIcon = 'img/device/light-on.png';
-              } else {
-                scope.devIcon = 'img/device/light-off.png';
-              }
-              break;
-            case 'shutter':
-              if (scope.devinfo.value > 50) {
-                scope.devIcon = 'img/device/shutter-on.png';
-              } else {
-                scope.devIcon = 'img/device/shutter-off.png';
-              }
-              break;
-            case 'thermostat':
-              scope.devIcon = 'img/device/thermostat.png';
-              break;
-            case 'remote':
-              scope.devIcon = 'img/device/remote.png';
-              break;
-            case 'camera':
-              scope.devIcon = 'img/device/camera.png';
-              break;
-            case 'sensor':
-              if (scope.devinfo.subtype === 'co-alarm') {
-                scope.devIcon = 'img/sensors/co.png';
-              } else if (scope.devinfo.subtype === 'co2') {
-                scope.devIcon = 'img/sensors/co2.png';
-              } else if (scope.devinfo.subtype === 'door') {
-                if (scope.devinfo.value) {
-                  scope.devIcon = 'img/sensors/door-open.png';
+          /**
+           * @name setDeviceIcon
+           * @desc set proper device icon
+           * @type {function}
+           * @param {devObj} device object
+           */
+          function setDeviceIcon(devObj) {
+            switch (devObj.type) {
+              case 'switch':
+                if (devObj.value) {
+                  devicesDevCtrl.deviceIcon = 'img/device/switch-on.png';
                 } else {
-                  scope.devIcon = 'img/sensors/door-close.png';
+                  devicesDevCtrl.deviceIcon = 'img/device/switch-off.png';
                 }
-              } else if (scope.devinfo.subtype === 'humidity') {
-                scope.devIcon = 'img/sensors/humidity.png';
-              } else if (scope.devinfo.subtype === 'light') {
-                scope.devIcon = 'img/sensors/lux.png';
-              } else if (scope.devinfo.subtype === 'motion') {
-                scope.devIcon = 'img/sensors/motion.png';
-              } else if (scope.devinfo.subtype === 'noise') {
-                scope.devIcon = 'img/sensors/noise.png';
-              } else if (scope.devinfo.subtype === 'pressure') {
-                scope.devIcon = 'img/sensors/pressure.png';
-              } else if (scope.devinfo.subtype === 'rain') {
-                scope.devIcon = 'img/sensors/rain.png';
-              } else if (scope.devinfo.subtype === 'smoke-alarm') {
-                scope.devIcon = 'img/sensors/smoke.png';
-              } else if (scope.devinfo.subtype === 'temperature') {
-                scope.devIcon = 'img/sensors/temp.png';
-              }
-              break;
+                break;
+              case 'light':
+                if (devObj.state.on) {
+                  devicesDevCtrl.deviceIcon = 'img/device/light-on.png';
+                } else {
+                  devicesDevCtrl.deviceIcon = 'img/device/light-off.png';
+                }
+                break;
+              case 'shutter':
+                if (devObj.value > 50) {
+                  devicesDevCtrl.deviceIcon = 'img/device/shutter-on.png';
+                } else {
+                  devicesDevCtrl.deviceIcon = 'img/device/shutter-off.png';
+                }
+                break;
+              case 'thermostat':
+                devicesDevCtrl.deviceIcon = 'img/device/thermostat.png';
+                break;
+              case 'remote':
+                devicesDevCtrl.deviceIcon = 'img/device/remote.png';
+                break;
+              case 'camera':
+                devicesDevCtrl.deviceIcon = 'img/device/camera.png';
+                break;
+              case 'sensor':
+                switch (deviceObj.subtype) {
+                  case 'co-alarm':
+                    devicesDevCtrl.deviceIcon = 'img/sensors/co.png';
+                    break;
+                  case 'co2':
+                    devicesDevCtrl.deviceIcon = 'img/sensors/co2.png';
+                    break;
+                  case 'door':
+                    devicesDevCtrl.deviceIcon = deviceObj.value ? 'img/sensors/door-open.png' : 'img/sensors/door-close.png';
+                    break;
+                  case 'humidity':
+                    devicesDevCtrl.deviceIcon = 'img/sensors/humidity.png';
+                    break;
+                  case 'light':
+                    devicesDevCtrl.deviceIcon = 'img/sensors/lux.png';
+                    break;
+                  case 'motion':
+                    devicesDevCtrl.deviceIcon = 'img/sensors/motion.png';
+                    break;
+                  case 'noise':
+                    devicesDevCtrl.deviceIcon = 'img/sensors/noise.png';
+                    break;
+                  case 'pressure':
+                    devicesDevCtrl.deviceIcon = 'img/sensors/pressure.png';
+                    break;
+                  case 'rain':
+                    devicesDevCtrl.deviceIcon = 'img/sensors/rain.png';
+                    break;
+                  case 'smoke-alarm':
+                    devicesDevCtrl.deviceIcon = 'img/sensors/smoke.png';
+                    break;
+                  case 'temperature':
+                    devicesDevCtrl.deviceIcon = 'img/sensors/temp.png';
+                    break;
+                }
+                break;
+            }
           }
-          scope.deviceFavorites = scope.devinfo.favorites ? 'img/button/favorite-white.png' : 'img/button/favorite-hollow.png';
-
-          scope.editDevice = function(dev) {
-            $rootScope.$broadcast('editDevice', dev);
+          /**
+           * @name editDevice
+           * @desc open modal for editing device
+           * @type {function}
+           * @param {devObj} device object
+           */
+          function editDevice(devObj) {
+            $scope.$emit('editDevice', devObj);
           };
-
-          scope.blacklistDev = function(dev) {
-            scope.doubleCheck += 1;
-            if (dev.type === 'remote' && scope.doubleCheck === 2) {
-              socket.emit('deleteCustomRemote', dev.id);
-            } else if (dev.type === 'camera' && scope.doubleCheck === 2) {
-              socket.emit('deleteCamera', dev.id);
-            } else if (dev.type !== 'remote' && dev.type !== 'camera') {
-              socket.emit('blacklistDevice', dev.id, function(response) {
+          /**
+           * @name blacklistDevice
+           * @desc blacklist device, removes it from all rooms and it's not available for actions
+           * @type {function}
+           * @param {devObj} device object
+           */
+          function blacklistDevice(devObj) {
+            doubleCheckDelete += 1;
+            if (devObj.type === 'remote' && doubleCheckDelete === 2) {
+              socket.emit('deleteCustomRemote', devObj.id);
+            } else if (devObj.type === 'camera' && doubleCheckDelete === 2) {
+              socket.emit('deleteCamera', devObj.id);
+            } else if (devObj.type != 'camera' && devObj.type != 'remote') {
+              socket.emit('blacklistDevice', devObj.id, function(response) {
                 if (response) {
-                  scope.devinfo.blacklisted = true;
+                  deviceObj.blacklisted = true;
                 }
               });
             }
           };
-
-          scope.unblacklistDev = function(dev) {
-            socket.emit('unblacklistDevice', dev.id, function(response) {
+          /**
+           * @name unblacklistDevice
+           * @desc un blacklist device
+           * @type {function}
+           * @param {devObj} device object
+           */
+          function unblacklistDevice(devObj) {
+            socket.emit('unblacklistDevice', devObj.id, function(response) {
               if (response) {
-                scope.devinfo.blacklisted = false;
+                deviceObj.blacklisted = false;
               }
             });
           };
-
-          scope.toggleAddToFavorites = function(favorites, devId) {
-            if (!favorites) {
+          /**
+           * @name toggleDeviceFavorites
+           * @desc add or remove device from favorites
+           * @type {function}
+           * @param {devId, devFav} device id, device favorites
+           */
+          function toggleDeviceFavorites(devId, devFav) {
+            if (!devFav) {
               socket.emit4('setUserProperty', devId, 'favorites', true);
-              scope.devinfo.favorites = true;
+              deviceObj.favorites = true;
             } else {
               socket.emit4('setUserProperty', devId, 'favorites', false);
-              scope.devinfo.favorites = false;
+              deviceObj.favorites = false;
             }
-            scope.deviceFavorites = scope.devinfo.favorites ? 'img/button/favorite-white.png' : 'img/button/favorite-hollow.png';
           };
+          setDeviceIcon(deviceObj);
+          //  exports
+          devicesDevCtrl.toggleDeviceFavorites = toggleDeviceFavorites;
+          devicesDevCtrl.blacklistDevice = blacklistDevice;
+          devicesDevCtrl.unblacklistDevice = unblacklistDevice;
+          devicesDevCtrl.editDevice = editDevice;
+          devicesDevCtrl.deviceObj = deviceObj;
+        }],
+        link: function(scope, elem, attr, ctrl) {
+
+          var deviceObj = ctrl.deviceObj;
+          // device in 'frame.devices' actions
+          var blacklistBtn = elem[0].querySelector('.blacklist-btn');
+          var unblacklistWrap = elem[0].querySelector('.device-blacklisted');
+          var unblacklistBtn = unblacklistWrap.querySelector('button');
+          var deleteBtn = elem[0].querySelector('.delete-btn');
+          var favoritesBtn = elem[0].querySelector('.favorites-btn');
+          // counter for delete button
+          var doubleCheckDelete = 0;
+          // if remote or camera, remove blacklist and display delete
+          if (deviceObj.type != 'camera' && deviceObj.type != 'remote') {
+            blacklistBtn.classList.remove('hidden');
+          } else {
+            deleteBtn.classList.remove('hidden');
+          }
+          // if device in favorites, change icon
+          if (!deviceObj.favorites) {
+            favoritesBtn.innerHTML = 'star_border';
+          }
+          /**
+           * @name favoritesBtn
+           * @desc change favorites icon
+           * @type {event}
+           */
+          favoritesBtn.addEventListener('click', function() {
+            if (!deviceObj.favorites) {
+              this.innerHTML = 'star_border';
+            } else {
+              this.innerHTML = 'star';
+            }
+          }, false);
         }
       }
     }])

@@ -1,10 +1,10 @@
 <div class="sensor-device-wrap">
   <div class="device-header">
-    <img ng-src="{{sensorImg}}" class="device-icon" title="{{::sensorinfo.subtype}}" alt="{{::sensorinfo.subtype}}">
+    <img ng-src="{{sensorCtrl.deviceIcon}}" class="device-icon" title="{{::sensorCtrl.deviceObj.subtype}}" alt="{{::sensorCtrl.deviceObj.subtype}}">
     <div class="sensor-content-data">
-      <h2>{{sensorinfo.value}}</h2>
-      <p>{{::sensorinfo.name}}</p>
-      <p>{{::sensorinfo.module}}</p>
+      <h2>{{sensorCtrl.deviceObj.value}}</h2>
+      <p>{{::sensorCtrl.deviceObj.name}}</p>
+      <p>{{::sensorCtrl.deviceObj.module}}</p>
     </div>
   </div>
 </div>

@@ -1,24 +1,31 @@
 <div class="camera-wrap">
-  <img ng-if="cinfo.thumbnailImg" ng-src={{cinfo.thumbnailImg}} class="camera-cached-tumb" ng-click="requestLiveStream(cinfo)">
-  <h5 ng-if="!cinfo.thumbnailImg">Camera not available</h5>
-  <button ng-if="!cinfo.thumbnailImg" type="button" class="button camera-refresh-btn" ng-click="refreshFeed(cinfo)">
+  <!-- thumbnail img -->
+  <img ng-show="cameraCtrl.deviceObj.thumbnailImg" ng-src={{cameraCtrl.deviceObj.thumbnailImg}} class="camera-cached-tumb">
+  <!-- refresh feed btn -->
+  <h5 ng-show="!cameraCtrl.deviceObj.thumbnailImg">Camera not available</h5>
+  <button ng-show="!cameraCtrl.deviceObj.thumbnailImg" type="button" class="button camera-refresh-btn" ng-click="cameraCtrl.refreshCameraFeed(cameraCtrl.deviceObj.id)">
     Refresh feed
   </button>
-  <h4>{{::cinfo.name}}</h4>
+  <h4>{{::cameraCtrl.deviceObj.name}}</h4>
+  <!-- favorites btn -->
   <span class="device-add-to-favorites">
-    <input type="checkbox" id="add-to-favorites-{{::cinfo.id}}" ng-model="cinfo.favorites" ng-change="toggleAddToFavorites(cinfo.favorites, cinfo.id)">
-    <label for="add-to-favorites-{{::cinfo.id}}" class="device-add-to-favorites-label" title="add to favorites"></label>
+    <input type="checkbox" id="add-to-favorites-{{::cameraCtrl.deviceObj.id}}" ng-model="cameraCtrl.deviceObj.favorites" ng-change="cameraCtrl.toggleDeviceFavorites(cameraCtrl.deviceObj.id, cameraCtrl.deviceObj.favorites)">
+    <label for="add-to-favorites-{{::cameraCtrl.deviceObj.id}}" class="device-add-to-favorites-label" title="add to favorites"></label>
   </span>
-  <i class="material-icons camera-live-tumb-btn" class="camera-live-tumb-btn" ng-click="getLiveThumbnail(cinfo.id)" title="get live thumbnail">photo_camera</i>
+  <!-- livestream -->
+  <i class="material-icons camera-live-stream-btn" ng-show="cameraCtrl.deviceObj.thumbnailImg" ng-click="cameraCtrl.requestCameraLiveStream(cameraCtrl.deviceObj)">play_arrow</i>
+  <!-- live thumbnail -->
+  <i class="material-icons camera-live-tumb-btn" class="camera-live-tumb-btn" ng-click="cameraCtrl.getCameraLiveThumbnail(cameraCtrl.deviceObj.id)" title="get live thumbnail">photo_camera</i>
+  <!-- recording doptions dropdown -->
   <span class="dropdown camera-dropdown-wrap">
     <i class="material-icons dropdown-toggle" data-toggle="dropdown">more_vert</i>
     <ul class = "dropdown-menu">
-      <li title="turn off recording" ng-click="recOff(cinfo)">Recording off</li>
-      <li title="records only when camera detects motion" ng-class="{'green-bg': cinfo.motion_recording}" ng-click="recOnMotion(cinfo)">Recording motion</li>
-      <li title="records only when alarm is turned on and camera detects motion" ng-class="{'green-bg': cinfo.motion_recording_if_alarm}" ng-click="recOnMotionAlarm(cinfo)">Recording motion on alarm</li>
+      <li title="turn off recording" ng-click="cameraCtrl.cameraRecordingOff(cameraCtrl.deviceObj)">Recording off</li>
+      <li title="records only when camera detects motion" ng-class="{'green-bg': cameraCtrl.deviceObj.motion_recording}" ng-click="cameraCtrl.cameraRecordingMotion(cameraCtrl.deviceObj)">Recording motion</li>
+      <li title="records only when alarm is turned on and camera detects motion" ng-class="{'green-bg': cameraCtrl.deviceObj.motion_recording_if_alarm}" ng-click="cameraCtrl.cameraRecordingMotionOnAlarm(cameraCtrl.deviceObj)">Recording motion on alarm</li>
     </ul>
   </span>
 
-  <!-- <i class="material-icons color-red camera-recording" ng-click="recOnMotion(cinfo)" title="start recording" ng-hide="cinfo.motion_recording">fiber_manual_record</i>
-  <i class="material-icons color-green camera-recording" ng-click="recOnMotion(cinfo)" title="stop recording" ng-show="cinfo.motion_recording">stop</i> -->
+  <!-- <i class="material-icons color-red camera-recording" ng-click="recOnMotion(cameraCtrl.deviceObj)" title="start recording" ng-hide="cameraCtrl.deviceObj.motion_recording">fiber_manual_record</i>
+  <i class="material-icons color-green camera-recording" ng-click="recOnMotion(cameraCtrl.deviceObj)" title="stop recording" ng-show="cameraCtrl.deviceObj.motion_recording">stop</i> -->
 </div>

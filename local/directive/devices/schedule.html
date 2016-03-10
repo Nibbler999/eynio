@@ -1,50 +1,23 @@
 <div class="row schedule-wrap">
   <div class="col-xs-12 col-sm-6">
-    <p>{{schinfo.name}}</p>
+    <p>{{scheduleCtrl.deviceObj.name}}</p>
   </div>
   <div class="col-xs-12 col-sm-6 display-flex justify-end">
-    <!-- log days of schedule !-->
-    <span ng-if="schinfo.dateTime.dayOfWeek.length < 7" ng-repeat="day in schinfo.dateTime.dayOfWeek">
-      <p ng-if="day === 0">Sun
-        <span ng-hide="$index == schinfo.dateTime.dayOfWeek.length -1">,</span>
-    </p>
-    <p ng-if="day === 1">Mon
-      <span ng-hide="$index == schinfo.dateTime.dayOfWeek.length -1">,</span>
-    </p>
-    <p ng-if="day === 2">Tue
-      <span ng-hide="$index == schinfo.dateTime.dayOfWeek.length -1">,</span>
-    </p>
-    <p ng-if="day === 3">Wed
-      <span ng-hide="$index == schinfo.dateTime.dayOfWeek.length -1">,</span>
-    </p>
-    <p ng-if="day === 4">Thu
-      <span ng-hide="$index == schinfo.dateTime.dayOfWeek.length -1">,</span>
-    </p>
-    <p ng-if="day === 5">Fri
-      <span ng-hide="$index == schinfo.dateTime.dayOfWeek.length -1">,</span>
-    </p>
-    <p ng-if="day === 6">Sat
-      <span ng-hide="$index == schinfo.dateTime.dayOfWeek.length -1">,</span>
-    </p>
-    </span>
-    <p ng-if="schinfo.dateTime.dayOfWeek.length === 7 || schinfo.dateTime.dayOfWeek.length === 0 && !schinfo.dateTime.timestamp" class="color-blue">Daily</p>
-    <p ng-if="schinfo.dateTime.hour && schinfo.dateTime.hour"><span class="color-blue">@</span> {{schinfo.dateTime.hour}}:<span ng-show="schinfo.dateTime.minute < 10">0</span>{{schinfo.dateTime.minute}}</p>
-    <p ng-if="schinfo.dateTime.timestamp">{{schinfo.dateTime.timestamp | date: 'd/MMM/yyyy HH:mm'}}</p>
-    <p ng-if="schinfo.dateTime.sunset" class="color-blue">Sunset</p>
-    <p ng-if="schinfo.dateTime.sunrise" class="color-blue">Sunrise</p>
-
+    <!-- schedule time-->
+    <div class="display-flex justify-end schedule-date">
+    </div>
     <!-- dropdown menu, edit, delete !-->
-    <div class="dropdown" ng-hide="currentState === 'frame.dashboard'">
+    <div class="dropdown">
       <button type="button" class="button edit-schedule-btn" id="edit-schedule-btn" role="button" data-toggle="dropdown"></button>
       <ul class="dropdown-menu edit-schedule-dropdown" role="menu" aria-labelledby="edit-schedule-btn">
-        <li role="presentation" class="edit-schedule-dropdown-btn" ng-hide="schinfo.dateTime.timestamp">
-          <a role="menuitem" tabindex="-1" href="" data-toggle="collapse" data-target="#edit-schedule-menu-{{::schinfo.id}}">
+        <li role="presentation" class="edit-schedule-dropdown-btn" ng-hide="scheduleCtrl.deviceObj.dateTime.timestamp">
+          <a role="menuitem" tabindex="-1" href="" data-toggle="collapse" data-target="#edit-schedule-menu-{{::scheduleCtrl.deviceObj.id}}">
             Edit
             <i class="material-icons">edit</i>
           </a>
         </li>
         <li role="presentation" class="delete-schedule-dropdown-btn">
-          <a role="menuitem" tabindex="-1" href="" ng-click="deleteSchedule(schinfo.id)">
+          <a role="menuitem" tabindex="-1" href="" ng-click="scheduleCtrl.deleteSchedule(scheduleCtrl.deviceObj.id)">
             Delete
             <i class="material-icons">delete</i>
           </a>
@@ -54,53 +27,53 @@
   </div>
 
   <!-- edit schedule collapse !-->
-  <div class="col-xs-12 collapse" id="edit-schedule-menu-{{::schinfo.id}}">
-    <form ng-submit="editSchedule(schinfo)">
+  <div class="col-xs-12 collapse" id="edit-schedule-menu-{{::scheduleCtrl.deviceObj.id}}">
+    <form>
       <div class="col-xs-6 col-sm-6 col-md-2 schedule-group">
-        <input type="text" class="form-input" ng-model="schinfo.name" placeholder="Schedule name" pattern=".{4,15}" title="4 - 15 characters" required>
+        <input type="text" class="form-input" ng-model="scheduleCtrl.deviceObj.name" placeholder="Schedule name" pattern=".{4,25}" title="4 - 25 characters" required>
       </div>
       <div class="col-xs-6 col-sm-6 col-md-2 schedule-group">
-        <input type="number" class="form-number" name="time" ng-model="schinfo.dateTime.hour" placeholder="Hours" min="0" max="23">
-        <input type="number" class="form-number" name="time" ng-model="schinfo.dateTime.minute" placeholder="Minutes" min="0" max="59">
+        <input type="number" class="form-number" name="hour" ng-model="scheduleCtrl.deviceObj.dateTime.hour" placeholder="Hr" min="0" max="23">
+        <input type="number" class="form-number" name="minute" ng-model="scheduleCtrl.deviceObj.dateTime.minute" placeholder="Min" min="0" max="59">
       </div>
       <div class="col-xs-12 col-sm-6 col-md-5 schedule-group schedule-days-wrap">
         <span>
-          <input type="checkbox" name="day-{{::schinfo.id}}" id="edit-schedule-mon-{{::schinfo.id}}" ng-checked="schinfo.dateTime.dayOfWeek.indexOf(1) != -1" ng-disabled="schinfo.dateTime.sunset || schinfo.dateTime.sunrise" value="1">
-          <label for="edit-schedule-mon-{{::schinfo.id}}" class="schedule-label">Mon</label>
+          <input type="checkbox" name="day" id="edit-schedule-mon-{{::scheduleCtrl.deviceObj.id}}" value="1">
+          <label for="edit-schedule-mon-{{::scheduleCtrl.deviceObj.id}}" class="schedule-label">Mon</label>
         </span>
         <span>
-          <input type="checkbox" name="day-{{::schinfo.id}}" id="edit-schedule-tue-{{::schinfo.id}}" ng-checked="schinfo.dateTime.dayOfWeek.indexOf(2) != -1" ng-disabled="schinfo.dateTime.sunset || schinfo.dateTime.sunrise" value="2">
-          <label for="edit-schedule-tue-{{::schinfo.id}}" class="schedule-label">Tue</label>
+          <input type="checkbox" name="day" id="edit-schedule-tue-{{::scheduleCtrl.deviceObj.id}}" value="2">
+          <label for="edit-schedule-tue-{{::scheduleCtrl.deviceObj.id}}" class="schedule-label">Tue</label>
         </span>
         <span>
-          <input type="checkbox" name="day-{{::schinfo.id}}" id="edit-schedule-wed-{{::schinfo.id}}" ng-checked="schinfo.dateTime.dayOfWeek.indexOf(3) != -1" ng-disabled="schinfo.dateTime.sunset || schinfo.dateTime.sunrise" value="3">
-          <label for="edit-schedule-wed-{{::schinfo.id}}" class="schedule-label">Wed</label>
+          <input type="checkbox" name="day" id="edit-schedule-wed-{{::scheduleCtrl.deviceObj.id}}" value="3">
+          <label for="edit-schedule-wed-{{::scheduleCtrl.deviceObj.id}}" class="schedule-label">Wed</label>
         </span>
         <span>
-          <input type="checkbox" name="day-{{::schinfo.id}}" id="edit-schedule-thu-{{::schinfo.id}}" ng-checked="schinfo.dateTime.dayOfWeek.indexOf(4) != -1" ng-disabled="schinfo.dateTime.sunset || schinfo.dateTime.sunrise" value="4">
-          <label for="edit-schedule-thu-{{::schinfo.id}}" class="schedule-label">Thu</label>
+          <input type="checkbox" name="day" id="edit-schedule-thu-{{::scheduleCtrl.deviceObj.id}}" value="4">
+          <label for="edit-schedule-thu-{{::scheduleCtrl.deviceObj.id}}" class="schedule-label">Thu</label>
         </span>
         <span>
-          <input type="checkbox" name="day-{{::schinfo.id}}" id="edit-schedule-fri-{{::schinfo.id}}" ng-checked="schinfo.dateTime.dayOfWeek.indexOf(5) != -1" ng-disabled="schinfo.dateTime.sunset || schinfo.dateTime.sunrise" value="5">
-          <label for="edit-schedule-fri-{{::schinfo.id}}" class="schedule-label">Fri</label>
+          <input type="checkbox" name="day" id="edit-schedule-fri-{{::scheduleCtrl.deviceObj.id}}" value="5">
+          <label for="edit-schedule-fri-{{::scheduleCtrl.deviceObj.id}}" class="schedule-label">Fri</label>
         </span>
         <span>
-          <input type="checkbox" name="day-{{::schinfo.id}}" id="edit-schedule-sat-{{::schinfo.id}}" ng-checked="schinfo.dateTime.dayOfWeek.indexOf(6) != -1" ng-disabled="schinfo.dateTime.sunset || schinfo.dateTime.sunrise" value="6">
-          <label for="edit-schedule-sat-{{::schinfo.id}}" class="schedule-label">Sat</label>
+          <input type="checkbox" name="day" id="edit-schedule-sat-{{::scheduleCtrl.deviceObj.id}}" value="6">
+          <label for="edit-schedule-sat-{{::scheduleCtrl.deviceObj.id}}" class="schedule-label">Sat</label>
         </span>
         <span>
-          <input type="checkbox" name="day-{{::schinfo.id}}" id="edit-schedule-sun-{{::schinfo.id}}" ng-checked="schinfo.dateTime.dayOfWeek.indexOf(0) != -1" ng-disabled="schinfo.dateTime.sunset || schinfo.dateTime.sunrise" value="0">
-          <label for="edit-schedule-sun-{{::schinfo.id}}" class="schedule-label">Sun</label>
+          <input type="checkbox" name="day" id="edit-schedule-sun-{{::scheduleCtrl.deviceObj.id}}" value="0">
+          <label for="edit-schedule-sun-{{::scheduleCtrl.deviceObj.id}}" class="schedule-label">Sun</label>
         </span>
       </div>
       <div class="col-xs-12 col-sm-4 col-md-2 schedule-group">
         <span>
-          <input type="checkbox" id="edit-schedule-sunset-{{::schinfo.id}}" class="sunset" value="sunset" name="sunset" ng-checked="schinfo.dateTime.sunset" ng-disabled="schinfo.dateTime.sunrise" ng-click="disableInputs($event)">
-          <label for="edit-schedule-sunset-{{::schinfo.id}}" class="schedule-label schedule-sunset-label">Sunset</label>
+          <input type="checkbox" id="edit-schedule-sunset-{{::scheduleCtrl.deviceObj.id}}" class="sunset" value="sunset" name="sunset">
+          <label for="edit-schedule-sunset-{{::scheduleCtrl.deviceObj.id}}" class="schedule-label schedule-sunset-label">Sunset</label>
         </span>
         <span>
-          <input type="checkbox" id="edit-schedule-sunrise-{{::schinfo.id}}" class="sunrise" value="sunrise" name="sunrise" ng-checked="schinfo.dateTime.sunrise" ng-disabled="schinfo.dateTime.sunset" ng-click="disableInputs($event)">
-          <label for="edit-schedule-sunrise-{{::schinfo.id}}" class="schedule-label schedule-sunrise-label">Sunrise</label>
+          <input type="checkbox" id="edit-schedule-sunrise-{{::scheduleCtrl.deviceObj.id}}" class="sunrise" value="sunrise" name="sunrise">
+          <label for="edit-schedule-sunrise-{{::scheduleCtrl.deviceObj.id}}" class="schedule-label schedule-sunrise-label">Sunrise</label>
         </span>
       </div>
       <div class="col-xs-12 col-sm-2 col-md-1 schedule-group">

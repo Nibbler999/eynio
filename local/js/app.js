@@ -3,20 +3,27 @@
 
   angular
     .module('nHome', ['ui.router', 'services'])
-    .config(function($stateProvider, $urlRouterProvider) {
+    .config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
       $urlRouterProvider
         .when('', 'dashboard');
       $stateProvider
         .state('login', {
-          url: '/login:register',
+          url: '/login?email&pass&oauth2',
           templateUrl: 'html_route/login_template.html',
           controller: 'LoginCtrl',
-          controllerAs: 'login',
-          params: {
-            register: {
-              value: 'login'
-            }
-          }
+          controllerAs: 'login'
+        })
+        .state('register', {
+          url:'/register',
+          templateUrl: 'html_route/register_template.html',
+          controller: 'RegisterCtrl',
+          controllerAs: 'register'
+        })
+        .state('password', {
+          url: '/forgot-password',
+          templateUrl: 'html_route/forgot-password_template.html',
+          controller: 'ForgotPassCtrl',
+          controllerAs: 'pass'
         })
         .state('frame', {
           templateUrl: 'html_route/frame_template.html',
@@ -99,5 +106,5 @@
           controller: 'RecentlyUsedCtrl',
           controllerAs: 'recently'
         })
-    });
+    }]);
 }());

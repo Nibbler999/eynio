@@ -1,4 +1,5 @@
 <div class="template-nav" ng-init="cameras = true">
+  <!-- navigation toggle -->
   <div class="template-nav-toggle">
     <h3 class="template-nav-toggle-btn" ng-click="cameras = true; recordings = false; alarms = false">Cameras</h3>
     <h3 class="template-nav-toggle-btn" ng-click="recordings = true; cameras = false; alarms = false">Recordings</h3>
@@ -24,8 +25,8 @@
 <!-- alarms -->
 <div class="display-devices-row" ng-hide="recordings || cameras">
   <!-- list cameras -->
-  <alarm ng-repeat="sensorAlarm in security.data.getDevicesObj.camera track by sensorAlarm.id" ainfo="sensorAlarm" ng-click="security.toggleAddSensor(sensorAlarm.id)"></alarm>
+  <alarm ng-repeat="sensorAlarm in security.data.getDevicesObj.camera track by sensorAlarm.id" ainfo="sensorAlarm"></alarm>
   <!-- list sensors -->
-  <alarm ng-repeat="sensorAlarm in security.data.getDevicesObj.sensor | filter: {subtype : 'motion'}" ainfo="sensorAlarm" ng-click="security.toggleAddSensor(sensorAlarm.id)"></alarm>
+  <alarm ng-repeat="sensorAlarm in security.data.getDevicesObj.sensor | filter: {subtype : 'motion'}" ainfo="sensorAlarm"></alarm>
   <small class="color-transparent" ng-if="!security.data.getDevicesObj || security.data.getDevicesObj.sensor.length === 0">No sensors for triggering alarm were found</small>
 </div>

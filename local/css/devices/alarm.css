@@ -32,12 +32,10 @@
   text-align: center;
   line-height: 2.5;
   cursor: pointer;
+    background-color: #21425E;
 }
 .alarm-footer-active {
   background-color: #E9A839;
-}
-.alarm-footer-inactive {
-  background-color: #21425E;
 }
 .alarm-btn {
   width: 100%;

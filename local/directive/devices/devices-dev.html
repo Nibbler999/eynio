@@ -1,19 +1,18 @@
 <div class="devices-dev-wrap">
   <div class="devices-dev-box">
-    <img ng-src="{{::devIcon}}" title="{{::devinfo.module}}">
-    <h4>{{devinfo.name}}</h4>
+    <img ng-src="{{::devicesDevCtrl.deviceIcon}}" title="{{::devicesDevCtrl.deviceObj.module}}">
+    <h4>{{devicesDevCtrl.deviceObj.name}}</h4>
   </div>
 
   <div class="devices-dev-box actions">
-    <i class="material-icons" title="edit device" ng-click="editDevice(devinfo)">mode_edit</i>
-    <i class="material-icons" ng-if="devinfo.type != 'camera' && devinfo.type != 'remote'" title="blacklist device" ng-click="blacklistDev(devinfo)">visibility_off</i>
-    <i class="material-icons" ng-if="devinfo.type === 'camera' || devinfo.type === 'remote'" title="delete device" ng-click="blacklistDev(devinfo)" ng-class="{'double-check': doubleCheck}">delete</i>
-    <i class="material-icons" title="favorites" ng-click="toggleAddToFavorites(devinfo.favorites, devinfo.id)" ng-show="!devinfo.favorites">star_border</i>
-    <i class="material-icons" title="favorites" ng-click="toggleAddToFavorites(devinfo.favorites, devinfo.id)" ng-show="devinfo.favorites">star</i>
+    <i class="material-icons" title="edit device" ng-click="devicesDevCtrl.editDevice(devicesDevCtrl.deviceObj)">mode_edit</i>
+    <i class="material-icons blacklist-btn hidden" title="blacklist device" ng-click="devicesDevCtrl.blacklistDevice(devicesDevCtrl.deviceObj)">visibility_off</i>
+    <i class="material-icons delete-btn hidden" title="delete device" ng-click="devicesDevCtrl.blacklistDevice(devicesDevCtrl.deviceObj)" ng-class="{'double-check': doubleCheck}">delete</i>
+    <i class="material-icons favorites-btn" title="favorites" ng-click="devicesDevCtrl.toggleDeviceFavorites(devicesDevCtrl.deviceObj.id, devicesDevCtrl.deviceObj.favorites)">star</i>
   </div>
 
   <!-- unblacklist device !-->
-  <div class="device-blacklisted" ng-show="devinfo.blacklisted">
-    <button type="button" name="unblacklist" title="unblacklist device" class="button unblacklist-btn" ng-click="unblacklistDev(devinfo)">Unblacklist device</button>
+  <div class="device-blacklisted" ng-show="devicesDevCtrl.deviceObj.blacklisted">
+    <button type="button" name="unblacklist" title="unblacklist device" class="button unblacklist-btn" ng-click="devicesDevCtrl.unblacklistDevice(devicesDevCtrl.deviceObj)">Unblacklist device</button>
   </div>
 </div>

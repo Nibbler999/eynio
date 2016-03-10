@@ -3,76 +3,140 @@
 
   angular
     .module('services')
-    .directive('scene', ['socket', 'dataService', '$rootScope', '$state', function(socket, dataService, $rootScope, $state) {
+    .directive('scene', ['$state', '$timeout', 'socket', function($state, $timeout, socket) {
       return {
         restrict: 'E',
         replace: true,
+        templateUrl: 'directive/devices/scene.html',
         scope: {
           scinfo: '='
         },
-        templateUrl: 'directive/devices/scene.html',
-        link: function(scope, elem, attr) {
+        controllerAs: 'sceneCtrl',
+        controller: ['$scope', function($scope) {
 
-          scope.currentState = $state.current.name;
-          scope.deviceScheduleRepeat = 'daily';
+          var sceneCtrl = this;
+          var deviceObj = $scope.scinfo;
 
-          scope.setScene = function(sceneId) {
-            socket.emit('setScene', sceneId);
-          };
+          sceneCtrl.deviceScheduleRepeat = 'daily';
 
-          scope.deleteScene = function(sceneId) {
-            socket.emit('deleteScene', sceneId);
-          };
-
-          scope.editScene = function(scene) {
-            $rootScope.$broadcast('editScene', scene);
-          };
-
-          // check hours to prevent schedule in the past
-          scope.checkHours = function(e) {
-            if (scope.deviceScheduleRepeat === 'once') {
-              var date = new Date();
-              e.target.min = date.getHours();
-            } else {
-              e.target.min = 0;
+          // listen for custom eventst and update scene object
+          $scope.$on('sceneEdited', function(event, response) {
+            if (deviceObj.id === response.id) {
+              deviceObj = newData;
             }
-          };
-
-          // check minutes to prevent schedule in the past
-          scope.checkMinutes = function(e) {
-            if (scope.deviceScheduleRepeat === 'once') {
-              var date = new Date();
-              var h = parseInt(document.getElementById('device-schedule-hours-' + scope.scinfo.id).value);
-              if (h <= date.getHours()) {
-                e.target.min = date.getMinutes() + 1;
+          });
+          /**
+           * @name setScene
+           * @desc set scene in action
+           * @type {function}
+           * @param {sceneId} scene id
+           */
+          function setScene(sceneId) {
+            socket.emit('setScene', sceneId)
+          }
+          /**
+           * @name deleteScene
+           * @desc delete scene
+           * @type {function}
+           * @param {sceneId} scene id
+           */
+          function deleteScene(sceneId) {
+            socket.emit('deleteScene', sceneId)
+          }
+          /**
+           * @name editScene
+           * @desc edit scene
+           * @type {function}
+           * @param {sceObj} scene object
+           */
+          function editScene(sceObj) {
+            $scope.$emit('editScene', sceObj);
+          }
+          /**
+           * @name setDeviceQuickSchedule
+           * @desc schedule action
+           * @type {function}
+           * @param {scheduleObj} generated schedule obj from link function
+           */
+          function setDeviceQuickSchedule(scheduleObj) {
+            socket.emit('addNewJob', scheduleObj, function(response) {
+              if (response) {
+                sceneCtrl.scheduleSuccess = true;
+                $timeout(function() {
+                  sceneCtrl.scheduleSuccess = false;
+                }, 2500);
               }
-            } else {
-              e.target.min = 0;
-            }
-          };
-          // add quick schedule
-          scope.quickSchedule = function(dev, state) {
-            var h = document.getElementById('device-schedule-hours-' + scope.scinfo.id);
-            var m = document.getElementById('device-schedule-minutes-' + scope.scinfo.id);
+            });
+          }
+
+          // exports
+          sceneCtrl.setDeviceQuickSchedule = setDeviceQuickSchedule;
+          sceneCtrl.setScene = setScene;
+          sceneCtrl.deleteScene = deleteScene;
+          sceneCtrl.editScene = editScene;
+          sceneCtrl.deviceObj = deviceObj;
+        }],
+        link: function(scope, elem, attr, ctrl) {
+
+          var deviceObj = ctrl.deviceObj;
+          // device schedule DOM elements
+          var deviceScheduleBtn = elem[0].querySelector('#device-schedule-btn');
+          var deviceScheduleTab = elem[0].querySelector('#device-schedule-tab');
+          var deviceScheduleClose = deviceScheduleTab.querySelector('.close-device-options');
+          var deviceScheduleForm = deviceScheduleTab.querySelector('form');
+          var hour = deviceScheduleForm.querySelectorAll('input[type="number"]')[0];
+          var minute = deviceScheduleForm.querySelectorAll('input[type="number"]')[1];
+          // scene footer document
+          var footer = elem[0].querySelector('.sce-box-footer');
+          // current state
+          var currentState = $state.current.name;
+          // remove footer if in dashboard
+          if (currentState === 'frame.dashboard') {
+            footer.classList.add('hidden')
+          } else {
+            footer.classList.remove('hidden')
+          }
+          /**
+           * @name deviceScheduleBtn
+           * @desc open schedule tab
+           * @type {Event}
+           */
+          deviceScheduleBtn.addEventListener('click', function() {
+            deviceScheduleTab.classList.remove('hidden');
+          }, false);
+          /**
+           * @name deviceScheduleClose
+           * @desc close schedule tab
+           * @type {event}
+           */
+          deviceScheduleClose.addEventListener('click', function(e) {
+            deviceScheduleTab.classList.add('hidden');
+          });
+          /**
+           * @name deviceScheduleForm
+           * @desc submit form for scheduling device actions
+           * @type {event}
+           */
+          deviceScheduleForm.addEventListener('submit', function() {
             var date = new Date();
-            date.setHours(parseInt(h.value), parseInt(m.value), 0, 0);
+            date.setHours(parseInt(hour.value), parseInt(minute.value), 0, 0);
 
             var job = {
-              name: dev.name,
+              name: deviceObj.name,
               type: 'scene',
               dateTime: {
                 dayOfWeek: [0, 1, 2, 3, 4, 5, 6],
-                hour: parseInt(h.value),
-                minute: parseInt(m.value),
+                hour: parseInt(hour.value),
+                minute: parseInt(minute.value),
                 sunrise: false,
                 sunset: false
               },
               actions: [{
                 emit_name: 'setScene',
-                params: [dev.id]
+                params: [deviceObj.id]
               }]
             };
-            if (scope.deviceScheduleRepeat === 'once') {
+            if (ctrl.deviceScheduleRepeat === 'once') {
               job.dateTime = {
                 hour: 0,
                 minute: 0,
@@ -81,25 +145,37 @@
                 timestamp: Date.parse(date)
               }
             }
-            console.log(job);
-            socket.emit('addNewJob', job, function(response) {
-              if (response) {
-                scope.scheduleSuccess = true;
-                h.value = '';
-                m.value = '';
-              }
-              setTimeout(function() {
-                scope.scheduleSuccess = false;
-              }, 250);
-            });
-          };
-
-          scope.$on('sceneEdited', function(event, newData) {
-            if (scope.scinfo.id === newData.id) {
-              console.log(newData);
-              scope.scinfo = newData;
+            ctrl.setDeviceQuickSchedule(job);
+          }, false);
+          /**
+           * @name hour
+           * @desc schedule form hour input, prevent scheduling in the past
+           * @type {evemt}
+           */
+          hour.addEventListener('click', function() {
+            if (ctrl.deviceScheduleRepeat === 'once') {
+              var date = new Date();
+              this.min = date.getHours();
+            } else {
+              this.min = 0;
             }
-          });
+          }, false);
+          /**
+           * @name minute
+           * @desc schedule form minute input, prevent scheduling in the past
+           * @type {event}
+           */
+          minute.addEventListener('click', function() {
+            if (ctrl.deviceScheduleRepeat === 'once') {
+              var date = new Date();
+              var h = parseInt(hour.value);
+              if (h <= date.getHours()) {
+                this.min = date.getMinutes() + 1;
+              }
+            } else {
+              this.min = 0;
+            }
+          }, false);
         }
       };
     }]);

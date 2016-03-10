@@ -11,139 +11,205 @@
         scope: {
           tinfo: '='
         },
-        link: function(scope, elem, attr) {
+        controllerAs: 'thermostatCtrl',
+        controller: ['$scope', function($scope) {
 
-          // where am I
-          scope.currentState = $state.current.name;
-          scope.deviceScheduleRepeat = 'daily';
+          var thermostatCtrl = this;
+          var deviceObj = $scope.tinfo;
+          thermostatCtrl.deviceScheduleRepeat = 'daily';
+          thermostatCtrl.deviceScheduleTemperature = deviceObj.target;
 
-          // targete for schedule
-          scope.targetForSchedule = scope.tinfo.target;
-
-          if (scope.currentState === 'frame.devices') {
-            scope.unblacklistDev = function(devId) {
-              socket.emit('unblacklistDevice', devId, function(response) {
-                if (response) {
-                  scope.tinfo.blacklisted = false;
-                }
-              })
-            };
-            return false;
-          } else {
-            // themostat target temp up
-            scope.tempUp = function(thermo) {
-              if (thermo.target < 32) {
-                return thermo.target++;
-              }
-            };
-            // thermostat target temp down
-            scope.tempDown = function(thermo) {
-              if (thermo.target > 18) {
-                return thermo.target--;
-              }
-            };
-            // set temperature
-            scope.setTemp = function(thermo) {
-              socket.emit3('setThermostatValue', thermo.id, thermo.target, function(response) {
-                if (response) {
-                  scope.responseSuccess = true;
-
-                  $timeout(function() {
-                    scope.responseSuccess = false;
-                  }, 1000);
-                }
-              });
-            };
-            // add/remove to favorites
-            scope.toggleAddToFavorites = function(favorites, devId) {
-              if (favorites) {
-                socket.emit4('setUserProperty', devId, 'favorites', true);
-              } else {
-                socket.emit4('setUserProperty', devId, 'favorites', false);
-              }
-            };
-
-            // check hours to prevent schedule in the past
-            scope.checkHours = function(e) {
-              if (scope.deviceScheduleRepeat === 'once') {
-                var date = new Date();
-                e.target.min = date.getHours();
-              } else {
-                e.target.min = 0;
-              }
-            };
-
-            // check minutes to prevent schedule in the past
-            scope.checkMinutes = function(e) {
-              if (scope.deviceScheduleRepeat === 'once') {
-                var date = new Date();
-                var h = parseInt(document.getElementById('device-schedule-hours-' + scope.tinfo.id).value);
-                if (h <= date.getHours()) {
-                  e.target.min = date.getMinutes() + 1;
-                }
-              } else {
-                e.target.min = 0;
-              }
-            };
-            // add quick schedule
-            scope.quickSchedule = function(dev, temp) {
-              var h = document.getElementById('device-schedule-hours-' + scope.tinfo.id);
-              var m = document.getElementById('device-schedule-minutes-' + scope.tinfo.id);
-              var date = new Date();
-              date.setHours(parseInt(h.value), parseInt(m.value), 0, 0);
-
-              var job = {
-                name: dev.name,
-                type: 'device',
-                dateTime: {
-                  dayOfWeek: [0, 1, 2, 3, 4, 5, 6],
-                  hour: parseInt(h.value),
-                  minute: parseInt(m.value),
-                  sunrise: false,
-                  sunset: false
-                },
-                actions: [{
-                  emit_name: 'setThermostatValue',
-                  params: [dev.id, temp]
-                }]
-              };
-              if (scope.deviceScheduleRepeat === 'once') {
-                job.dateTime = {
-                  hour: 0,
-                  minute: 0,
-                  sunrise: false,
-                  sunset: false,
-                  timestamp: Date.parse(date)
-                }
-              }
-              console.log(job);
-              socket.emit('addNewJob', job, function(response) {
-                if (response) {
-                  scope.scheduleSuccess = true;
-                  h.value = '';
-                  m.value = '';
-                }
-                $timeout(function() {
-                  scope.scheduleSuccess = false;
-                }, 750);
-              });
-            };
-
-            // quick schedule temp up
-            scope.tempUpSchedule = function(temp) {
-              if (temp < 32) {
-                temp++;
-                scope.targetForSchedule = temp;
-              };
-            };
-
-            scope.tempDownSchedule = function(temp) {
-              if (temp > 18) {
-                temp--;
-                scope.targetForSchedule = temp;
-              }
-            };
+          /**
+           * @name toggleDeviceFavorites
+           * @desc add or remove device from favorites
+           * @type {function}
+           * @param {devId, devFav} device id, favorites state
+           */
+          function toggleDeviceFavorites(devId, devFav) {
+            if (devFav) {
+              socket.emit4('setUserProperty', devId, 'favorites', true);
+            } else {
+              socket.emit4('setUserProperty', devId, 'favorites', false);
+            }
           }
+          /**
+           * @name setThermostatTemperature
+           * @desc set target temperature for thermostat
+           * @type {function}
+           * @param {devId, devTarget} device id, target temperature
+           */
+          function setThermostatTemperature(devId, devTarget) {
+            socket.emit3('setThermostatValue', devId, devTarget, function(response) {
+              if (response) {
+                thermostatCtrl.setTempSuccess = true;
+                $timeout(function() {
+                  thermostatCtrl.setTempSuccess = false;
+                }, 1500);
+              }
+            });
+          }
+          /**
+           * @name setThermostatTemperatureDown
+           * @desc decrease thermostat target temeperature
+           * @type {function}
+           * @param {devTarget} target temperature
+           */
+          function setThermostatTemperatureDown(devTarget) {
+            if (devTarget > 18) {
+              deviceObj.target -= 1;
+            }
+          }
+          /**
+           * @name setThermostatTemperatureUp
+           * @desc increase themostat target temop
+           * @type {function}
+           * @param {devTarget} target temperature
+           */
+          function setThermostatTemperatureUp(devTarget) {
+            if (devTarget < 32) {
+              deviceObj.target += 1;
+            }
+          }
+          /**
+           * @name setThermostatScheduleTemperatureDown
+           * @desc decrease schedule target temperature
+           * @type {function}
+           * @param {scheduleTarget} schedule target temperature
+           */
+          function setThermostatScheduleTemperatureDown(scheduleTarget) {
+            if (scheduleTarget > 18) {
+              thermostatCtrl.deviceScheduleTemperature -= 1;
+            }
+          }
+          /**
+           * @name setThermostatScheduleTemperatureUp
+           * @desc increase schedule target temperature
+           * @type {function}
+           * @param {scheduleTarget} schedule target temperature
+           */
+          function setThermostatScheduleTemperatureUp(scheduleTarget) {
+            if (scheduleTarget < 32) {
+              thermostatCtrl.deviceScheduleTemperature += 1;
+            }
+          }
+          /**
+           * @name setDeviceQuickSchedule
+           * @desc schedule action
+           * @type {function}
+           * @param {scheduleObj} generated schedule obj from link function
+           */
+          function setDeviceQuickSchedule(scheduleObj) {
+            socket.emit('addNewJob', scheduleObj, function(response) {
+              if (response) {
+                thermostatCtrl.scheduleSuccess = true;
+                $timeout(function() {
+                  thermostatCtrl.scheduleSuccess = false;
+                }, 2500);
+              }
+            });
+          }
+
+          // exports
+          thermostatCtrl.toggleDeviceFavorites = toggleDeviceFavorites;
+          thermostatCtrl.setThermostatTemperature = setThermostatTemperature;
+          thermostatCtrl.setThermostatTemperatureUp = setThermostatTemperatureUp;
+          thermostatCtrl.setThermostatTemperatureDown = setThermostatTemperatureDown;
+          thermostatCtrl.setThermostatScheduleTemperatureDown = setThermostatScheduleTemperatureDown;
+          thermostatCtrl.setThermostatScheduleTemperatureUp = setThermostatScheduleTemperatureUp;
+          thermostatCtrl.setDeviceQuickSchedule = setDeviceQuickSchedule;
+          thermostatCtrl.deviceObj = deviceObj;
+        }],
+        link: function(scope, elem, attr, ctrl) {
+
+          var deviceObj = ctrl.deviceObj;
+          // device schedule DOM elements
+          var deviceScheduleBtn = elem[0].querySelector('#device-schedule-btn');
+          var deviceScheduleTab = elem[0].querySelector('#device-schedule-tab');
+          var deviceScheduleClose = deviceScheduleTab.querySelector('.close-device-options');
+          var deviceScheduleForm = deviceScheduleTab.querySelector('form');
+          var hour = deviceScheduleForm.querySelectorAll('input[type="number"]')[0];
+          var minute = deviceScheduleForm.querySelectorAll('input[type="number"]')[1];
+
+          /**
+           * @name deviceScheduleBtn
+           * @desc open schedule tab
+           * @type {Event}
+           */
+          deviceScheduleBtn.addEventListener('click', function() {
+            deviceScheduleTab.classList.remove('hidden');
+          }, false);
+          /**
+           * @name deviceScheduleClose
+           * @desc close schedule tab
+           * @type {event}
+           */
+          deviceScheduleClose.addEventListener('click', function(e) {
+            deviceScheduleTab.classList.add('hidden');
+          });
+          /**
+           * @name deviceScheduleForm
+           * @desc submit form for scheduling device actions
+           * @type {event}
+           */
+          deviceScheduleForm.addEventListener('submit', function() {
+            var date = new Date();
+            date.setHours(parseInt(hour.value), parseInt(minute.value), 0, 0);
+
+            var job = {
+              name: deviceObj.name,
+              type: 'device',
+              dateTime: {
+                dayOfWeek: [0, 1, 2, 3, 4, 5, 6],
+                hour: parseInt(hour.value),
+                minute: parseInt(minute.value),
+                sunrise: false,
+                sunset: false
+              },
+              actions: [{
+                emit_name: 'setThermostatValue',
+                params: [deviceObj.id, ctrl.deviceScheduleTemperature]
+              }]
+            };
+            if (ctrl.deviceScheduleRepeat === 'once') {
+              job.dateTime = {
+                hour: 0,
+                minute: 0,
+                sunrise: false,
+                sunset: false,
+                timestamp: Date.parse(date)
+              }
+            }
+            ctrl.setDeviceQuickSchedule(job);
+          }, false);
+          /**
+           * @name hour
+           * @desc schedule form hour input, prevent scheduling in the past
+           * @type {evemt}
+           */
+          hour.addEventListener('click', function() {
+            if (ctrl.deviceScheduleRepeat === 'once') {
+              var date = new Date();
+              this.min = date.getHours();
+            } else {
+              this.min = 0;
+            }
+          }, false);
+          /**
+           * @name minute
+           * @desc schedule form minute input, prevent scheduling in the past
+           * @type {event}
+           */
+          minute.addEventListener('click', function() {
+            if (ctrl.deviceScheduleRepeat === 'once') {
+              var date = new Date();
+              var h = parseInt(hour.value);
+              if (h <= date.getHours()) {
+                this.min = date.getMinutes() + 1;
+              }
+            } else {
+              this.min = 0;
+            }
+          }, false);
         }
       };
     }]);

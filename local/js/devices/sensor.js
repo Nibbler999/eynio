@@ -11,61 +11,67 @@
         scope: {
           sensorinfo: '='
         },
-        link: function(scope, elem, attr) {
+        controllerAs: 'sensorCtrl',
+        controller: ['$scope', function($scope) {
 
-          /* where am I */
-          scope.devicesState = $state.current.name;
+          var sensorCtrl = this;
+          var deviceObj = $scope.sensorinfo;
 
-          var getIcon = function() {
-            if (scope.sensorinfo.subtype === 'co-alarm') {
-              scope.sensorImg = 'img/sensors/co.png';
-            } else
-            if (scope.sensorinfo.subtype === 'co2') {
-              scope.sensorImg = 'img/sensors/co2.png';
-            } else
-            if (scope.sensorinfo.subtype === 'door') {
-              if (scope.sensorinfo.value) {
-                scope.sensorImg = 'img/sensors/door-open.png';
-
-              } else {
-                scope.sensorImg = 'img/sensors/door-close.png';
-              }
-            } else
-            if (scope.sensorinfo.subtype === 'humidity') {
-              scope.sensorImg = 'img/sensors/humidity.png';
-            } else
-            if (scope.sensorinfo.subtype === 'light') {
-              scope.sensorImg = 'img/sensors/lux.png';
-            } else
-            if (scope.sensorinfo.subtype === 'motion') {
-              scope.sensorImg = 'img/sensors/motion.png';
-            } else
-            if (scope.sensorinfo.subtype === 'noise') {
-              scope.sensorImg = 'img/sensors/noise.png';
-            } else
-            if (scope.sensorinfo.subtype === 'pressure') {
-              scope.sensorImg = 'img/sensors/pressure.png';
-            } else
-            if (scope.sensorinfo.subtype === 'rain') {
-              scope.sensorImg = 'img/sensors/rain.png';
-            } else
-            if (scope.sensorinfo.subtype === 'smoke-alarm') {
-              scope.sensorImg = 'img/sensors/smoke.png';
-            } else
-            if (scope.sensorinfo.subtype === 'temperature') {
-              scope.sensorImg = 'img/sensors/temp.png';
+          // listen for value changes
+          socket.on('sensorValue', function(response) {
+            if (deviceObj.id === response.id) {
+              deviceObj.value = response.value
+            }
+            setDeviceIcon();
+          });
+          /**
+           * @name setDeviceIcon
+           * @desc set sensor img
+           * @type {function}
+           * @param {}
+           */
+          function setDeviceIcon() {
+            switch (deviceObj.subtype) {
+              case 'co-alarm':
+                sensorCtrl.deviceIcon = 'img/sensors/co.png';
+                break;
+              case 'co2':
+                sensorCtrl.deviceIcon = 'img/sensors/co2.png';
+                break;
+              case 'door':
+                sensorCtrl.deviceIcon = deviceObj.value ? 'img/sensors/door-open.png' : 'img/sensors/door-close.png';
+                break;
+              case 'humidity':
+                sensorCtrl.deviceIcon = 'img/sensors/humidity.png';
+                break;
+              case 'light':
+                sensorCtrl.deviceIcon = 'img/sensors/lux.png';
+                break;
+              case 'motion':
+                sensorCtrl.deviceIcon = 'img/sensors/motion.png';
+                break;
+              case 'noise':
+                sensorCtrl.deviceIcon = 'img/sensors/noise.png';
+                break;
+              case 'pressure':
+                sensorCtrl.deviceIcon = 'img/sensors/pressure.png';
+                break;
+              case 'rain':
+                sensorCtrl.deviceIcon = 'img/sensors/rain.png';
+                break;
+              case 'smoke-alarm':
+                sensorCtrl.deviceIcon = 'img/sensors/smoke.png';
+                break;
+              case 'temperature':
+                sensorCtrl.deviceIcon = 'img/sensors/temp.png';
+                break;
             }
           }
+          setDeviceIcon();
 
-          getIcon();
-
-          socket.on('sensorValue', function(newSensroVal) {
-            if (scope.sensorinfo.id === newSensroVal.id) {
-              scope.sensorinfo.value = newSensroVal.value
-            }
-            getIcon();
-          });
-        }
+          // exports
+          sensorCtrl.deviceObj = deviceObj;
+        }]
       }
     }]);
 }());

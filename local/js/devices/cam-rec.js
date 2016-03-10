@@ -11,61 +11,82 @@
         scope: {
           camrec: '='
         },
-        link: function(scope, elem, attr) {
-          scope.currentState = $state.current.name;
+        controllerAs: 'camrecCtrl',
+        controller: ['$scope', function($scope) {
 
-          var date = new Date(scope.camrec.starttime);
-          scope.camrec.date = date.toUTCString();
-
-          scope.apiKey = dataService.getData().getApiKey;
-          if (!scope.apiKey) {
-            socket.emit('getApiKey', null, function(key) {
-              scope.apiKey = key;
-            });
-          }
-
-          socket.emit('getRecordingThumbnail', scope.camrec.id, function(response) {
-            scope.camrec.thumbnailImg = dataService.blobToImage(response);
-          });
-
-          scope.serverId = 0;
-          var options = {
-            width: -1,
-            height: -1,
-            framerate: 1
-          }
-
+          var camrecCtrl = this;
+          var deviceObj = $scope.camrec;
+          var camrecOptions = {
+              width: -1,
+              height: -1,
+              framerate: 1
+            }
+            // get camera name by id in recording
           var allCameras = dataService.getData().getDevicesObj.camera;
-          // set camera name
           angular.forEach(allCameras, function(cam) {
-            if (cam.id === scope.camrec.cameraid) {
-              scope.camrec.cameraName = cam.name;
+            if (cam.id === deviceObj.cameraid) {
+              deviceObj.cameraName = cam.name;
             }
           });
-
-          // console.log(scope.camrec);
-          scope.startPlayback = function(rec) {
-            socket.emit3('startPlayback', rec.id, options, function(response) {
+          // get date of recording for filtering
+          var date = new Date(deviceObj.starttime);
+          deviceObj.date = date.toUTCString();
+          // get api key for recording download
+          camrecCtrl.apiKey = dataService.getData().getApiKey;
+          if (!camrecCtrl.apiKey) {
+            socket.emit('getApiKey', null, function(response) {
+              camrecCtrl.apiKey = response;
+            });
+          }
+          // get server id for recording download
+          deviceObj.serverId = 0;
+            // get recording thumbnail image
+          socket.emit('getRecordingThumbnail', deviceObj.id, function(response) {
+            deviceObj.thumbnailImg = dataService.blobToImage(response);
+          });
+          /**
+           * @name requestPlayback
+           * @desc request playback from server, if success send emit for video modal
+           * @type {function}
+           * @param {camrecObj} camera recording object
+           */
+          function requestPlayback(camrecObj) {
+            socket.emit3('startPlayback', camrecObj.id, camrecOptions, function(response) {
               if (response) {
-                rec.playbackId = response;
-                $rootScope.$broadcast('requestLiveStreamPlayback', {
-                  dev: rec,
+                camrecObj.playbackId = response;
+                $scope.$emit('requestLiveStreamPlayback', {
+                  dev: camrecObj,
                   type: 'recording',
-                  options: options
+                  options: camrecOptions
                 });
               }
             });
-          };
-          //
-          // scope.endPlayback = function(recId) {
-          //   socket.emit('endPlayback', recId, function(response) {
-          //     console.log('OVO NIKAD', response);
-          //   });
-          // };
-
-          scope.deleteRecording = function(recId) {
+          }
+          /**
+           * @name deleteRecording
+           * @desc delete recording
+           * @type {function}
+           * @param {recId} recording id
+           */
+          function deleteRecording(recId) {
             socket.emit('deleteRecording', recId);
-          };
+            // emit event to security ctrl
+            $scope.$emit('deleteRecording', recId);
+          }
+          // exports
+          camrecCtrl.requestPlayback = requestPlayback;
+          camrecCtrl.deleteRecording = deleteRecording;
+          camrecCtrl.deviceObj = deviceObj;
+        }],
+        link: function(scope, elem, attr) {
+
+          var camrecActions = elem[0].querySelector('.cam-rec-actions');
+          var currentState = $state.current.name;
+          var deleteIcon = elem[0].querySelector('.color-red');
+          // if dashboard remove delete icon
+          if (currentState === 'frame.dashboard') {
+            camrecActions.removeChild(deleteIcon);
+          }
         }
       }
     }])
