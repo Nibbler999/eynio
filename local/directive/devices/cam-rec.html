@@ -6,6 +6,9 @@
     <h5>{{::camrecCtrl.deviceObj.starttime | date: 'd/MMM/yyyy HH:mm:ss'}}</h5>
   </span>
   <span class="cam-rec-actions">
+    <a href="/{{::camrecCtrl.deviceObj.id}}.webm" download title="{{::(camrecCtrl.deviceObj.size / 1048576).toFixed(2)}} MB">
+      <i class="material-icons">file_download</i>
+    </a>
     <i class="material-icons color-red" ng-click="camrecCtrl.deleteRecording(camrecCtrl.deviceObj.id)">delete</i>
   </span>
 </div>
