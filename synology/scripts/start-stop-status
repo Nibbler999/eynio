@@ -5,7 +5,7 @@ PIDFILE=/var/run/nhome.pid
 
 start_package()
 {
-    HOME=/var/packages/NHome/etc node ${PRIVATE_LOCATION}/server.js --nocolor --pidfile $PIDFILE &> /tmp/nhome.log &
+    HOME=/var/packages/NHome/etc node ${PRIVATE_LOCATION}/server.js --nocolor --pidfile $PIDFILE &> /var/log/nhome.log &
 }
 
 stop_package()
@@ -37,7 +37,7 @@ case $1 in
                 exit 0
                 ;;
         log)
-                echo "/tmp/nhome.log"
+                echo "/var/log/nhome.log"
                 exit 0
                 ;;
 esac
