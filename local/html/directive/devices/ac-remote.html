@@ -1,0 +1,228 @@
+<div id="device" ng-class="{'fullRemote': fullActive, 'fullNumpad': getNumpad, 'deviceOptions': devOptions}">
+    <div id="devHead">
+        <img ng-show="currentState != 'frame.devices'" src="img/buttons/devIcons/remote.png" class="img-responsive" ng-click="fullActive = !fullActive; getNumpad = false">
+        <img ng-show="currentState === 'frame.devices'" src="img/buttons/devIcons/remote.png" class="img-responsive">
+        <div>
+            <p>{{crinfo.name}}</p>
+            <p>{{crinfo.type}}</p>
+        </div>
+        <img ng-show="currentState === 'frame.devices'" src="img/buttons/remoteIcons/open-book.svg" alt="Learning mode" class="img-responsive remote-learning-mode" data-toggle="modal" data-target="#learning-mode-{{crinfo.id}}">
+    </div>
+
+    <div id="devOptions" ng-show="devOptions" ng-class="{'devOptionsActive': devOptions}">
+        <label for="devName" class="sr-only">Name of Device</label>
+        <input type="text" id="devName" ng-model="crinfo.name" class="form-text" placeholder="Remote Name">
+
+        <div id="buttonHolder">
+            <button type="submit" class="btn btn-primary" ng-click="updateRemote(crinfo.id)">Save</button>
+            <button type="button" class="btn btn-danger" ng-click="delteRemote(crinfo.id)">Delete</button>
+        </div>
+    </div>
+
+    <div class="devBody" ng-class="{'devBody-active': fullActive}" ng-hide="learningMode">
+        <div class="remote-row HELPER_jc-betweem">
+            <div class="remote-btn remote-btn-wide rem-power" id="acrem-cool" ng-click="cRemoteAction(crinfo.id, 'COOL')">
+                Cool
+            </div>
+            <div class="remote-btn remote-btn-wide rem-source" id="acrem-heat" ng-click="cRemoteAction(crinfo.id, 'HEAT')">
+                Heat
+            </div>
+            <div class="remote-btn remote-btn-wide rem-source" id="acrem-fan" ng-click="cRemoteAction(crinfo.id, 'FAN')">
+                Fan
+            </div>
+        </div>
+
+        <div class="remote-row HELPER_jc-betweem">
+            <div class="remote-btn remote-btn-wide rem-tools" id="acrem-on" ng-click="cRemoteAction(crinfo.id, 'ON')">
+                On
+            </div>
+            <div class="remote-btn remote-btn-wide rem-info" id="acrem-off" ng-click="cRemoteAction(crinfo.id, 'OFF')">
+                Off
+            </div>
+        </div>
+
+        <div class="remote-row HELPER_jc-center">
+            <div class="remote-btn remote-btn-gray rem-left" id="acrem-left" ng-click="cRemoteAction(crinfo.id, 'LEFT')">
+                18
+            </div>
+            <div class="remote-btn remote-btn-gray rem-left" id="acrem-left" ng-click="cRemoteAction(crinfo.id, 'LEFT')">
+                20
+            </div>
+            <div class="remote-btn remote-btn-gray rem-left" id="acrem-left" ng-click="cRemoteAction(crinfo.id, 'LEFT')">
+                22
+            </div>
+            <div class="remote-btn remote-btn-gray rem-left" id="acrem-left" ng-click="cRemoteAction(crinfo.id, 'LEFT')">
+                24
+            </div>
+            <div class="remote-btn remote-btn-gray rem-left" id="acrem-left" ng-click="cRemoteAction(crinfo.id, 'LEFT')">
+                26
+            </div>
+            <div class="remote-btn remote-btn-gray rem-left" id="acrem-left" ng-click="cRemoteAction(crinfo.id, 'LEFT')">
+                28
+            </div>
+            <div class="remote-btn remote-btn-gray rem-left" id="acrem-left" ng-click="cRemoteAction(crinfo.id, 'LEFT')">
+                30
+            </div>
+        </div>
+
+
+
+
+
+
+        <!-- Learning mode modal -->
+        <div class="modal fade" id="learning-mode-{{crinfo.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="stopStream()">
+                            &times;
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">
+                       Welcome to learning mode of your
+                        {{crinfo.name}}
+                    </h4>
+                    </div>
+                    <div class="modal-body modal-remote-learn">
+
+                        <div>
+                            <div class="remote-row HELPER_jc-betweem">
+                                <div class="remote-btn remote-btn-wide rem-power" id="rem-learn-power" ng-click="learnKey(crinfo.id, 'POWER')">
+                                    Power
+                                </div>
+                                <div class="remote-btn remote-btn-wide rem-source" id="rem-learn-source" ng-click="learnKey(crinfo.id, 'SOURCE')">
+                                    Source
+                                </div>
+                            </div>
+
+                            <div class="remote-row HELPER_jc-betweem">
+                                <div class="remote-btn remote-btn-wide rem-tools" id="rem-learn-tools" ng-click="learnKey(crinfo.id, 'TOOLS')">
+                                    Tools
+                                </div>
+                                <div class="remote-btn remote-btn-wide rem-info" id="rem-learn-info" ng-click="learnKey(crinfo.id, 'INFO')">
+                                    INFO
+                                </div>
+                            </div>
+
+                            <div class="remote-btn remote-btn-gray rem-up" id="rem-learn-up" ng-click="learnKey(crinfo.id, 'UP')"></div>
+
+                            <div class="remote-row HELPER_jc-center">
+                                <div class="remote-btn remote-btn-gray rem-left" id="rem-learn-left" ng-click="learnKey(crinfo.id, 'LEFT')"></div>
+                                <div class="remote-btn rem-ok" id="rem-learn-ok" ng-click="learnKey(crinfo.id, 'OK')">OK</div>
+                                <div class="remote-btn remote-btn-gray rem-right" id="rem-learn-right" ng-click="learnKey(crinfo.id, 'RIGHT')"></div>
+                            </div>
+
+                            <div class="remote-btn remote-btn-gray rem-down" id="rem-learn-down" ng-click="learnKey(crinfo.id, 'DOWN')"></div>
+
+                            <div class="remote-row HELPER_jc-betweem">
+                                <div class="remote-btn remote-btn-wide rem-return" id="rem-learn-return" ng-click="learnKey(crinfo.id, 'RETURN')">
+                                    Return
+                                </div>
+                                <div class="remote-btn remote-btn-wide rem-exit" id="rem-learn-exit" ng-click="learnKey(crinfo.id, 'EXIT')">
+                                    Exit
+                                </div>
+                            </div>
+
+                            <div class="remote-row HELPER_jc-betweem">
+                                <div class="remote-btn remote-btn-gray rem-volup" id="rem-learn-volup" ng-click="learnKey(crinfo.id, 'VOLUP')">
+                                    Vol
+                                </div>
+                                <div class="remote-btn rem-mute" id="rem-learn-mute" ng-click="learnKey(crinfo.id, 'MUTE')">
+                                    Mute
+                                </div>
+                                <div class="remote-btn rem-settings" id="rem-learn-settings" ng-click="learnKey(crinfo.id, 'SETTINGS')">
+                                    Settings
+                                </div>
+                                <div class="remote-btn remote-btn-gray rem-chup" id="rem-learn-chup" ng-click="learnKey(crinfo.id, 'CHUP')">
+                                    CH
+                                </div>
+                            </div>
+
+                            <div class="remote-row HELPER_jc-betweem">
+                                <div class="remote-btn remote-btn-gray rem-voldown" id="rem-learn-voldown" ng-click="learnKey(crinfo.id, 'VOLDOWN')">
+                                    Vol
+                                </div>
+                                <div class="remote-btn rem-txt" id="rem-learn-txt" ng-click="learnKey(crinfo.id, 'TXT')">
+                                    Txt
+                                </div>
+                                <div class="remote-btn rem-menu" id="rem-learn-menu" ng-click="learnKey(crinfo.id, 'MENU')">
+                                    Menu
+                                </div>
+                                <div class="remote-btn remote-btn-gray rem-chdown" id="rem-learn-chdown" ng-click="learnKey(crinfo.id, 'CHDOWN')">
+                                    CH
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- numpad btns !-->
+                        <div>
+                            <div class="remote-row HELPER_jc-center">
+                                <div class="remote-btn remote-btn-gray numpad-btn rem-num_1" id="rem-learn-num_1" ng-click="learnKey(crinfo.id, 'NUM_1')">
+                                    1
+                                </div>
+                                <div class="remote-btn remote-btn-gray numpad-btn rem-num_2" id="rem-learn-num_2" ng-click="learnKey(crinfo.id, 'NUM_2')">
+                                    2
+                                </div>
+                                <div class="remote-btn remote-btn-gray numpad-btn rem-num_3" id="rem-learn-num_3" ng-click="learnKey(crinfo.id, 'NUM_3')">
+                                    3
+                                </div>
+                            </div>
+
+                            <div class="remote-row HELPER_jc-center">
+                                <div class="remote-btn remote-btn-gray numpad-btn rem-num_4" id="rem-learn-num_4" ng-click="learnKey(crinfo.id, 'NUM_4')">
+                                    4
+                                </div>
+                                <div class="remote-btn remote-btn-gray numpad-btn rem-num_5" id="rem-learn-num_5" ng-click="learnKey(crinfo.id, 'NUM_5')">
+                                    5
+                                </div>
+                                <div class="remote-btn remote-btn-gray numpad-btn rem-num_6" id="rem-learn-num_6" ng-click="learnKey(crinfo.id, 'NUM_6')">
+                                    6
+                                </div>
+                            </div>
+
+                            <div class="remote-row HELPER_jc-center">
+                                <div class="remote-btn remote-btn-gray numpad-btn rem-num_7" id="rem-learn-num_7" ng-click="learnKey(crinfo.id, 'NUM_7')">
+                                    7
+                                </div>
+                                <div class="remote-btn remote-btn-gray numpad-btn rem-num_8" id="rem-learn-num_8" ng-click="learnKey(crinfo.id, 'NUM_8')">
+                                    8
+                                </div>
+                                <div class="remote-btn remote-btn-gray numpad-btn rem-num_9" id="rem-learn-num_9" ng-click="learnKey(crinfo.id, 'NUM_9')">
+                                    9
+                                </div>
+                            </div>
+
+
+                            <div class="remote-row HELPER_jc-center">
+                                <div class="remote-btn remote-btn-gray numpad-btn rem-num_0" id="rem-learn-num_0" ng-click="learnKey(crinfo.id, 'NUM_0')">
+                                    0
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer modal-remote-learn-footer">
+                        <p>
+                            Click on the button you want to program
+                            <br> then press the button on the tv remote to have it memorised
+                        </p>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+
+
+        <div id="devFooter" class="remoteFooter" ng-show="currentState != 'frame.devices'">
+            <div class="remote-numpad-btn" ng-click="getNumpad = !getNumpad; fullActive = false">
+                NUMPAD
+            </div>
+        </div>
+
+        <div id="devFooter" ng-show="currentState === 'frame.devices'">
+            <div id="options" ng-click="devOptions = !devOptions"></div>
+        </div>
+    </div>

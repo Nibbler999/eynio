@@ -3,7 +3,8 @@
 
   angular
     .module('services', [])
-    .config(['$httpProvider', function($httpProvider) {
+    .config(['$httpProvider', '$compileProvider', function($httpProvider, $compileProvider) {
+      $compileProvider.debugInfoEnabled(false);
       // Use x-www-form-urlencoded Content-Type
       $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
 

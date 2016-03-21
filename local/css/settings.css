@@ -228,7 +228,7 @@
   height: auto;
 }
 .settings-btn.green {
-  background-color: #5fca8f;
+  background-color: #5fca8f !important;
 }
 .settings-btn.blue{
   background-color: #006BB7;

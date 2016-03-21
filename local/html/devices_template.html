@@ -1,0 +1,87 @@
+<div class="template-nav">
+  <h3>Devices</h3>
+
+  <div class="dropdown">
+    <button class="button add-new-btn" id="add-new-device" role="button" data-toggle="dropdown">
+      Add new device
+    </button>
+    <ul class="dropdown-menu add-new-device-dorpdown-menu" role="menu" aria-labelledby="add-new-device">
+      <li role="presentation">
+        <a role="menuitem" tabindex="-1" href="" ng-click="device.addRemote()">
+            New Remote
+          </a>
+      </li>
+      <li role="presentation">
+        <a role="menuitem" tabindex="-1" href="" ng-click="device.addCamera()">
+            New Camera
+          </a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- show all lights !-->
+<section class="display-devices" ng-if="device.data.getDevicesObj.light.length">
+  <h4 data-toggle="collapse" data-target="#lights-list">Lights</h4>
+  <div class="collapse" id="lights-list">
+    <devices-dev ng-repeat="light in device.data.getDevicesObj.light" devinfo="light"></devices-dev>
+  </div>
+  <hr>
+</section>
+
+<!-- show all switches !-->
+<section class="display-devices" ng-if="device.data.getDevicesObj.switch.length">
+  <h4 data-toggle="collapse" data-target="#switches-list">Switches</h4>
+  <div class="collapse" id="switches-list">
+    <devices-dev ng-repeat="switch in device.data.getDevicesObj.switch" devinfo="switch"></devices-dev>
+  </div>
+  <hr>
+</section>
+<!-- show all shutters !-->
+<section class="display-devices" ng-if="device.data.getDevicesObj.shutters.length">
+  <h4 data-toggle="collapse" data-target="#shutters-list">Shutters</h4>
+  <hr>
+  <div class="collapse" id="shutters-list">
+    <devices-dev ng-repeat="shutter in device.data.getDevicesObj.shutters" devinfo="shutter"></devices-dev>
+  </div>
+</section>
+<!-- show all thermostats !-->
+<section class="display-devices" ng-if="device.data.getDevicesObj.thermostat.length">
+  <h4 data-toggle="collapse" data-target="#thermostats-list">Thermostat</h4>
+  <div class="collapse" id="thermostats-list">
+    <devices-dev ng-repeat="thermo in device.data.getDevicesObj.thermostat" devinfo="thermo"></devices-dev>
+  </div>
+  <hr>
+</section>
+<!-- show all remotes !-->
+<section class="display-devices" ng-if="device.data.getDevicesObj.remote.length">
+  <h4 data-toggle="collapse" data-target="#remotes-list">Remotes</h4>
+  <div class="collapse" id="remotes-list">
+    <devices-dev ng-repeat="cRemote in device.data.getDevicesObj.remote track by cRemote.id" devinfo="cRemote"></devices-dev>
+  </div>
+  <hr>
+</section>
+<!-- show all cameras !-->
+<section class="display-devices" ng-if="device.data.getDevicesObj.camera.length">
+  <h4 data-toggle="collapse" data-target="#cameras-list">Cameras</h4>
+  <div class="collapse" id="cameras-list">
+    <devices-dev ng-repeat="camera in device.data.getDevicesObj.camera track by camera.id" devinfo="camera"></devices-dev>
+  </div>
+  <hr>
+</section>
+<!-- show all sensors !-->
+<section class="display-devices" ng-if="device.data.getDevicesObj.sensor.length">
+  <h4 data-toggle="collapse" data-target="#sensors-list">Sensors</h4>
+  <div class="collapse" id="sensors-list">
+    <devices-dev ng-repeat="sensor in device.data.getDevicesObj.sensor" devinfo="sensor"></devices-dev>
+  </div>
+  <hr>
+</section>
+<!-- show all blacklisted !-->
+<section class="display-devices" ng-if="device.data.getBlacklisted.length">
+  <h4 data-toggle="collapse" data-target="#blacklisted-list">Blacklisted</h4>
+  <div class="collapse" id="blacklisted-list">
+    <devices-dev ng-repeat="dev in device.data.getBlacklisted track by dev.id" devinfo="dev"></devices-dev>
+  </div>
+  <hr>
+</section>

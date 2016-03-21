@@ -1,0 +1,91 @@
+<section class="custom-modal-window edit-device-modal" ng-class="{'show-modal': editDeviceCtrl.showModal}">
+  <section class="custom-modal-wrap">
+    <img class="edit-devices-close-btn" src="img/button/cross.png">
+    <div class="edit-device-rename">
+      <h3>Device Settings</h3>
+
+      <div class="form-input-wrap">
+        <label for="rename-device" class="form-label">
+          Rename device
+        </label>
+        <input type="text" id="rename-device" class="form-input" ng-model="editDeviceCtrl.deviceObj.name">
+
+        <!-- if editing camera show more options !-->
+        <span ng-show="editDeviceCtrl.deviceObj.type === 'camera'">
+          <label for="snapshot-camera" class="form-label">
+            Snapshot
+          </label>
+          <input type="text" id="snapshot-camera" class="form-input" ng-model="editDeviceCtrl.deviceObj.snapshot">
+
+          <label for="mjpeg-camera" class="form-label">
+            MJPEG
+          </label>
+          <input type="text" id="mjpeg-camera" class="form-input" ng-model="editDeviceCtrl.deviceObj.mjpeg">
+          <label for="rtsp-camera" class="form-label">
+            RTSP
+          </label>
+          <input type="text" id="rtsp-camera" class="form-input" ng-model="editDeviceCtrl.deviceObj.rtsp">
+
+          <label class="form-label">Rotation</label>
+          <span>
+            <i>0°</i>
+            <input type="radio" id="camera-rotation-0" name="camera-rotation" value="0" ng-checked="editDeviceCtrl.deviceObj.rotate === 0" ng-model="editDeviceCtrl.deviceObj.rotate">
+            <label for="camera-rotation-0" class="radio-label"></label>
+          </span>
+        <span>
+            <i>90°</i>
+            <input type="radio" id="camera-rotation-90" name="camera-rotation" value="90" ng-checked="editDeviceCtrl.deviceObj.rotate === 90" ng-model="editDeviceCtrl.deviceObj.rotate">
+            <label for="camera-rotation-90" class="radio-label"></label>
+          </span>
+        <span>
+            <i>180°</i>
+            <input type="radio" id="camera-rotation-180" name="camera-rotation" value="180" ng-checked="editDeviceCtrl.deviceObj.rotate === 180" ng-model="editDeviceCtrl.deviceObj.rotate">
+            <label for="camera-rotation-180" class="radio-label"></label>
+          </span>
+        <span>
+            <i>270°</i>
+            <input type="radio" id="camera-rotation-270" name="camera-rotation" value="270" ng-checked="editDeviceCtrl.deviceObj.rotate === 270" ng-model="editDeviceCtrl.deviceObj.rotate">
+            <label for="camera-rotation-270" class="radio-label"></label>
+          </span>
+        <label class="form-label">Frame rate</label>
+        <input type="number" name="fps" ng-model="editDeviceCtrl.deviceObj.fps" min="1" max="30" class="form-number">
+        </span>
+
+        <!-- if editing remote show options !-->
+        <span ng-show="editDeviceCtrl.deviceObj.type === 'remote'">
+
+          <label class="form-label" for="ir-output-remote">IR Output</label>
+          <select id="ir-output-remote" class="form-select" ng-model="editDeviceCtrl.deviceObj.deviceid">
+            <option ng-repeat="remote in device.data.getRemotes" value={{::remote.id}}>
+              {{::remote.name}}
+            </option>
+          </select>
+        </span>
+      </div>
+    </div>
+    <div class="edit-device-room">
+      <h4>Asigned rooms</h4>
+      <div class="asing-room">
+        <button type="button" class="button asigned-room-btn" ng-repeat="room in editDeviceCtrl.asignedRooms" ng-click="editDeviceCtrl.removeDeviceRoom($index, room)">
+          <p>{{::room.name}}</p>
+        </button>
+      </div>
+      <hr>
+      <h4>Unasigned rooms</h4>
+      <div class="asing-room">
+        <button type="button" class="button unasigned-room-btn" ng-repeat="room in editDeviceCtrl.unAsignedRooms" ng-click="editDeviceCtrl.addDeviceRoom($index, room)">
+          <p>{{::room.name}}</p>
+        </button>
+      </div>
+
+      <div class="add-new-footer">
+        <button class="button orange-btn">
+          Cancel
+        </button>
+        <button type="submit" class="button blue-btn" ng-click="editDeviceCtrl.saveDeviceEdit(editDeviceCtrl.deviceObj)">
+          Save
+        </button>
+      </div>
+    </div>
+  </section>
+</section>

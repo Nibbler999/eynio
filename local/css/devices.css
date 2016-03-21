@@ -18,6 +18,9 @@
 .edit-device-modal, .add-camera-modal, .add-remote-modal {
   display: none;
 }
+.show-modal{
+  display: block;
+}
 .custom-modal-wrap {
   position: relative;
   max-width: 95%;
@@ -56,6 +59,7 @@
   top: 3%;
   right: 1%;
   cursor: pointer;
+  z-index: 1;
 }
 .edit-device-room {
   padding: 1%;

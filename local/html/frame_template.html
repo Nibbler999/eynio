@@ -1,0 +1,242 @@
+<div class="frame-wrap">
+  <!-- navigation !-->
+  <h3 class="server-offline-msg" ng-show="God.serverOffline">
+    Server is offline
+  </h3>
+  <section class="frame-nav">
+    <i class="material-icons burger-menu-icon button" ng-click="God.toggleMenu()">menu</i>
+    <img src="img/logo/nhome_logo_white.png" class="frame-menu-icon" ui-sref="frame.all-rooms">
+
+    <div>
+      <div class="frame-new-server-notification" ng-show="God.foundNewServer.length">
+        <button type="button" class="button frame-new-server-btn" title="nHome found {{God.foundNewServer.length}} new server(s)" ui-sref="frame.add-server">
+          <img src="img/add-server/server-added.png" class="server-found-img">
+        </button>
+      </div>
+
+      <!--<div class="frame-notifications" ng-show="God.foundNewServer.length">
+        {{God.foundNewServer.length}}
+        <div class="frame-notifications-dropdown">
+          <ul>
+            <li ng-repeat="server in God.foundNewServer">
+              {{server.name}}
+            </li>
+          </ul>
+          <button class="frame-notifications-more-btn">
+            More
+          </button>
+        </div>
+      </div>!-->
+    </div>
+  </section>
+  <!-- content wrap !-->
+  <section class="frame-content-wrap">
+    <!-- side bar !-->
+    <section class="frame-sidebar">
+      <div class="dropdown server-dropdown" ng-click="showDownloads = false">
+
+      </div>
+
+      <a ui-sref="frame.dashboard" class="sidebar-nav-btn nhome-btn" ui-sref-active="active" ng-click="showDownloads = false">
+        Dashboard
+      </a>
+
+      <a ui-sref="frame.devices" class="sidebar-nav-btn devices-btn" ui-sref-active="active" ng-click="showDownloads = false">
+        <span>Devices</span>
+      </a>
+
+      <a ui-sref="frame.scenes" class="sidebar-nav-btn scenes-btn" ui-sref-active="active" ng-click="showDownloads = false">
+        <span>Scenes</span>
+      </a>
+
+      <a ui-sref="frame.schedule" class="sidebar-nav-btn schedule-btn" ui-sref-active="active" ng-click="showDownloads = false">
+        <span>Schedule</span>
+      </a>
+
+      <a ui-sref="frame.security" class="sidebar-nav-btn security-btn" ui-sref-active="active" ng-click="showDownloads = false">
+        <span>Security</span>
+      </a>
+
+      <!-- downloads menu toggle by download btn !-->
+      <section class="downloads-menu" ng-show="showDownloads">
+        <section class="downloads-title">
+          <h3>Downloads</h3>
+          <img src="img/button/cross.png" class="downloads-close-btn" ng-click="showDownloads = false">
+        </section>
+
+        <div class="panel-group" id="accordion">
+          <div class="panel panel-default downloads-panel">
+            <div class="panel-heading downloads-panel-heading download-raspi" data-toggle="collapse" data-parent="#accordion" data-target="#collapse-pi">
+              <h4 class="panel-title">
+                Raspberry Pi
+              </h4>
+            </div>
+
+            <div id="collapse-pi" class="panel-collapse collapse in">
+              <div class="panel-body">
+                <!-- <a href="https://nhome.s3.amazonaws.com/NHomePi-NOOBS.zip" class="download-link">
+                  Pi - NOOB Installer
+                </a>
+                <a href="https://nhome.s3.amazonaws.com/NHomePi.img.xz" class="download-link">
+                  Pi - Raw Image
+                </a> -->
+                <a href="https://nhome.s3.amazonaws.com/NHomePi2-NOOBS.zip" class="download-link">
+                  Pi 2 - NOOB Installer
+                </a>
+                <a href="https://nhome.s3.amazonaws.com/NHomePi2.img.xz" class="download-link">
+                  Pi 2 - Raw Installer
+                </a>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="panel panel-default downloads-panel">
+            <div class="panel-heading downloads-panel-heading download-nas collapsed" data-toggle="collapse" data-parent="#accordion" data-target="#collapse-nas">
+              <h4 class="panel-title">
+                NAS
+              </h4>
+            </div>
+
+            <div id="collapse-nas" class="panel-collapse collapse">
+              <div class="panel-body">
+                <a href="https://nhome.s3.amazonaws.com/NHome.spk" class="download-link">
+                  Synology NAS
+                </a>
+                <a href="https://nhome.s3.amazonaws.com/NHome.apk" class="download-link">
+                  Asustor NAS
+                </a>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="panel panel-default downloads-panel">
+            <div class="panel-heading downloads-panel-heading download-win collapsed" data-toggle="collapse" data-parent="#accordion" data-target="#collapse-win">
+              <h4 class="panel-title">
+                Windows
+              </h4>
+            </div>
+
+            <div id="collapse-win" class="panel-collapse collapse">
+              <div class="panel-body">
+                <a href="https://nhome.s3.amazonaws.com/NHomeServer.exe" class="download-link">
+                  Windows
+                </a>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="panel panel-default downloads-panel">
+            <div class="panel-heading downloads-panel-heading download-generic collapsed" data-toggle="collapse" data-parent="#accordion" data-target="#collapse-generic">
+              <h4 class="panel-title">
+                Generic
+              </h4>
+            </div>
+
+            <div id="collapse-generic" class="panel-collapse collapse">
+              <div class="panel-body">
+                <a href="https://nhome.s3.amazonaws.com/NHomeServer.zip" class="download-link">
+                  Generic
+                </a>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="panel panel-default downloads-panel">
+            <div class="panel-heading downloads-panel-heading download-fedora collapsed" data-toggle="collapse" data-parent="#accordion" data-target="#collapse-fedora">
+              <h4 class="panel-title">
+                Fedora
+              </h4>
+            </div>
+
+            <div id="collapse-fedora" class="panel-collapse collapse">
+              <div class="panel-body">
+                <a href="https://nhome.s3.amazonaws.com/NHomeServer.rpm" class="download-link">
+                  Fedora
+                </a>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="panel panel-default downloads-panel">
+            <div class="panel-heading downloads-panel-heading download-android collapsed" data-toggle="collapse" data-parent="#accordion" data-target="#collapse-android">
+              <h4 class="panel-title">
+                Android
+              </h4>
+            </div>
+
+            <div id="collapse-android" class="panel-collapse collapse">
+              <div class="panel-body">
+                <a href="https://play.google.com/store/apps/details?id=n.home.smartapp" target="_blank" class="download-link">
+                  Android
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <button class="sidebar-nav-btn activity-log-btn hidden-xs hidden-sm hidden-md">
+        Session activity log
+      </button>
+      <div class="sidebar-activity-log hidden-xs hidden-sm hidden-md" ng-class="{'empty': !God.sessionActionLog.length}">
+        <ul>
+          <li ng-repeat="log in God.sessionActionLog track by log.time">
+            <div class="activity-log-bullet">
+              <div class="activity-log-bullet-shadow"></div>
+            </div>
+            <span class="activity-log-info">
+              <p class="activity-log-date">{{::log.time | date: 'd/MMM/yyyy HH:mm:ss'}}</p>
+              <p>{{::log.user}}
+                turned
+                <b ng-if="log.action.slice(log.action.length-3, log.action.length) === 'off'">OFF</b>
+                <b ng-if="log.action.slice(log.action.length-2, log.action.length) === 'on'">ON</b>
+                <b ng-if="log.action ==='scene-set'">triggered scene</b>
+                {{::log.device}}
+              </p>
+            </span>
+          </li>
+        </ul>
+        <!--<img src="img/frame/activity-log.png" ng-hide="God.sessionActionLog.length > 0">!-->
+      </div>
+
+      <a ui-sref="frame.server-settings" class="button settings-cog-btn" ng-click="showDownloads = false">
+        Settings
+      </a>
+    </section>
+
+    <!-- page content !-->
+    <section class="frame-page-content-wrap">
+
+      <!-- ui router !-->
+      <section class="frame-view" ui-view></section>
+      <!-- stream modal -->
+      <play-stream></play-stream>
+      <!-- add rmeote modal -->
+      <add-remote></add-remote>
+      <!-- add new camera -->
+      <add-camera></add-camera>
+      <!-- edit device -->
+      <edit-device></edit-device>
+      <!-- bottom nav !-->
+      <section class="frame-nav-bottom" ng-click="showDownloads = false">
+        <a ui-sref="frame.dashboard" name="Favorite" class="button filter-btn dashboard-filter-btn" ui-sref-active="active">
+          <span class="hidden-xs">Dashboard</span>
+        </a>
+        <a ui-sref="frame.all-rooms" class="button filter-btn all-rooms-filter-btn" ui-sref-active="active">
+          <span class="hidden-xs">All rooms</span>
+        </a>
+        <a ui-sref="frame.most-used" class="button filter-btn most-used-filter-btn" ui-sref-active="active">
+          <span class="hidden-xs">Most used</span>
+        </a>
+        <a ui-sref="frame.recently-used" class="button filter-btn recently-used-filter-btn" ui-sref-active="active">
+          <span class="hidden-xs">Recently used</span>
+        </a>
+      </section>
+    </section>
+  </section>
+</div>

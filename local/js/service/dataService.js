@@ -237,7 +237,6 @@
           });
         });
         socket.on('sensorValue', function(sensorChange) {
-
           angular.forEach(currentServerData.getDevicesObj.sensor, function(sensor) {
             if (sensor.id === sensorChange.id) {
               sensor.value = sensorChange.value;
@@ -268,7 +267,7 @@
         });
         /* get activity log, listen for updates */
         socket.emit('getActionLog', 1, function(log) {
-          currentServerData.getActionLog = log.reverse();
+          bigServerData.getActionLog = log.reverse();
           deferred.resolve(log);
         });
         /* get server log */
@@ -283,6 +282,9 @@
         socket.emit('isAlarmEnabled', null, function(alarmState) {
           currentServerData.isAlarmEnabled = alarmState;
         });
+        socket.emit('getAlarmConfig', null, function(alarmConf) {
+          currentServerData.getAlarmConfig = alarmConf;
+        });
 
         return deferred.promise
       };
@@ -295,8 +297,12 @@
         return currentServerData;
       };
       //  return big data, not saved to IDB
-      this.getBigData = function(){
+      this.getBigData = function() {
         return bigServerData
+      };
+      // return account data
+      this.getAccountData = function(){
+        return accountData
       };
 
       this.blobToImage = function(imageData) {

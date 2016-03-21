@@ -1,0 +1,12 @@
+<div class="template-nav">
+  <h3>Scenes</h3>
+  <button class="button add-new-btn" data-toggle="collapse" data-target="#add-new-scene, #display-scenes">
+    Add New Scene
+  </button>
+</div>
+
+<div id="display-scenes" class="collapse in">
+  <scene ng-repeat="scene in scene.data.getScenes track by scene.id" scinfo="scene"></scene>
+  <p class="color-transparent" ng-if="!scene.data.getScenes.length">You haven't created a single sceen! Click the button in the corner and make one</p>
+</div>
+<add-scene></add-scene>

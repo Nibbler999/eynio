@@ -50,15 +50,15 @@
   <ui-view></ui-view>
   <!-- build:js js/main.min.js -->
   <!-- angularJS -->
-  <script src="js/libraries/angular.min.js"></script>
+  <script src="js/lib/angular.min.js"></script>
   <!-- ui-router -->
-  <script src="js/libraries/angular-ui-router.min.js"></script>
+  <script src="js/lib/angular-ui-router.min.js"></script>
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-  <script src="js/libraries/jquery-1.11.3.min.js"></script>
+  <script src="js/lib/jquery-1.11.3.min.js"></script>
   <!-- Bootstrap -->
   <script src="js/bootstrap.min.js"></script>
   <!-- socket.IO -->
-  <script src="js/libraries/socket.io.js"></script>
+  <script src="js/lib/socket.io.js"></script>
   <!-- color picker !-->
   <script defer src="js/tinycolor-min.js"></script>
   <script defer src="js/bootstrap.colorpickersliders.min.js"></script>
@@ -72,40 +72,44 @@
   <!-- services shared among controlelrs and directives !-->
   <script defer src="js/service/dataService.js"></script>
 
-  <!-- controllers !-->
-  <script defer src="js/controllers/NHomeCtrl.js"></script>
-  <script defer src="js/controllers/AllRoomCtrl.js"></script>
-  <script defer src="js/controllers/DashboardCtrl.js"></script>
-  <script defer src="js/controllers/MostUsedCtrl.js"></script>
-  <script defer src="js/controllers/RecentlyUsedCtrl.js"></script>
-  <script defer src="js/controllers/DeviceCtrl.js"></script>
-  <script defer src="js/controllers/ScenesCtrl.js"></script>
-  <script defer src="js/controllers/ScheduleCtrl.js"></script>
-  <script defer src="js/controllers/SecurityCtrl.js"></script>
-  <script defer src="js/controllers/SettingsServerCtrl.js"></script>
+  <!-- controller !-->
+  <script defer src="js/controller/NHomeCtrl.js"></script>
+  <script defer src="js/controller/AllRoomCtrl.js"></script>
+  <script defer src="js/controller/DashboardCtrl.js"></script>
+  <script defer src="js/controller/MostUsedCtrl.js"></script>
+  <script defer src="js/controller/RecentlyUsedCtrl.js"></script>
+  <script defer src="js/controller/DeviceCtrl.js"></script>
+  <script defer src="js/controller/ScenesCtrl.js"></script>
+  <script defer src="js/controller/ScheduleCtrl.js"></script>
+  <script defer src="js/controller/SecurityCtrl.js"></script>
+  <script defer src="js/controller/SettingsServerCtrl.js"></script>
 
   <!-- live stream, play recordings -->
-  <script defer src="js/service/play-stream.js"></script>
+  <script defer src="js/directive/play-stream.js"></script>
+  <script defer src="js/directive/add-remote.js"></script>
+  <script defer src="js/directive/add-camera.js"></script>
+  <script defer src="js/directive/edit-device.js"></script>
+  <script defer src="js/directive/add-scene.js"></script>
+  <script defer src="js/directive/googleMaps.js"></script>
   <!-- single devices !-->
-  <script defer src="js/devices/light.js"></script>
-  <script defer src="js/devices/switch.js"></script>
-  <script defer src="js/devices/remote.js"></script>
-  <script defer src="js/devices/scene.js"></script>
-  <script defer src="js/devices/thermostat.js"></script>
-  <script defer src="js/devices/shutter.js"></script>
-  <script defer src="js/devices/schedule.js"></script>
-  <script defer src="js/devices/alarm.js"></script>
-  <script defer src="js/devices/camera.js"></script>
-  <script defer src="js/devices/sensor.js"></script>
-  <script defer src="js/devices/devices-dev.js"></script>
-  <script defer src="js/devices/cam-rec.js"></script>
-  <script defer src="js/service/googleMaps.js"></script>
+  <script defer src="js/directive/devices/light.js"></script>
+  <script defer src="js/directive/devices/switch.js"></script>
+  <script defer src="js/directive/devices/remote.js"></script>
+  <script defer src="js/directive/devices/scene.js"></script>
+  <script defer src="js/directive/devices/thermostat.js"></script>
+  <script defer src="js/directive/devices/shutter.js"></script>
+  <script defer src="js/directive/devices/schedule.js"></script>
+  <script defer src="js/directive/devices/alarm.js"></script>
+  <script defer src="js/directive/devices/camera.js"></script>
+  <script defer src="js/directive/devices/sensor.js"></script>
+  <script defer src="js/directive/devices/devices-dev.js"></script>
+  <script defer src="js/directive/devices/cam-rec.js"></script>
   <!-- Scene and Schedule devices !-->
-  <script defer src="js/devices/scene-schedule/scene-switch.js"></script>
-  <script defer src="js/devices/scene-schedule/scene-light.js"></script>
-  <script defer src="js/devices/scene-schedule/scene-thermostat.js"></script>
-  <script defer src="js/devices/scene-schedule/scene-shutter.js"></script>
-  <script defer src="js/devices/scene-schedule/scene-TvRemote.js"></script>
+  <script defer src="js/directive/devices/scene-schedule/scene-switch.js"></script>
+  <script defer src="js/directive/devices/scene-schedule/scene-light.js"></script>
+  <script defer src="js/directive/devices/scene-schedule/scene-thermostat.js"></script>
+  <script defer src="js/directive/devices/scene-schedule/scene-shutter.js"></script>
+  <script defer src="js/directive/devices/scene-schedule/scene-TvRemote.js"></script>
   <!-- endbuild -->
   <!-- Google Maps -->
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDADXlpX2alBz67rIO3mNGK_0tmghDrRLs&libraries=places"></script>

@@ -1,0 +1,23 @@
+<div class="device-wrap">
+
+  <div class="device-header">
+    <img ng-src="img/device/thermostat.png" class="device-icon">
+    <div class="device-content-data">
+      <p ng-bind="::sceneThermostatCtrl.deviceObj.name"></p>
+      <p ng-bind="::sceneThermostatCtrl.deviceObj.type"></p>
+      <p ng-bind="::sceneThermostatCtrl.deviceObj.module"></p>
+    </div>
+  </div>
+
+  <!-- display +/- set thermostat !-->
+  <div class="device-footer">
+    <div class="device-footer-btn-wrap">
+      <button class="device-btn-opt device-minus-btn" ng-click="sceneThermostatCtrl.tempDown(sceneThermostatCtrl.deviceObj)"></button>
+      <butotn class="device-btn-opt">
+        <span class="color-blue">{{sceneThermostatCtrl.deviceObj.value}}</span> /
+        <span class="color-green">{{sceneThermostatCtrl.deviceObj.target}}</span>
+      </butotn>
+      <button class="device-btn-opt device-plus-btn" ng-click="sceneThermostatCtrl.tempUp(sceneThermostatCtrl.deviceObj)"></button>
+    </div>
+  </div>
+</div>

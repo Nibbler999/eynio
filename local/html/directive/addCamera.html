@@ -1,0 +1,73 @@
+<section class="custom-modal-window add-camera-modal" ng-class="{'show-modal': addCameraCtrl.showModal}">
+  <section class="custom-modal-wrap">
+    <div class="add-camera-header">
+      <h3>Add new camera</h3>
+    </div>
+    <div class="add-camera-step-1">
+      <form type="form" id="add-camera-form">
+        <div class="col-md-6">
+          <div class="col-xs-6 col-md-12">
+            <input type="text" class="hidden-input">
+            <input type="password" class="hidden-input">
+            <label for="add-camera-name" class="form-label">Name</label>
+            <input type="text" id="add-camera-name" class="form-input" name="camera name" pattern=".{4,15}" required>
+
+            <label for="add-camera-desc" class="form-label">Description</label>
+            <input type="text" id="add-camera-desc" class="form-input" name="camera description">
+          </div>
+          <div class="col-xs-6 col-md-12">
+            <label for="add-camera-user" class="form-label">Username</label>
+            <input type="text" id="add-camera-user" class="form-input">
+
+            <label for="add-camera-password" class="form-label">Password</label>
+            <input type="password" id="add-camera-password" class="form-input">
+          </div>
+          <div class="col-xs-6 col-md-12">
+            <label for="add-camera-fps" class="form-label">Frame rate</label>
+            <input type="number" name="fps" value="1" min="1" max="30" id="add-camera-fps" class="form-number">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="col-xs-6 col-md-12">
+            <label for="add-camera-rtsp" class="form-label">RTSP</label>
+            <input type="text" id="add-camera-rtsp" class="form-input">
+
+            <label for="add-camera-mjpeg" class="form-label">MJPEG</label>
+            <input type="text" id="add-camera-mjpeg" class="form-input">
+          </div>
+          <div class="col-xs-6 col-md-12">
+            <label for="add-camera-snapshot" class="form-label">JPEG Snapshot</label>
+            <input type="text" id="add-camera-snapshot" class="form-input">
+            <label class="form-label" for="add-camera-rotation">Rotation</label>
+            <select class="form-select" id="add-camera-rotation">
+              <option value="0">0°</option>
+              <option value="90">90°</option>
+              <option value="180">180°</option>
+              <option value="270">270°</option>
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="color-green" ng-show="addCameraCtrl.addCamSuccess === 'yes'">
+      <h4>Connecting success!</h4>
+      <h5>You can start using your camera just by clicking on it</h5>
+    </div>
+
+    <div class="color-red" ng-show="addCameraCtrl.addCamSuccess === 'no'">
+      <h4>Connecting failed!</h4>
+      <h5>Something went wrong, check your input data</h5>
+    </div>
+
+    <div class="add-new-footer">
+      <button type="reset" class="button orange-btn" form="add-camera-form">
+        Cancel
+      </button>
+
+      <button type="submit" class="button blue-btn" form="add-camera-form">
+        Save and Continue
+      </button>
+    </div>
+  </section>
+</section>
