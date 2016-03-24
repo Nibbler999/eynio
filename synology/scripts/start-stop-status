@@ -5,7 +5,7 @@ PIDFILE=/var/run/nhome.pid
 
 start_package()
 {
-    HOME=/var/packages/NHome/etc node ${PRIVATE_LOCATION}/server.js --nocolor --pidfile $PIDFILE &> /var/log/nhome.log &
+    HOME=/var/packages/NHome/etc node ${PRIVATE_LOCATION}/server.js --nocolor --pidfile $PIDFILE --platform Synology &> /var/log/nhome.log &
 }
 
 stop_package()

@@ -12,6 +12,7 @@ program
   .option('-l, --loglevel [level]', 'Log level (fatal, error, warn, info, debug, trace) [info]', 'info')
   .option('--nocolor', 'Disable colors in terminal output', false)
   .option('--pidfile [path]', 'Save a pid file at the given path', '')
+  .option('--platform [platform]', 'Set platform', '')
   .parse(process.argv);
 
 var log = require('./lib/logger.js')(program, process.stdout);

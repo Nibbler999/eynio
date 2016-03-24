@@ -4,7 +4,7 @@ PIDFILE=/var/run/nhome.pid
 
 start_package()
 {
-    HOME=/usr/local/etc /usr/local/bin/node ${APKG_PKG_DIR}/server.js --nocolor --pidfile $PIDFILE &> ${APKG_PKG_DIR}/server.log &
+    HOME=/usr/local/etc /usr/local/bin/node ${APKG_PKG_DIR}/server.js --nocolor --pidfile $PIDFILE --platform Asustor &> ${APKG_PKG_DIR}/server.log &
 }
 
 stop_package()
