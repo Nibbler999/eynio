@@ -16,7 +16,7 @@
       "app":{
          "type":"custom",
 		 "protocol":"http",
-         "port":8008,
+         "port":38736,
 		 "url":"/"
       },
       "privilege":{
@@ -25,7 +25,7 @@
       }
    },
    "register":{
-      "port": [ 8008 ],
+      "port": [ 38736 ],
       "boot-priority":{
          "stop-order": 80,
          "start-order": 20
