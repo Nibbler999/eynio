@@ -62,7 +62,7 @@ window.onload = function() {
     require('../lib/main.js')(log, function (conn) {
 
         $('#localmode-btn').one('click', function() {
-            $('#localframe').attr('src', 'http://127.0.0.1:38736/');
+            $('#localframe').attr('src', 'http://127.0.0.1:38736/redirect');
         });
 
         conn.on('setExternalIP', function (command) {
