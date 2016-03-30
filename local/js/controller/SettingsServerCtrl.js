@@ -3,12 +3,13 @@
 
   angular
     .module('nHome')
-    .controller('SettingsServerCtrl', ['$scope', '$rootScope', '$http', '$timeout', '$state', 'socket', 'dataService', function($scope, $rootScope, $http, $timeout, $state, socket, dataService) {
+    .controller('SettingsServerCtrl', ['$scope', '$rootScope', '$timeout', '$state', 'socket', 'dataService', function($scope, $rootScope, $timeout, $state, socket, dataService) {
 
       var server = this;
       var activityLogDay = 1;
       server.deleteServerCount = 0;
       server.upToDate = true;
+      var restoreServer = document.querySelector('#restore-server');
 
       // get server data and check for updates
       socket.emit('getServerStatus', null, function(serverStatus) {
@@ -22,10 +23,10 @@
         }, 250);
       });
       // check for updates
-      socket.emit('checkUpdates', null, function(response){
-        server.upToDate = !response;
-      })
-      // configure backup withlatest data
+      socket.emit('checkUpdates', null, function(response) {
+          server.upToDate = !response;
+        })
+        // configure backup withlatest data
       socket.emit('configBackup', null, function(config) {
         var data = JSON.stringify(config);
         var backup = document.getElementById('download-backup');
@@ -72,8 +73,7 @@
        * @type {function} $scope fn, onchange event
        * @param {elem} input element
        */
-      $scope.restore = function(elem) {
-        var backupRestore = elem;
+      restoreServer.addEventListener('change', function(e) {
         var reader = new FileReader();
         reader.addEventListener('loadend', function() {
           var config;
@@ -88,8 +88,8 @@
             alert('Config restored, please restart your server');
           });
         });
-        reader.readAsText(backupRestore.files[0]);
-      };
+        reader.readAsText(this.files[0]);
+      });
       /**
        * @name leaveServer
        * @desc leave current serrver
@@ -154,16 +154,18 @@
        * @param {email, msg, status} new email, ivite message, status
        */
       server.inviteUser = function(email, msg, status) {
-        socket.emit4('inviteUser', email, msg, status, function(invite) {
-          if (invite) {
+        socket.emit4('inviteUser', email, msg, status, function(response) {
+          if (response) {
             server.inviteSuccess = true;
             $timeout(function() {
               server.inviteSuccess = false;
             }, 1000);
+            console.log(server.data.userList);
             server.data.userList.push({
               email: inviteEmail,
               level: inviteStatus,
-            })
+            });
+            console.log(server.data.userList);
           } else {
             alert('Inviting ' + inviteEmail + ' failed!');
           }
@@ -188,7 +190,6 @@
               angular.forEach(server.data.userList, function(user) {
                 if (user.email === server.data.getUserProfile.email) {
                   user.level === 'ADMIN';
-                  return
                 }
               });
             }

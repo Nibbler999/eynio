@@ -145,6 +145,7 @@
            * @type {event}
            */
           cancelBtn.addEventListener('click', function() {
+            editSceneObj = null;
             ctrl.restoreDevices();
             form.reset();
             $(displayScenes).collapse('toggle');

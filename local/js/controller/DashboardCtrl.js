@@ -3,8 +3,38 @@
 
   angular
     .module('nHome')
-    .controller('DashboardCtrl', ['dataService', '$stateParams', function(dataService, $stateParams) {
+    .controller('DashboardCtrl', ['dataService', '$stateParams', 'socket', function(dataService, $stateParams, socket) {
       var dashboard = this;
+
+
+      /**
+       * @name setAlarmOff
+       * @desc turn off alarm
+       * @type {function}
+       */
+      dashboard.setAlarmOff = function(alarmState) {
+        if (alarmState) {
+          socket.emit('disableAlarm', null, function(response) {
+            if (response) {
+              dashboard.data.isAlarmEnabled = false;
+            }
+          })
+        }
+      };
+      /**
+       * @name setAlarmOn
+       * @desc turn on alarm
+       * @type {function}
+       */
+      dashboard.setAlarmOn = function(alarmState) {
+        if (!alarmState) {
+          socket.emit('enableAlarm', null, function(response) {
+            if (response) {
+              dashboard.data.isAlarmEnabled = true;
+            }
+          })
+        }
+      }
 
       // get data
       dashboard.data = dataService.getData();

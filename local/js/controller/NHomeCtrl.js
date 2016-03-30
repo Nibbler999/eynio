@@ -33,16 +33,6 @@
         location.reload(true);
       };
 
-      /* turn alarm on/off */
-      God.alarmStateToggle = function() {
-        if (!God.alarmState) {
-          socket.emit('enableAlarm');
-          God.alarmState = true;
-        } else {
-          socket.emit('disableAlarm');
-          God.alarmState = false;
-        }
-      };
       /* logout user */
       God.logout = function() {
         sessionStorage.removeItem('activeServer');
@@ -83,7 +73,7 @@
         God.activeServer.name = newServerName;
         sessionStorage.activeServer = JSON.stringify(God.activeServer);
 
-        angular.forEach(God.data.user.servers, function(server) {
+        angular.forEach(God.userInfoData.servers, function(server) {
           if (server.id === God.activeServer.id) {
             server.name = newServerName;
           }

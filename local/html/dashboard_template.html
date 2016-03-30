@@ -1,5 +1,9 @@
 <div class="template-nav">
   <h3>Dashboard</h3>
+  <div class="display-flex">
+    <button type="button" name="alarm off" class="btn dashboard-alarm-toggle alarm-off" ng-class="{'active': !dashboard.data.isAlarmEnabled}" ng-click="dashboard.setAlarmOff(dashboard.data.isAlarmEnabled)"></button>
+    <button type="button" name="alarm on" class="btn dashboard-alarm-toggle alarm-on" ng-class="{'active': dashboard.data.isAlarmEnabled}" ng-click="dashboard.setAlarmOn(dashboard.data.isAlarmEnabled)"></button>
+  </div>
 </div>
 <!-- newly added devices / devices without rooms -->
 <div class="dashboard-display-wrap" ng-hide="!dashboard.uncategorised.length">
