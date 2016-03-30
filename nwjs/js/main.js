@@ -61,10 +61,6 @@ window.onload = function() {
 
     require('../lib/main.js')(log, function (conn) {
 
-        $('#localmode-btn').one('click', function() {
-            $('#localframe').attr('src', 'https://my.nhome.ba/');
-        });
-
         conn.on('setExternalIP', function (command) {
             $('#external_ip').text(command.args[0]);
         });
