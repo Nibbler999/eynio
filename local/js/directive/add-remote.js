@@ -45,13 +45,15 @@
           var remoteType = form.querySelectorAll('[name=add-remote-type]');
           var remoteBridge = form.querySelectorAll('[name=add-remote-bridge]');
           var closeBtn = elem[0].querySelector('button[type="reset"]');
-
           /**
            * @name form
            * @desc submit form, create new remote
            * @type {event}
            */
           form.addEventListener('submit', function() {
+            if(!remoteBridge.length){
+              remoteBridge = form.querySelectorAll('[name=add-remote-bridge]');
+            }
 
               var ir, type, bridge, remote;
               // loop remote types, select checked one

@@ -91,11 +91,13 @@
 /* END SCENE BOX CSS */
 
 .new-scene {
-  position: relative;
+  position: absolute;
   color: #fff;
   background-color: #14334B;
   border-radius: 0.5em;
   box-shadow: 0.1em 0.1em 0.5em rgba(0, 0, 0, 0.5);
+  top: 1em;
+  left: 0;
 }
 .new-scene-nav {
   display: -webkit-box;

@@ -169,7 +169,7 @@
   .add-server-window-dark-wrap {
     bottom: auto;
     top: 25%;
-    left: 2%;
-    right: -2%;
+    left: 0%;
+    right: 0%;
   }
 }

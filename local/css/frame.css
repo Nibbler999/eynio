@@ -30,6 +30,7 @@
 }
 .burger-menu-icon {
   height: 1.25em;
+  min-width: 1.5em;
   line-height: 1.25;
   padding: 0 1%;
   margin: auto 0;

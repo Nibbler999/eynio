@@ -76,11 +76,16 @@
   cursor: pointer;
 }
 .camera-dropdown-wrap > ul {
-  background-color: #224764
+  background-color: #224764;
+  min-width: auto;
+  text-align: center;
 }
 .camera-dropdown-wrap > ul > li {
   cursor: pointer;
   padding: 1% 3%;
+}
+.camera-dropdown-wrap > ul img {
+  height: 2.25em;
 }
 .camera-dropdown-wrap > ul > li:hover {
   background: rgba(0, 0, 0, 0.5);
@@ -120,7 +125,7 @@
 }
 .cam-rec-info {
   position: absolute;
-  bottom: 0em;
+  bottom: 2em;
   left: 0.25em;
 }
 .cam-rec-actions {
@@ -129,19 +134,11 @@
   right: 0;
   padding: 0 0.25em;
 }
-
-/*.cam-rec-wrap > a {
+.camera-dropdown-wrap.cam-rec {
   position: absolute;
-  bottom: 0em;
-  right: 2.5em;
+  bottom: 0.15em;
+  right: -0.2em;
 }
-.cam-rec-wrap > i {
-  cursor: pointer;
-  position: absolute;
-  bottom: 0.25em;
-  right: 0.25em;
-}*/
-
 
 /* END */
 

@@ -16,16 +16,16 @@
   font-family: 'Material Icons';
   font-style: normal;
   font-weight: 400;
-  src: url(../fonts/MaterialIcons-Regular.woff2); /* For IE6-8 */
-  src: local('Material Icons'),
-       local('MaterialIcons-Regular'),
-       url(../fonts/MaterialIcons-Regular.woff2) format('woff2');
+  src: url(../fonts/MaterialIcons-Regular.woff2);
+  /* For IE6-8 */
+  src: local('Material Icons'), local('MaterialIcons-Regular'), url(../fonts/MaterialIcons-Regular.woff2) format('woff2');
 }
 .material-icons {
   font-family: 'Material Icons';
   font-weight: normal;
   font-style: normal;
-  font-size: 24px;  /* Preferred icon size */
+  font-size: 24px;
+  /* Preferred icon size */
   display: inline-block;
   width: 1em;
   height: 1em;
@@ -35,15 +35,12 @@
   word-wrap: normal;
   white-space: nowrap;
   direction: ltr;
-
   /* Support for all WebKit browsers. */
   -webkit-font-smoothing: antialiased;
   /* Support for Safari and Chrome. */
   text-rendering: optimizeLegibility;
-
   /* Support for Firefox. */
   -moz-osx-font-smoothing: grayscale;
-
   /* Support for IE. */
   font-feature-settings: 'liga';
 }
@@ -88,6 +85,7 @@ button:focus {
 ::-webkit-resizer, ::-webkit-scrollbar-button, ::-webkit-scrollbar-corner {
   display: none;
 }
+
 
 /* Let's get this party started */
 
@@ -168,6 +166,7 @@ button:focus {
 }
 .form-number {
   max-width: 6em;
+  min-width: 4em;
   height: 2.5em;
   border-radius: 0.25em;
   background: #21425E;
@@ -176,7 +175,7 @@ button:focus {
   text-indent: 0.5em;
   transition: all 0.5s ease;
 }
-.form-number.success{
+.form-number.success {
   background-color: #00E676;
 }
 .form-date {
@@ -314,7 +313,7 @@ input:disabled ~ label, input:disabled {
   align-items: center;
   padding: 2% 1%;
 }
-.dashboard-display-wrap{
+.dashboard-display-wrap {
   position: relative;
   background-color: #0F2D45;
   border: 0.1em solid #173E5D;
@@ -322,7 +321,7 @@ input:disabled ~ label, input:disabled {
   margin: 1%;
   color: #fff;
 }
-.dashboard-display-wrap > button{
+.dashboard-display-wrap > button {
   position: absolute;
   top: 0;
   right: 0;
@@ -343,7 +342,7 @@ input:disabled ~ label, input:disabled {
 .margin-auto {
   margin: auto;
 }
-.green-bg{
+.green-bg {
   background-color: #00E676;
 }
 .color-red {

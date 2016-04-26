@@ -129,6 +129,7 @@
            * @type {event}
            */
           closeModalBtn.addEventListener('click', function() {
+            console.log();
             ctrl.stopStream(ctrl.deviceObj);
             streamModal.style.display = 'none';
           }, false);
