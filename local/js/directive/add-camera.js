@@ -28,7 +28,6 @@
             function addNewCamera(camObj) {
               var defer = $q.defer();
               var testStream = camObj.rtsp ? camObj.rtsp : camObj.snapshot ? camObj.snapshot : camObj.mjpeg;
-              console.log(testStream);
               socket.emit('testStreamURL', testStream, function(response) {
                 defer.resolve(response);
                 if (response) {
@@ -78,7 +77,6 @@
                   fps: Number(cameraFps.value)
                 }
                 ctrl.addNewCamera(camObj).then(function(response) {
-                  console.log(response);
                   if (response) {
                     ctrl.addCamSuccess = 'yes';
                     $timeout(function() {
@@ -90,7 +88,6 @@
                     ctrl.addCamSuccess = 'no';
                     $timeout(function() {
                       ctrl.addCamSuccess = null;
-                      ctrl.showModal = false;
                     }, 1500)
                   }
                 })

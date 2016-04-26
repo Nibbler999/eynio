@@ -9,7 +9,7 @@
       return {
         connect: function(token, server) {
           if (!socket) {
-            socket = io.connect('/client');
+            socket = io.connect('/client?token=' + token);
           }
           return socket;
         },

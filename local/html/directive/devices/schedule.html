@@ -30,7 +30,7 @@
   <div class="col-xs-12 collapse" id="edit-schedule-menu-{{::scheduleCtrl.deviceObj.id}}">
     <form>
       <div class="col-xs-6 col-sm-6 col-md-2 schedule-group">
-        <input type="text" class="form-input" ng-model="scheduleCtrl.deviceObj.name" placeholder="Schedule name" pattern=".{4,25}" title="4 - 25 characters" required>
+        <input type="text" class="form-input" placeholder="Schedule name" pattern=".{4,25}" title="4 - 25 characters" required>
       </div>
       <div class="col-xs-6 col-sm-6 col-md-2 schedule-group">
         <input type="number" class="form-number" name="hour" ng-model="scheduleCtrl.deviceObj.dateTime.hour" placeholder="Hr" min="0" max="23">

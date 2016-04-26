@@ -3,7 +3,7 @@
 
   angular
     .module('nHome')
-    .controller('SettingsServerCtrl', ['$scope', '$rootScope', '$timeout', '$state', 'socket', 'dataService', function($scope, $rootScope, $timeout, $state, socket, dataService) {
+    .controller('SettingsServerCtrl', ['$scope', '$rootScope', '$timeout', '$state', 'socket', 'dataService', 'dataRequest', function($scope, $rootScope, $timeout, $state, socket, dataService, dataRequest) {
 
       var server = this;
       var activityLogDay = 1;
@@ -160,14 +160,12 @@
             $timeout(function() {
               server.inviteSuccess = false;
             }, 1000);
-            console.log(server.data.userList);
             server.data.userList.push({
-              email: inviteEmail,
-              level: inviteStatus,
+              email: email,
+              level: status,
             });
-            console.log(server.data.userList);
           } else {
-            alert('Inviting ' + inviteEmail + ' failed!');
+            alert('Inviting ' + email + ' failed!');
           }
         });
       };

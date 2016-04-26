@@ -1,0 +1,49 @@
+<div class="container-fluid login-template">
+  <div class="login-wrap">
+    <div class="col-xs-12 col-md-5 login-description register">
+      <h2>Open new possibilities.</h2>
+
+      <p>New windows, garage doors, shutters</p>
+      <p>Everything should work with NHome.</p>
+      <p>We really hope it should.</p>
+
+      <a ui-sref="register" class="button btn register-btn">
+        Register now
+      </a>
+    </div>
+
+    <div class="col-xs-12 col-md-5 form register-form">
+      <form role="form" autocomplete="off" id="register-form">
+        <h4>Register</h4>
+        <div class="col-sm-12 col-md-6 form-input-wrap">
+          <label for="register-username" class="form-label">Username</label>
+          <input type="text" class="form-input" id="register-username" name="Username" pattern=".{3,}" title="3 characters minimum" required autofocus>
+
+          <label for="register-email" class="form-label">Email</label>
+          <input type="email" class="form-input" id="register-email" name="Email" required>
+
+          <a ui-sref="login" class="btn hidden-xs hidden-sm button back-to-login-btn">
+            Back to login
+          </a>
+        </div>
+
+        <div class="col-sm-12 col-md-6 form-input-wrap">
+
+          <label for="register-password" class="form-label">Password</label>
+          <input type="password" class="form-input" id="register-password" name="Password" pattern=".{4,}" title="4 characters minimum" required>
+          <label for="register-rePassword" class="form-label">Repeat Password</label>
+          <input type="password" class="form-input" id="register-rePassword" name="Password" pattern=".{4,}" title="4 characters minimum" required>
+
+          <button type="submit" class="btn button login-btn">Register</button>
+
+          <a ui-sref="login" class="btn hidden-md hidden-lg button back-to-login-btn">
+            Back to login
+          </a>
+        </div>
+        <span ng-show="register.regSuccess">
+          <small class="color-green">Registraton success! You can start using NHome</small>
+        </span>
+      </form>
+    </div>
+  </div>
+</div>

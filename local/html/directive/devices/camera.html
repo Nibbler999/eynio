@@ -20,12 +20,18 @@
   <span class="dropdown camera-dropdown-wrap">
     <i class="material-icons dropdown-toggle" data-toggle="dropdown">more_vert</i>
     <ul class = "dropdown-menu">
-      <li title="turn off recording" ng-click="cameraCtrl.cameraRecordingOff(cameraCtrl.deviceObj)">Recording off</li>
-      <li title="records only when camera detects motion" ng-class="{'green-bg': cameraCtrl.deviceObj.motion_recording}" ng-click="cameraCtrl.cameraRecordingMotion(cameraCtrl.deviceObj)">Recording motion</li>
-      <li title="records only when alarm is turned on and camera detects motion" ng-class="{'green-bg': cameraCtrl.deviceObj.motion_recording_if_alarm}" ng-click="cameraCtrl.cameraRecordingMotionOnAlarm(cameraCtrl.deviceObj)">Recording motion on alarm</li>
+
+      <li title="turn off recording" ng-click="cameraCtrl.cameraRecordingOff(cameraCtrl.deviceObj)">
+        <img src="../img/button/rec-off.png" alt="off" />
+      </li>
+
+      <li title="records only when camera detects motion" ng-class="{'green-bg': cameraCtrl.deviceObj.motion_recording}" ng-click="cameraCtrl.cameraRecordingMotion(cameraCtrl.deviceObj)">
+        <img src="../img/button/rec-motion.png" alt="motion" />
+      </li>
+
+      <li title="records only when alarm is turned on and camera detects motion" ng-class="{'green-bg': cameraCtrl.deviceObj.motion_recording_if_alarm}" ng-click="cameraCtrl.cameraRecordingMotionOnAlarm(cameraCtrl.deviceObj)">
+        <img src="../img/button/alarm-on.png" alt="alarm" />
+      </li>
     </ul>
   </span>
-
-  <!-- <i class="material-icons color-red camera-recording" ng-click="recOnMotion(cameraCtrl.deviceObj)" title="start recording" ng-hide="cameraCtrl.deviceObj.motion_recording">fiber_manual_record</i>
-  <i class="material-icons color-green camera-recording" ng-click="recOnMotion(cameraCtrl.deviceObj)" title="stop recording" ng-show="cameraCtrl.deviceObj.motion_recording">stop</i> -->
 </div>

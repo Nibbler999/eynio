@@ -6,7 +6,7 @@
     .config(['$stateProvider', '$urlRouterProvider', '$compileProvider', function($stateProvider, $urlRouterProvider, $compileProvider) {
       $compileProvider.debugInfoEnabled(false);
       $urlRouterProvider
-        .when('', 'dashboard');
+        .when('', 'login');
       $stateProvider
         .state('login', {
           url: '/login?email&pass&oauth2',

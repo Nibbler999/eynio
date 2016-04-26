@@ -7,13 +7,45 @@
 
       var currentServerData = {};
       var bigServerData = {};
+      var accountData = {};
+
+      var IDBServerData, IDBUserData, IDBUser, IDBServerId;
 
       var fromLogin = sessionStorage.userInfoData ? false : true;
 
+      // try to open IDB and get user and last data
+      openDB('last_user', 1, 'last');
+
       // connect to socket via net
-      this.socketConnect = function() {
+      this.socketConnect = function(user, server) {
+        console.log(user, server);
         var deferred = $q.defer();
-        socket.connect();
+
+        user.lastServer = server;
+        currentServerData.user = user;
+        if (!IDBUser) {
+          IDBUser = user;
+          if (fromLogin && !IDBServerData) {
+            IDBUser.IDBVersion = 1;
+            openDB('users', IDBUser.IDBVersion, IDBUser.email);
+          }
+        } else {
+          user.IDBVersion = IDBUser.IDBVersion;
+          if (IDBUser.email !== user.email || IDBUser.lastServer.id !== user.lastServer.id) {
+            IDBServerData.close();
+            currentServerData = {};
+            IDBUser = user;
+            if (IDBServerData.objectStoreNames.contains(IDBUser.email)) {
+              openDB('users', IDBUser.IDBVersion, user.email);
+            } else {
+              IDBUser.IDBVersion += 1;
+              openDB('users', IDBUser.IDBVersion, user.email);
+            }
+          } else {
+            IDBUser = user;
+          }
+        }
+        socket.connect(encodeURIComponent(user.token), server.id);
         deferred.resolve();
         return deferred.promise;
       };
@@ -31,6 +63,7 @@
           deferred.resolve(categories);
           currentServerData.getCategories = categories;
           //allCategories = categories;
+          putDB(IDBServerData, IDBUser.email, IDBUser.lastServer.id, currentServerData);
         });
         return deferred.promise
       };
@@ -54,6 +87,7 @@
             }
           });
           deferred.resolve(currentServerData.getDevicesObj);
+          putDB(IDBServerData, IDBUser.email, IDBUser.lastServer.id, currentServerData);
         });
         return deferred.promise
       };
@@ -63,6 +97,7 @@
         socket.emit('getScenes', null, function(scenes) {
           deferred.resolve(scenes);
           currentServerData.getScenes = scenes;
+          putDB(IDBServerData, IDBUser.email, IDBUser.lastServer.id, currentServerData);
         });
         return deferred.promise
       };
@@ -72,6 +107,7 @@
         socket.emit('getJobs', null, function(schedules) {
           deferred.resolve(schedules);
           currentServerData.getSchedules = schedules;
+          putDB(IDBServerData, IDBUser.email, IDBUser.lastServer.id, currentServerData);
         });
         return deferred.promise
       };
@@ -110,7 +146,13 @@
           window.navigator.vibrate(250);
         });
         socket.on('customRemoteAdded', function(remoteObj) {
-          currentServerData.getDevicesObj.remote.push(remoteObj);
+          console.log(remoteObj);
+          if (currentServerData.getDevicesObj.remote) {
+            currentServerData.getDevicesObj.remote.push(remoteObj);
+          } else {
+            currentServerData.getDevicesObj.remote = [];
+            currentServerData.getDevicesObj.remote.push(remoteObj);
+          }
           currentServerData.getDevicesArray.push(remoteObj);
           window.navigator.vibrate(250);
         });
@@ -119,7 +161,12 @@
           window.navigator.vibrate(250);
         });
         socket.on('cameraAdded', function(cameraObj) {
-          currentServerData.getDevicesObj.camera.push(cameraObj);
+          if (currentServerData.getDevicesObj.camera) {
+            currentServerData.getDevicesObj.camera.push(cameraObj);
+          } else {
+            currentServerData.getDevicesObj.camera = [];
+            currentServerData.getDevicesObj.camera.push(cameraObj);
+          }
           currentServerData.getDevicesArray.push(cameraObj);
           window.navigator.vibrate(250);
         });
@@ -222,6 +269,7 @@
               if (dev.id === devId) {
                 typeArray.splice(index, 1);
                 currentServerData.getBlacklisted.push(dev);
+                dev.blacklisted = true;
                 window.navigator.vibrate(75);
               }
             })
@@ -232,6 +280,7 @@
             if (dev.id === devId) {
               currentServerData.getBlacklisted.splice(index, 1);
               currentServerData.getDevicesObj[dev.type].push(dev);
+              dev.blacklisted = false;
               window.navigator.vibrate(150);
             }
           });
@@ -274,6 +323,23 @@
         socket.emit('getLog', null, function(log) {
           bigServerData.getLog = log.reverse();
         });
+        socket.emit('getApiKey', null, function(key) {
+          currentServerData.getApiKey = key;
+          // apiKey = key;
+          IDBUser.apiKey = key;
+          putDB(IDBUserData, 'last', 'user', IDBUser);
+        });
+        //get list of server for user
+        socket.emit('getServers', null, function(servers) {
+          currentServerData.getServers = servers;
+          angular.forEach(currentServerData.user.servers, function(userServer) {
+            angular.forEach(servers, function(server) {
+              if (userServer.id === server.id) {
+                userServer.online = server.online;
+              }
+            });
+          });
+        });
         // get weather from yrno
         socket.emit('getWeather', null, function(weatherInfo) {
           currentServerData.getWeather = weatherInfo;
@@ -289,6 +355,43 @@
         return deferred.promise
       };
 
+      /**
+       * @name getAccountEmit
+       * @desc get account state data
+       * @type {function}
+       */
+      this.getAccountEmit = function() {
+        var defer = $q.defer();
+        // get user data
+        socket.emit('getUserProfile', null, function(response) {
+
+          accountData.getUserProfile = response;
+          // console.log(userProfile);
+          // acc.userProfile = userProfile;
+          // document.querySelector('.settings-user-avatar').style.backgroundImage = 'url(' + userProfile.avatar + ')';
+        });
+        // offline notifications
+        socket.emit('getOfflineNotifications', null, function(response) {
+          accountData.getOfflineNotifications = response;
+          // acc.offlineNotifications = data;
+        });
+        // alarm notifications
+        socket.emit('getAlarmConfig', null, function(response) {
+          accountData.getAlarmConfig = response;
+          defer.resolve(response);
+          // acc.alarmNotification = alarm.method;
+          // if (alarm.recipients) {
+          //   angular.forEach(alarm.recipients, function(recipient) {
+          //     if (recipient === acc.userProfile.email) {
+          //       acc.alarmNotifications = true;
+          //     }
+          //   });
+          // }
+        });
+
+        return defer.promise
+      }
+
       this.logOut = function() {
         currentServerData = {};
       };
@@ -301,7 +404,7 @@
         return bigServerData
       };
       // return account data
-      this.getAccountData = function(){
+      this.getAccountData = function() {
         return accountData
       };
 
@@ -328,6 +431,72 @@
         } else if (element.msRequestFullscreen) {
           element.msRequestFullscreen();
         }
+      };
+
+      function openDB(db, dbV, objStore) {
+        var req = window.indexedDB.open(db, dbV);
+
+        req.onsuccess = function(e) {
+          if (e.target.result.name === 'last_user') {
+            IDBUserData = e.target.result;
+            getDB(IDBUserData, 'last', 'user');
+          } else {
+            IDBServerData = e.target.result;
+            getDB(IDBServerData, IDBUser.email, IDBUser.lastServer.id);
+          }
+        };
+
+        req.onerror = function(e) {
+          console.log('OPEN error', e);
+        };
+
+        req.onupgradeneeded = function(e) {
+          var store;
+          if (typeof objStore === 'object') {
+            angular.forEach(objStore, function(server) {
+              store = e.target.result.createObjectStore(server.id);
+            })
+          } else if (typeof objStore === 'string') {
+            store = e.target.result.createObjectStore(objStore);
+          }
+        };
+      };
+
+      function putDB(idb, objStore, objStoreKey, data) {
+        var req = idb.transaction(objStore, 'readwrite').objectStore(objStore).put(data, objStoreKey);;
+
+        //var objectStore = transaction.
+        req.onsuccess = function(e) {
+          // console.log('PUT success', e);
+        };
+
+        req.onerror = function(e) {
+          console.log('PUT ERROR', e);
+        };
+      };
+
+      function getDB(idb, objStore, objStoreKey) {
+        var req = idb.transaction(objStore, 'readonly').objectStore(objStore).get(objStoreKey);
+
+        req.onsuccess = function(e) {
+          if (objStoreKey === 'user' && e.target.result) {
+            if (!IDBUser) {
+              IDBUser = e.target.result;
+            } else {
+              IDBUser.IDBVersion = e.target.result.IDBVersion;
+            }
+            if (IDBUser && IDBUser.email) {
+              openDB('users', IDBUser.IDBVersion, IDBUser.email);
+            }
+          } else if (Number(objStoreKey)) {
+            currentServerData = e.target.result && !currentServerData.length ? e.target.result : currentServerData;
+            currentServerData.user = IDBUser;
+          }
+        };
+
+        req.onerror = function(e) {
+          console.log('GET error', e);
+        };
       };
     }]);
 }());

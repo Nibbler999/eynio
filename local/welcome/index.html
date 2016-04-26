@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="mobile-web-app-capable" content="yes">
+        <title>NHome</title>
+        <!-- build:css css/main.min.css -->
+        <link rel="stylesheet" href="css/main.css" media="screen" charset="utf-8">
+        <!-- endbuild -->
+    </head>
+    <body>
+        <section class="main-container">
+            <!-- navigation -->
+            <nav class="main-nav">
+                <span class="nav-logo-wrap">
+                    <img src="img/nav-logo.png" alt="logo"/>
+                    <i class="material-icons nav-icon">menu</i>
+                </span>
+
+                <div class="nav-menu">
+                    <a href="#welcome" class="nav-state-btn" data-state="welcome">
+                        <button type="button" name="nav btn" class="nav-btn">Welcome</button>
+                    </a>
+                    <a href="#NHome" class="nav-state-btn" data-state="NHome">
+                        <button type="button" name="nav btn" class="nav-btn">NHome</button>
+                    </a>
+                    <a href="#NSecurity" class="nav-state-btn" data-state="NSecurity">
+                        <button type="button" name="nav btn" class="nav-btn">NSecurity</button>
+                    </a>
+                    <a href="#server" class="nav-state-btn" data-state="server">
+                        <button type="button" name="nav btn" class="nav-btn">Server</button>
+                    </a>
+                </div>
+            </nav>
+
+            <!-- welcome wrap -->
+            <section class="state-wrap" data-state="welcome">
+
+                <div class="welcome-msg">
+                    <h1>Welcome</h1>
+                    <img src="img/welcome.png" alt=""/>
+                    <h5>Sophisticated and advanced, yet simple and intuitive, these systems make it easier to live with smart devices.</h5>
+                </div>
+
+                <div class="welcome-content-wrap">
+
+                    <div class="welcome-content">
+
+                        <img src="img/NHome.png" alt="NHome"/>
+                        <div class="welcome-content-info bg-blue">
+
+                            <img src="img/nav-logo.png" alt="nhome"/>
+                            <h2>Smart devices
+                                <b>connecting</b>
+                                and
+                                <b>control</b>
+                                system</h2>
+                            <a href="#NHome">
+                                <button type="button" name="see more" class="go-btn bg-blue">
+                                    See more
+                                    <i class="material-icons">keyboard_arrow_right</i>
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="welcome-content">
+
+                        <img src="img/NSecurity.png" alt="NSecurity"/>
+                        <div class="welcome-content-info bg-yellow">
+
+                            <img src="img/nav-logo.png" alt="nhome"/>
+                            <h2>Security
+                                <b>without</b>
+                                <b>blind spots</b>
+                            </h2>
+                            <a href="#NSecurity">
+                                <button type="button" name="see more" class="go-btn bg-yellow">
+                                    See more
+                                    <i class="material-icons">keyboard_arrow_right</i>
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="welcome-footer">
+                    <img src="img/server.png" alt="nServer"/>
+
+                    <div class="welcome-footer-content">
+                        <h4>Your server is now online.</h4>
+                        <p>
+                            To set it up and adjust it, open Server interface.
+                        </p>
+                    </div>
+
+                    <div class="welcome-footer-content">
+
+                        <p>
+                            Your server name:
+                        </p>
+                        <p>
+                            <b id="server_name"></b>
+                        </p>
+                        <a href="/#server">
+                            <button type="button" name="set up now" class="go-btn bg-blue">
+                                Set up now
+                                <i class="material-icons">keyboard_arrow_right</i>
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- nhome wrap -->
+            <section class="state-wrap NHome-wrap" data-state="NHome" hidden>
+                <br>
+                <div class="nhome-content-top-wrap">
+                    <div class="nhome-content-top">
+                        <h1>Welcome to NHome</h1>
+                        <h5>NHome is a smart things connecting system, which should make your life easier and free you from any app hassle.</h5>
+                        <a href="https://my.nhome.ba/#/login" target="_blank">
+                            <button type="button" name="login or register" class="go-btn bg-white color-blue">
+                                Register or login
+                                <i class="material-icons">keyboard_arrow_right</i>
+                            </button>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="nhome-content-bottom-wrap">
+
+                    <div class="box bg-light-blue">
+                        <h2>Using NHome</h2>
+                        <p>
+                            To learn the basics of our system you can visit our website at
+                        </p>
+                        <h4>www.nhome.ba</h4>
+                        <h3>Download one of our client apps</h3>
+                        <a href="https://nhome.ba/wp/download/" target="_blank">
+                            <button type="button" name="button" class="go-btn bg-white color-blue">
+                                Go To Downloads
+                                <i class="material-icons">file_download</i>
+                            </button>
+                        </a>
+                    </div>
+
+                    <div class="nhome-content-bottom-side">
+                        <a href="/#" target="_blank" id="open_local_mode">
+                            <div class="box bg-dark-navy">
+                                <span>
+                                    <h5>Start NHome locally</h5>
+                                    <p>
+                                        NHome local mode allows you to run devices in your network
+                                    </p>
+                                </span>
+                                <i class="material-icons">keyboard_arrow_right</i>
+                            </div>
+                        </a>
+
+                        <a href="https://my.nhome.ba/#/login?email=demo@nhome.ba&pass=demo" target="_blank">
+                            <div class="box bg-light-navy">
+                                <span>
+                                    <h5>Try NHome Demo</h5>
+                                    <p>
+                                        to get the feel of the application and its capabilities
+                                    </p>
+                                </span>
+                                <i class="material-icons">keyboard_arrow_right</i>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="nhome-devices-wrap">
+                    <h3>We support</h3>
+
+                    <div class="nhome-device-track">
+                        <img src="img/device-lifx.png" alt="lifix"/>
+                        <img src="img/device-fibaro.png" alt="fibaro"/>
+                        <img src="img/device-netatmo.png" alt="netatmo"/>
+                        <img src="img/device-nest.png" alt="nest"/>
+                        <img src="img/device-ecobee.png" alt="ecobee"/>
+                        <img src="img/device-wemo.png" alt="wemo"/>
+                    </div>
+                </div>
+            </section>
+
+            <!-- NSecurity wrap -->
+            <section class="state-wrap" data-state="NSecurity" hidden>
+                <br>
+                <br>
+                <div class="nsecurity-content-wrap">
+                    <div class="nsecurity-content">
+
+                        <h4>Security without blind spots</h4>
+                        <p>
+                            Brought to you by NHome team. NHome security revolves around making you and your loved ones as safe as technologically possible
+                        </p>
+                        <a href="https://nhome.ba/wp/download/" target="_blank">
+                            <button type="button" name="button" class="go-btn bg-yellow color-white">
+                                Go To Downloads
+                                <i class="material-icons">file_download</i>
+                            </button>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="nsecurity-content-footer-wrap">
+
+                    <a href="#" target="_blank">
+                        <div class="box bg-gray color-white">
+                            <span>
+                                <h4>Start NSecurity local</h4>
+                                <p>
+                                    NSecurity local mode allows you to run devices in your network
+                                </p>
+                            </span>
+                            <i class="material-icons">keyboard_arrow_right</i>
+                        </div>
+                    </a>
+
+                    <a href="https://my.nhome.ba/#/login?email=demo@nhome.ba&pass=demo" target="_blank">
+                        <div class="box bg-yellow color-white">
+                            <span>
+                                <h4>Try NSecurity Demo</h4>
+                                <p>
+                                    to get a feel of the application and its capabilities
+                                </p>
+                            </span>
+                            <i class="material-icons">keyboard_arrow_right</i>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- server wrap -->
+            <section class="state-wrap" data-state="server" hidden>
+                <br>
+                <br>
+                <h2>Set up and personalise your nServer.</h2>
+                <h4>Go through the server log, view the available devices, update, change your settings through nServer</h4>
+
+                <div class="server-content-wrap">
+
+                    <div class="box bg-gray-blue">
+
+                        <div>
+                            <h2 id="connected"></h2>
+                            <h4>Connection</h4>
+                            <h2 id="ping"></h2>
+                            <h4>Ping</h4>
+                        </div>
+
+                    </div>
+
+                    <div class="box bg-gray-blue">
+                        <div>
+                            <h2 id="ip"></h2>
+                            <h4>Internal IP</h4>
+                            <h2 id="external_ip"></h2>
+                            <h4>External IP</h4>
+                        </div>
+                    </div>
+
+
+                    <div class="box bg-gray-blue">
+                        <div>
+                            <h2 id="version"></h2>
+                            <h4>Server version</h4>
+                            <h2 id="node_version"></h2>
+                            <h4>Node version</h4>
+                        </div>
+                    </div>
+
+                    <div class="box bg-gray-blue">
+                        <div>
+                            <h2 id="node_platform"></h2>
+                            <h4>OS</h4>
+                            <h2 id="node_arch"></h2>
+                            <h4>Architecture</h4>
+                        </div>
+                    </div>
+
+                </div>
+
+                <h3>Server Log</h3>
+                <hr>
+                <div class="server-log">
+                    <pre id="terminal"></pre>
+                </div>
+            </section>
+
+        </section>
+        <script src="../js/lib/jquery-1.11.3.min.js" charset="utf-8"></script>
+        <script src="js/jquery.sse.js" charset="utf-8"></script>
+        <!-- build:js js/main.min.js -->
+        <script src="js/main.js" charset="utf-8"></script>
+        <!-- buildend -->
+    </body>
+</html>

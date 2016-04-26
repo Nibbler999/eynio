@@ -17,7 +17,7 @@
          "type":"custom",
 		 "protocol":"http",
          "port":38736,
-		 "url":"/redirect"
+		 "url":"/welcome"
       },
       "privilege":{
          "accessible":"users",

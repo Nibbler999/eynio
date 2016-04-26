@@ -84,6 +84,9 @@
            */
           function setDeviceWhite(devId) {
             socket.emit4('setLightColor', devId, [0, 0, 1], 'hsl');
+            lightCtrl.deviceObj.state.hsl[0] = 360;
+            lightCtrl.deviceObj.state.hsl[1] = 1;
+            lightCtrl.deviceObj.state.hsl[2] = 1;
           }
           /**
            * @name setLightColor

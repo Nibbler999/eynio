@@ -15,6 +15,7 @@
           var deviceObj;
           var data = dataService.getData();
           var allCategories = data.getCategories ? data.getCategories : null;
+          var oldName;
 
           // init device categories
           editDeviceCtrl.asignedRooms = [];
@@ -23,6 +24,7 @@
           $scope.$on('editDevice', function(event, data) {
             editDeviceCtrl.deviceObj = data;
             editDeviceCtrl.showModal = true;
+            oldName = data.name;
             if (!allCategories) {
               data = dataService.getData();
               allCategories = data.getCategories;
@@ -66,6 +68,9 @@
            * @type {function}
            */
           function closeDeviceEditModal() {
+            if (editDeviceCtrl.deviceObj && editDeviceCtrl.deviceObj.name !== oldName) {
+              editDeviceCtrl.deviceObj.name = oldName
+            }
             editDeviceCtrl.asignedRooms = [];
             editDeviceCtrl.unAsignedRooms = [];
             editDeviceCtrl.deviceObj = null;

@@ -3,7 +3,7 @@
 
   angular
     .module('nHome')
-    .controller('NHomeCtrl', ['$scope', '$rootScope', '$state', '$timeout', 'dataService', 'socket', function($scope, $rootScope, $state, $timeout, dataService, socket) {
+    .controller('NHomeCtrl', ['$scope', '$rootScope', '$state', '$timeout', 'dataRequest', 'dataService', 'socket', function($scope, $rootScope, $state, $timeout, dataRequest, dataService, socket) {
 
       var God = this;
 
@@ -12,18 +12,51 @@
       // var liveStreamImg = document.querySelector('.camera-live-stream');
       var wentOffline;
       var serverActiveLog = sessionStorage.sessionActionLog ? JSON.parse(sessionStorage.sessionActionLog) : {};
-      God.userInfoData = {};
-      God.activeServer = {
-        id: 1,
-        name: 'no servers found'
-      };
       God.allServers = [];
       // connect to socket
-      dataService.socketConnect().then(function() {
-        postSocketConnectAction();
-      });
+      if (sessionStorage.userInfoData) {
+        God.userInfoData = JSON.parse(sessionStorage.userInfoData);
+        God.activeServer = JSON.parse(sessionStorage.activeServer);
+        God.activeServer.name = God.activeServer.name ? God.activeServer.name : 'no server found'
+
+        if (God.activeServer.id) {
+          dataService.socketConnect(God.userInfoData, God.activeServer).then(function() {
+            postSocketConnectAction();
+          });
+        }
+        // // check if reloaded
+        // if (sessionStorage.activeServer && sessionStorage.activeServer !== 'undefined') {
+        //   God.activeServer = JSON.parse(sessionStorage.activeServer);
+        //
+        //   /*if (God.activeServer.local && God.activeServer.ip_int) {
+        //     dataService.localSocketConnect(God.activeServer.ip_int).then(function() {
+        //       socketEmits();
+        //     });
+        //   } else {*/
+        //   dataService.socketConnect(encodeURIComponent(God.userInfoData.token), God.activeServer.id, God.userInfoData.email).then(function() {
+        //     socketEmits();
+        //   });
+        //   //}
+        // } else if (God.userInfoData.servers.length) {
+        //   /*if (God.userInfoData.servers[0].local && God.userInfoData.servers[0].ip_int) {
+        //     dataService.localSocketConnect(God.userInfoData.servers[0].ip_int).then(function() {
+        //       socketEmits();
+        //     });
+        //     God.activeServer = God.userInfoData.servers[0];
+        //   } else {*/
+        //   dataService.socketConnect(encodeURIComponent(God.userInfoData.token), God.userInfoData.servers[0].id, God.userInfoData.email).then(function() {
+        //     socketEmits();
+        //   });
+        //   God.activeServer = God.userInfoData.servers[0];
+        //   /*}*/
+        // }
+      } else {
+        $state.go('login');
+      }
 
       /* SET DEFAULT VALUES */
+      //Set user avatar
+      document.querySelector('.user-avatar').style.backgroundImage = 'url(' + God.userInfoData.avatar + ')';
 
       God.sessionActionLog = sessionStorage.sessionActionLog && JSON.parse(sessionStorage.sessionActionLog)[God.activeServer.id] ? JSON.parse(sessionStorage.sessionActionLog)[God.activeServer.id] : [];
 

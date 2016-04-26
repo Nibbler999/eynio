@@ -16,11 +16,6 @@
 
           var camrecCtrl = this;
           var deviceObj = $scope.camrec;
-          var camrecOptions = {
-              width: -1,
-              height: -1,
-              framerate: 1
-            }
             // get camera name by id in recording
           var allCameras = dataService.getData().getDevicesObj.camera;
           angular.forEach(allCameras, function(cam) {
@@ -39,54 +34,34 @@
             });
           }
           // get server id for recording download
-          deviceObj.serverId = 0;
-            // get recording thumbnail image
-          socket.emit('getRecordingThumbnail', deviceObj.id, function(response) {
-            deviceObj.thumbnailImg = dataService.blobToImage(response);
-          });
-          /**
-           * @name requestPlayback
-           * @desc request playback from server, if success send emit for video modal
-           * @type {function}
-           * @param {camrecObj} camera recording object
-           */
-          function requestPlayback(camrecObj) {
-            socket.emit3('startPlayback', camrecObj.id, camrecOptions, function(response) {
-              if (response) {
-                camrecObj.playbackId = response;
-                $scope.$emit('requestLiveStreamPlayback', {
-                  dev: camrecObj,
-                  type: 'recording',
-                  options: camrecOptions
-                });
-              }
-            });
-          }
-          /**
-           * @name deleteRecording
-           * @desc delete recording
-           * @type {function}
-           * @param {recId} recording id
-           */
+          deviceObj.serverId = JSON.parse(sessionStorage.activeServer).id;
+            /**
+             * @name deleteRecording
+             * @desc delete recording
+             * @type {function}
+             * @param {recId} recording id
+             */
           function deleteRecording(recId) {
             socket.emit('deleteRecording', recId);
             // emit event to security ctrl
             $scope.$emit('deleteRecording', recId);
           }
           // exports
-          camrecCtrl.requestPlayback = requestPlayback;
+          // camrecCtrl.requestPlayback = requestPlayback;
           camrecCtrl.deleteRecording = deleteRecording;
           camrecCtrl.deviceObj = deviceObj;
         }],
-        link: function(scope, elem, attr) {
+        link: function(scope, elem, attr, ctrl) {
 
-          var camrecActions = elem[0].querySelector('.cam-rec-actions');
+          var dropdown = elem[0].querySelector('.dropdown-menu');
           var currentState = $state.current.name;
           var deleteIcon = elem[0].querySelector('.color-red');
+          var video = elem[0].querySelector('video');
           // if dashboard remove delete icon
           if (currentState === 'frame.dashboard') {
-            camrecActions.removeChild(deleteIcon);
+            dropdown.removeChild(deleteIcon.parentNode);
           }
+          video.src = "/" + ctrl.deviceObj.id + ".webm";
         }
       }
     }])

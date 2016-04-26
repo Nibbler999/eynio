@@ -1,0 +1,35 @@
+<div class="container-fluid login-template">
+  <div class="login-wrap">
+    <div class="col-xs-12 col-md-5 login-description">
+      <h2>Open new possibilities.</h2>
+
+      <p>New windows, garage doors, shutters</p>
+      <p>Everything should work with NHome.</p>
+      <p>We really hope it should.</p>
+
+      <a ui-sref="register" class="button btn register-btn">
+        Register now
+      </a>
+    </div>
+
+    <div class="col-xs-12 col-md-3 form login-form">
+      <form type="form" autocomplete="off" ng-submit="login.loginUser(login.email, login.pass)">
+        <h4>Login to your account</h4>
+        <div class="form-input-wrap">
+          <label for="login-email" class="form-label">Email</label>
+          <input type="email" class="form-input" name="Email" ng-model="login.email" required autofocus>
+
+          <label for="login-password" class="form-label">Password</label>
+          <input type="password" class="form-input" name="Password" ng-model="login.pass" required>
+        </div>
+        <small class="color-red" ng-show="login.incorrect">Authentication failed</small>
+
+        <button type="submit" class="btn button login-btn">Login</button>
+      </form>
+
+      <a ui-sref="password" class="forgot-password">
+        Forgot your password?
+      </a>
+    </div>
+  </div>
+</div>

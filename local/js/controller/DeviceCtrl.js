@@ -38,6 +38,7 @@
           dataService.getDevicesEmit().then(function(devices) {
             device.data.getDevicesObj = devices;
             $timeout(function() {
+              console.log(contentWrapParent);
               contentWrapParent.children[0].children[1].children[1].classList.add('in');
             }, 100);
           });
@@ -48,6 +49,7 @@
           dataService.getScenesEmit();
           dataService.getSchedulesEmit();
           dataService.getRecordingsEmit();
+          console.log(device.data);
         }
       }
     ])

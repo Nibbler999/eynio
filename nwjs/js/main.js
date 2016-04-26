@@ -1,13 +1,6 @@
+"use strict";
+
 window.onload = function() {
-
-    $('.sidebar-btn').click(function() {
-   
-        $('.sidebar-btn').removeClass('active');
-        $(this).addClass('active');
-
-        $('.tab').removeClass('active');
-        $('#' + $(this).val()).addClass('active');
-    });
 
     // Load native UI library
     var gui = require('nw.gui');
@@ -42,66 +35,28 @@ window.onload = function() {
         win.show();
     }
 
-    var stream = require('stream');
+    var path = require('path'), cp = require('child_process');
 
-    var entries = [];
+    var child;
 
-    var weblog = new stream.Writable({
-        write: function(chunk, encoding, next) {
-            entries.push(chunk.toString());
-            if (entries.length > 50) {
-                entries.shift();
-            }
-            document.getElementById('console').textContent = entries.join('');
-            next();
-        }
-    });
+    var nodePath = 'node';
 
-    var log = require('../lib/logger.js')({ loglevel: 'info', nocolor: true }, weblog);
+    var cwd = path.dirname(process.execPath);
 
-    require('../lib/main.js')(log, function (conn) {
+    if (process.platform === 'win32') {
+        nodePath = path.join(cwd, 'node.exe');
+    }
 
-        conn.on('setExternalIP', function (command) {
-            $('#external_ip').text(command.args[0]);
-        });
+    function spawnChild () {
+        child = cp.spawn(nodePath, ['update.js']);
+        child.on('exit', spawnChild);
+    };
 
-        conn.on('setPing', function (ping) {
-            $('#ping').text(ping + 'ms');
-        });
+    spawnChild();
 
-        conn.on('connect', function () {
-            $('#connected').text('On');
-        });
-
-        conn.on('disconnect', function () {
-            $('#connected').text('Off');
-            $('#ping').text('-');
-        });
-
-        conn.command('getServerStatus', function (status) {
-            $('#server-name').text(status.name);
-            $('#local_ip').text(status.ip);
-            $('#app_version').text(status.version);
-            $('#node_version').text(status.node_version);
-            $('#node_platform').text(status.node_platform);
-        });
-
-        conn.command('getBridges', function (bridges) {
-
-            if (bridges) {
-                $('#bridge_count').text(bridges.length);
-            } else {
-                $('#bridge_count').text(0);
-            }
-        });
-
-        conn.command('getDevices', function (devices) {
-
-            if (devices) {
-                $('#device_count').text(devices.length);
-            } else {
-                $('#device_count').text(0);
-            }
-        });
+    win.on('close', function () {
+        child.removeListener('exit', spawnChild);
+        child.kill();
+        win.close(true);
     });
 };

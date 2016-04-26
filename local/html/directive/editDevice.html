@@ -8,7 +8,7 @@
         <label for="rename-device" class="form-label">
           Rename device
         </label>
-        <input type="text" id="rename-device" class="form-input" ng-model="editDeviceCtrl.deviceObj.name">
+        <input type="text" id="rename-device" class="form-input" ng-model="editDeviceCtrl.deviceObj.name" maxlength="20" required>
 
         <!-- if editing camera show more options !-->
         <span ng-show="editDeviceCtrl.deviceObj.type === 'camera'">

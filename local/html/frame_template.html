@@ -27,6 +27,18 @@
           </button>
         </div>
       </div>!-->
+
+      <div class="btn-group">
+        <button type="button" class="button user-dropdown-toggle-btn" data-toggle="dropdown">
+          <div class="user-info">
+            <div class="user-avatar"></div>
+            <div class="user-details hidden-xs">
+              <h4>{{God.userInfoData.user_name}}</h4>
+              <!--<h4>{{God.userInfoData.location}}</h4>!-->
+            </div>
+          </div>
+        </button>
+      </div>
     </div>
   </section>
   <!-- content wrap !-->
@@ -34,7 +46,6 @@
     <!-- side bar !-->
     <section class="frame-sidebar">
       <div class="dropdown server-dropdown" ng-click="showDownloads = false">
-
       </div>
 
       <a ui-sref="frame.dashboard" class="sidebar-nav-btn nhome-btn" ui-sref-active="active" ng-click="showDownloads = false">
@@ -85,6 +96,12 @@
                 </a>
                 <a href="https://nhome.s3.amazonaws.com/NHomePi2.img.xz" class="download-link">
                   Pi 2 - Raw Installer
+                </a>
+                <a href="https://nhome.s3.amazonaws.com/NHomePi2-NOOBS.zip" class="download-link">
+                  Pi 3 - NOOB Installer
+                </a>
+                <a href="https://nhome.s3.amazonaws.com/NHomePi2.img.xz" class="download-link">
+                  Pi 3 - Raw Installer
                 </a>
               </div>
             </div>

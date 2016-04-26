@@ -52,6 +52,7 @@
           var scheduleDate = elem[0].querySelector('.schedule-date');
           var collapse = elem[0].querySelector('.collapse');
           var form = elem[0].querySelector('form');
+          var name = elem[0].querySelector('.form-input');
           var hour = form.querySelectorAll('input[type="number"]')[0];
           var minute = form.querySelectorAll('input[type="number"]')[1];
           var days = form.querySelectorAll('input[name=day]');
@@ -66,6 +67,8 @@
           if (currentState === 'frame.dashboard') {
             dropdown.classList.add('hidden');
           }
+          // set sschedule name
+          name.value = ctrl.deviceObj.name;
           /**
            * @name setScheduleDate
            * @desc print schedule days, hour, minute, date
@@ -186,6 +189,9 @@
            * @type {event}
            */
           form.addEventListener('submit', function() {
+            // set new name from input
+            deviceObj.name = name.value;
+            
             var time = {
               dayOfWeek: [],
               hour: 0,
