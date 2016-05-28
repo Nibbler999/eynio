@@ -58,6 +58,16 @@
         })
       };
       /**
+      * @name requestPin
+      * @desc request pin for smart tv login
+      * @type {function}
+      */
+      server.requestPin = function(){
+        socket.emit('getPIN', null, function(response){
+          server.loginPin = response;
+        })
+      }
+      /**
        * @name changeServerName
        * @desc change server name
        * @type {function}

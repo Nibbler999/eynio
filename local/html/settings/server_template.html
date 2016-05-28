@@ -15,67 +15,92 @@
 
   <div class="settings-box-wrap">
     <div class="settings-box">
-      <h4>Serever status</h4>
+      <div>
 
-      <div class="server-status-btn online" ng-hide="!server.upToDate">
-        <small>Your server is currently</small>
-        <p class="color-green">Up to date.</p>
+        <h4>Serever status</h4>
+
+        <div class="server-status-btn online" ng-hide="!server.upToDate">
+          <small>Your server is currently</small>
+          <p class="color-green">Up to date.</p>
+        </div>
+
+        <div class="server-status-btn offline" ng-show="!server.upToDate" ng-click="server.updateApp()">
+          <small>Your server is currently</small>
+          <p class="color-red">Not up to date.</p>
+          <p>Update now</p>
+        </div>
       </div>
 
-      <div class="server-status-btn offline" ng-show="!server.upToDate" ng-click="server.updateApp()">
-        <small>Your server is currently</small>
-        <p class="color-red">Not up to date.</p>
-        <p>Update now</p>
+      <div>
+
+        <h5 class="color-transparent">Version:
+          <span class="color-white">{{::server.serverInfoData.version}}</span>
+        </h5>
+        <button type="button" class="settings-btn reboot" ng-click="server.updateApp()">Reboot Server</button>
       </div>
 
-      <h5 class="color-transparent">Version:
-        <span class="color-white">{{::server.serverInfoData.version}}</span>
-      </h5>
-      <button type="button" class="settings-btn reboot" ng-click="server.updateApp()">Reboot Server</button>
     </div>
 
     <div class="settings-box">
-      <h4>Server info</h4>
+      <div>
+        <h4>Server info</h4>
 
-      <p class="color-green server-status-indicator" ng-if="!God.serverOffline">Online</p>
-      <p class="color-red server-status-indicator" ng-if="God.serverOffline">Offline</p>
+        <p class="color-green server-status-indicator" ng-if="!God.serverOffline">Online</p>
+        <p class="color-red server-status-indicator" ng-if="God.serverOffline">Offline</p>
 
-      <p class="color-transparent">Ping:
-        <span class="color-white">{{::server.serverInfoData.ping}}</span>
-      </p>
-      <p class="color-transparent">IP:
-        <span class="color-white">{{::server.serverInfoData.ip}}</span>
-      </p>
-      <p class="color-transparent">External IP:
-        <span class="color-white">{{::server.serverInfoData.external_ip}}</span>
-      </p>
-      <p class="color-transparent">OS:
-        <span class="color-white">{{::server.serverInfoData.node_platform}}</span>
-      </p>
-      <p class="color-transparent">Node version:
-        <span class="color-white">{{::server.serverInfoData.node_version}}</span>
-      </p>
-      <p class="color-transparent">Node arch:
-        <span class="color-white">{{::server.serverInfoData.node_arch}}</span>
-      </p>
-      <small class="color-transparent">Recording folder size in MB</small>
+        <p class="color-transparent">Ping:
+          <span class="color-white">{{::server.serverInfoData.ping}}</span>
+        </p>
+        <p class="color-transparent">IP:
+          <span class="color-white">{{::server.serverInfoData.ip}}</span>
+        </p>
+        <p class="color-transparent">External IP:
+          <span class="color-white">{{::server.serverInfoData.external_ip}}</span>
+        </p>
+        <p class="color-transparent">OS:
+          <span class="color-white">{{::server.serverInfoData.node_platform}}</span>
+        </p>
+        <p class="color-transparent">Node version:
+          <span class="color-white">{{::server.serverInfoData.node_version}}</span>
+        </p>
+        <p class="color-transparent">Node arch:
+          <span class="color-white">{{::server.serverInfoData.node_arch}}</span>
+        </p>
+      </div>
+
+      <div>
+
+        <small class="color-transparent">Recording folder size in MB</small>
         <form class="server-settings-form" ng-submit="server.setRecordingsLimit(server.serverInfoData.recording_quota)">
           <input type="number" name="record-folder-size" min="0" class="form-number" ng-model="server.serverInfoData.recording_quota" ng-class="{'success': server.setRecordingsLimitSuccess}">
           <button type="submit" name="set" class="settings-btn green">Set Limit</button>
         </form>
-
+      </div>
     </div>
 
     <div class="settings-box">
-      <h4>Bridges</h4>
-      <p class="server-status-indicator">{{::server.data.getBridges.length}}</p>
-      <p class="color-transparent">Bridges currently on this server</p>
+      <div>
 
-      <p>
-        <span class="color-white" ng-repeat="bridge in server.data.getBridges">{{::bridge.name}}
-          <span ng-hide="$index == server.data.getBridges.length-1">,</span>
-        </span>
-      </p>
+        <h4>Bridges</h4>
+        <p class="server-status-indicator">{{::server.data.getBridges.length}}</p>
+        <p class="color-transparent">Bridges currently on this server</p>
+
+        <p>
+          <span class="color-white" ng-repeat="bridge in server.data.getBridges">{{::bridge.name}}
+            <span ng-hide="$index == server.data.getBridges.length-1">,</span>
+          </span>
+        </p>
+      </div>
+
+      <div>
+        <small class="color-transparent">Requset PIN for smart TV login</small>
+        <div class="display-flex justify-between align-end">
+          <button type="button" name="pin" class="settings-btn half-width green" ng-click="server.requestPin()">PIN</button>
+          <h4 class="color-green">
+            {{server.loginPin}}
+          </h4>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -147,8 +172,7 @@
         <li class="server-log-li" ng-repeat="log in server.actionLog">
           <p class="color-white">{{::log.user}} turned
             <b ng-if="server.testRegex(log.action, 'off')" class="color-orange">OFF</b>
-            <b ng-if="server.testRegex(log.action, 'on')" class="color-blue">ON</b>
-             {{::log.device}}
+            <b ng-if="server.testRegex(log.action, 'on')" class="color-blue">ON</b> {{::log.device}}
           </p>
           <p class="color-white">{{::log.time | date: 'd/MMM/yyyy HH:mm:ss'}}</p>
         </li>

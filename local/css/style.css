@@ -42,6 +42,7 @@
   /* Support for Firefox. */
   -moz-osx-font-smoothing: grayscale;
   /* Support for IE. */
+  -webkit-font-feature-settings: 'liga';
   font-feature-settings: 'liga';
 }
 html, body {
@@ -86,7 +87,6 @@ button:focus {
   display: none;
 }
 
-
 /* Let's get this party started */
 
 .button, butotn:focus {
@@ -112,7 +112,6 @@ button:focus {
   box-shadow: 0em 0.1em 0.4em #142A3E;
   color: #000;
   -webkit-transform: scale(0.95);
-  -ms-transform: scale(0.95);
   transform: scale(0.95);
 }
 .form-label {
@@ -173,6 +172,7 @@ button:focus {
   border: 0.1em solid #446B8D;
   color: #fff;
   text-indent: 0.5em;
+  -webkit-transition: all 0.5s ease;
   transition: all 0.5s ease;
 }
 .form-number.success {
@@ -342,6 +342,9 @@ input:disabled ~ label, input:disabled {
 .margin-auto {
   margin: auto;
 }
+.margin-no{
+  margin: 0;
+}
 .green-bg {
   background-color: #00E676;
 }
@@ -383,6 +386,12 @@ input:disabled ~ label, input:disabled {
   -ms-flex-flow: row wrap;
   flex-flow: row wrap;
 }
+.justify-between {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
 .justify-end {
   -webkit-box-pack: end;
   -webkit-justify-content: flex-end;
@@ -394,6 +403,9 @@ input:disabled ~ label, input:disabled {
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
+}
+.align-end{
+  align-items: flex-end;
 }
 .horizontal-line {
   position: absolute;

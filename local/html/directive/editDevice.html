@@ -32,23 +32,29 @@
             <input type="radio" id="camera-rotation-0" name="camera-rotation" value="0" ng-checked="editDeviceCtrl.deviceObj.rotate === 0" ng-model="editDeviceCtrl.deviceObj.rotate">
             <label for="camera-rotation-0" class="radio-label"></label>
           </span>
-        <span>
+          <span>
             <i>90°</i>
             <input type="radio" id="camera-rotation-90" name="camera-rotation" value="90" ng-checked="editDeviceCtrl.deviceObj.rotate === 90" ng-model="editDeviceCtrl.deviceObj.rotate">
             <label for="camera-rotation-90" class="radio-label"></label>
           </span>
-        <span>
+          <span>
             <i>180°</i>
             <input type="radio" id="camera-rotation-180" name="camera-rotation" value="180" ng-checked="editDeviceCtrl.deviceObj.rotate === 180" ng-model="editDeviceCtrl.deviceObj.rotate">
             <label for="camera-rotation-180" class="radio-label"></label>
           </span>
-        <span>
+          <span>
             <i>270°</i>
             <input type="radio" id="camera-rotation-270" name="camera-rotation" value="270" ng-checked="editDeviceCtrl.deviceObj.rotate === 270" ng-model="editDeviceCtrl.deviceObj.rotate">
             <label for="camera-rotation-270" class="radio-label"></label>
           </span>
-        <label class="form-label">Frame rate</label>
-        <input type="number" name="fps" ng-model="editDeviceCtrl.deviceObj.fps" min="1" max="30" class="form-number">
+          <label class="form-label">Frame rate</label>
+          <input type="number" name="fps" ng-model="editDeviceCtrl.deviceObj.fps" min="1" max="30" class="form-number">
+
+          <label class="form-label">Connect camera on server boot</label>
+          <div class="custom-input-wrap color-white">
+            <input type="checkbox" id="camera-pre_connect" ng-model="editDeviceCtrl.deviceObj.pre_connect">
+            <label for="camera-pre_connect" class="checkbox-label margin-no"></label>
+          </div>
         </span>
 
         <!-- if editing remote show options !-->

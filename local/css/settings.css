@@ -154,6 +154,9 @@
   margin: 1em 0;
 }
 .settings-box {
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
   position: relative;
   -webkit-box-flex: 1;
   -webkit-flex-grow: 1;
@@ -196,6 +199,9 @@
   outline: none;
   -webkit-transition: all 0.35s ease;
   transition: all 0.35s ease;
+}
+.half-width {
+  width: 50%;
 }
 .settings-btn:hover {
   -webkit-transform: scale(1.025);

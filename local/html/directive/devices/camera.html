@@ -32,6 +32,9 @@
       <li title="records only when alarm is turned on and camera detects motion" ng-class="{'green-bg': cameraCtrl.deviceObj.motion_recording_if_alarm}" ng-click="cameraCtrl.cameraRecordingMotionOnAlarm(cameraCtrl.deviceObj)">
         <img src="../img/button/alarm-on.png" alt="alarm" />
       </li>
+      <li>
+        <input type="number" class="form-number camera-fps" name="fps" ng-model="cameraCtrl.deviceObj.fps" min="1" max="30" title="frames per second" ng-change="cameraCtrl.cameraFpsChange(cameraCtrl.deviceObj.fps)">
+      </li>
     </ul>
   </span>
 </div>

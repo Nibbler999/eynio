@@ -17,6 +17,8 @@
           var cameraCtrl = this;
           var deviceObj = $scope.cinfo;
 
+          console.log(deviceObj);
+
           var cameraOptions = {
             width: -1,
             height: -1,
@@ -136,6 +138,15 @@
             }
           };
 
+          /**
+           * @name cameraFpsChange
+           * @desc change camera fps
+           * @type {function}
+           */
+          function cameraFpsChange(fps) {
+            socket.emit('updateCamera', deviceObj);
+          }
+
           // exports
           cameraCtrl.toggleDeviceFavorites = toggleDeviceFavorites;
           cameraCtrl.requestCameraLiveStream = requestCameraLiveStream;
@@ -144,6 +155,7 @@
           cameraCtrl.cameraRecordingOff = cameraRecordingOff;
           cameraCtrl.cameraRecordingMotion = cameraRecordingMotion;
           cameraCtrl.cameraRecordingMotionOnAlarm = cameraRecordingMotionOnAlarm;
+          cameraCtrl.cameraFpsChange = cameraFpsChange;
           cameraCtrl.deviceObj = deviceObj;
         }]
       };

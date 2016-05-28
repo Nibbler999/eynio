@@ -204,6 +204,10 @@
 .stream-key.left {
   left: 0em;
 }
+.camera-fps{
+  margin: 5% auto;
+  min-width: auto;
+}
 .camera-live-stream:-webkit-full-screen {
   position: fixed;
   top: 0;

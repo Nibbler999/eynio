@@ -15,7 +15,7 @@
   position: absolute;
   background-color: rgba(15, 42, 65, 0.8);
 }
-.edit-device-modal, .add-camera-modal, .add-remote-modal {
+.edit-device-modal, .add-camera-modal, .add-scan-camera-modal. .add-remote-modal {
   display: none;
 }
 .show-modal{
@@ -190,6 +190,12 @@
 }
 .add-remote-radio-select {
   padding: 0 2%;
+}
+.scan-canmeras-check-wrap{
+  padding: 5% 0;
+}
+.scan-canmeras-check-wrap > label{
+  margin: 0;
 }
 @-webkit-keyframes popUp {
   0% {

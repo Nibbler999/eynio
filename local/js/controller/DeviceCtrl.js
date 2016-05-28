@@ -18,6 +18,18 @@
         device.addCamera = function() {
           $scope.$emit('addNewCamera');
         };
+
+        /**
+         * @name scanForCameras
+         * @desc scan cameras for cameras
+         * @type {function}
+         */
+        device.scanForCameras = function() {
+          $scope.$emit('addScanedCameraScan');
+          socket.emit('findCameras', null, function(response) {
+            $scope.$emit('addScanedCamera', response);
+          })
+        };
         //  get data
         device.data = dataService.getData();
 
@@ -42,7 +54,7 @@
               contentWrapParent.children[0].children[1].children[1].classList.add('in');
             }, 100);
           });
-          dataService.getServerEmits().then(function(){
+          dataService.getServerEmits().then(function() {
             device.data = dataService.getData();
           });
           dataService.getCategoriesEmit();
