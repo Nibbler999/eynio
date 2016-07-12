@@ -6,7 +6,7 @@ function checkUpdates()
 {
     var version = require('./package.json').version;
 
-    https.get('https://neosoft-updates.s3.amazonaws.com/zupdate/NHomeServer/' + version + '.xml', function(res) {
+    https.get('https://nhome.s3.amazonaws.com/zupdate/NHomeServer/' + version + '.xml', function(res) {
 
         console.log('Checking for updates');
 
