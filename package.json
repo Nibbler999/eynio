@@ -23,6 +23,7 @@
     "fibaro-api": "0.1.1",
     "finalhandler": "^0.4.1",
     "firebase": "2.4.1",
+    "glob": "6.0.4",
     "home-controller": "0.5.2",
     "iotdb-timers": "0.0.12",
     "ip": "1.1.2",
