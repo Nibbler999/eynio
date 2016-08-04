@@ -8,6 +8,7 @@ User=nhome
 Group=nhome
 Restart=always
 MemoryLimit=512M
+EnvironmentFile=-/etc/sysconfig/nhomeserver
 
 [Install]
 WantedBy=basic.target
