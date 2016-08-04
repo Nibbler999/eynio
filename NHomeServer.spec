@@ -45,7 +45,7 @@ rm -rf %{buildroot}
 getent group nhome >/dev/null || groupadd -r nhome
 getent passwd nhome >/dev/null || \
     useradd -r -g nhome -s /sbin/nologin \
-    -c "NHome server" nhome
+    -c "NHome server" -m nhome
 exit 0
 
 %post
