@@ -58,7 +58,8 @@ exit 0
 %systemd_postun_with_restart nhomeserver.service
 
 %files
-%attr(0755,root,root) /opt/nhome
-%attr(0644,root,root) /lib/systemd/system/nhomeserver.service
+%defattr(-,root,root,-)
+%dir /opt/nhome
+%{_unitdir}/nhomeserver.service
 
 %changelog
