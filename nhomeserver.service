@@ -3,12 +3,12 @@ Description=NHome
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/node --max_semi_space_size=2 --max_old_space_size=256 --max_executable_size=192 /opt/nhome/server.js
 User=nhome
 Group=nhome
+EnvironmentFile=-/etc/sysconfig/nhomeserver
+ExecStart=/usr/bin/node --max_semi_space_size=2 --max_old_space_size=256 --max_executable_size=192 /opt/nhome/server.js $OPTIONS
 Restart=always
 MemoryLimit=512M
-EnvironmentFile=-/etc/sysconfig/nhomeserver
 
 [Install]
 WantedBy=basic.target
