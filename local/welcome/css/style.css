@@ -1,0 +1,232 @@
+* {
+    box-sizing: border-box;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url(../fonts/Roboto-Medium.ttf);
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url(../fonts/Roboto-Light.ttf);
+    font-weight: 300;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url(../fonts/Roboto-Bold.ttf);
+    font-weight: 500;
+}
+
+a, a:visited {
+    text-decoration: none;
+    color: inherit;
+}
+
+body, html {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    font-weight: 300;
+    font-family: 'Roboto', sans-serif;
+    overflow-x: hidden;
+}
+
+h1, h2 {
+    font-weight: 500;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    font-weight: 300;
+    font-size: 1.1em;
+}
+
+header {
+    position: relative;
+    height: 20%;
+    background-color: #4d4d4d;
+    padding: 5% 15%;
+}
+
+header>img {
+    height: 4em;
+}
+
+header>span {
+    position: absolute;
+    right: 15%;
+    bottom: 15%;
+}
+
+.nav-button {
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.nav-button.active {
+    color: #fff;
+    font-weight: bold;
+}
+
+.content {
+    position: relative;
+    height: 80%;
+    -webkit-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+.content>section {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.content>section:last-child {
+    left: 100%;
+}
+
+.content.roll {
+    -webkit-transform: translateX(-100%);
+    transform: translateX(-100%);
+}
+
+.server-welcome-box {
+    float: left;
+    width: 50%;
+    height: 85%;
+}
+
+.server-welcome-box:first-of-type {
+    border-right: 1px solid #eee;
+}
+
+.server-btn {
+    display: block;
+    width: 100%;
+    font-weight: 500;
+}
+
+.server-btn:hover {
+    background-color: #efefef;
+}
+
+.server-btn button {
+    text-indent: 1.5em;
+    background-position: 0% -20%;
+    background-size: 10% 90%;
+    background-repeat: no-repeat;
+}
+
+.server-btn p {
+    text-indent: 2em;
+    margin: 0;
+    color: #4d4d4d;
+    font-weight: 300;
+}
+
+
+/* CLICK WRAP */
+
+.server-welcome-box.click>figure {
+    padding: 0 0 0 30%;
+    /*padding-left: 30%;*/
+    margin: 40px 0;
+}
+
+.server-welcome-box.click>p {
+    color: #4d4d4d;
+    padding-left: 30%;
+}
+
+.server-btn.click {
+    padding: 20px 0 20px 30%;
+    /*padding-left: 30%;*/
+}
+
+.server-btn.click button {
+    color: #00c1c6;
+    background-image: url(../img/click_button_icon.png);
+}
+
+
+/* VISION WRAP */
+
+.server-welcome-box.vision>figure {
+    padding: 0;
+    margin: 40px 80px;
+}
+
+.server-welcome-box.vision>p {
+    color: #4d4d4d;
+    padding: 0 80px;
+}
+
+.server-btn.vision {
+    padding: 20px 80px;
+}
+
+.server-btn.vision button {
+    color: #FCB712;
+    background-image: url(../img/vision_button_icon.png);
+}
+
+footer {
+    width: 100%;
+    height: 15%;
+    clear: both;
+    background-color: #ffffff;
+}
+
+footer>a {
+    float: right;
+}
+
+footer img {
+    height: 3em;
+    margin: 1em 2em;
+}
+
+.info-content>div {
+    height: 50%;
+    padding: 2.5% 15%;
+    color: #4d4d4d;
+}
+
+.info-content h1 {
+    font-size: 1.5em;
+    margin-top: 1%;
+}
+
+.info-server h2 {
+    margin: 0;
+    width: 50%;
+    float: left;
+    padding: 2.5% 2.5% 0 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.info-server h2 span {
+    font-weight: 300;
+}
+
+.info-log {
+    background-color: #efefef;
+}
+
+.info-log>div {
+    height: 75%;
+    overflow: auto;
+}
