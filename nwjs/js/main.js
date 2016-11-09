@@ -11,7 +11,7 @@ window.onload = function() {
     if (gui.App.argv.indexOf('--autostart') !== -1) {
 
         // Create a tray icon
-        var tray = new nw.Tray({ title: 'NHomeServer', icon: 'nwjs/img/tray.png' });
+        var tray = new nw.Tray({ title: 'EynioServer', icon: 'nwjs/img/tray.png' });
     
         tray.on('click', function() {
             win.show();

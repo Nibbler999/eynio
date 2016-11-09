@@ -15,15 +15,15 @@
 # Modern UI
 !include MUI2.nsh
 
-Name "NHomeServer"
-InstallDir "c:\NHomeServer"
+Name "EynioServer"
+InstallDir "c:\EynioServer"
 
 RequestExecutionLevel user
 
-VIAddVersionKey "ProductName" "NHomeServer"
-VIAddVersionKey "CompanyName" "Neosoft Computers"
-VIAddVersionKey "LegalCopyright" "Copyright Neosoft Computers 2009"
-VIAddVersionKey "FileDescription" "NHomeServer Installer"
+VIAddVersionKey "ProductName" "EynioServer"
+VIAddVersionKey "CompanyName" "Eynio"
+VIAddVersionKey "LegalCopyright" "Copyright Eynio 2016"
+VIAddVersionKey "FileDescription" "EynioServer Installer"
 VIAddVersionKey "FileVersion" "VERSIONDATA1"
 
 VIProductVersion "VERSIONDATA2"
@@ -52,7 +52,7 @@ ComponentText "Select which optional components you want to install."
 
 DirText "Please select the installation folder."
 
-Section "NHomeServer program"
+Section "EynioServer program"
   SectionIn RO
 
   SetOutPath "$INSTDIR"
@@ -62,29 +62,29 @@ SectionEnd
 
 Section "Start Menu Shortcuts"
   SetShellVarContext current
-  CreateDirectory "$SMPROGRAMS\NHomeServer"
-  CreateShortCut "$SMPROGRAMS\NHomeServer\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
-  CreateShortCut "$SMPROGRAMS\NHomeServer\NHomeServer.lnk" "$INSTDIR\nhome.exe" "" "$INSTDIR\nhome.ico" 0
+  CreateDirectory "$SMPROGRAMS\EynioServer"
+  CreateShortCut "$SMPROGRAMS\EynioServer\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
+  CreateShortCut "$SMPROGRAMS\EynioServer\EynioServer.lnk" "$INSTDIR\server.exe" "" "$INSTDIR\server.ico" 0
 SectionEnd
 
 Section "Desktop Icons"
   SetShellVarContext current
-  CreateShortCut "$DESKTOP\NHomeServer.lnk" "$INSTDIR\nhome.exe" "" "$INSTDIR\nhome.ico" 0
+  CreateShortCut "$DESKTOP\EynioServer.lnk" "$INSTDIR\server.exe" "" "$INSTDIR\server.ico" 0
 SectionEnd
 
 Section "Start on boot"
   SetShellVarContext current
-  CreateShortCut "$SMSTARTUP\NHomeServer.lnk" "$INSTDIR\nhome.exe" "--autostart" "$INSTDIR\nhome.ico" 0
+  CreateShortCut "$SMSTARTUP\EynioServer.lnk" "$INSTDIR\server.exe" "--autostart" "$INSTDIR\server.ico" 0
 SectionEnd
 
 Section "Uninstall"
   SetShellVarContext current
-  Delete /rebootok "$DESKTOP\NHomeServer.lnk"
-  Delete /rebootok "$SMPROGRAMS\NHomeServer\NHomeServer.lnk"
-  Delete /rebootok "$SMPROGRAMS\NHomeServer\Uninstall.lnk"
-  Delete /rebootok "$SMSTARTUP\NHomeServer.lnk"
-  RMDir "$SMPROGRAMS\NHomeServer"
-  RMDir /r /rebootok "$APPDATA\Neosoft\NHomeServer"
+  Delete /rebootok "$DESKTOP\EynioServer.lnk"
+  Delete /rebootok "$SMPROGRAMS\EynioServer\EynioServer.lnk"
+  Delete /rebootok "$SMPROGRAMS\EynioServer\Uninstall.lnk"
+  Delete /rebootok "$SMSTARTUP\EynioServer.lnk"
+  RMDir "$SMPROGRAMS\EynioServer"
+  RMDir /r /rebootok "$APPDATA\Eynio\EynioServer"
   RMDir /r /rebootok "$INSTDIR"
 SectionEnd
 

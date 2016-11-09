@@ -1,11 +1,11 @@
 #!/bin/sh
 
-PRIVATE_LOCATION=/var/packages/NHome/target
-PIDFILE=/var/run/nhome.pid
+PRIVATE_LOCATION=/var/packages/EynioServer/target
+PIDFILE=/var/run/eynio.pid
 
 start_package()
 {
-    HOME=/var/packages/NHome/etc node ${PRIVATE_LOCATION}/server.js --nocolor --pidfile $PIDFILE --platform Synology &> /var/log/nhome.log &
+    HOME=/var/packages/EynioServer/etc node ${PRIVATE_LOCATION}/server.js --nocolor --pidfile $PIDFILE --platform Synology &> /var/log/eynio.log &
 }
 
 stop_package()
@@ -37,7 +37,7 @@ case $1 in
                 exit 0
                 ;;
         log)
-                echo "/var/log/nhome.log"
+                echo "/var/log/eynio.log"
                 exit 0
                 ;;
 esac

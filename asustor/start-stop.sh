@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PIDFILE=/var/run/nhome.pid
+PIDFILE=/var/run/eynio.pid
 
 start_package()
 {

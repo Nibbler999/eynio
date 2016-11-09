@@ -1,2 +1,2 @@
-NHome is a Smart Home application created for easily controlling, scheduling and manipulating multiple smart devices. 
+Eynio is a Smart Home application created for easily controlling, scheduling and manipulating multiple smart devices. 
 Explore the endless possibilities of your home through our extremely easy to use app - keep connected, protected and informed.

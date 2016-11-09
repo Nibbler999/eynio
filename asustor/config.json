@@ -1,14 +1,14 @@
 {
    "general":{
-      "package":"NHomeServer",
-      "name":"NHome Server",
+      "package":"EynioServer",
+      "name":"Eynio Server",
       "version":"1.0.0",
       "depends":["nodejs"],
       "conflicts":[],
-      "developer":"NHome",
-      "maintainer":"NHome",
-      "email":"atkinson.tommy@nhome.ba",
-      "website":"https://nhome.ba/",
+      "developer":"Eynio",
+      "maintainer":"Eynio",
+      "email":"info@eynio.com",
+      "website":"https://eynio.com/",
       "architecture":"any",
       "firmware":"2.0"
    },
