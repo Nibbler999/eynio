@@ -1,18 +1,18 @@
 "use strict";
 
+// Load native UI library
+var gui = require('nw.gui');
+
+// Get the current window
+var win = gui.Window.get();
+
 window.onload = function() {
-
-    // Load native UI library
-    var gui = require('nw.gui');
-
-    // Get the current window
-    var win = gui.Window.get();
 
     if (gui.App.argv.indexOf('--autostart') !== -1) {
 
         // Create a tray icon
         var tray = new nw.Tray({ title: 'EynioServer', icon: 'nwjs/img/tray.png' });
-    
+
         tray.on('click', function() {
             win.show();
         });
@@ -30,27 +30,34 @@ window.onload = function() {
         tray.menu = menu;
 
         win.setShowInTaskbar(false);
-         
+
     } else {
         win.show();
     }
 
-    var path = require('path'), cp = require('child_process');
-
-    var child;
+    var cp = require('child_process');
 
     var nodePath = 'node';
 
-    var cwd = path.dirname(process.execPath);
+    var opts = {};
 
     if (process.platform === 'win32') {
+        var path = require('path');
+        var cwd = path.dirname(process.execPath);
         nodePath = path.join(cwd, 'node.exe');
+        opts.stdio = 'ignore';
+    } else {
+        opts.stdio = 'inherit';
     }
 
+    var child;
+
+    var args = ['server.js'].concat(gui.App.argv);
+
     function spawnChild () {
-        child = cp.spawn(nodePath, ['update.js']);
+        child = cp.spawn(nodePath, args, opts);
         child.on('exit', spawnChild);
-    };
+    }
 
     spawnChild();
 
