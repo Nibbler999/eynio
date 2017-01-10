@@ -45,6 +45,7 @@ window.onload = function() {
         var path = require('path');
         var cwd = path.dirname(process.execPath);
         nodePath = path.join(cwd, 'node.exe');
+        process.env.NHOME_CAN_UPDATE = '1';
         opts.stdio = 'ignore';
     } else {
         opts.stdio = 'inherit';
@@ -55,8 +56,10 @@ window.onload = function() {
     var args = ['server.js'].concat(gui.App.argv);
 
     function spawnChild () {
-        child = cp.spawn(nodePath, args, opts);
-        child.on('exit', spawnChild);
+        require('../lib/updater.js').update(function() {
+            child = cp.spawn(nodePath, args, opts);
+            child.on('exit', spawnChild);
+        });
     }
 
     spawnChild();
