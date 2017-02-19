@@ -18,7 +18,7 @@
     "chroma-js": "1.2.1",
     "commander": "2.9.0",
     "deep-extend": "0.4.1",
-    "duplexer2": "0.1.4",
+    "duplexify": "3.5.0",
     "es6-promise": "4.0.5",
     "fibaro-api": "0.1.1",
     "finalhandler": "0.5.1",
