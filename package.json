@@ -43,7 +43,6 @@
     "simple-itach": "0.2.1",
     "socket.io": "1.7.3",
     "socket.io-client": "1.7.3",
-    "socketio-wildcard": "0.3.0",
     "sse": "0.0.6",
     "tcp-ping": "0.1.1",
     "ttq": "0.1.2",
