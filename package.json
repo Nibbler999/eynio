@@ -32,7 +32,7 @@
     "mkdirp": "0.5.1",
     "netatmo": "2.1.0",
     "node-hue-api": "2.3.0",
-    "node-lifx": "0.6.0",
+    "node-lifx": "0.8.0",
     "node-orvibo": "1.1.0",
     "node-schedule": "1.2.0",
     "onvif": "0.5.3",
