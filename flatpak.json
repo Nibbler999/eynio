@@ -1,0 +1,156 @@
+{
+  "app-id": "com.eynio.server",
+  "runtime": "org.freedesktop.Platform",
+  "runtime-version": "1.6",
+  "sdk": "org.freedesktop.Sdk",
+  "command": "eynioserver",
+  "modules": [
+    {
+        "name": "nodejs",
+        "config-opts": ["--shared-zlib", "--shared-openssl", "--with-intl=system-icu", "--without-npm"],
+        "sources": [
+            {
+                "type": "archive",
+                "url": "https://nodejs.org/dist/v6.11.2/node-v6.11.2.tar.xz",
+                "sha256": "04af4992238b19124ea56f1bcfda36827613a24eb3b00fc3b50f261a415a26e4"
+            }
+        ]
+    },
+    {
+        "name": "ffmpeg",
+        "config-opts": [
+            "--enable-shared", "--disable-static",
+            "--disable-doc", "--disable-ffplay", "--disable-ffprobe", "--disable-ffserver",
+            "--disable-bzlib", "--disable-zlib",
+            "--enable-gpl", "--enable-version3",
+            "--disable-cuda", "--disable-cuvid", "--disable-nvenc", "--disable-vaapi", "--disable-vdpau",
+            "--enable-libx264", "--enable-libvpx",
+            "--disable-everything",
+            "--enable-demuxer=mjpeg,mp4,matroska,rtsp",
+            "--enable-parser=aac,h264,mjpeg,vp8,mpeg4video",
+            "--enable-decoder=aac,h264,mjpeg,vp8,mpeg4,pcm_alaw,pcm_mulaw,adpcm_g722,adpcm_g726",
+            "--enable-encoder=libvpx_vp8,libx264,aac,mjpeg,mpeg1video,rawvideo,pcm_mulaw",
+            "--enable-muxer=mjpeg,mp4,webm,mpegts,mulaw",
+            "--enable-filter=scale,transpose,fps",
+            "--enable-protocol=file,pipe"
+        ],
+        "modules": [
+            {
+                "name": "libx264",
+                "config-opts": ["--enable-shared", "--disable-cli"],
+                "sources": [
+                    {
+                        "type": "git",
+                        "url": "git://git.videolan.org/git/x264.git",
+                        "branch": "stable"
+                    }
+                ]
+            }
+        ],
+        "sources": [
+            {
+                "type": "archive",
+                "url": "http://ffmpeg.org/releases/ffmpeg-3.3.3.tar.bz2",
+                "sha256": "1069ac8fc7f52e566bea28b41b9c437246aeb5096f82fb26fa96dc7d5a10a473"
+            }
+        ]
+    },
+    {
+        "name": "nwjs",
+        "buildsystem": "simple",
+        "modules": [
+            {
+                "name": "udev",
+                "config-opts": [ "--disable-hwdb", "--disable-logging", "--disable-gudev",
+                                 "--disable-introspection", "--disable-keymap", "--disable-mtd_probe"],
+                "sources": [
+                    {
+                        "type": "archive",
+                        "url": "http://kernel.org/pub/linux/utils/kernel/hotplug/udev-175.tar.bz2",
+                        "sha256": "4c7937fe5a1521316ea571188745b9a00a9fdf314228cffc53a7ba9e5968b7ab"
+                    }
+                ]
+            },
+            {
+                "name": "dbus-glib",
+                "config-opts": [ "--disable-static", "--disable-gtk-doc" ],
+                "sources": [
+                    {
+                        "type": "archive",
+                        "url": "https://dbus.freedesktop.org/releases/dbus-glib/dbus-glib-0.106.tar.gz",
+                        "sha256": "b38952706dcf68bad9c302999ef0f420b8cf1a2428227123f0ac4764b689c046"
+                    }
+                ]
+            },
+            {
+                "name": "gconf",
+                "config-opts": ["--disable-static", "--disable-gtk-doc", "--disable-orbit", "--disable-introspection"],
+                "sources" : [
+                    {
+                        "type": "archive",
+                        "url": "http://ftp.gnome.org/pub/GNOME/sources/GConf/3.2/GConf-3.2.6.tar.xz",
+                        "sha256": "1912b91803ab09a5eed34d364bf09fe3a2a9c96751fde03a4e0cfa51a04d784c"
+                    }
+                ]
+            },
+            {
+                "name": "eynioserver",
+                "buildsystem": "simple",
+                "sources": [
+                    {
+                        "type": "file",
+                        "path": "source.tar.gz",
+                        "dest-filename": "source.tar.gz"
+                    },
+                    {
+                        "type": "script",
+                        "commands": [
+                            "cd /app/share/eynioserver",
+                            "./nw"
+                        ],
+                        "dest-filename": "eynioserver-bin"
+                    }
+                ],
+                "build-commands": [
+                    "mkdir -p /app/share/eynioserver",
+                    "tar -xzf source.tar.gz -C /app/share/eynioserver/",
+                    "mv eynioserver-bin /app/bin/eynioserver"
+                ]
+            }
+        ],
+        "sources": [
+            {
+                "only-arches": [ "x86_64" ],
+                "type": "archive",
+                "url": "https://dl.nwjs.io/v0.24.3/nwjs-v0.24.3-linux-x64.tar.gz",
+                "sha256": "8d6611179546752053138184f2a70ed5753638dfef5755930b58e835670ca144",
+                "dest": "nwjs"
+            },
+            {
+                "only-arches": [ "i386" ],
+                "type": "archive",
+                "url": "https://dl.nwjs.io/v0.24.3/nwjs-v0.24.3-linux-ia32.tar.gz",
+                "sha256": "44e12a97db3102b58056c81e124443a865a9feec0c983cfb51c8d764a2ad1c43",
+                "dest": "nwjs"
+            }
+        ],
+        "build-commands": [
+            "find nwjs/locales ! -name en-US.pak -type f -exec rm -f {} +",
+            "cp -a nwjs/* /app/share/eynioserver/"
+        ]
+    }
+  ],
+  "cleanup": [
+      "/include", "*.a", "*.la",
+      "/sbin",
+      "/lib/pkgconfig",
+      "/share/aclocal", "/share/gir-1.0", "/share/gtk-doc", "/share/man", "/share/pkgconfig", "/share/ffmpeg"
+  ],
+  "finish-args": [
+      "--socket=x11",
+      "--share=network",
+      "--device=dri",
+      "--filesystem=home",
+      "--talk-name=org.gnome.GConf"
+  ]
+}
