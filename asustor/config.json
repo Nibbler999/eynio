@@ -1,7 +1,7 @@
 {
    "general":{
-      "package":"EynioServer",
-      "name":"Eynio Server",
+      "package":"EynioConnect",
+      "name":"Eynio Connect",
       "version":"1.0.0",
       "depends":["nodejs"],
       "conflicts":[],
