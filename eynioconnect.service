@@ -2,6 +2,7 @@
 Description=EynioConnect
 Wants=network-online.target
 After=network.target network-online.target
+Conflicts=nhomeserver.service
 
 [Service]
 User=eynio

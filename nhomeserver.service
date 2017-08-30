@@ -1,6 +1,7 @@
 [Unit]
 Description=NHome
 After=network.target
+Conflicts=eynioconnect.service
 
 [Service]
 User=nhome
