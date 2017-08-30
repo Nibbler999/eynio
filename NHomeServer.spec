@@ -59,7 +59,6 @@ exit 0
 %systemd_post eynioconnect.service
 
 %preun
-%systemd_preun nhomeserver.service
 %systemd_preun eynioconnect.service
 
 %postun
