@@ -1,4 +1,4 @@
-server.js lib local node_modules nwjs server.ico package.json LICENSE GPLv3.txt opt/nhome/
+server.js lib local node_modules nwjs server.ico package.json LICENSE GPLv3.txt opt/eynioconnect/
 debian/*.desktop /usr/share/applications/
 debian/*.service /lib/systemd/system/
-debian/nhome /etc/init.d/
+debian/eynioconnect /etc/init.d/

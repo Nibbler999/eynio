@@ -1,9 +1,6 @@
 #!/bin/sh
 
-adduser --system nhome
-
-#update-rc.d nhome defaults
-#invoke-rc.d nhome start
+adduser --system eynio
 
 exit 0
 

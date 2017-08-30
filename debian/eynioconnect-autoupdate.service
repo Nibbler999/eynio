@@ -1,13 +1,13 @@
 [Unit]
-Description=NHome
+Description=Eynio Connect Autoupdate
 Requires=NetworkManager-wait-online.service
 After=network-online.target
 
 [Service]
-ExecStart=/usr/bin/node /opt/nhome/server.js
+ExecStart=/usr/bin/node /opt/eynioconnect/server.js
 ExecStartPre=/usr/bin/apt-get update
-ExecStartPre=/usr/bin/apt-get -y install nhomeserver
-User=nhome
+ExecStartPre=/usr/bin/apt-get -y install eynioconnectdev
+User=eynio
 PermissionsStartOnly=true
 Restart=always
 Environment=NHOME_CAN_UPDATE=1

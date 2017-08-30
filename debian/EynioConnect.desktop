@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=Eynio Connect
+Comment=Eynio Connect
+Exec=node /opt/eynioconnect/server.js
+Icon=/opt/eynioconnect/server.ico
+Terminal=true
+Type=Application
+StartupNotify=false
+Categories=Net;
