@@ -1,11 +1,11 @@
 #!/bin/sh
 
-PRIVATE_LOCATION=/var/packages/EynioServer/target
+PRIVATE_LOCATION=/var/packages/EynioConnect/target
 PIDFILE=/var/run/eynio.pid
 
 start_package()
 {
-    HOME=/var/packages/EynioServer/etc node ${PRIVATE_LOCATION}/server.js --nocolor --pidfile $PIDFILE --platform Synology &> /var/log/eynio.log &
+    HOME=/var/packages/EynioConnect/etc node ${PRIVATE_LOCATION}/server.js --nocolor --pidfile $PIDFILE --platform Synology &> /var/log/eynio.log &
 }
 
 stop_package()
