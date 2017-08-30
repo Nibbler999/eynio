@@ -60,7 +60,7 @@ exit 0
 
 %posttrans
 # Enable nhomeserver service if nhome user exists (legacy installation)
-getent group nhome && systemctl enable --now nhomeserver >/dev/null 2>&1 || : 
+(getent group nhome && systemctl enable --now nhomeserver) >/dev/null 2>&1 || :
 
 %preun
 %systemd_preun eynioconnect.service
