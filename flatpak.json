@@ -1,9 +1,9 @@
 {
-  "app-id": "com.eynio.server",
+  "app-id": "com.eynio.connect",
   "runtime": "org.freedesktop.Platform",
   "runtime-version": "1.6",
   "sdk": "org.freedesktop.Sdk",
-  "command": "eynioserver",
+  "command": "eynioconnect",
   "modules": [
     {
         "name": "nodejs",
@@ -94,7 +94,7 @@
                 ]
             },
             {
-                "name": "eynioserver",
+                "name": "eynioconnect",
                 "buildsystem": "simple",
                 "sources": [
                     {
@@ -105,16 +105,16 @@
                     {
                         "type": "script",
                         "commands": [
-                            "cd /app/share/eynioserver",
+                            "cd /app/share/eynioconnect",
                             "./nw"
                         ],
-                        "dest-filename": "eynioserver-bin"
+                        "dest-filename": "eynioconnect-bin"
                     }
                 ],
                 "build-commands": [
-                    "mkdir -p /app/share/eynioserver",
-                    "tar -xzf source.tar.gz -C /app/share/eynioserver/",
-                    "mv eynioserver-bin /app/bin/eynioserver"
+                    "mkdir -p /app/share/eynioconnect",
+                    "tar -xzf source.tar.gz -C /app/share/eynioconnect/",
+                    "mv eynioconnect-bin /app/bin/eynioconnect"
                 ]
             }
         ],
@@ -136,7 +136,7 @@
         ],
         "build-commands": [
             "find nwjs/locales ! -name en-US.pak -type f -exec rm -f {} +",
-            "cp -a nwjs/* /app/share/eynioserver/"
+            "cp -a nwjs/* /app/share/eynioconnect/"
         ]
     }
   ],
