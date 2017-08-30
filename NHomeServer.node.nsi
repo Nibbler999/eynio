@@ -15,15 +15,15 @@
 # Modern UI
 !include MUI2.nsh
 
-Name "EynioServer"
-InstallDir "c:\EynioServer"
+Name "EynioConnect"
+InstallDir "c:\EynioConnect"
 
 RequestExecutionLevel user
 
-VIAddVersionKey "ProductName" "EynioServer"
+VIAddVersionKey "ProductName" "EynioConnect"
 VIAddVersionKey "CompanyName" "Eynio"
-VIAddVersionKey "LegalCopyright" "Copyright Eynio 2016"
-VIAddVersionKey "FileDescription" "EynioServer Installer"
+VIAddVersionKey "LegalCopyright" "Copyright Eynio 2017"
+VIAddVersionKey "FileDescription" "EynioConnect Installer"
 VIAddVersionKey "FileVersion" "VERSIONDATA1"
 
 VIProductVersion "VERSIONDATA2"
@@ -52,7 +52,7 @@ ComponentText "Select which optional components you want to install."
 
 DirText "Please select the installation folder."
 
-Section "EynioServer program"
+Section "EynioConnect program"
   SectionIn RO
 
   SetOutPath "$INSTDIR"
@@ -62,29 +62,29 @@ SectionEnd
 
 Section "Start Menu Shortcuts"
   SetShellVarContext current
-  CreateDirectory "$SMPROGRAMS\EynioServer"
-  CreateShortCut "$SMPROGRAMS\EynioServer\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
-  CreateShortCut "$SMPROGRAMS\EynioServer\EynioServer.lnk" "$INSTDIR\server.exe" "" "$INSTDIR\server.ico" 0
+  CreateDirectory "$SMPROGRAMS\EynioConnect"
+  CreateShortCut "$SMPROGRAMS\EynioConnect\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
+  CreateShortCut "$SMPROGRAMS\EynioConnect\EynioConnect.lnk" "$INSTDIR\server.exe" "" "$INSTDIR\server.ico" 0
 SectionEnd
 
 Section "Desktop Icons"
   SetShellVarContext current
-  CreateShortCut "$DESKTOP\EynioServer.lnk" "$INSTDIR\server.exe" "" "$INSTDIR\server.ico" 0
+  CreateShortCut "$DESKTOP\EynioConnect.lnk" "$INSTDIR\server.exe" "" "$INSTDIR\server.ico" 0
 SectionEnd
 
 Section "Start on boot"
   SetShellVarContext current
-  CreateShortCut "$SMSTARTUP\EynioServer.lnk" "$INSTDIR\server.exe" "--autostart" "$INSTDIR\server.ico" 0
+  CreateShortCut "$SMSTARTUP\EynioConnect.lnk" "$INSTDIR\server.exe" "--autostart" "$INSTDIR\server.ico" 0
 SectionEnd
 
 Section "Uninstall"
   SetShellVarContext current
-  Delete /rebootok "$DESKTOP\EynioServer.lnk"
-  Delete /rebootok "$SMPROGRAMS\EynioServer\EynioServer.lnk"
-  Delete /rebootok "$SMPROGRAMS\EynioServer\Uninstall.lnk"
-  Delete /rebootok "$SMSTARTUP\EynioServer.lnk"
-  RMDir "$SMPROGRAMS\EynioServer"
-  RMDir /r /rebootok "$APPDATA\Eynio\EynioServer"
+  Delete /rebootok "$DESKTOP\EynioConnect.lnk"
+  Delete /rebootok "$SMPROGRAMS\EynioConnect\EynioConnect.lnk"
+  Delete /rebootok "$SMPROGRAMS\EynioConnect\Uninstall.lnk"
+  Delete /rebootok "$SMSTARTUP\EynioConnect.lnk"
+  RMDir "$SMPROGRAMS\EynioConnect"
+  RMDir /r /rebootok "$APPDATA\Eynio\EynioConnect"
   RMDir /r /rebootok "$INSTDIR"
 SectionEnd
 
