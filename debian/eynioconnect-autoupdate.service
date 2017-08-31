@@ -6,7 +6,7 @@ After=network-online.target
 [Service]
 ExecStart=/usr/bin/node /opt/eynioconnect/server.js
 ExecStartPre=/usr/bin/apt-get update
-ExecStartPre=/usr/bin/apt-get -y install eynioconnectdev
+ExecStartPre=/usr/bin/apt-get -y install eynioconnect
 User=eynio
 PermissionsStartOnly=true
 Restart=always
