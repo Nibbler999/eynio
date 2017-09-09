@@ -13,7 +13,6 @@
     "adm-zip": "0.4.7",
     "async": "2.1.5",
     "bl": "1.2.0",
-    "buffer-indexof": "1.1.0",
     "bunyan": "1.8.5",
     "chroma-js": "1.2.1",
     "commander": "2.9.0",
