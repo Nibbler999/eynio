@@ -1,111 +1,155 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>Eynio Server</title>
-    <link rel="stylesheet" href="css/style.css" media="screen" title="no title">
+	<meta charset="UTF-8">
+	<title>Eynio Connect</title>
+	<link rel="stylesheet" href="css/style.css">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet">
 </head>
-
 <body>
-    <header>
-        <img src="img/eynio_server_logo.png" alt="eynio server" />
+	<div id='welcome'>
+		<div id='welcomeL'>
+			<img src="img/server_welcome_logo.png" alt="Eynio Server">
+			<h3>Welcome to <span>Eynio Connect</span></h3>
+			<p>Eynio Connect is your first step in turning a home into smart one. Software that allows you to control everything with our apps - Click, Vision or Wall. It will automatically scan your local network looking for supported devices, afterward, you will be able to control them via Eynio Connect or our apps.<br/><br/>Eynio Connect requires a stable computer and a network connection and needs to be ON 24/7,  so you can control whatever you want peacefully. And what is the best - it doesn’t require any hardware or wiring.<br/><br/>Whether you have one or one hundred devices to control or locations to monitor, Eynio Connect can allow you full control. To get started click the ‘Set Up Connect’ button.</p>
+		</div>
+		<div id='welcomeR'>
+			<div id='welcomeCenter'>
+				<p>You need to set up your connect to start using Eynio applications</p>
+				<a href="https://setup.eynio.com/#/servers" target='_blank'>
+					<button id='claimServer'><img src="img/claim_icon.png" alt="Claim Server">Set Up Connect</button>
+				</a>
+				<div id='information'><img src="img/information_icon.png" alt="Information"></div>
+			</div>
+		</div>
+	</div>
+	<main>
+		<div class="wrap">
+			<aside>
+				<div id="asideTop">
+					<img id='serverLogo' src="img/server_logo.png" alt="Connect">
+					<button id="reboot"><img src="img/reboot_icon.png" alt="Reboot">Reboot Connect</button>
+				</div>
+				<img id='navLogo' src="img/dashboard.png" alt="navLogo">
+				<nav>
+					<ul>
+						<li class='activeNav' data-template='dashboard'><img src="img/dashboard_icon.png" alt="Dashboard">Dashboard</li>
+						<li data-template='serverInfo'><img src="img/server_info_icon.png" alt="Server Info">Connect Info</li>
+						<li data-template='logs'><img src="img/logs_icon.png" alt="Logs">Logs</li>
+					</ul>
+				</nav>
+				<div id='bottom'>
+					<div id='nameDiv'>Connect name: <span id='name'>N/A</span></div>
+					<div id='statusDiv'>Connect status: <span id='status' class='offline'></span></div>
+				</div>
+			</aside>
+			<div id='dashboard' class='template activeTemplate'>
+				<div id='dashL'>
+					<h3>Getting Started</h3>
+					<p>With Eynio Connect running smoothly on different platforms and <b>Click</b> and <b>Vision</b> apps available on all your favorite devices - laptops, smartphones, tablets, smart TVs and gaming consoles, we are making it easier to control and monitor everything from any device, anytime.</p>
+					<a href="https://eynio.com/wp-content/uploads/2017/07/Eynio_Server_Setup_Instructions.pdf" download>
+						<button><img src="img/download_icon.png" alt="Manual">Download user manual</button>
+					</a>
+					<img id='devices' src="img/devices.png" alt="devices">
+				</div>
+				<div id='dashR'>
+					<h3>Our products</h3>
+					<ul>
+						<a href="https://eynio.com/wp/click/" target='_blank'>
+							<li>
+								<img id='click' src="img/click.png" alt="click">
+								<p>Home automation</p>
+							</li>
+						</a>
+						<a href="https://eynio.com/wp/vision/" target='_blank'>
+							<li>
+								<img id='vision' src="img/vision.png" alt="vision">
+								<p>Video surveillance</p>
+							</li>
+						</a>
+						<a href="https://eynio.com/wp/wall/" target='_blank'>
+							<li>
+								<img id='wall' src="img/wall.png" alt="wall">
+								<p>Control with wall mounted app</p>
+							</li>
+						</a>
+					</ul>
+					<a href="https://eynio.com/wp/downloads/" target='_blank'>
+						<button><img src="img/external_link_icon.png" alt="Download Page">Download page</button>
+					</a>
+				</div>
+			</div>
 
-        <span>
-                <button type="button" class="nav-button active" name="welcome">
-                    WELCOME
-                </button>
-                <button type="button" class="nav-button" name="info">
-                    SERVER INFO
-                </button>
-            </span>
-    </header>
+			<div id='serverInfo' class='template'>
+				<h3>Connect Info</h3>
+				<ul>
+					<li>
+						<h4>Connect name</h4>
+						<span id="info-name">Eynio</span>
+					</li>
+					<li>
+						<h4>Installation date</h4>
+						<span id="regdate">-</span>
+					</li>
+					<li>
+						<h4>Version</h4>
+						<span id="server_v">-</span>
+						<!-- <button id='updateButton' class='updateAvaiable'><img src="img/update_icon.png" alt="Update">Update Available</button> -->
+					</li>
+					<li>
+						<h4>Autoupdate</h4>
+						<span id="autoupdate">-</span>
+					</li>
+					<li>
+						<h4>Updateable</h4>
+						<span id="updateable">-</span>
+					</li>
+					<li>
+						<h4>Node Version</h4>
+						<span id="node_v">-</span>
+					</li>
+					<li>
+						<h4>Node Arch</h4>
+						<span id="arch">-</span>
+					</li>
+					<li>
+						<h4>Node Platform</h4>
+						<span id="os">-</span>
+					</li>
+					<li>
+						<h4>IP</h4>
+						<span id="ip_int">-</span>
+					</li>
+					<li>
+						<h4>External IP</h4>
+						<span id="ip_ext">-</span>
+					</li>
+					<li>
+						<h4>Ping</h4>
+						<span id="ping">-</span>
+					</li>
+					<li>
+						<h4>Local</h4>
+						<span id="local">-</span>
+					</li>
+				</ul>
+			</div>
 
-    <section class="content">
-
-        <section>
-            <div class="server-welcome-box click">
-                <figure>
-                    <img src="img/eynio_click_logo.png" alt="eynio click" />
-                </figure>
-                <p>
-                    With Click you can save the energy, boost efficiency, enjoy in comfort and have peace of mind.
-                </p>
-                <a href="https://click.eynio.com" target="_blank" class="server-btn click">
-                    <button type="button" name="Start Click">
-                            Start Click
-                        </button>
-                    <p>
-                        Enjoy the full Click version
-                    </p>
-                </a>
-                <a href="https://click.eynio.com/#/login?_k=ptha6e/demo" target="_blank" class="server-btn click">
-                    <button type="button" name="Start Click">
-                            Try Click Demo
-                        </button>
-                    <p>
-                        Get the feel of the application
-                    </p>
-                </a>
-            </div>
-
-            <div class="server-welcome-box vision">
-                <figure>
-                    <img src="img/eynio_vision_logo.png" alt="eynio vision" />
-                </figure>
-                <p>
-                    Video system that displays cameras across any interface and lets users have quick access to different facilities from one place
-                </p>
-                <a href="https://vision.eynio.com/#/login" target="_blank" class="server-btn vision">
-                    <button type="button" name="StartVision">Start Vision</button>
-                    <p>
-                        Enjoy the full Vision version
-                    </p>
-                </a>
-                <a href="https://vision.eynio.com/#/login/demo" target="_blank" class="server-btn vision">
-                    <button type="button" name="Try Vision Demo">Try Vision Demo</button>
-                    <p>
-                        Get the feel of the application
-                    </p>
-                </a>
-            </div>
-
-            <footer>
-                <a href="https://eynio.com/" target="_blank">
-                    <img src="img/powered_by_eynio.png" alt="powered by eynio" />
-                </a>
-            </footer>
-        </section>
-
-        <section class="info-content">
-            <div class="info-server">
-                <h1>SERVER INFO:</h1>
-
-                <div>
-                    <h2><span>Connection:</span> <span id="connection"></span></h2>
-                    <h2><span>Ping:</span> <span id="ping"></span></h2>
-                    <h2><span>Internal IP:</span> <span id="ip_int"></span></h2>
-                    <h2><span>External IP:</span> <span id="ip_ext"></span></h2>
-                    <h2><span>Server Version:</span> <span id="server_v"></span></h2>
-                    <h2><span>Node Version:</span> <span id="node_v"></span></h2>
-                    <h2><span>OS:</span> <span  id="os"></span></h2>
-                    <h2><span>Architecture:</span> <span id="arch"></span></h2>
-
-                </div>
-            </div>
-
-            <div class="info-log">
-                <h1>SERVER LOG</h1>
-                <div>
-                  <pre id="terminal"></pre>
-                </div>
-            </div>
-        </section>
-    </section>
-
-    <script src="js/jquery-1.11.3.min.js" charset="utf-8"></script>
-    <script src="js/jquery.sse.js" charset="utf-8"></script>
-    <script src="js/main.js" charset="utf-8"></script>
+			<div id='logs' class='template'>
+				<div id='top'>
+					<h3 class='activeNavLog' data-template='serverLogs'>Connect Logs</h3>
+					<h3 data-template='latestActions'>Latest Actions</h3>
+				</div>
+				<div id='serverLogs' class='logTemplate activeTemplateLog'>
+                    <pre id="terminal"></pre>
+				</div>
+				<div id='latestActions' class='logTemplate'>
+				</div>
+			</div>
+		</div>
+	</main>
+    <script src='js/jquery-1.11.3.min.js'></script>
+    <script src='js/jquery.sse.js'></script>
+	<script src='js/main.js'></script>
 </body>
-
 </html>

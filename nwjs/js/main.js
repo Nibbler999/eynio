@@ -6,6 +6,8 @@ var gui = require('nw.gui');
 // Get the current window
 var win = gui.Window.get();
 
+var child;
+
 window.onload = function() {
 
     if (gui.App.argv.indexOf('--autostart') !== -1) {
@@ -58,8 +60,6 @@ window.onload = function() {
         terminal.innerText += data;
     }
 
-    var child;
-
     function spawnChild () {
         require('../lib/updater.js').update(function() {
             child = cp.spawn(nodePath, args, opts);
@@ -76,4 +76,8 @@ window.onload = function() {
         child.kill();
         win.close(true);
     });
+};
+
+window.reboot = function () {
+    child.kill();
 };
